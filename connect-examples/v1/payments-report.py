@@ -7,7 +7,7 @@
 # format_money function to display amounts in other currency formats.
 #
 # To run this script from the command line:
-# python item-management.py
+# python payments-report.py
 #
 # To install Python on Windows:
 # https://www.python.org/download/
