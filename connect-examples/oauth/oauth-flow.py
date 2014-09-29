@@ -30,7 +30,8 @@ def authorize():
             to authorize the application.'''.format(application_id)
 
 # Serves requsts from Square to your application's redirect URL
-# Note that you need to set your application's Redirect URL to http://localhost:8080 from your apps page
+# Note that you need to set your application's Redirect URL to
+# http://localhost:8080/callback from your apps page
 @get('/callback')
 def callback():
 
