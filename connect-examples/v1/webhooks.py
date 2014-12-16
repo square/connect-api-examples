@@ -84,7 +84,7 @@ def is_valid_callback(callback_body, callback_signature):
   string_signature = string_signature.rstrip('\n')
 
   # Compare your generated signature with the signature included in the request
-  return string_signature == callback_signature
+  return hmac.compare_digest(string_signature, callback_signature)
 
 # Start up the server
 run(host='localhost', port=8080)
