@@ -11,7 +11,8 @@
 
 import httplib, urllib, json
 
-# Your application's personal access token. Get this from your Apps page (https://connect.squareup.com/apps)
+# Your application's personal access token.
+# Get this from your application dashboard (https://connect.squareup.com/apps)
 access_token = 'REPLACE_ME'
 
 # The base URL for every Connect API request

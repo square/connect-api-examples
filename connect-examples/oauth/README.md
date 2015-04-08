@@ -17,13 +17,13 @@ installed, you can install Bottle by following
 In order for the sample to work, you must specify two fields in `oauth-flow.py`:
 
 * Replace the value of `application_id` with your application's ID, available on your
-[apps page](https://connect.squareup.com/apps).
+[application dashboard](https://connect.squareup.com/apps).
 
-* Replace the value of `application_secret` with your application's secret, also available on your apps page.
+* Replace the value of `application_secret` with your application's secret, also available on your application dashboard.
 
 ### Set your application's Redirect URL
 
-On your apps page, set your application's Redirect URL to `http://localhost:8080/callback`.
+On your application dashboard, set your application's Redirect URL to `http://localhost:8080/callback`.
 
 Note that applications that don't use a `localhost` URL must use HTTPS. HTTP is allowed for `localhost` URLs to simplify the development process.
 

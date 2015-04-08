@@ -5,7 +5,7 @@
 #    is already signed in to Square, and if the merchant has already authorized your application,
 #    the OAuth flow automatically proceeds to the next step without presenting the Permissions form.
 # 3. Square sends a request to your application's Redirect URL
-#    (which should be set to http://localhost:8080/callback on your apps page)
+#    (which should be set to http://localhost:8080/callback on your application dashboard)
 # 4. The server extracts the authorization code provided in Square's request and passes it
 #    along to the Obtain Token endpoint.
 # 5. The Obtain Token endpoint returns an access token your application can use in subsequent requests
@@ -14,7 +14,7 @@
 from bottle import get, request, static_file, run
 import httplib, json
 
-# Your application's ID and secret, available from your apps page.
+# Your application's ID and secret, available from your application dashboard.
 application_id = 'REPLACE_ME'
 application_secret = 'REPLACE_ME'
 
@@ -31,7 +31,7 @@ def authorize():
 
 # Serves requsts from Square to your application's redirect URL
 # Note that you need to set your application's Redirect URL to
-# http://localhost:8080/callback from your apps page
+# http://localhost:8080/callback from your application dashboard
 @get('/callback')
 def callback():
 

@@ -18,8 +18,8 @@ import hmac, httplib, json, locale
 # Your application's access token
 access_token = 'REPLACE_ME'
 
-# Your application's secret
-application_secret = 'REPLACE_ME'
+# Your application's webhook signature key, available from your application dashboard
+webhook_signature_key = 'REPLACE_ME'
 
 # The URL that this server is listening on (e.g., 'http://example.com/events')
 # Note that to receive notifications from Square, this cannot be a localhost URL
@@ -33,7 +33,7 @@ request_headers = { 'Authorization': 'Bearer ' + access_token,
 
 # Listens for PAYMENT_UPDATED webhook notifications and retrieves associated payments
 #
-# Note that you need to set your application's webhook URL from your apps page
+# Note that you need to set your application's webhook URL from your application dashboard
 # to receive these notifications. In this sample, if your host's base URL is 
 # http://example.com, you'd set your webhook URL to http://example.com/events
 @post('/events')
@@ -77,8 +77,8 @@ def is_valid_callback(callback_body, callback_signature):
   # Combine your webhook notification URL and the JSON body of the incoming request into a single string
   string_to_sign = webhook_url + callback_body
 
-  # Generate the HMAC-SHA1 signature of the string, signed with your application secret
-  string_signature = hmac.new(application_secret, string_to_sign, sha1).digest().encode('base64')
+  # Generate the HMAC-SHA1 signature of the string, signed with your webhook signature key
+  string_signature = hmac.new(webhook_signature_key, string_to_sign, sha1).digest().encode('base64')
 
   # Remove the trailing newline from the generated signature (this is a quirk of the Python library)
   string_signature = string_signature.rstrip('\n')

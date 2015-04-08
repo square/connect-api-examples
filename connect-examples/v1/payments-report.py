@@ -15,7 +15,8 @@
 import httplib, urllib, json, locale
 from urlparse import urlparse
 
-# Your application's personal access token. Get this from your Apps page (https://connect.squareup.com/apps)
+# Your application's personal access token.
+# Get this from your application dashboard (https://connect.squareup.com/apps)
 access_token = 'REPLACE_ME'
                    
 # Uses the locale to format currency amounts correctly
