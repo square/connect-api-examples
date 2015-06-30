@@ -2,7 +2,7 @@
 
 This example demonstrates a bare-bones implementation of the Square Connect OAuth flow. The application links merchants to the OAuth Permissions form and handles the result of the authorization, which is sent to the application's Redirect URL.
 
-For more information, see [OAuth Overview](https://connect.squareup.com/docs/api#oauth-overview), along with the comments included in `oauth-flow.py`.
+For more information, see [OAuth Overview](https://docs.connect.squareup.com/api/connect/v1/#oauth-overview), along with the comments included in `oauth-flow.py`.
 
 ## Setup
 
