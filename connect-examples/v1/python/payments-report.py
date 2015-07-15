@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Demonstrates generating a 2014 payments report with the Square Connect API.
+# Demonstrates generating a 2015 payments report with the Square Connect API.
 # Replace the value of the `access_token` variable below before running this script.
 #
 # This sample assumes all monetary amounts are in US dollars. You can alter the
@@ -18,6 +18,14 @@ from urlparse import urlparse
 # Your application's personal access token.
 # Get this from your application dashboard (https://connect.squareup.com/apps)
 access_token = 'REPLACE_ME'
+
+# Standard HTTP headers for every Connect API request
+request_headers = {'Authorization': 'Bearer ' + access_token,
+                   'Accept': 'application/json',
+                   'Content-Type': 'application/json'}
+  
+# The base URL for every Connect API request
+connection = httplib.HTTPSConnection('connect.squareup.com')
                    
 # Uses the locale to format currency amounts correctly
 locale.setlocale(locale.LC_ALL, 'en_US')
@@ -27,50 +35,64 @@ def format_money(amount):
   return locale.currency(amount / 100.)
 
 
-# Retrieves all of a merchant's payments from 2014
-def get_2014_payments():
+# Obtains all of the business's location IDs. Each location has its own collection of payments.
+def get_location_ids():
+  request_path = '/v1/me/locations'
+  connection.request('GET', request_path, '', request_headers)
+  response = connection.getresponse()
+
+  # Transform the JSON array of locations into a Python list
+  locations = json.loads(response.read())
+
+  location_ids = []
+  for location in locations:
+    location_ids.append(location['id'])
+
+  return location_ids
+
+
+# Downloads all of a business's payments from 2015
+def get_2015_payments(location_ids):
   
-  # Restrict the request to the 2014 calendar year, eight hours behind UTC
+  # Restrict all requests to the 2015 calendar year, eight hours behind UTC
   # Make sure to URL-encode all parameters
-  parameters = urllib.urlencode({'begin_time': '2014-01-01T00:00:00-08:00',
-                                 'end_time'  : '2015-01-01T00:00:00-08:00'})
+  parameters = urllib.urlencode({'begin_time': '2015-01-01T00:00:00-08:00',
+                                 'end_time'  : '2016-01-01T00:00:00-08:00'})
   
-  # Standard HTTP headers for every Connect API request
-  request_headers = {'Authorization': 'Bearer ' + access_token,
-                     'Accept': 'application/json',
-                     'Content-Type': 'application/json'}
-  
-  # The base URL for every Connect API request
-  connection = httplib.HTTPSConnection('connect.squareup.com')  
-          
   payments = []
-  request_path = '/v1/me/payments?' + parameters
-  more_results = True
-  
-  while more_results:
-    connection.request('GET', request_path, '', request_headers)
-    response = connection.getresponse()
 
-    # Read the response body JSON into the cumulative list of results
-    payments = payments + json.loads(response.read())
+  # For each location...
+  for location_id in location_ids:
+
+    print 'Downloading payments for location with ID ' + location_id + '...'
+
+    request_path = '/v1/' + location_id + '/payments?' + parameters
+    more_results = True
     
-    # Check whether pagination information is included in a response header, indicating more results
-    pagination_header = response.getheader('link', '')
-    if "rel='next'" not in pagination_header:
-      more_results = False
-    else:
+    # ...as long as there are more payments to download from the location...
+    while more_results:
 
-      # Extract the next batch URL from the header.
-      #
-      # Pagination headers have the following format:
-      # <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
-      # This line extracts the URL from the angle brackets surrounding it.
-      next_batch_url = urlparse(pagination_header.split('<')[1].split('>')[0])
+      # ...send a GET request to /v1/LOCATION_ID/payments
+      connection.request('GET', request_path, '', request_headers)
+      response = connection.getresponse()
 
-      request_path = next_batch_url.path + '?' + next_batch_url.query
-  
-  # All requests are complete.
-  connection.close()
+      # Read the response body JSON into the cumulative list of results
+      payments = payments + json.loads(response.read())
+      
+      # Check whether pagination information is included in a response header, indicating more results
+      pagination_header = response.getheader('link', '')
+      if "rel='next'" not in pagination_header:
+        more_results = False
+      else:
+
+        # Extract the next batch URL from the header.
+        #
+        # Pagination headers have the following format:
+        # <https://connect.squareup.com/v1/LOCATION_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
+        # This line extracts the URL from the angle brackets surrounding it.
+        next_batch_url = urlparse(pagination_header.split('<')[1].split('>')[0])
+
+        request_path = next_batch_url.path + '?' + next_batch_url.query
 
   # Remove potential duplicate values from the list of payments
   seen_payment_ids = set()
@@ -85,7 +107,7 @@ def get_2014_payments():
   return unique_payments
 
 
-# Prints a sales report based on an array of payments
+# Prints a sales report based on a list of payments
 def print_sales_report(payments):
 
    # Variables for holding cumulative values of various monetary amounts
@@ -122,7 +144,7 @@ def print_sales_report(payments):
   
   # Print a sales report similar to the Sales Summary in the merchant dashboard.
   print ''
-  print '==SALES REPORT FOR 2014=='
+  print '==SALES REPORT FOR 2015=='
   print 'Gross Sales:       ' + format_money(base_purchases - discounts)
   print 'Discounts:         ' + format_money(discounts)
   print 'Net Sales:         ' + format_money(base_purchases)
@@ -136,5 +158,11 @@ def print_sales_report(payments):
     
 
 if __name__ == '__main__':
-  payments = get_2014_payments()
+
+  # Get all 2015 payments from all of the business's locations
+  payments = get_2015_payments(get_location_ids())
+
+  # Print a sales summary report of the payments
   print_sales_report(payments)
+
+  connection.close()

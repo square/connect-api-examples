@@ -59,8 +59,11 @@ function webhookCallback() {
       # Get the ID of the updated payment
       $paymentId = $callbackBodyJson->entity_id;
 
+      # Get the ID of the payment's associated location
+      $locationId = $callbackBodyJson->location_id;
+
       # Send a request to the Retrieve Payment endpoint to get the updated payment's full details
-      $response = Unirest\Request::get($connectHost . '/v1/me/payments/' . $paymentId, $requestHeaders);
+      $response = Unirest\Request::get($connectHost . '/v1/' . $locationId . '/payments/' . $paymentId, $requestHeaders);
 
       # Perform an action based on the returned payment (in this case, simply log it)
       error_log(json_encode($response->body, JSON_PRETTY_PRINT));

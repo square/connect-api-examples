@@ -1,5 +1,5 @@
 # Demonstrates creating, updating, and deleting an item with the Square Connect API.
-# Replace the value of the `$access_token` variable below before running this sample.
+# Replace the values of `ACCESS_TOKEN` and `LOCATION_ID` below before running this sample.
 #
 # This sample requires the Unirest gem. Download instructions are here:
 # http://unirest.io/ruby.html
@@ -9,14 +9,18 @@ require 'json'
 
 # Replace this value with your application's personal access token,
 # available from your application dashboard (https://connect.squareup.com/apps)
-$access_token = 'REPLACE_ME'
+ACCESS_TOKEN = 'REPLACE_ME'
+
+# The ID of the location you want to create an item for.
+# See payments-report.rb for an example of getting a business's location IDs.
+LOCATION_ID = 'REPLACE_ME'
 
 # The base URL for every Connect API request
-$connect_host = 'https://connect.squareup.com'
+CONNECT_HOST = 'https://connect.squareup.com'
 
 # Standard HTTP headers for every Connect API request
-$request_headers = {
-  'Authorization' => 'Bearer ' + $access_token,
+REQUEST_HEADERS = {
+  'Authorization' => 'Bearer ' + ACCESS_TOKEN,
   'Accept' => 'application/json',
   'Content-Type' => 'application/json'
 }
@@ -39,8 +43,8 @@ def create_item()
     ]
   }
 
-  response = Unirest.post $connect_host + '/v1/me/items',
-                  headers: $request_headers,
+  response = Unirest.post CONNECT_HOST + '/v1/' + LOCATION_ID + '/items',
+                  headers: REQUEST_HEADERS,
                   parameters: request_body.to_json
 
   if response.code == 200
@@ -60,8 +64,8 @@ def update_item(item_id)
     'name' => 'Malted Milkshake'
   }
 
-  response = Unirest.put $connect_host + '/v1/me/items/' + item_id,
-                   headers: $request_headers,
+  response = Unirest.put CONNECT_HOST + '/v1/' + LOCATION_ID + '/items/' + item_id,
+                   headers: REQUEST_HEADERS,
                    parameters: request_body.to_json
 
   if response.code == 200
@@ -76,8 +80,8 @@ end
 
 # Deletes the Malted Milkshake item.
 def delete_item(item_id)
-  response = Unirest.delete $connect_host + '/v1/me/items/' + item_id,
-                   headers: $request_headers
+  response = Unirest.delete CONNECT_HOST + '/v1/' + LOCATION_ID + '/items/' + item_id,
+                   headers: REQUEST_HEADERS
 
   if response.code == 200
     puts 'Successfully deleted item'

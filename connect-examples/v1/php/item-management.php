@@ -1,7 +1,7 @@
 <?php
 
 # Demonstrates creating, updating, and deleting an item with the Square Connect API.
-# Replace the value of the `$accessToken` variable below before running this sample.
+# Replace the values of `$accessToken` and `$locationId` below before running this sample.
 #
 # This sample requires the Unirest PHP library. Download it here:
 # http://unirest.io/php.html
@@ -17,6 +17,10 @@ require_once 'path/to/Unirest.php';
 # available from your application dashboard (https://connect.squareup.com/apps)
 $accessToken = 'REPLACE_ME';
 
+# The ID of the location you want to create an item for.
+# See payments-report.php for an example of getting a business's location IDs.
+$locationId = 'REPLACE_ME';
+
 # The base URL for every Connect API request
 $connectHost = 'https://connect.squareup.com';
 
@@ -29,7 +33,7 @@ $requestHeaders = array (
 
 # Creates a "Milkshake" item.
 function createItem() {
-  global $accessToken, $connectHost, $requestHeaders;
+  global $accessToken, $locationId, $connectHost, $requestHeaders;
 
   $request_body = array(
     "name"=>"Milkshake",
@@ -45,7 +49,7 @@ function createItem() {
     )
   );
 
-  $response = Unirest\Request::post($connectHost . '/v1/me/items', $requestHeaders, json_encode($request_body));
+  $response = Unirest\Request::post($connectHost . '/v1/' . $locationId . '/items', $requestHeaders, json_encode($request_body));
 
   if ($response->code == 200) {
     error_log('Successfully created item:');
@@ -59,13 +63,13 @@ function createItem() {
 
 # Updates the Milkshake item to rename it to "Malted Milkshake"
 function updateItem($itemId) {
-  global $accessToken, $connectHost, $requestHeaders;
+  global $accessToken, $locationId, $connectHost, $requestHeaders;
 
   $request_body = array(
     "name"=>"Malted Milkshake"
   );
 
-  $response = Unirest\Request::put($connectHost . '/v1/me/items/' . $itemId, $requestHeaders, json_encode($request_body));
+  $response = Unirest\Request::put($connectHost . '/v1/' . $locationId . '/items/' . $itemId, $requestHeaders, json_encode($request_body));
 
   if ($response->code == 200) {
     error_log('Successfully updated item:');
@@ -79,9 +83,9 @@ function updateItem($itemId) {
 
 # Deletes the Malted Milkshake item.
 function deleteItem($itemId) {
-  global $accessToken, $connectHost, $requestHeaders;
+  global $accessToken, $locationId, $connectHost, $requestHeaders;
 
-  $response = Unirest\Request::delete($connectHost . '/v1/me/items/' . $itemId, $requestHeaders);
+  $response = Unirest\Request::delete($connectHost . '/v1/' . $locationId . '/items/' . $itemId, $requestHeaders);
 
   if ($response->code == 200) {
     error_log('Successfully deleted item');

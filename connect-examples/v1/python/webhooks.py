@@ -58,10 +58,13 @@ def webhooks_callback():
   
     # Get the ID of the updated payment
     payment_id = callback_body_dict['entity_id']
+
+    # Get the ID of the payment's associated location
+    location_id = callback_body_dict['location_id']
     
     # Send a request to the Retrieve Payment endpoint to get the updated payment's full details
     connection = httplib.HTTPSConnection('connect.squareup.com')
-    connection.request('GET', '/v1/me/payments/' + payment_id, '', request_headers)
+    connection.request('GET', '/v1/' + location_id + '/payments/' + payment_id, '', request_headers)
     connect_response_body = json.loads(connection.getresponse().read())
 
     # Perform an action based on the returned payment (in this case, simply print the payment)

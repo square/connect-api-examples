@@ -1,6 +1,6 @@
 <?php
 
-# Demonstrates generating a 2014 payments report with the Square Connect API.
+# Demonstrates generating a 2015 payments report with the Square Connect API.
 # Replace the value of the `$accessToken` variable below before running this script.
 #
 # This sample assumes all monetary amounts are in US dollars. You can alter the
@@ -22,60 +22,78 @@ $accessToken = 'REPLACE_ME';
 # The base URL for every Connect API request
 $connectHost = 'https://connect.squareup.com';
 
+# Standard HTTP headers for every Connect API request
+$requestHeaders = array (
+  'Authorization' => 'Bearer ' . $accessToken,
+  'Accept' => 'application/json',
+  'Content-Type' => 'application/json'
+);
+
 # Helper function to convert cent-based money amounts to dollars and cents
 function formatMoney($money) {
   return money_format('%+.2n', $money / 100);
 }
 
-# Retrieves all of a merchant's payments from 2014
-function get2014Payments() {
-  global $accessToken, $connectHost;
+# Obtains all of the business's location IDs. Each location has its own collection of payments.
+function getLocationIds() {
+  global $accessToken, $connectHost, $requestHeaders;
+  $requestPath = $connectHost . '/v1/me/locations';
+  $response = Unirest\Request::get($requestPath, $requestHeaders);
+  $locations = $response->body;
+  $locationIds = array();
 
-  # Restrict the request to the 2014 calendar year, eight hours behind UTC
+  foreach ($locations as $location) {
+    $locationIds[] = $location->id;
+  }
+
+  return $locationIds;
+}
+
+# Retrieves all of a merchant's payments from 2015
+function get2015Payments($location_ids) {
+  global $accessToken, $connectHost, $requestHeaders;
+
+  # Restrict the request to the 2015 calendar year, eight hours behind UTC
   # Make sure to URL-encode all parameters
   $parameters = http_build_query(
   	array(
-  	  'begin_time' => '2014-01-01T00:00:00-08:00',
-  	  'end_time'   => '2015-01-01T00:00:00-08:00'
+  	  'begin_time' => '2015-01-01T00:00:00-08:00',
+  	  'end_time'   => '2016-01-01T00:00:00-08:00'
   	)
   );
 
-  # Standard HTTP headers for every Connect API request
-  $requestHeaders = array (
-    'Authorization' => 'Bearer ' . $accessToken,
-    'Accept' => 'application/json',
-    'Content-Type' => 'application/json'
-  );
-
   $payments = array();
-  $requestPath = $connectHost . '/v1/me/payments?' . $parameters;
-  $moreResults = true;
 
-  while ($moreResults) {
+  foreach ($location_ids as $location_id) {
+    $requestPath = $connectHost . '/v1/' . $location_id . '/payments?' . $parameters;
+    $moreResults = true;
 
-  	# Send a GET request to the List Payments endpoint
-  	$response = Unirest\Request::get($requestPath, $requestHeaders);
+    while ($moreResults) {
 
-  	# Read the converted JSON body into the cumulative array of results
-  	$payments = array_merge($payments, $response->body);
+      # Send a GET request to the List Payments endpoint
+      $response = Unirest\Request::get($requestPath, $requestHeaders);
 
-  	# Check whether pagination information is included in a response header, indicating more results
-  	if (array_key_exists('Link', $response->headers)) {
-  	  $paginationHeader = $response->headers['Link'];
-  	  if (strpos($paginationHeader, "rel='next'") !== false) {
+      # Read the converted JSON body into the cumulative array of results
+      $payments = array_merge($payments, $response->body);
 
-  	    # Extract the next batch URL from the header.
-        #
-        # Pagination headers have the following format:
-        # <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
-        # This line extracts the URL from the angle brackets surrounding it.
-        $requestPath = explode('>', explode('<', $paginationHeader)[1])[0];
-  	  } else {
-  	  	$moreResults = false;
-  	  }
-  	} else {
-  	  $moreResults = false;
-  	}
+      # Check whether pagination information is included in a response header, indicating more results
+      if (array_key_exists('Link', $response->headers)) {
+        $paginationHeader = $response->headers['Link'];
+        if (strpos($paginationHeader, "rel='next'") !== false) {
+
+          # Extract the next batch URL from the header.
+          #
+          # Pagination headers have the following format:
+          # <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
+          # This line extracts the URL from the angle brackets surrounding it.
+          $requestPath = explode('>', explode('<', $paginationHeader)[1])[0];
+        } else {
+          $moreResults = false;
+        }
+      } else {
+        $moreResults = false;
+      }
+    }
   }
 
   # Remove potential duplicate values from the list of payments
@@ -131,7 +149,7 @@ function printSalesReport($payments) {
 
   # Print a sales report similar to the Sales Summary in the merchant dashboard.
   echo '<pre>';
-  echo '==SALES REPORT FOR 2014==' . '<br/>';
+  echo '==SALES REPORT FOR 2015==' . '<br/>';
   echo 'Gross Sales:       ' . formatMoney($basePurchases - $discounts) . '<br/>';
   echo 'Discounts:         ' . formatMoney($discounts) . '<br/>';
   echo 'Net Sales:         ' . formatMoney($basePurchases) . '<br/>';
@@ -147,7 +165,7 @@ function printSalesReport($payments) {
 }
 
 # Call the functions defined above
-$payments = get2014Payments();
+$payments = get2015Payments(getLocationIds());
 printSalesReport($payments);
 
 ?>

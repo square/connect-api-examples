@@ -1,5 +1,5 @@
 /*
-  Demonstrates generating a 2014 payments report with the Square Connect API.
+  Demonstrates generating a 2015 payments report with the Square Connect API.
   Replace the value of the `_accessToken` variable below before running this sample.
 
   You can alter the formatMoney method to display monetary amounts in a different format.
@@ -48,59 +48,91 @@ public class PaymentsReporter {
     return NumberFormat.getCurrencyInstance().format(money / 100.0);
   }
 
-  // Retrieves all of a merchant's payments from 2014
-  public List<JSONObject> get2014Payments() {
 
-    // Restrict the request to the 2014 calendar year, eight hours behind UTC.
-    // Unirest URL-encodes query parameters automatically.
-    String requestPath = Unirest.get(_connectHost + "/v1/me/payments")
-        .queryString("begin_time", "2014-01-01T00:00:00-08:00")
-        .queryString("end_time", "2015-01-01T00:00:00-08:00")
-        .getUrl();
+  // Obtains all of the business's location IDs. Each location has its own collection of payments.
+  public List<String> getLocationIds() {
+    String requestPath = Unirest.get(_connectHost + "/v1/me/locations").getUrl();
+
+    HttpResponse<JsonNode> response = null;
+
+    try {
+      response = Unirest.get(requestPath).asJson();
+    } catch (UnirestException e) {
+      return new ArrayList();
+    }
+
+    List<String> locationIds = new ArrayList();
+
+    if (response != null && response.getBody().isArray()) {
+      JSONArray locationArray = response.getBody().getArray();
+      for (int i = 0; i < locationArray.length(); i++) {
+        locationIds.add(locationArray.getJSONObject(i).getString("id"));
+      }
+    }
+
+    return locationIds;
+  }
+
+  // Retrieves all of a merchant's payments from 2015
+  public List<JSONObject> get2015Payments(List<String> locationIds) {
 
     List<JSONObject> payments = new ArrayList<JSONObject>();
-    HttpResponse<JsonNode> response = null;
-    boolean moreResults = true;
 
-    while (moreResults) {
-      try {
+    for (String locationId : locationIds) {
 
-        // Send a GET request to the List Payments endpoint
-        response = Unirest.get(requestPath).asJson();
-      } catch (UnirestException e) {
+      System.out.println("Downloading payments for location with ID " + locationId);
 
-        // If any HTTP request fails during method execution, return null to indicate an error
-        return null;
-      }
+      // Restrict the request to the 2014 calendar year, eight hours behind UTC.
+      // Unirest URL-encodes query parameters automatically.
+      String requestPath = Unirest.get(_connectHost + "/v1/" + locationId + "/payments")
+          .queryString("begin_time", "2015-01-01T00:00:00-08:00")
+          .queryString("end_time", "2016-01-01T00:00:00-08:00")
+          .getUrl();
 
-      if (response != null && response.getBody().isArray()) {
+      HttpResponse<JsonNode> response = null;
+      boolean moreResults = true;
 
-        // Read the converted JSON body into the cumulative list of results
-        JSONArray paymentArray = response.getBody().getArray();
-        for (int i = 0; i < paymentArray.length(); i++) {
-          payments.add(paymentArray.getJSONObject(i));
+      while (moreResults) {
+
+        try {
+
+          // Send a GET request to the List Payments endpoint
+          response = Unirest.get(requestPath).asJson();
+        } catch (UnirestException e) {
+
+          // If any HTTP request fails during method execution, return null to indicate an error
+          return null;
         }
 
-        // Check whether pagination information is included in a response header,
-        // indicating more results
-        if (response.getHeaders().containsKey("link")){
-          String paginationHeader = response.getHeaders().get("link").get(0);
-          if (paginationHeader.contains("rel='next'")) {
+        if (response != null && response.getBody().isArray()) {
 
-            // Extract the next batch URL from the header.
-            //
-            // Pagination headers have the following format:
-            // <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
-            // This line extracts the URL from the angle brackets surrounding it.
-            requestPath = paginationHeader.split("<")[1].split(">")[0];
+          // Read the converted JSON body into the cumulative list of results
+          JSONArray paymentArray = response.getBody().getArray();
+          for (int i = 0; i < paymentArray.length(); i++) {
+            payments.add(paymentArray.getJSONObject(i));
+          }
+
+          // Check whether pagination information is included in a response header,
+          // indicating more results
+          if (response.getHeaders().containsKey("link")){
+            String paginationHeader = response.getHeaders().get("link").get(0);
+            if (paginationHeader.contains("rel='next'")) {
+
+              // Extract the next batch URL from the header.
+              //
+              // Pagination headers have the following format:
+              // <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
+              // This line extracts the URL from the angle brackets surrounding it.
+              requestPath = paginationHeader.split("<")[1].split(">")[0];
+            } else {
+              moreResults = false;
+            }
           } else {
             moreResults = false;
           }
         } else {
-          moreResults = false;
+          return null;
         }
-      } else {
-        return null;
       }
     }
 
@@ -175,7 +207,7 @@ public class PaymentsReporter {
   // Call the methods defined above
   public static void main(String[] args) {
     PaymentsReporter reporter = new PaymentsReporter();
-    List<JSONObject> payments = reporter.get2014Payments();
+    List<JSONObject> payments = reporter.get2015Payments(reporter.getLocationIds());
     if (payments != null) {
       reporter.printSalesReport(payments);
     }

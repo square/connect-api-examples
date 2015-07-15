@@ -25,6 +25,10 @@ public class ItemManager {
   // available from your application dashboard (https://connect.squareup.com/apps)
   private final String _accessToken = "REPLACE_ME";
 
+  // The ID of the location you want to create an item for.
+  // See PaymentsReporter.java for an example of getting a business's location IDs.
+  private final String _locationId = "REPLACE_ME";
+
   // The base URL for every Connect API request
   private final String _connectHost = "https://connect.squareup.com";
 
@@ -63,7 +67,7 @@ public class ItemManager {
     JsonNode bodyNode = new JsonNode(requestBody.toString());
     HttpResponse<JsonNode> response = null;
     try {
-      response = Unirest.post(_connectHost + "/v1/me/items").body(bodyNode).asJson();
+      response = Unirest.post(_connectHost + "/v1/" + _locationId + "/items").body(bodyNode).asJson();
     } catch (UnirestException e) {
       return null;
     }
@@ -86,7 +90,7 @@ public class ItemManager {
 
     HttpResponse<JsonNode> response = null;
     try {
-      response = Unirest.put(_connectHost + "/v1/me/items/" + itemId).body(requestBody).asJson();
+      response = Unirest.put(_connectHost + "/v1/" + _locationId + "/items/" + itemId).body(requestBody).asJson();
     } catch (UnirestException e) {
       return null;
     }
@@ -106,7 +110,7 @@ public class ItemManager {
 
     HttpResponse<JsonNode> response = null;
     try {
-      response = Unirest.delete(_connectHost + "/v1/me/items/" + itemId).asJson();
+      response = Unirest.delete(_connectHost + "/v1/" + _locationId + "/items/" + itemId).asJson();
     } catch (UnirestException e) {
       return null;
     }

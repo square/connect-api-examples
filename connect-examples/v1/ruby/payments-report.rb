@@ -1,5 +1,5 @@
-# Demonstrates generating a 2014 payments report with the Square Connect API.
-# Replace the value of the `$access_token` variable below before running this script.
+# Demonstrates generating a 2015 payments report with the Square Connect API.
+# Replace the value of the `ACCESS_TOKEN` variable below before running this script.
 #
 # This sample assumes all monetary amounts are in US dollars. You can alter the
 # formatMoney function to display amounts in other currency formats.
@@ -14,10 +14,17 @@ require 'uri'
 
 # Replace this value with your application's personal access token,
 # available from your application dashboard (https://connect.squareup.com/apps)
-$access_token = 'REPLACE_ME'
+ACCESS_TOKEN = 'REPLACE_ME'
 
 # The base URL for every Connect API request
-$connect_host = 'https://connect.squareup.com'
+CONNECT_HOST = 'https://connect.squareup.com'
+
+# Standard HTTP headers for every Connect API request
+REQUEST_HEADERS = {
+  'Authorization' => 'Bearer ' + ACCESS_TOKEN,
+  'Accept' => 'application/json',
+  'Content-Type' => 'application/json'
+}
 
 # Helper function to convert cent-based money amounts to dollars and cents
 def format_money(money)
@@ -28,55 +35,71 @@ def format_money(money)
   return money_string
 end
 
-# Retrieves all of a merchant's payments from 2014
-def get_2014_payments()
+# Obtains all of the business's location IDs. Each location has its own collection of payments.
+def get_location_ids()
+  request_path = '/v1/me/locations'
+  response = Unirest.get CONNECT_HOST + request_path,
+               headers: REQUEST_HEADERS
+  locations = response.body
+  location_ids = []
 
-  # Restrict the request to the 2014 calendar year, eight hours behind UTC
+  for location in locations
+    location_ids.push(location['id'])
+  end
+
+  return location_ids
+end
+
+# Retrieves all of a merchant's payments from 2015
+def get_2015_payments(location_ids)
+
+  # Restrict the request to the 2015 calendar year, eight hours behind UTC
   # Make sure to URL-encode all parameters
   parameters = URI.encode_www_form(
-    'begin_time' => '2014-01-01T00:00:00-08:00',
-    'end_time'   => '2015-01-01T00:00:00-08:00'
+    'begin_time' => '2015-01-01T00:00:00-08:00',
+    'end_time'   => '2016-01-01T00:00:00-08:00'
   )
 
-  # Standard HTTP headers for every Connect API request
-  request_headers = {
-  	'Authorization' => 'Bearer ' + $access_token,
-  	'Accept' => 'application/json',
-  	'Content-Type' => 'application/json'
-  }
-
   payments = []
-  request_path = $connect_host + '/v1/me/payments?' + parameters
-  more_results = true
 
-  while more_results do
 
-    # Send a GET request to the List Payments endpoint
-    response = Unirest.get request_path,
-    					   headers: request_headers,
-    					   parameters: parameters
+  for location_id in location_ids
+    puts 'Downloading payments for location with ID ' + location_id + '...'
 
-    # Read the converted JSON body into the cumulative array of results
-    payments += response.body
+    request_path = CONNECT_HOST + '/v1/' + location_id + '/payments?' + parameters
 
-    # Check whether pagination information is included in a response header, indicating more results
-    if response.headers.has_key?(:link)
-      pagination_header = response.headers[:link]
-      if pagination_header.include? "rel='next'"
+    more_results = true
 
-        # Extract the next batch URL from the header.
-        #
-        # Pagination headers have the following format:
-        # <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
-        # This line extracts the URL from the angle brackets surrounding it.
-        request_path = pagination_header.split('<')[1].split('>')[0]
+    while more_results do
+
+      # Send a GET request to the List Payments endpoint
+      response = Unirest.get request_path,
+                   headers: REQUEST_HEADERS,
+                   parameters: parameters
+
+      # Read the converted JSON body into the cumulative array of results
+      payments += response.body
+
+      # Check whether pagination information is included in a response header, indicating more results
+      if response.headers.has_key?(:link)
+        pagination_header = response.headers[:link]
+        if pagination_header.include? "rel='next'"
+
+          # Extract the next batch URL from the header.
+          #
+          # Pagination headers have the following format:
+          # <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
+          # This line extracts the URL from the angle brackets surrounding it.
+          request_path = pagination_header.split('<')[1].split('>')[0]
+        else
+          more_results = false
+        end
       else
         more_results = false
       end
-    else
-      more_results = false
     end
   end
+
 
   # Remove potential duplicate values from the list of payments
   seen_payment_ids = Set.new
@@ -135,7 +158,7 @@ def print_sales_report(payments)
 
   # Print a sales report similar to the Sales Summary in the merchant dashboard.
   puts ''
-  puts '==SALES REPORT FOR 2014=='
+  puts '==SALES REPORT FOR 2015=='
   puts 'Gross Sales:       ' + format_money(base_purchases - discounts)
   puts 'Discounts:         ' + format_money(discounts)
   puts 'Net Sales:         ' + format_money(base_purchases)
@@ -149,5 +172,5 @@ def print_sales_report(payments)
 end
 
 # Call the functions defined above
-payments = get_2014_payments()
+payments = get_2015_payments(get_location_ids())
 print_sales_report(payments)

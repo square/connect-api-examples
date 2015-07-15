@@ -15,20 +15,20 @@ require 'sinatra'
 require 'unirest'
 
 # Your application's access token
-$access_token = 'REPLACE_ME'
+ACCESS_TOKEN = 'REPLACE_ME'
 
 # Your application's webhook signature key, available from your application dashboard
-$webhook_signature_key = 'REPLACE_ME'
+WEBHOOK_SIGNATURE_KEY = 'REPLACE_ME'
 
 # The URL that this server is listening on (e.g., 'http://example.com/events')
 # Note that to receive notifications from Square, this cannot be a localhost URL
-$webhook_url = 'REPLACE_ME'
+WEBHOOK_URL = 'REPLACE_ME'
 
 # The base URL for every Connect API request
-$connect_host = 'https://connect.squareup.com'
+CONNECT_HOST = 'https://connect.squareup.com'
 
 # Headers to provide to Connect API endpoints
-$request_headers = { 'Authorization' => 'Bearer ' + $access_token,
+REQUEST_HEADERS = { 'Authorization' => 'Bearer ' + ACCESS_TOKEN,
                      'Accept' => 'application/json',
                      'Content-Type' => 'application/json'}
 
@@ -61,9 +61,12 @@ post '/events' do
   	# Get the ID of the updated payment
     payment_id = callback_body_json['entity_id']
 
+    # Get the ID of the payment's associated location
+    location_id = callback_body_json['location_id']
+
     # Send a request to the Retrieve Payment endpoint to get the updated payment's full details
-    response = Unirest.get $connect_host + '/v1/me/payments/' + payment_id,
-                  headers: $request_headers
+    response = Unirest.get CONNECT_HOST + '/v1/' + location_id + '/payments/' + payment_id,
+                  headers: REQUEST_HEADERS
 
     # Perform an action based on the returned payment (in this case, simply log it)
     puts JSON.pretty_generate(response.body)
@@ -75,10 +78,10 @@ end
 def is_valid_callback(callback_body, callback_signature)
   
   # Combine your webhook notification URL and the JSON body of the incoming request into a single string
-  string_to_sign = $webhook_url + callback_body
+  string_to_sign = WEBHOOK_URL + callback_body
 
   # Generate the HMAC-SHA1 signature of the string, signed with your webhook signature key
-  string_signature = Base64.strict_encode64(OpenSSL::HMAC.digest('sha1', $webhook_signature_key, string_to_sign))
+  string_signature = Base64.strict_encode64(OpenSSL::HMAC.digest('sha1', WEBHOOK_SIGNATURE_KEY, string_to_sign))
 
   # Hash the signatures a second time (to protect against timing attacks)
   # and compare them

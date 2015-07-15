@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #
 # Demonstrates creating, updating, and deleting an item with the Square Connect API.
-# Replace the value of the `access_token` variable below before running this script.
+# Replace the values of `access_token` and `location_id` below before running this script.
 #
 # To run this script from the command line:
 # python item-management.py
@@ -14,6 +14,10 @@ import httplib, urllib, json
 # Your application's personal access token.
 # Get this from your application dashboard (https://connect.squareup.com/apps)
 access_token = 'REPLACE_ME'
+
+# The ID of the location you want to create an item for.
+# See payments-report.py for an example of getting a business's location IDs.
+location_id = 'REPLACE_ME'
 
 # The base URL for every Connect API request
 connection = httplib.HTTPSConnection('connect.squareup.com')
@@ -39,7 +43,7 @@ def create_item():
       }
     ]
   } '''
-  connection.request('POST', '/v1/me/items', request_body, request_headers)
+  connection.request('POST', '/v1/' + location_id + '/items', request_body, request_headers)
   response = connection.getresponse()
   response_body = json.loads(response.read())
 
@@ -60,7 +64,7 @@ def update_item(item_id):
   request_body = ''' {
     "name": "Malted Milkshake"
   } '''
-  connection.request('PUT', '/v1/me/items/' + item_id, request_body, request_headers)
+  connection.request('PUT', '/v1/' + location_id + '/items/' + item_id, request_body, request_headers)
   response = connection.getresponse()
   response_body = json.loads(response.read())
   if response.status == 200:
@@ -74,7 +78,7 @@ def update_item(item_id):
 # Deletes the Malted Milkshake item.
 def delete_item(item_id):
   print 'Deleting item ' + item_id
-  connection.request('DELETE', '/v1/me/items/' + item_id, '', request_headers)
+  connection.request('DELETE', '/v1/' + location_id + '/items/' + item_id, '', request_headers)
   response = connection.getresponse()
   response_body = json.loads(response.read())
   if response.status == 200:

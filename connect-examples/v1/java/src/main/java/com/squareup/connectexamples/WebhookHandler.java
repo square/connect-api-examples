@@ -75,10 +75,15 @@ public class WebhookHandler {
 
       JSONObject requestBody = new JSONObject(callbackBody);
       if (requestBody.has("event_type") && requestBody.getString("event_type").equals("PAYMENT_UPDATED")) {
+
+        // Get the ID of the updated payment
         String paymentId = requestBody.getString("entity_id");
+
+        // Get the ID of the payment's associated location
+        String locationId = requestBody.getString("location_id");
         HttpResponse<JsonNode> response;
         try {
-          response = Unirest.get(_connectHost + "/v1/me/payments/" + paymentId).asJson();
+          response = Unirest.get(_connectHost + "/v1/" + locationId + "/payments/" + paymentId).asJson();
         } catch (UnirestException e) {
           System.out.println("Failed to retrieve payment details");
           return;
