@@ -1,7 +1,7 @@
 <?php
 
 # Demonstrates creating, updating, and deleting an item with the Square Connect API.
-# Replace the value of the `access_token` variable below before running this sample.
+# Replace the value of the `$accessToken` variable below before running this sample.
 #
 # This sample requires the Unirest PHP library. Download it here:
 # http://unirest.io/php.html
