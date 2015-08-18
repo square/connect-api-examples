@@ -1,6 +1,6 @@
 # This sample demonstrates a bare-bones implementation of the Square Connect OAuth flow:
 #
-# 1. A merchant clicks the authorization link served by the root path (http://localhost:4567/)  
+# 1. A merchant clicks the authorization link served by the root path (http://localhost:4567/)
 # 2. The merchant signs in to Square and submits the Permissions form. Note that if the merchant
 #    is already signed in to Square, and if the merchant has already authorized your application,
 #    the OAuth flow automatically proceeds to the next step without presenting the Permissions form.
@@ -19,19 +19,21 @@ require 'sinatra'
 require 'unirest'
 
 # Your application's ID and secret, available from your application dashboard.
-$application_id = 'REPLACE_ME'
-$application_secret = 'REPLACE_ME'
+APP_ID     = 'REPLACE_ME'
+APP_SECRET = 'REPLACE_ME'
 
 # Headers to provide to OAuth API endpoints
-$oauth_request_headers = { 'Authorization' => 'Client ' + $application_secret,
-                           'Accept' => 'application/json',
-                           'Content-Type' => 'application/json'}
+OAUTH_REQUEST_HEADERS = {
+  'Authorization' => "Client #{APP_SECRET}",
+  'Accept' => 'application/json',
+  'Content-Type' => 'application/json'
+}
 
-$connect_host = 'https://connect.squareup.com'
+CONNECT_HOST = 'https://connect.squareup.com'
 
 # Serves the link that merchants click to authorize your application
 get '/' do
-  "<a href=\"https://connect.squareup.com/oauth2/authorize?client_id=#{$application_id}\">Click here</a>
+  "<a href=\"#{CONNECT_HOST}/oauth2/authorize?client_id=#{APP_ID}\">Click here</a>
             to authorize the application."
 end
 
@@ -45,18 +47,19 @@ get '/callback' do
 
   if authorization_code
 
-  	# Provide the code in a request to the Obtain Token endpoint
-  	oauth_request_body = {
-  	  'client_id' => $application_id,
-  	  'client_secret' => $application_secret,
-  	  'code' => authorization_code
-  	}
-  	response = Unirest.post $connect_host + '/oauth2/token',
-                  headers: $oauth_request_headers,
-                  parameters: oauth_request_body
+    # Provide the code in a request to the Obtain Token endpoint
+    oauth_request_body = {
+      'client_id' => APP_ID,
+      'client_secret' => APP_SECRET,
+      'code' => authorization_code
+    }
+
+    response = Unirest.post "#{CONNECT_HOST}/oauth2/token",
+                            headers: OAUTH_REQUEST_HEADERS,
+                            parameters: oauth_request_body
 
     # Extract the returned access token from the response body
-    if response.body.has_key?('access_token')
+    if response.body.key?('access_token')
 
       # Here, instead of printing the access token, your application server should store it securely
       # and use it in subsequent requests to the Connect API on behalf of the merchant.
@@ -70,6 +73,6 @@ get '/callback' do
 
   # The request to the Redirect URL did not include an authorization code. Something went wrong.
   else
-  	return 'Authorization failed!'
+    return 'Authorization failed!'
   end
 end
