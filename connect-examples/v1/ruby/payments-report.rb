@@ -109,21 +109,26 @@ def print_sales_report(payments)
     processing_fees = processing_fees + payment['processing_fee_money']['amount']
     net_money       = net_money       + payment['net_total_money']['amount']
     refunds         = refunds         + payment['refunded_money']['amount']
+
+
+    # When a refund is applied to a credit card payment, Square returns to the merchant a percentage 
+    # of the processing fee corresponding to the refunded portion of the payment. This amount
+    # is not currently returned by the Connect API, but we can calculate it as shown:
+
+    # If a processing fee was applied to the payment AND some portion of the payment was refunded...
+    if payment['processing_fee_money']['amount'] < 0 && payment['refunded_money']['amount'] < 0
+
+        # ...calculate the percentage of the payment that was refunded...
+        percentage_refunded = payment['refunded_money']['amount'] / 
+                              payment['total_collected_money']['amount'].to_f
+
+        # ...and multiply that percentage by the original processing fee
+        returned_processing_fees = returned_processing_fees + 
+                                   (payment['processing_fee_money']['amount'] * percentage_refunded)
+    end
   end
 
-  # When a refund is applied to a credit card payment, Square returns to the merchant a percentage 
-  # of the processing fee corresponding to the refunded portion of the payment. This amount
-  # is not currently returned by the Connect API, but we can calculate it as shown:
-
-  # If a processing fee was applied to the payment AND some portion of the payment was refunded...
-  if payment['processing_fee_money']['amount'] < 0 && payment['refunded_money']['amount'] < 0
-
-      # ...calculate the percentage of the payment that was refunded...
-      percentage_refunded = payment['refunded_money']['amount'] / payment['total_collected_money']['amount'].to_f
-
-      # ...and multiply that percentage by the original processing fee
-      returned_processing_fees = returned_processing_fees + (payment['processing_fee_money']['amount'] * percentage_refunded)
-  end
+  
 
   # Calculate the amount of pre-tax, pre-tip money collected
   base_purchases = collected_money - taxes - tips
