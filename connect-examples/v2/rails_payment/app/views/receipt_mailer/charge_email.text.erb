@@ -1,0 +1,12 @@
+Amount: <%= number_to_currency(@data[:amount].to_f/100) %>
+
+Address
+=======
+<%= @data[:user][:name] %>
+<%= @data[:user][:street_address_1] %> <%= @data[:user][:street_address_2] %>
+<%= @data[:user][:city] %>, <%= @data[:user][:state] %> - <%= @data[:user][:zip] %>
+
+Card Details
+============
+Brand: <%= @data[:card].card_brand %>
+Last 4: <%= @data[:card].last_4 %>

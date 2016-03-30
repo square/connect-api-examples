@@ -1,0 +1,22 @@
+== README
+
+The root page has the selections for the different implemetations.
+
+Ruby version: 2.2.1
+
+Rails version: 4.2.6
+
+To get the app running:
+
+* bundle install
+
+* bundle exec rake db:create db:migrate # (No db in example, but keeps rails from complaining)
+
+* Add a .env file at the root with following values: 
+
+    SQUARE_APPLICATION_ID=your-app-id
+    SQUARE_ACCESS_TOKEN=your-access-token
+
+* Install & run mailcatcher and visit "http://localhost:1080"
+
+* rails s

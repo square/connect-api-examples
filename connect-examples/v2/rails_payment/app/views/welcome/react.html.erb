@@ -1,0 +1,349 @@
+
+<div class="no-boot" id="react-form"></div>
+
+<script type="text/babel">
+{// "{" shows babel highlighting in sublime
+  var ProductFields = React.createClass({
+    handleChange: function(e) {
+      var product = {
+        id: this.refs.product_id.value
+      } 
+      this.props.handleChange(product);
+    },
+    render: function() {
+      return (
+        <div>
+          <h2>React Example</h2>
+            
+          <label>Choose your Golden Gate replica</label>
+          <select 
+            id="product_id" 
+            ref="product_id"
+            defaultValue={this.props.product.id}
+            onChange={this.handleChange}
+          >
+            <option value="001">$1 Paper Origami 1:10,000 scale model (11 inch) </option>
+            <option value="002">$49 Plastic 1:5000 scale model (22 inch)</option>
+            <option value="003">$5000 Metal &amp; Concrete 1:1000 scale replica (9 feet)</option>
+          </select>
+        </div>
+      );
+    }
+  });
+
+  var UserFields = React.createClass({
+    handleChange: function(e) {
+      var user = {
+        name: this.refs.name.value,
+        email: this.refs.email.value
+      } 
+      this.props.handleChange(user);
+    },
+    render: function() {
+      return (
+        <div>
+          <label>Name</label>
+          <input 
+            type="text" 
+            id="name" 
+            ref="name"  
+            placeholder="Name"
+            defaultValue={this.props.user.name}
+            onChange={this.handleChange}
+          />
+
+          <label>Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            ref="email"  
+            placeholder="Email"
+            defaultValue={this.props.user.email}
+            onChange={this.handleChange}
+          />
+        </div>
+      );
+    }
+  });
+
+  var ShippingFields = React.createClass({
+    handleChange: function(e) {
+      var shipping = {
+        address1: this.refs.street_address_1.value,
+        address2: this.refs.street_address_2.value,
+        city: this.refs.city.value,
+        state: this.refs.state.value,
+        zip: this.refs.zip.value
+      } 
+      this.props.handleChange(shipping);
+    },
+    render: function () {
+      return (
+        <div>
+          <h3> Shipping Address </h3>
+      
+          <label>Street</label>
+          <input 
+            type="text" 
+            id="street_address_1" 
+            ref="street_address_1"  
+            placeholder="Address Line 1"
+            defaultValue={this.props.shipping.address1}
+            onChange={this.handleChange}
+          />
+
+          <label>Street</label>
+          <input 
+            type="text" 
+            id="street_address_2" 
+            ref="street_address_2"  
+            placeholder="Address Line 2"
+            defaultValue={this.props.shipping.address2}
+            onChange={this.handleChange}
+          />
+
+          <label>City</label>
+          <input 
+            type="text" 
+            id="city" 
+            ref="city"  
+            placeholder="City"
+            defaultValue={this.props.shipping.city}
+            onChange={this.handleChange}
+          />
+
+          <label>State</label>
+          <select 
+            id="state" 
+            ref="state"
+            defaultValue={this.props.shipping.state}
+            onChange={this.handleChange}
+          >
+            <option value=""></option>
+            <option value="AL">Alabama</option>
+            <option value="AK">Alaska</option>
+            <option value="AZ">Arizona</option>
+            <option value="AR">Arkansas</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="CT">Connecticut</option>
+            <option value="DE">Delaware</option>
+            <option value="DC">District of Columbia</option>
+            <option value="FL">Florida</option>
+            <option value="GA">Georgia</option>
+            <option value="HI">Hawaii</option>
+            <option value="ID">Idaho</option>
+            <option value="IL">Illinois</option>
+            <option value="IN">Indiana</option>
+            <option value="IA">Iowa</option>
+            <option value="KS">Kansas</option>
+            <option value="KY">Kentucky</option>
+            <option value="LA">Louisiana</option>
+            <option value="ME">Maine</option>
+            <option value="MD">Maryland</option>
+            <option value="MA">Massachusetts</option>
+            <option value="MI">Michigan</option>
+            <option value="MN">Minnesota</option>
+            <option value="MS">Mississippi</option>
+            <option value="MO">Missouri</option>
+            <option value="MT">Montana</option>
+            <option value="NE">Nebraska</option>
+            <option value="NV">Nevada</option>
+            <option value="NH">New Hampshire</option>
+            <option value="NJ">New Jersey</option>
+            <option value="NM">New Mexico</option>
+            <option value="NY">New York</option>
+            <option value="NC">North Carolina</option>
+            <option value="ND">North Dakota</option>
+            <option value="OH">Ohio</option>
+            <option value="OK">Oklahoma</option>
+            <option value="OR">Oregon</option>
+            <option value="PA">Pennsylvania</option>
+            <option value="RI">Rhode Island</option>
+            <option value="SC">South Carolina</option>
+            <option value="SD">South Dakota</option>
+            <option value="TN">Tennessee</option>
+            <option value="TX">Texas</option>
+            <option value="UT">Utah</option>
+            <option value="VT">Vermont</option>
+            <option value="VA">Virginia</option>
+            <option value="WA">Washington</option>
+            <option value="WV">West Virginia</option>
+            <option value="WI">Wisconsin</option>
+            <option value="WY">Wyoming</option>
+          </select>
+
+          <label>Zip</label>
+          <input 
+            type="text" 
+            id="zip" 
+            ref="zip"  
+            placeholder="Zip"
+            defaultValue={this.props.shipping.zip}
+            onChange={this.handleChange}
+          />
+        </div>
+      );
+    }
+  });
+
+  var PaymentFields = React.createClass({
+    render: function() {
+      var cardErrorNodes = [];
+      for (var key in this.props.cardErrors) {
+        cardErrorNodes.push(<li key={key}>{this.props.cardErrors[key].message}</li>)
+      }
+      return (
+        <div>
+          <div id="card-errors">{cardErrorNodes}</div>
+
+          <div>
+            <label>Card Number</label>
+            <div  id="sq-card-number"></div>
+          </div>
+          
+          <div>
+            <label>CVV</label>
+            <div  id="sq-cvv"></div>
+          </div>
+
+          <div>
+            <label>Expiration Date</label>
+            <div  id="sq-expiration-date"></div>
+          </div>
+
+          <div>
+            <label>Postal Code</label>
+            <div  id="sq-postal-code"></div>
+          </div>
+          
+        </div>
+      );
+    }
+  });
+
+  var Form = React.createClass({
+    getInitialState: function() {
+      return {
+        is_payment_success: false, //for showing #successNotification div
+        is_processing: false, //for disabling payment button
+        card_errors: [],
+        product: {id: "001"},
+        user: {name: "", email:""},
+        shipping: {address1: "", address2: "", city: "", state: "", zip: ""}
+      };
+    },
+    componentDidMount: function() {
+      //Place square payment form function in componentDidMount
+      //Because it has to be called after the DOM renders the divs
+      this.paymentForm = new SqPaymentForm({
+        applicationId: '<%=Rails.application.secrets.square_application_id %>',
+        inputClass: 'sq-input',
+        inputStyles: [
+            {
+              fontSize: '14px',
+              padding: '7px 12px',
+              backgroundColor: "transparent"
+            }
+          ],
+        cardNumber: {
+          elementId: 'sq-card-number',
+          placeholder: '0000 0000 0000 0000'    
+        },
+        cvv: {
+          elementId: 'sq-cvv',
+          placeholder: 'CVV'
+        },
+        expirationDate: {
+          elementId: 'sq-expiration-date',
+          placeholder: 'MM/YY'
+        },
+        postalCode: {
+          elementId: 'sq-postal-code',
+          placeholder: '94110'
+        },
+        callbacks: {
+          cardNonceResponseReceived: function(errors, nonce, cardData) {
+            if (errors){
+              this.setState({is_processing: false, card_errors: errors});
+            }else{
+              this.setState({card_errors: []});
+              this.chargeCardWithNonce(nonce);
+            }
+            
+          }.bind(this), //needed to bring this into context 
+          unsupportedBrowserDetected: function() {
+            // Alert the buyer
+          }.bind(this)
+        }
+      });
+      this.paymentForm.build();
+    },
+    chargeCardWithNonce: function(nonce) {
+      console.log("charging card with nonce");
+      var url = "/charges/charge_card";
+      var data = {
+        nonce: nonce,
+        product_id: this.state.product.id,
+        name: this.state.user.name,
+        email: this.state.user.email,         
+        street_address_1: this.state.shipping.address1,
+        street_address_2: this.state.shipping.address2,
+        city: this.state.shipping.city,
+        state: this.state.shipping.state,
+        zip: this.state.shipping.zip
+      };
+      console.log(data);
+
+      $.post( url, data, function( data ) {
+          if (data.status == 200) {
+            this.setState({is_payment_success: true})
+          }else if (data.status == 400){
+            var errors = []
+            for (var i =0; i < data.errors.length; i++){
+              errors.push({message: data.errors[i].detail});
+            }
+            this.setState({card_errors: errors})
+          }
+          this.setState({is_processing: false})
+      }.bind(this));
+    },
+    handleSubmit: function() {
+      this.setState({is_processing: true});
+      this.paymentForm.requestCardNonce();
+    },
+    handleProductChange: function(product){
+      this.setState({product: product})
+    } ,
+    handleUserChange: function(user){
+      this.setState({user: user})
+    },
+    handleShippingChange: function(shipping){
+      this.setState({shipping: shipping})
+    },
+    render: function() {
+      if (this.state.is_payment_success == true){
+        return (
+          <div id="successNotification">
+            Card Charged Succesfully!!
+          </div>
+        )
+      }else{
+        return (
+            <div>
+              <ProductFields product={this.state.product} handleChange={this.handleProductChange} />
+              <UserFields user={this.state.user} handleChange={this.handleUserChange} />
+              <ShippingFields shipping={this.state.shipping} handleChange={this.handleShippingChange} />
+              <PaymentFields cardErrors={this.state.card_errors} />
+              <div>
+                <input type="submit" id="submit" value="Buy Now" className="btn btn-primary" onClick={this.handleSubmit} disabled={this.state.is_processing}/>
+              </div>
+            </div>
+        );
+      }
+    }
+  });
+
+  ReactDOM.render(<Form />, document.getElementById('react-form')); 
+}
+</script>

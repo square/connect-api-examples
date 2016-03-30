@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html ng-app="squareApp">
+<head>
+  <title>RailsPayment</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ember.js/2.4.3/ember.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ember-data.js/2.4.3/ember-data.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ember.js/2.4.3/ember-template-compiler.js"></script>
+  <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>

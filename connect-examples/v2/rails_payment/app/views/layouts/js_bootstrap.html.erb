@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RailsPayment</title>
+  <%= stylesheet_link_tag   'bootstrap', 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+  <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>
