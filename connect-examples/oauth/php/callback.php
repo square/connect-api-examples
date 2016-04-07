@@ -2,7 +2,7 @@
 
 # This sample demonstrates a bare-bones implementation of the Square Connect OAuth flow:
 #
-# 1. A merchant clicks the authorization link served by the root path (http://localhost:8000/)  
+# 1. A merchant clicks the authorization link served by the root path (http://localhost:8000/)
 # 2. The merchant signs in to Square and submits the Permissions form. Note that if the merchant
 #    is already signed in to Square, and if the merchant has already authorized your application,
 #    the OAuth flow automatically proceeds to the next step without presenting the Permissions form.
@@ -26,7 +26,7 @@ $applicationSecret = 'REPLACE_ME';
 $connectHost = 'https://connect.squareup.com';
 
 # Headers to provide to OAuth API endpoints
-$oauthRequestHeaders = array (
+$oauthRequestHeaders = array(
   'Authorization' => 'Client ' . $applicationSecret,
   'Accept' => 'application/json',
   'Content-Type' => 'application/json'
@@ -36,26 +36,27 @@ $oauthRequestHeaders = array (
 # Note that you need to set your application's Redirect URL to
 # http://localhost:8000/callback.php from your application dashboard
 function callback() {
-  global $connectHost, $oauthRequestHeaders;
+  global $connectHost, $oauthRequestHeaders, $applicationId, $applicationSecret;
 
   # Extract the returned authorization code from the URL
   $authorizationCode = $_GET['code'];
   if ($authorizationCode) {
 
     # Provide the code in a request to the Obtain Token endpoint
-    $oauthRequestBody = array(
+    $data = array(
       'client_id' => $applicationId,
       'client_secret' => $applicationSecret,
       'code' => $authorizationCode
     );
-    $response = Unirest\Request::post($connectHost . '/oauth2/token', $oauthRequestBody, $requestHeaders);
+    $oauthRequestBody = Unirest\Request\Body::json($data);
+    $response = Unirest\Request::post($connectHost . '/oauth2/token', $requestHeaders, $oauthRequestBody);
 
     # Extract the returned access token from the response body
-    if (property_exists($response, 'access_token')) {
+    if (property_exists($response->body, 'access_token')) {
 
       # Here, instead of printing the access token, your application server should store it securely
       # and use it in subsequent requests to the Connect API on behalf of the merchant.
-      error_log('Access token: ' . $response->access_token);
+      error_log('Access token: ' . $response->body->access_token);
       error_log('Authorization succeeded!');
 
       # The response from the Obtain Token endpoint did not include an access token. Something went wrong.
