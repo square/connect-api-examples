@@ -1,1 +1,4 @@
 target/
+vendor/
+composer.phar
+composer.lock

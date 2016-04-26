@@ -1,12 +1,15 @@
 
-The project is structured under two folders:
+This folder includes the following samples:
 
-* rails_payment: rails server implementation, within here it also includes frontend implementations for:
-    * plain JS
+* __rails_payment__: a rails server implementation. This example includes front-end
+implementations for:
+    * Standard Javascript
     * JQuery
     * Angular 1
     * React
     * Ember
     * JS + Bootstrap
-* node_payment: node server implementation, within here there is a frontend implementation:
-    * plain JS
+* __node_payment__: a node server implementation. This example includes a single,
+standard Javascript front-end implementation.
+* __php_payment__: a simple PHP server implementation with an accompanying payment
+form.
