@@ -2,11 +2,13 @@
 
 # Demonstrates a server listening for webhook notifications from the Square Connect API
 #
+# This sample requires the Unirest PHP library. See README.md in this directory for
+# installation instructions.
+#
 # See Webhooks Overview for more information:
 # https://docs.connect.squareup.com/api/connect/v1/#webhooks-overview
 
-# Replace this value with the path to the Unirest PHP library
-require_once 'path/to/Unirest.php';
+require 'vendor/autoload.php';
 
 # Your application's access token
 $accessToken = 'REPLACE_ME';
@@ -31,13 +33,13 @@ $requestHeaders = array (
 # Retrieves payments by the IDs provided in webhook notifications.
 #
 # Note that you need to set your application's webhook URL from your application dashboard
-# to receive these notifications. In this sample, if your host's base URL is 
+# to receive these notifications. In this sample, if your host's base URL is
 # http://example.com, you'd set your webhook URL to http://example.com/webhooks.php.
 function webhookCallback() {
   global $connectHost, $requestHeaders;
 
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
+
     # Get the JSON body and HMAC-SHA1 signature of the incoming POST request
     $callbackBody = file_get_contents('php://input');
     $callbackSignature = getallheaders()['X-Square-Signature'];
@@ -72,7 +74,7 @@ function webhookCallback() {
     error_log("Received a non-POST request");
   }
 }
- 
+
 # Validates HMAC-SHA1 signatures included in webhook notifications to ensure notifications came from Square
 function isValidCallback($callbackBody, $callbackSignature) {
   global $webhookUrl, $webhookSignatureKey;

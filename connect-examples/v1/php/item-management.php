@@ -3,14 +3,12 @@
 # Demonstrates creating, updating, and deleting an item with the Square Connect API.
 # Replace the values of `$accessToken` and `$locationId` below before running this sample.
 #
-# This sample requires the Unirest PHP library. Download it here:
-# http://unirest.io/php.html
+# This sample requires the Unirest PHP library. See README.md in this directory for
+# installation instructions.
 #
 # Results are logged with error_log.
 
-
-# Replace this value with the path to the Unirest PHP library
-require_once 'path/to/Unirest.php';
+require 'vendor/autoload.php';
 
 
 # Replace this value with your application's personal access token,

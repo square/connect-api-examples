@@ -6,14 +6,13 @@
 # This sample assumes all monetary amounts are in US dollars. You can alter the
 # formatMoney function to display amounts in other currency formats.
 #
-# This sample requires the Unirest PHP library. Download it here:
-# http://unirest.io/php.html
+# This sample requires the Unirest PHP library. See README.md in this directory for
+# installation instructions.
 #
 # Results are rendered in a simple HTML pre block.
 
 
-# Replace this value with the path to the Unirest PHP library
-require_once 'path/to/Unirest.php';
+require 'vendor/autoload.php';
 
 # Replace this value with your application's personal access token,
 # available from your application dashboard (https://connect.squareup.com/apps)
@@ -128,7 +127,7 @@ function printSalesReport($payments) {
     $refunds         = $refunds         + $payment->refunded_money->amount;
 
 
-    # When a refund is applied to a credit card payment, Square returns to the merchant a percentage 
+    # When a refund is applied to a credit card payment, Square returns to the merchant a percentage
     # of the processing fee corresponding to the refunded portion of the payment. This amount
     # is not currently returned by the Connect API, but we can calculate it as shown:
 

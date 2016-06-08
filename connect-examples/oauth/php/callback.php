@@ -2,7 +2,7 @@
 
 # This sample demonstrates a bare-bones implementation of the Square Connect OAuth flow:
 #
-# 1. A merchant clicks the authorization link served by the root path (http://localhost:8000/)  
+# 1. A merchant clicks the authorization link served by the root path (http://localhost:8000/)
 # 2. The merchant signs in to Square and submits the Permissions form. Note that if the merchant
 #    is already signed in to Square, and if the merchant has already authorized your application,
 #    the OAuth flow automatically proceeds to the next step without presenting the Permissions form.
@@ -13,11 +13,10 @@
 # 5. The Obtain Token endpoint returns an access token your application can use in subsequent requests
 #    to the Connect API.
 #
-# This sample requires the Unirest PHP library. Download it here:
-# http://unirest.io/php.html
+# This sample requires the Unirest PHP library. Follow the instructions in README.md
+# to install it.
 
-# Replace this value with the path to the Unirest PHP library
-require_once 'path/to/Unirest.php';
+require 'vendor/autoload.php';
 
 # Your application's ID and secret, available from your application dashboard
 $applicationId = 'REPLACE_ME';
@@ -36,7 +35,7 @@ $oauthRequestHeaders = array (
 # Note that you need to set your application's Redirect URL to
 # http://localhost:8000/callback.php from your application dashboard
 function callback() {
-  global $connectHost, $oauthRequestHeaders;
+  global $connectHost, $oauthRequestHeaders, $applicationId, $applicationSecret;
 
   # Extract the returned authorization code from the URL
   $authorizationCode = $_GET['code'];
@@ -48,7 +47,7 @@ function callback() {
       'client_secret' => $applicationSecret,
       'code' => $authorizationCode
     );
-    $response = Unirest\Request::post($connectHost . '/oauth2/token', $oauthRequestBody, $requestHeaders);
+    $response = Unirest\Request::post($connectHost . '/oauth2/token', $oauthRequestHeaders, json_encode($oauthRequestBody));
 
     # Extract the returned access token from the response body
     if (property_exists($response, 'access_token')) {

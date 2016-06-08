@@ -1,4 +1,4 @@
-<?php 
+<?php
 
   # This file simply serves the link that merchants click to authorize your application.
   # When authorization completes, a notification is sent to your redirect URL, which should
