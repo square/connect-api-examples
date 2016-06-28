@@ -71,7 +71,7 @@
         }
       }
     });
-    function submitButtonClick() {
+    function submitButtonClick(event) {
       event.preventDefault();
       sqPaymentForm.requestCardNonce();
     }
@@ -110,7 +110,7 @@
     <label>Postal Code</label>
     <div id="sq-postal-code"></div>
     <input type="hidden" id="card-nonce" name="nonce">
-    <input type="submit" onclick="submitButtonClick()" id="card-nonce">
+    <input type="submit" onclick="submitButtonClick(event)" id="card-nonce">
   </form>
 
   <div id="errors"></div>
