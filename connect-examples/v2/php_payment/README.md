@@ -37,7 +37,7 @@ From the sample's root directory, run:
 
 You can then visit `localhost:8000` in your browser to see the card form.
 
-If you're using your sandbox credentials, you can test out an valid credit card
+If you're using your sandbox credentials, you can test a valid credit card
 transaction by providing the following card information in the form:
 
 * Card Number 4532 7597 3454 5858
