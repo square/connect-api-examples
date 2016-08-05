@@ -24,30 +24,23 @@ $applicationSecret = 'REPLACE_ME';
 
 $connectHost = 'https://connect.squareup.com';
 
-# Headers to provide to OAuth API endpoints
-$oauthRequestHeaders = array (
-  'Authorization' => 'Client ' . $applicationSecret,
-  'Accept' => 'application/json',
-  'Content-Type' => 'application/json'
-);
-
 # Serves requests from Square to your application's redirect URL
 # Note that you need to set your application's Redirect URL to
 # http://localhost:8000/callback.php from your application dashboard
 function callback() {
-  global $connectHost, $oauthRequestHeaders, $applicationId, $applicationSecret;
+  global $connectHost, $applicationId, $applicationSecret;
 
   # Extract the returned authorization code from the URL
   $authorizationCode = $_GET['code'];
   if ($authorizationCode) {
 
     # Provide the code in a request to the Obtain Token endpoint
-    $oauthRequestBody = array(
+    $oauthRequestParams = array(
       'client_id' => $applicationId,
       'client_secret' => $applicationSecret,
       'code' => $authorizationCode
     );
-    $response = Unirest\Request::post($connectHost . '/oauth2/token', $oauthRequestHeaders, json_encode($oauthRequestBody));
+    $response = json_decode(Unirest\Request::post($connectHost . '/oauth2/token?' . http_build_query($oauthRequestParams)));
 
     # Extract the returned access token from the response body
     if (property_exists($response, 'access_token')) {
