@@ -5,6 +5,10 @@ Square Connect PHP client library.
 
 ## Setup
 
+### Requirements
+
+* PHP >= 5.4.0
+
 ### Install the PHP client library
 
 This sample already includes the `square/connect` dependency in its `composer.json`
