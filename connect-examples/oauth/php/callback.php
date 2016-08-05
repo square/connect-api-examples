@@ -50,11 +50,11 @@ function callback() {
     $response = Unirest\Request::post($connectHost . '/oauth2/token', $oauthRequestHeaders, json_encode($oauthRequestBody));
 
     # Extract the returned access token from the response body
-    if (property_exists($response, 'access_token')) {
+    if (property_exists($response->body, 'access_token')) {
 
       # Here, instead of printing the access token, your application server should store it securely
       # and use it in subsequent requests to the Connect API on behalf of the merchant.
-      error_log('Access token: ' . $response->access_token);
+      error_log('Access token: ' . $response->body->access_token);
       error_log('Authorization succeeded!');
 
       # The response from the Obtain Token endpoint did not include an access token. Something went wrong.
