@@ -3,6 +3,10 @@
 This sample demonstrates processing card payments with Square Connect API, using the
 Square Connect C# client library.
 
+## Frameworks supported
+- .NET 4.0 or later
+- Windows Phone 7.1 (Mango)
+
 ## Setup
 
 ### Install the C# client library
