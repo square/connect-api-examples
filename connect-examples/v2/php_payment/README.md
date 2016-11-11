@@ -15,7 +15,9 @@ file. To install the client library:
 
 2. Run the following command from the directory containing `composer.json`:
 
-       php composer.phar install
+```
+php composer.phar install
+```
 
 ### Provide required credentials
 
@@ -40,8 +42,8 @@ You can then visit `localhost:8000` in your browser to see the card form.
 If you're using your sandbox credentials, you can test a valid credit card
 transaction by providing the following card information in the form:
 
-* Card Number 4532 7597 3454 5858
-* Card CVV 111
+* Card Number `4532 7597 3454 5858`
+* Card CVV `111`
 * Card Expiration (Any time in the future)
 * Card Postal Code (Any valid US postal code)
 
