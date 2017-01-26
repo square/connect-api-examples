@@ -52,7 +52,7 @@ function initApiClient() {
   // Grab the location key for the configured store
   try {
 
-    $apiResponse = $locClient->listLocations() ;
+    $apiResponse = $locClient->listLocations($GLOBALS['ACCESS_TOKEN'])->getLocations() ;
 
     // There may be more than one location assocaited with the account (e.g,. a
     // brick-and-mortar store and an online store), so we need to run through
@@ -79,7 +79,7 @@ function initApiClient() {
     // Display the exception details, clear out the client since it couldn't
     // be properly initialized, and exit
     echo "The SquareConnect\Configuration object threw an exception while " .
-         "calling LocationsApi->listLocations: ", $e->getMessage(), PHP_EOL ;
+         "calling LocationApi->listLocations: ", $e->getMessage(), PHP_EOL ;
     $GLOBALS['API_CLIENT'] = null ;
     exit ;
   }
