@@ -8,7 +8,7 @@
 if (!defined(_SQ_ENDPOINT_LOCATION)) {
   define(
     "_SQ_ENDPOINT_LOCATION",
-    "https://connect.squareupstaging.com/v2/locations"
+    "https://connect.squareup.com/v2/locations"
   ) ;
 }
 
@@ -16,7 +16,7 @@ if (!defined(_SQ_ENDPOINT_LOCATION)) {
 if (!defined(_SQ_ENDPOINT_CHECKOUT)) {
   define(
     "_SQ_ENDPOINT_CHECKOUT",
-    "https://connect.squareupstaging.com/v2/locations/{LOCATIONID}/checkouts"
+    "https://connect.squareup.com/v2/locations/{LOCATIONID}/checkouts"
   ) ;
 }
 
