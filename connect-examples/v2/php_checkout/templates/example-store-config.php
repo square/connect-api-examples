@@ -47,7 +47,7 @@ function initApiClient() {
   $GLOBALS['API_CLIENT'] = new \SquareConnect\ApiClient($configuration) ;
 
   // Create a LocationsApi client to load the location ID
-  $locClient = new \SquareConnect\Api\LocationsApi($GLOBALS['API_CLIENT']) ;
+  $locClient = new \SquareConnect\Api\LocationApi($GLOBALS['API_CLIENT']) ;
 
   // Grab the location key for the configured store
   try {
