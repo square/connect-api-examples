@@ -12,7 +12,7 @@ $returnedTransactionId = $_GET["transactionId"] ;
 initApiClient() ;
 
 // Create a new API object to verify the transaction
-$transactionClient = new \SquareConnect\Api\TransactionsApi($GLOBALS['API_CLIENT']) ;
+$transactionClient = new \SquareConnect\Api\TransactionApi($GLOBALS['API_CLIENT']) ;
 
 // Ping the Transactions API endpoint for transaction details
 try {
@@ -25,7 +25,7 @@ try {
 
 } catch (Exception $e) {
   echo "The SquareConnect\Configuration object threw an exception while " .
-       "calling TransactionsApi->retrieveTransaction: ",
+       "calling TransactionApi->retrieveTransaction: ",
        $e->getMessage(), PHP_EOL ;
   exit ;
 }
