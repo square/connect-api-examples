@@ -1,0 +1,299 @@
+/*
+ * Copyright 2017 Square Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+syntax = "proto2";
+
+package squareup.catalog.service;
+
+option java_package = "com.squareup.catalog.service";
+option java_multiple_files = true;
+
+import "error.proto";
+import "catalog/catalog.proto";
+
+// @desc A mapping between a client-supplied temporary ID and a permanent server ID.
+message CatalogIdMapping {
+    /*--
+      @desc The client-supplied, temporary `#`-prefixed ID for a new [CatalogObject](#type-catalogobject).
+    --*/
+    optional string client_object_id = 1;
+
+    // @desc The permanent ID for the [CatalogObject](#type-catalogobject) created by the server.
+    optional string object_id = 2;
+}
+
+// @desc A batch of CatalogObjects.
+message CatalogObjectBatch {
+    repeated resources.CatalogObject objects = 1;
+}
+
+message BatchUpsertCatalogObjectsRequest {
+    /*--
+      @desc A value you specify that uniquely identifies this
+      request among all your requests. A common way to create
+      a valid idempotency key is to use a Universally unique
+      identifier (UUID).
+
+      If you're unsure whether a particular request was successful,
+      you can reattempt it with the same idempotency key without
+      worrying about creating duplicate objects.
+    --*/
+    optional string idempotency_key = 1;
+
+    /*--
+      @desc A batch of CatalogObjects to be inserted/updated atomically.
+      The objects within a batch will be inserted in an all-or-nothing fashion, i.e., if an error occurs
+      attempting to insert or update an object within a batch, the entire batch will be rejected. However, an error
+      in one batch will not affect other batches within the same request.
+
+      For each object, its `updated_at` field is ignored and replaced with a current [timestamp](#workingwithdates), and its
+      `is_deleted` field must not be set to `true`.
+
+      To modify an existing object, supply its ID. To create a new object, use an ID starting
+      with `#`. These ids may be used to create relationships between an object and attributes of
+      other objects that reference it. For example, you can create a [CatalogItem](#type-catalogitem) with
+      ID `#ABC` and a [CatalogItemVariation](#type-catalogitemvariation) with its `item_id` attribute set to
+      `#ABC` in order to associate the [CatalogItemVariation](#type-catalogitemvariation) with its parent
+      [CatalogItem](#type-catalogitem).
+
+      Any `#`-prefixed ids are valid only within a single atomic batch, and will be replaced by server-generated ids.
+
+      Each batch may contain up to 1,000 objects. The total number of objects across all batches for a single request
+      may not exceed 10,000. If either of these limits is violated, an error will be returned and no objects will
+      be inserted or updated.
+    --*/
+    repeated CatalogObjectBatch batches = 2;
+}
+
+message BatchUpsertCatalogObjectsResponse {
+    // @desc The set of [Error](#type-error)s encountered.
+    repeated resources.Error errors = 1;
+
+    /*--
+      @desc The created [CatalogObject](#type-catalogobject)s
+    --*/
+    repeated resources.CatalogObject objects = 2;
+
+    // @desc The database [timestamp](#workingwithdates) of this update in RFC 3339 format, e.g., "2016-09-04T23:59:33.123Z".
+    optional string updated_at = 3;
+
+    // @desc The mapping between client and server IDs for this Upsert.
+    repeated CatalogIdMapping id_mappings = 4;
+}
+
+message RetrieveCatalogObjectResponse {
+    // @desc The set of [Error](#type-error)s encountered.
+    repeated resources.Error errors = 1;
+
+    // @desc The [CatalogObject](#type-catalogobject)s returned.
+    optional resources.CatalogObject object = 2;
+
+    // @desc A list of [CatalogObject](#type-catalogobject)s referenced by the object in the `object` field.
+    repeated resources.CatalogObject related_objects = 3;
+}
+
+/*--
+  @desc The order (e.g., chronological or alphabetical) in which results from a request are returned.
+--*/
+enum SortOrder {
+    // @desc The results are returned in descending (e.g., newest-first or Z-A) order.
+    DESC = 0;
+
+    // @desc The results are returned in ascending (e.g., oldest-first or A-Z) order.
+    ASC = 1;
+}
+
+// @desc A query to be applied to a [SearchCatalogObjectsRequest](#type-searchcatalogobjectsrequest) request). Only one query field may be present.
+message CatalogQuery {
+
+    message SortedAttribute {
+        // @desc The attribute whose value should be used as the sort key.
+        optional string attribute_name = 1 [(squareup.validation.not_empty) = true];
+
+        /*--
+          @desc The first attribute value to be returned by the query. Ascending sorts will return only
+          objects with this value or greater, while descending sorts will return only objects with this value
+          or less. If unset, start at the beginning (for ascending sorts) or end (for descending sorts).
+        --*/
+        optional string initial_attribute_value = 2;
+
+        // @desc The desired [SortOrder](#type-sortorder), `"ASC"` (ascending) or `"DESC"` (descending).
+        optional SortOrder sort_order = 3 [default = ASC];
+    }
+
+    message Exact {
+        // @desc The name of the attribute to be searched.
+        optional string attribute_name = 1 [(squareup.validation.not_empty) = true];
+
+        // @desc The desired value of the search attribute.
+        optional string attribute_value = 2 [(squareup.validation.required) = true];
+    }
+
+    message Prefix {
+        // @desc The name of the attribute to be searched.
+        optional string attribute_name = 1 [(squareup.validation.not_empty) = true];
+
+        // @desc The desired prefix of the search attribute value.
+        optional string attribute_prefix = 2 [(squareup.validation.not_empty) = true];
+    }
+
+    message Range {
+        // @desc The name of the attribute to be searched.
+        optional string attribute_name = 1 [(squareup.validation.not_empty) = true];
+
+        // @desc The desired minimum value for the search attribute (inclusive).
+        optional int64 attribute_min_value = 2;
+
+        // @desc The desired maximum value for the search attribute (inclusive).
+        optional int64 attribute_max_value = 3;
+    }
+
+    message Text {
+        /*--
+          @desc A list of one, two, or three search keywords. Keywords with fewer than three characters
+          are ignored.
+        --*/
+        repeated string keywords = 1 [(squareup.validation.required) = true];
+    }
+
+    message ItemsForTax {
+        // @desc A set of [CatalogTax](#type-catalogtax) ids to be used to find associated [CatalogItem](#type-catalogitem)s.
+        repeated string tax_ids = 1 [(squareup.validation.required) = true];
+    }
+
+    message ItemsForModifierList {
+        // @desc A set of [CatalogModifierList](#type-catalogmodifierlist) ids to be used to find associated [CatalogItem](#type-catalogitem)s.
+        repeated string modifier_list_ids = 1 [(squareup.validation.required) = true];
+    }
+
+    // @desc A query that returns all objects, sorted by the given attribute.
+    optional CatalogQuery.SortedAttribute sorted_attribute_query = 1;
+
+    /*--
+      @desc A query that returns only objects for which the given (string-valued) attribute has the
+      given case-insensitive value.
+    --*/
+    optional CatalogQuery.Exact exact_query = 2;
+
+    /*--
+      @desc A query that returns only objects for which the given (string-valued) attribute has the
+      given case-insensitive prefix.
+    --*/
+    optional CatalogQuery.Prefix prefix_query = 3;
+
+    /*--
+      @desc A query that returns only objects for which the given (integer-valued) attribute lies in the given range.
+    --*/
+    optional CatalogQuery.Range range_query = 4;
+
+    /*--
+      @desc A query that returns only objects whose searchable attributes contain all of the given
+      keywords as prefixes. For example, if an Item contains attributes `{"name": "t-shirt"}` and
+      `{"description": "Small, Red"}`, it will be matched by the query `{"keywords": ["shirt", "sm", "re"]}`.
+    --*/
+    optional CatalogQuery.Text text_query = 5;
+
+    // @desc A query that returns all [CatalogItem](#type-catalogitem)s that have any of the given [CatalogTax](#type-catalogtax)es enabled.
+    optional CatalogQuery.ItemsForTax items_for_tax_query = 6;
+
+    // @desc A query that returns all [CatalogItem](#type-catalogitem)s that have any of the given [CatalogModifierList](#type-catalogmodifierlist)s enabled.
+    optional CatalogQuery.ItemsForModifierList items_for_modifier_list_query = 7;
+}
+
+message SearchCatalogObjectsRequest {
+    /*--
+      @desc The pagination cursor returned in the previous response. Leave unset for an initial request.
+      See [Paginating results](#paginatingresults) for more information.
+    --*/
+    optional string cursor = 1;
+
+    /*--
+      @desc The desired set of object types to apper in the search results. The legal values are taken from the
+      [CatalogObjectType](#type-catalogobjecttype) enumeration, namely `"ITEM"`, `"ITEM_VARIATION"`, `"CATEGORY"`,
+      `"DISCOUNT"`, `"TAX"`, `"MODIFIER"`, or `"MODIFIER_LIST"`.
+    --*/
+    repeated resources.CatalogObjectType object_types = 2;
+
+    /*--
+      @desc If `true`, deleted objects will be included in the results. Deleted objects will have their
+      `is_deleted` field set to `true`.
+    --*/
+    optional bool include_deleted_objects = 3 [default = false];
+
+    /*--
+      @desc If `true`, the response will include additional objects that are related to the
+      requested object, as follows:
+
+      If a [CatalogItem](#type-catalogitem) is returned in the object field of the response,
+      its associated [CatalogCategory](#type-catalogcategory), [CatalogTax](#type-catalogtax)es, and
+      [CatalogModifierList](#type-catalogmodifierlist)s will be included in the `related_objects` field of the
+      response.
+
+      If a [CatalogItemVariation](#type-catalogitemvariation) is returned in the object field of the
+      response, its parent [CatalogItem](#type-catalogitem) will be included in the `related_objects` field of
+      the response.
+    --*/
+    optional bool include_related_objects = 4 [default = false];
+
+    // @desc Return only objects that have been modified after this [timestamp](#workingwithdates) (in RFC 3339 format, e.g., "2016-09-04T23:59:33.123Z").
+    optional string begin_time = 5;
+
+    // @desc A query to be used to filter or sort the results. If no query is specified, the entire catalog will be returned.
+    optional CatalogQuery query = 6;
+
+    /*--
+      @desc A limit on the number of results to be returned in a single page. The limit is advisory -
+      the implementation may return more or fewer results. If the supplied limit is 0 or is higher than
+      the maximum limit of 1,000, it will be ignored.
+     --*/
+    optional int32 limit = 7;
+}
+
+message SearchCatalogObjectsResponse {
+    // @desc The set of [Error](#type-error)s encountered.
+    repeated resources.Error errors = 1;
+
+    /*--
+      @desc The pagination cursor to be used in a subsequent request. If unset, this is the final response.
+      See [Paginating results](#paginatingresults) for more information.
+    --*/
+    optional string cursor = 2;
+
+    // @desc The [CatalogObject](#type-catalogobject)s returned.
+    repeated resources.CatalogObject objects = 3;
+
+    // @desc A list of [CatalogObject](#type-catalogobject)s referenced by the object in the `object` field.
+    repeated resources.CatalogObject related_objects = 4;
+}
+
+message BatchDeleteCatalogObjectsRequest {
+    /*--
+      @desc The ids of the [CatalogObject](#type-catalogobject)s to be deleted. When an object is deleted, other objects
+      in the graph that depend on that object will be deleted as well (for example, deleting a
+      [CatalogItem](#type-catalogitem) will delete its [CatalogItemVariation](#type-catalogitemvariation)s).
+    --*/
+    repeated string object_ids = 1;
+}
+
+message BatchDeleteCatalogObjectsResponse {
+    // @desc The set of [Error](#type-error)s encountered.
+    repeated resources.Error errors = 1;
+
+    // @desc The ids of all [CatalogObject](#type-catalogobject)s deleted by this request.
+    repeated string deleted_object_ids = 2;
+
+    // @desc The database [timestamp](#workingwithdates) of this deletion in RFC 3339 format, e.g., "2016-09-04T23:59:33.123Z".
+    optional string deleted_at = 3;
+}

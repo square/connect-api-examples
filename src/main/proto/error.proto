@@ -1,0 +1,218 @@
+/*
+ * Copyright 2017 Square Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+syntax = "proto2";
+
+package squareup.resources;
+
+option java_package = "com.squareup.resources";
+option java_multiple_files = true;
+
+// Errors are always a repeated field. This allows clients to easily group
+// errors by code or by field as they please. The contents of the human-readable
+// detail property may be subject to change.
+/*--
+  @desc Represents an error encountered during a request to the API.
+--*/
+message Error {
+
+    /*--
+      @desc Indicates which high-level category of error has occurred during a
+      request to the API.
+    --*/
+    enum Category {
+
+        // @desc An error occurred with the API itself.
+        API_ERROR = 1;
+
+        /*--
+          @desc An authentication error occurred. Most commonly, the request had
+          a missing, malformed, or otherwise invalid `Authorization` header.
+        --*/
+        AUTHENTICATION_ERROR = 2;
+
+        /*--
+          @desc The request was invalid. Most commonly, a required parameter was
+          missing, or a provided parameter had an invalid value.
+        --*/
+        INVALID_REQUEST_ERROR = 3;
+
+        /*--
+          @desc Your application reached the API rate limit. Retry your request
+          after a while.
+        --*/
+        RATE_LIMIT_ERROR = 4;
+
+        /*--
+          @desc An error occurred while processing a payment method. Most commonly,
+          the details of the payment method were invalid (such as a card's CVV
+          or expiration date).
+        --*/
+        PAYMENT_METHOD_ERROR = 5;
+
+        /*--
+          @desc An error occurred while attempting to process a refund.
+        --*/
+        REFUND_ERROR = 6;
+    }
+
+    /*--
+      @desc Indicates specific errors that can occur during a request to the API.
+    --*/
+    enum Code {
+        // 500 Internal Server Error
+        INTERNAL_SERVER_ERROR = 5000000;
+
+        // 401 Unauthorized
+        UNAUTHORIZED = 4010000;
+        ACCESS_TOKEN_EXPIRED = 4010001;
+        ACCESS_TOKEN_REVOKED = 4010002;
+
+        // 403 Forbidden
+        FORBIDDEN = 4030000;
+        INSUFFICIENT_SCOPES = 4030001;
+        APPLICATION_DISABLED = 4030002;
+        V1_APPLICATION = 4030003;
+        V1_ACCESS_TOKEN = 4030004;
+        CARD_PROCESSING_NOT_ENABLED = 4030005;
+
+        // 400 Bad Request
+        BAD_REQUEST = 4000000;
+        MISSING_REQUIRED_PARAMETER = 4000001;
+        INCORRECT_TYPE = 4000002; // incorrect type for a field.
+        INVALID_TIME = 4000003; // time format was incorrect
+        INVALID_TIME_RANGE = 4000004; // time range is invalid
+        INVALID_VALUE = 4000005; // field value is invalid.
+        INVALID_CURSOR = 4000006;
+        UNKNOWN_QUERY_PARAMETER = 4000007;
+        CONFLICTING_PARAMETERS = 4000008;
+        EXPECTED_JSON_BODY = 4000009; // request body is not a JSON object
+        INVALID_SORT_ORDER = 4000010; // sort order must be ASC or DESC
+        VALUE_REGEX_MISMATCH = 4000061; // the value does not match an expected regular expression
+        VALUE_TOO_SHORT = 4000057; // string value below minimum length
+        VALUE_TOO_LONG = 4000011; // string value exceeds maximum length
+        VALUE_TOO_LOW = 4000012; // value is below a required minimum
+        VALUE_TOO_HIGH = 4000058; // value is below a required maximum
+        VALUE_EMPTY = 4000059; // value has a default (empty) value, such as a blank string
+        ARRAY_EMPTY = 4000060; // array is empty
+        EXPECTED_BOOLEAN = 4000013;
+        EXPECTED_INTEGER = 4000014;
+        EXPECTED_FLOAT = 4000015;
+        EXPECTED_STRING = 4000016;
+        EXPECTED_OBJECT = 4000017;
+        EXPECTED_ARRAY = 4000018;
+        EXPECTED_BASE64_ENCODED_BYTE_ARRAY = 4000056;
+        INVALID_ARRAY_VALUE = 4000019; // an object in an array does not match the array type
+        INVALID_ENUM_VALUE = 4000020; // invalid enum value for an enum field
+        INVALID_CONTENT_TYPE = 4000021; // invalid content type header
+        INVALID_FORM_VALUE = 4000022; // legacy error type for form parsing errors. only for v1 compatibility.
+        ONE_INSTRUMENT_EXPECTED = 4000052; // exactly one instrument expected on request, but zero or multiple were set.
+        NO_FIELDS_SET = 4000053; // no fields in a message were set, in a message that allows any arbitrary fields to be set.
+
+        // these are card/payment related errors (seen in tokenization, charging, linking)
+        CARD_EXPIRED = 4000024;
+        INVALID_EXPIRATION = 4000027;
+        INVALID_EXPIRATION_YEAR = 4000028;
+        INVALID_EXPIRATION_DATE = 4000039;
+        UNSUPPORTED_CARD_BRAND = 4000055;
+        // Invalid card number.
+        INVALID_CARD = 4000040;
+        DELAYED_TRANSACTION_EXPIRED = 4000041; // too long since auth
+        DELAYED_TRANSACTION_CANCELED = 4000042; // already cancelled
+        DELAYED_TRANSACTION_CAPTURED = 4000043; // already captured
+        DELAYED_TRANSACTION_FAILED = 4000044; // already failed
+        CARD_TOKEN_EXPIRED = 4000045;
+        CARD_TOKEN_USED = 4000046;
+        AMOUNT_TOO_HIGH = 4000047;
+        UNSUPPORTED_INSTRUMENT_TYPE = 4000054;
+
+        // The requested refund amount exceeds the amount available to refund.
+        REFUND_AMOUNT_INVALID = 4000048;
+        // This payment already has a pending refund.
+        REFUND_ALREADY_PENDING = 4000049;
+        // Payment is not refundable, e.g. a previous refund has already been rejected
+        // and no new refunds can be accepted.
+        PAYMENT_NOT_REFUNDABLE = 4000050;
+
+        // Generic error for invalid card data.
+        INVALID_CARD_DATA = 4000051;
+
+        IDEMPOTENCY_KEY_REUSED = 4000066;
+
+        UNEXPECTED_VALUE = 4000068;
+
+        // 402 Request failed.
+        //
+        // It is an HTTP status code reserved for future use. Square uses it to
+        // indicate that a request is syntactically and semantically correct,
+        // but still cannot be fulfilled successfully for reasons not detectable
+        // by the client before it's sent to Square.
+        CARD_DECLINED = 4020001;
+        VERIFY_CVV_FAILURE = 4020002;
+        VERIFY_AVS_FAILURE = 4020003;
+        CARD_DECLINED_CALL_ISSUER = 4020004;
+
+        // 404000 Not Found
+        NOT_FOUND = 4040000;
+
+        // 408 Request Timeout
+        REQUEST_TIMEOUT = 4080000;
+
+        // 409 Conflict
+        CONFLICT = 4090000;
+
+        // 413 Request Entity Too Large
+        REQUEST_ENTITY_TOO_LARGE = 4130000;
+
+        // 415 Unsupported Media Type
+        UNSUPPORTED_MEDIA_TYPE = 4150000;
+
+        // 429 Rate Limited
+        RATE_LIMITED = 4290000;
+
+        // 501 Not Implemented
+        NOT_IMPLEMENTED = 5010000; // Sandbox support will lag behind API support for a while
+
+        // 503 Service Unavailable
+        SERVICE_UNAVAILABLE = 5030000;
+    }
+
+    /*--
+      @desc The error's high-level category.
+    --*/
+    optional Error.Category category = 4;
+
+    /*--
+      @desc The error's specific code.
+    --*/
+    optional Error.Code code = 1;
+
+    /*--
+      @desc A human-readable description of the error for debugging purposes.
+    --*/
+    optional string detail = 2;
+
+    /*--
+      @desc The name of the field provided in the original request that the error
+      pertains to, if any.
+    --*/
+    optional string field = 3;
+}
+
+// A response message that only includes errors
+message ErrorResponse {
+    // @desc Any errors that occurred during the request.
+    repeated resources.Error errors = 1;
+}
