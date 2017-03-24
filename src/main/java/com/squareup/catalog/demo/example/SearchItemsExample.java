@@ -27,8 +27,9 @@ import java.io.IOException;
 import static java.util.Collections.singletonList;
 
 /**
- * This example searches for items with the name "Soda".
- */
+ * This example searches for CatalogItems with the name "Soda" and prints
+ * the names and IDs to the screen.
+ **/
 public class SearchItemsExample extends Example {
 
   public SearchItemsExample() {
@@ -38,6 +39,16 @@ public class SearchItemsExample extends Example {
   @Override
   public void execute(CatalogApi catalogApi, LocationApi locationApi) throws IOException {
     // Build a search request.
+    /**
+     * Build the search request
+     *
+     * This function call creates a SearchCatalogObjectsRequest object
+     * (request) configured to search across the catalog for any CatalogObject
+     * whose name exactly matches the string "Soda"
+     *
+     * Note: this call only packages the search request object. Nothing has been
+     * queried at this point.
+     **/
     SearchCatalogObjectsRequest request = new SearchCatalogObjectsRequest.Builder()
         .object_types(singletonList(CatalogObjectType.ITEM))
         .query(new CatalogQuery.Builder()
@@ -49,7 +60,7 @@ public class SearchItemsExample extends Example {
             .build())
         .build();
 
-    // Post the search request.
+    // Post the search request and log the results
     logger.info("Searching for items named 'Soda'");
     SearchCatalogObjectsResponse response = catalogApi.search(request);
     if (response != null) {

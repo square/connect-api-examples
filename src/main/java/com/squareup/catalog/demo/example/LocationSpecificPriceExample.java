@@ -19,9 +19,10 @@ import static com.squareup.catalog.demo.util.Moneys.usd;
 import static java.util.Collections.singletonList;
 
 /**
- * This example creates an item variation with a location-specific price that overrides the
- * global price.
- */
+ * This example creates a CatalogItemVariation with a location-specific price
+ * that overrides its predefined global price. It then uploads the new objects
+ * and prints the CatalogItem name and ID to the screen.
+ **/
 public class LocationSpecificPriceExample extends Example {
 
   public LocationSpecificPriceExample() {
@@ -41,7 +42,21 @@ public class LocationSpecificPriceExample extends Example {
     // Choose the first location to apply an override.
     String locationId = locationsResponse.locations.get(0).id;
 
-    // Build the request to create the new item.
+    /**
+     * Build the request to create the new item.
+     *
+     * This function call creates a BatchUpsertCatalogObjectsRequest object
+     * (request) populated with two new CatalogObjects:
+     *   - a CatalogItem called "Soda" with ID "#SODA"
+     *   - a CatalogItemVariation child called "Regular" with ID "#SODA-REGULAR"
+     *     and a global price of $2.00
+     * and assigns a location-specific price override so a Regular Soda will be
+     * $2.50 at that location instead of the normal $2.00 price found everywhere
+     * else (maybe don't shop there!? :P)
+     *
+     * Note: this call only *creates* the new objects and packages them for
+     * upsert. Nothing has been uploaded to the server at this point.
+     **/
     BatchUpsertCatalogObjectsRequest request = new BatchUpsertCatalogObjectsRequest.Builder()
         .idempotency_key(UUID.randomUUID().toString())
         .batches(singletonList(new CatalogObjectBatch.Builder()
@@ -68,7 +83,13 @@ public class LocationSpecificPriceExample extends Example {
             .build()))
         .build();
 
-    // Post the batch upsert to insert the new item.
+    /**
+     * Post the batch upsert to insert the new item.
+     *
+     * Use the BatchUpsertCatalogObjectsRequest object we just created to
+     * upsert the new CatalogObjects to the catalog associated with the
+     * access token included on the command line.
+     **/
     logger.info("Creating new item with location");
     BatchUpsertCatalogObjectsResponse response = catalogApi.batchUpsert(request);
 
@@ -77,7 +98,11 @@ public class LocationSpecificPriceExample extends Example {
       return;
     }
 
+    /*
+     * Otherwise, grab the name and object ID of the CatalogItem that was
+     * just created and print them to the screen.
+     **/
     CatalogObject newItem = response.objects.get(0);
-    logger.info("Created item Soda (" + newItem.id + ")");
+    logger.info("Created item " + newItem.item_data.name + " (" + newItem.id + ")");
   }
 }
