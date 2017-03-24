@@ -9,7 +9,7 @@ Demo app providing examples of common Catalog API interactions.
 In order to execute the examples in this demo, you'll need to access your personal access token in
 Square's Developer Portal.
  
-1. Visit https://connect.squareupstaging.com/apps
+1. Visit https://connect.squareup.com/apps
 2. Click "New Application"
 3. Create an application using the name "Catalog API Demo"
 4. Copy the Personal Access Token
