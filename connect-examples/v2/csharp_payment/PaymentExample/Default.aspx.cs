@@ -2,6 +2,7 @@
 
 using Square.Connect.Api;
 using Square.Connect.Model;
+using Square.Connect.Client;
 
 namespace PaymentExample
 {
@@ -38,22 +39,19 @@ namespace PaymentExample
             // Monetary amounts are specified in the smallest unit of the applicable currency.
             // This amount is in cents. It's also hard-coded for $1.00, 
             // which isn't very useful.
-            Money amount = NewMoney(100, "USD");
+            Money amount = new Money(100, Money.CurrencyEnum.USD);
 
             ChargeRequest body = new ChargeRequest(AmountMoney: amount, IdempotencyKey: uuid, CardNonce: nonce);
-            var response = _transactionApi.Charge(_accessToken, _locationId, body);
-            if (response.Errors == null)
-            {
-                return "Transaction complete\n" + response.ToJson();
-            } else
-            {
-                return response.Errors.ToString();
-            }
-        }
 
-        public static Money NewMoney(int amount, string currency)
-        {
-            return new Money(amount, Money.ToCurrencyEnum(currency));
+            try
+            {
+                var response = _transactionApi.Charge(_accessToken, _locationId, body);
+                return "Transaction complete\n" + response.ToJson();
+            }
+            catch (ApiException e)
+            {
+                return e.Message;
+            }
         }
 
         public static string NewIdempotencyKey()
