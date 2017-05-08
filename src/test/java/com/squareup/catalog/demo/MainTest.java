@@ -15,10 +15,10 @@
  */
 package com.squareup.catalog.demo;
 
-import com.squareup.catalog.demo.api.CatalogApi;
-import com.squareup.catalog.demo.api.LocationApi;
 import com.squareup.catalog.demo.example.Example;
-import java.io.IOException;
+import com.squareup.connect.ApiException;
+import com.squareup.connect.api.CatalogApi;
+import com.squareup.connect.api.LocationsApi;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -78,32 +78,31 @@ public class MainTest {
     verify(logger, never()).error(anyString());
   }
 
-  @Test public void processArgs_executeExample() throws IOException {
+  @Test public void processArgs_executeExample() throws ApiException {
     ArgumentCaptor<CatalogApi> catalogApiCaptor = ArgumentCaptor.forClass(CatalogApi.class);
-    ArgumentCaptor<LocationApi> locationApiCaptor= ArgumentCaptor.forClass(LocationApi.class);
+    ArgumentCaptor<LocationsApi> locationApiCaptor = ArgumentCaptor.forClass(LocationsApi.class);
     main.processArgs(new String[] {"foo", "-token", "abcdef"});
     verify(exampleFoo).execute(catalogApiCaptor.capture(), locationApiCaptor.capture());
     CatalogApi catalogApi = catalogApiCaptor.getValue();
-    assertEquals(Main.API_BASE_URL + "catalog/", catalogApi.baseUrl);
-    assertEquals("abcdef", catalogApi.accessToken);
-    assertEquals(Main.API_BASE_URL + "locations", locationApiCaptor.getValue().baseUrl);
+    assertEquals("https://connect.squareup.com", catalogApi.getApiClient().getBasePath());
+    assertEquals("https://connect.squareup.com",
+        locationApiCaptor.getValue().getApiClient().getBasePath());
 
-    verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationApi.class));
+    verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 
-  @Test public void processArgs_executeExampleWithBaseUrl() throws IOException {
+  @Test public void processArgs_executeExampleWithBaseUrl() throws ApiException {
     ArgumentCaptor<CatalogApi> catalogApiCaptor = ArgumentCaptor.forClass(CatalogApi.class);
     main.processArgs(
         new String[] {"foo", "-token", "abcdef", "-base-url", "http://squareup.com/baseurl"});
-    verify(exampleFoo).execute(catalogApiCaptor.capture(), any(LocationApi.class));
+    verify(exampleFoo).execute(catalogApiCaptor.capture(), any(LocationsApi.class));
     CatalogApi catalogApi = catalogApiCaptor.getValue();
-    assertEquals("http://squareup.com/baseurl/catalog/", catalogApi.baseUrl);
-    assertEquals("abcdef", catalogApi.accessToken);
+    assertEquals("http://squareup.com/baseurl", catalogApi.getApiClient().getBasePath());
 
-    verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationApi.class));
+    verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 
-  @Test public void processArgs_exampleNotFound() throws IOException {
+  @Test public void processArgs_exampleNotFound() throws ApiException {
     try {
       main.processArgs(new String[] {"bad_name", "-token", "abcdef"});
       fail("Expected IllegalArgumentException");
@@ -113,31 +112,31 @@ public class MainTest {
     verifyExamplesDidNotExecute();
   }
 
-  @Test public void processArgs_exampleMissingToken() throws IOException {
+  @Test public void processArgs_exampleMissingToken() throws ApiException {
     main.processArgs(new String[] {"foo"});
     verify(logger).error(anyString());
     verifyUsageLogged();
   }
 
-  @Test public void processArgs_exampleDanglingToken() throws IOException {
+  @Test public void processArgs_exampleDanglingToken() throws ApiException {
     main.processArgs(new String[] {"bad_name", "-token"});
     verify(logger).error(anyString());
     verifyUsageLogged();
   }
 
-  @Test public void processArgs_unrecognizedArgument() throws IOException {
+  @Test public void processArgs_unrecognizedArgument() throws ApiException {
     main.processArgs(new String[] {"bad_name", "-token", "abcdef", "-unrecognized"});
     verify(logger).error(startsWith("Unrecognized"));
     verifyUsageLogged();
   }
 
-  private void verifyUsageLogged() throws IOException {
+  private void verifyUsageLogged() throws ApiException {
     verify(logger).info(startsWith("USAGE"));
     verifyExamplesDidNotExecute();
   }
 
-  private void verifyExamplesDidNotExecute() throws IOException {
-    verify(exampleFoo, never()).execute(any(CatalogApi.class), any(LocationApi.class));
-    verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationApi.class));
+  private void verifyExamplesDidNotExecute() throws ApiException {
+    verify(exampleFoo, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
+    verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 }

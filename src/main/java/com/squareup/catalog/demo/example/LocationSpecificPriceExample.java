@@ -1,17 +1,17 @@
 package com.squareup.catalog.demo.example;
 
-import com.squareup.catalog.demo.api.CatalogApi;
-import com.squareup.catalog.demo.api.LocationApi;
-import com.squareup.catalog.resources.CatalogItemVariation;
-import com.squareup.catalog.resources.CatalogObject;
-import com.squareup.catalog.resources.CatalogObjectType;
-import com.squareup.catalog.resources.CatalogPricingType;
-import com.squareup.catalog.resources.ItemVariationLocationOverrides;
-import com.squareup.catalog.service.BatchUpsertCatalogObjectsRequest;
-import com.squareup.catalog.service.BatchUpsertCatalogObjectsResponse;
-import com.squareup.catalog.service.CatalogObjectBatch;
-import com.squareup.catalog.service.ListLocationsResponse;
-import java.io.IOException;
+import com.squareup.connect.ApiException;
+import com.squareup.connect.api.CatalogApi;
+import com.squareup.connect.api.LocationsApi;
+import com.squareup.connect.models.BatchUpsertCatalogObjectsRequest;
+import com.squareup.connect.models.BatchUpsertCatalogObjectsResponse;
+import com.squareup.connect.models.CatalogItemVariation;
+import com.squareup.connect.models.CatalogItemVariation.PricingTypeEnum;
+import com.squareup.connect.models.CatalogObject;
+import com.squareup.connect.models.CatalogObject.TypeEnum;
+import com.squareup.connect.models.CatalogObjectBatch;
+import com.squareup.connect.models.ItemVariationLocationOverrides;
+import com.squareup.connect.models.ListLocationsResponse;
 import java.util.UUID;
 
 import static com.squareup.catalog.demo.util.CatalogObjects.item;
@@ -30,19 +30,19 @@ public class LocationSpecificPriceExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationApi locationApi) throws IOException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
     // Get the list of locations for this merchant.
     logger.info("Retrieving locations");
-    ListLocationsResponse locationsResponse = locationApi.listLocations();
+    ListLocationsResponse locationsResponse = locationsApi.listLocations();
     if (locationsResponse == null) {
       return;
     }
-    logger.info("Retrieved " + locationsResponse.locations.size() + " locations");
+    logger.info("Retrieved " + locationsResponse.getLocations().size() + " locations");
 
     // Choose the first location to apply an override.
-    String locationId = locationsResponse.locations.get(0).id;
+    String locationId = locationsResponse.getLocations().get(0).getId();
 
-    /**
+    /*
      * Build the request to create the new item.
      *
      * This function call creates a BatchUpsertCatalogObjectsRequest object
@@ -56,42 +56,37 @@ public class LocationSpecificPriceExample extends Example {
      *
      * Note: this call only *creates* the new objects and packages them for
      * upsert. Nothing has been uploaded to the server at this point.
-     **/
-    BatchUpsertCatalogObjectsRequest request = new BatchUpsertCatalogObjectsRequest.Builder()
-        .idempotency_key(UUID.randomUUID().toString())
-        .batches(singletonList(new CatalogObjectBatch.Builder()
+     */
+    BatchUpsertCatalogObjectsRequest request = new BatchUpsertCatalogObjectsRequest()
+        .idempotencyKey(UUID.randomUUID().toString())
+        .batches(singletonList(new CatalogObjectBatch()
             .objects(singletonList(
                 item("#SODA", "Soda", null,
-                    new CatalogObject.Builder()
-                        .type(CatalogObjectType.ITEM_VARIATION)
+                    new CatalogObject()
+                        .type(TypeEnum.ITEM_VARIATION)
                         .id("#SODA-REGULAR")
-                        .present_at_all_locations(true)
-                        .item_variation_data(new CatalogItemVariation.Builder()
+                        .presentAtAllLocations(true)
+                        .itemVariationData(new CatalogItemVariation()
                             .name("Regular")
-                            .pricing_type(CatalogPricingType.FIXED_PRICING)
-                            .price_money(usd(200)) // Global price is $2.00
-                            .location_overrides(singletonList(
+                            .pricingType(PricingTypeEnum.FIXED_PRICING)
+                            .priceMoney(usd(200)) // Global price is $2.00
+                            .locationOverrides(singletonList(
                                 // Apply an override to the first location.
-                                new ItemVariationLocationOverrides.Builder()
-                                    .location_id(locationId)
-                                    .price_money(usd(250))
-                                    .pricing_type(CatalogPricingType.FIXED_PRICING)
-                                    .build()))
-                            .build())
-                        .build()
-                )))
-            .build()))
-        .build();
+                                new ItemVariationLocationOverrides()
+                                    .locationId(locationId)
+                                    .priceMoney(usd(250))
+                                    .pricingType(
+                                        ItemVariationLocationOverrides.PricingTypeEnum.FIXED_PRICING)))))))));
 
-    /**
+    /*
      * Post the batch upsert to insert the new item.
      *
      * Use the BatchUpsertCatalogObjectsRequest object we just created to
      * upsert the new CatalogObjects to the catalog associated with the
      * access token included on the command line.
-     **/
+     */
     logger.info("Creating new item with location");
-    BatchUpsertCatalogObjectsResponse response = catalogApi.batchUpsert(request);
+    BatchUpsertCatalogObjectsResponse response = catalogApi.batchUpsertCatalogObjects(request);
 
     // If the response is null, we already logged errors.
     if (response == null) {
@@ -102,7 +97,7 @@ public class LocationSpecificPriceExample extends Example {
      * Otherwise, grab the name and object ID of the CatalogItem that was
      * just created and print them to the screen.
      **/
-    CatalogObject newItem = response.objects.get(0);
-    logger.info("Created item " + newItem.item_data.name + " (" + newItem.id + ")");
+    CatalogObject newItem = response.getObjects().get(0);
+    logger.info("Created item " + newItem.getItemData().getName() + " (" + newItem.getId()+ ")");
   }
 }

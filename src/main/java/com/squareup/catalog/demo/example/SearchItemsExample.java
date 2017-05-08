@@ -15,14 +15,15 @@
  */
 package com.squareup.catalog.demo.example;
 
-import com.squareup.catalog.demo.api.CatalogApi;
-import com.squareup.catalog.demo.api.LocationApi;
-import com.squareup.catalog.resources.CatalogObject;
-import com.squareup.catalog.resources.CatalogObjectType;
-import com.squareup.catalog.service.CatalogQuery;
-import com.squareup.catalog.service.SearchCatalogObjectsRequest;
-import com.squareup.catalog.service.SearchCatalogObjectsResponse;
-import java.io.IOException;
+import com.squareup.connect.ApiException;
+import com.squareup.connect.api.CatalogApi;
+import com.squareup.connect.api.LocationsApi;
+import com.squareup.connect.models.CatalogObject;
+import com.squareup.connect.models.CatalogQuery;
+import com.squareup.connect.models.CatalogQueryExact;
+import com.squareup.connect.models.SearchCatalogObjectsRequest;
+import com.squareup.connect.models.SearchCatalogObjectsResponse;
+import java.util.List;
 
 import static java.util.Collections.singletonList;
 
@@ -37,9 +38,8 @@ public class SearchItemsExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationApi locationApi) throws IOException {
-    // Build a search request.
-    /**
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+    /*
      * Build the search request
      *
      * This function call creates a SearchCatalogObjectsRequest object
@@ -48,26 +48,26 @@ public class SearchItemsExample extends Example {
      *
      * Note: this call only packages the search request object. Nothing has been
      * queried at this point.
-     **/
-    SearchCatalogObjectsRequest request = new SearchCatalogObjectsRequest.Builder()
-        .object_types(singletonList(CatalogObjectType.ITEM))
-        .query(new CatalogQuery.Builder()
+     */
+    SearchCatalogObjectsRequest request = new SearchCatalogObjectsRequest()
+        .objectTypes(singletonList(SearchCatalogObjectsRequest.ObjectTypesEnum.ITEM))
+        .query(new CatalogQuery()
             // An Exact query searches for exact matches of the specified attribute.
-            .exact_query(new CatalogQuery.Exact.Builder()
-                .attribute_name("name")  // Searching on the item name field
-                .attribute_value("Soda") // Must exactly match "Soda"
-                .build())
-            .build())
-        .build();
+            .exactQuery(new CatalogQueryExact()
+                .attributeName("name")  // Searching on the item name field
+                .attributeValue("Soda") // Must exactly match "Soda"
+            )
+        );
 
     // Post the search request and log the results
     logger.info("Searching for items named 'Soda'");
-    SearchCatalogObjectsResponse response = catalogApi.search(request);
+    SearchCatalogObjectsResponse response = catalogApi.searchCatalogObjects(request);
     if (response != null) {
-      logger.info("Found " + response.objects.size() + " results");
-      for (int i = 0; i < response.objects.size(); i++) {
-        CatalogObject item = response.objects.get(i);
-        logger.info((i + 1) + ": " + item.item_data.name + " (" + item.id + ")");
+      List<CatalogObject> catalogObjects = response.getObjects();
+      logger.info("Found " + response.getObjects().size() + " results");
+      for (int i = 0; i < catalogObjects.size(); i++) {
+        CatalogObject item = catalogObjects.get(i);
+        logger.info((i + 1) + ": " + item.getItemData().getName() + " (" + item.getId() + ")");
       }
     }
   }
