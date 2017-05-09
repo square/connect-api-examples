@@ -15,17 +15,23 @@
  */
 package com.squareup.catalog.demo;
 
+import com.google.gson.JsonSyntaxException;
 import com.squareup.catalog.demo.example.CreateItemExample;
 import com.squareup.catalog.demo.example.DeleteCategoryExample;
 import com.squareup.catalog.demo.example.Example;
 import com.squareup.catalog.demo.example.LocationSpecificPriceExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
+import com.squareup.catalog.demo.util.GsonProvider;
 import com.squareup.connect.ApiClient;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.Configuration;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
 import com.squareup.connect.auth.OAuth;
+import com.squareup.connect.models.Error;
+import java.util.List;
+
+import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
 
 public class Main {
 
@@ -174,11 +180,38 @@ public class Main {
         try {
           example.execute(catalogApi, locationsApi);
         } catch (ApiException e) {
-          throw new RuntimeException(e);
+          handleApiException(e);
         }
         return;
       }
     }
     throw new IllegalArgumentException("Example " + exampleName + " not found");
+  }
+
+  /**
+   * Attempts to log {@link Error}s from an {@link ApiException}, or rethrows if the response body
+   * cannot be parsed.
+   */
+  private void handleApiException(ApiException apiException) {
+    try {
+      // If the response includes a body, it means that he server returned some error message.
+      ErrorResponse response =
+          GsonProvider.gson().fromJson(apiException.getResponseBody(), ErrorResponse.class);
+
+      // If we found errors in the response body, log them. Otherwise, rethrow.
+      if (!checkAndLogErrors(response.errors, logger)) {
+        throw new RuntimeException(apiException);
+      }
+    } catch (JsonSyntaxException e) {
+      // If the error message isn't in JSON format, rethrow the error.
+      throw new RuntimeException(apiException);
+    }
+  }
+
+  /**
+   * Represents the response body of an {@link ApiException} that contains server specified errors.
+   */
+  private static class ErrorResponse {
+    List<Error> errors;
   }
 }

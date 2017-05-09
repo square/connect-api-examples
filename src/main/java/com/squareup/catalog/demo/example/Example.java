@@ -16,9 +16,12 @@
 package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
+import com.squareup.catalog.demo.util.Errors;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
+import com.squareup.connect.models.Error;
+import java.util.List;
 
 /**
  * Base class used to define Examples.
@@ -48,6 +51,16 @@ public abstract class Example {
    * @param catalogApi the API abstraction used to interact with the Catalog API
    * @param locationsApi the API abstraction used to interact with merchant locations
    */
-  public abstract void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws
-      ApiException;
+  public abstract void execute(CatalogApi catalogApi, LocationsApi locationsApi)
+      throws ApiException;
+
+  /**
+   * Logs errors received from the Catalog API.
+   *
+   * @param errors the list of errors returned in the API response
+   * @return true if errors were logged, false if no errors
+   */
+  protected boolean checkAndLogErrors(List<Error> errors) {
+    return Errors.checkAndLogErrors(errors, logger);
+  }
 }

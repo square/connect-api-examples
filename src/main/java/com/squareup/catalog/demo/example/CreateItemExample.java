@@ -77,8 +77,7 @@ public class CreateItemExample extends Example {
                 item("#SODA", "Soda", null,
                     itemVariation("#SODA-SMALL", "Small", 150),
                     itemVariation("#SODA-MEDIUM", "Medium", 175),
-                    itemVariation("#SODA-LARGE", "Large", 200)
-                )))));
+                    itemVariation("#SODA-LARGE", "Large", 200))))));
 
     /*
      * Post the batch upsert to insert the new item.
@@ -89,9 +88,7 @@ public class CreateItemExample extends Example {
      */
     logger.info("Creating new Soda item");
     BatchUpsertCatalogObjectsResponse response = catalogApi.batchUpsertCatalogObjects(request);
-
-    // If the response is null, we already logged errors.
-    if (response == null) {
+    if (checkAndLogErrors(response.getErrors())) {
       return null;
     }
 
@@ -113,16 +110,14 @@ public class CreateItemExample extends Example {
     // Send GET request to retrieve a single object based on the object ID.
     logger.info("Retrieving item with id: " + itemId);
     RetrieveCatalogObjectResponse response = catalogApi.retrieveCatalogObject(itemId, false);
-
-    // If the response is null, we already logged errors.
-    if (response == null) {
+    if (checkAndLogErrors(response.getErrors())) {
       return;
     }
 
-      /*
-       * Otherwise, grab the name and object ID of the CatalogItem that was
-       * fetched from the catalog and print them to the screen.
-       **/
+    /*
+     * Otherwise, grab the name and object ID of the CatalogItem that was
+     * fetched from the catalog and print them to the screen.
+     */
     CatalogObject retrieveditem = response.getObject();
     logger.info("Retrieved Item "
         + retrieveditem.getItemData().getName()

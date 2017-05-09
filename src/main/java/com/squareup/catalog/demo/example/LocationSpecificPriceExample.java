@@ -34,7 +34,7 @@ public class LocationSpecificPriceExample extends Example {
     // Get the list of locations for this merchant.
     logger.info("Retrieving locations");
     ListLocationsResponse locationsResponse = locationsApi.listLocations();
-    if (locationsResponse == null) {
+    if (checkAndLogErrors(locationsResponse.getErrors())) {
       return;
     }
     logger.info("Retrieved " + locationsResponse.getLocations().size() + " locations");
@@ -88,8 +88,8 @@ public class LocationSpecificPriceExample extends Example {
     logger.info("Creating new item with location");
     BatchUpsertCatalogObjectsResponse response = catalogApi.batchUpsertCatalogObjects(request);
 
-    // If the response is null, we already logged errors.
-    if (response == null) {
+    // Check for errors.
+    if (checkAndLogErrors(response.getErrors())) {
       return;
     }
 

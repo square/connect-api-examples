@@ -51,7 +51,7 @@ public class DeleteCategoryExample extends Example {
   public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
     // Create a category with items.
     BatchUpsertCatalogObjectsResponse response = createCategoryWithItems(catalogApi);
-    if (response == null) {
+    if (checkAndLogErrors(response.getErrors())) {
       return;
     }
 
@@ -99,9 +99,7 @@ public class DeleteCategoryExample extends Example {
      */
     logger.info("Creating new Drinks category with three items");
     BatchUpsertCatalogObjectsResponse response = catalogApi.batchUpsertCatalogObjects(request);
-
-    // If the response is null, we already logged errors.
-    if (response == null) {
+    if (checkAndLogErrors(response.getErrors())) {
       return null;
     }
 
@@ -150,9 +148,7 @@ public class DeleteCategoryExample extends Example {
     // Post the batch delete to delete the category and items.
     logger.info("Deleting Drinks category");
     BatchDeleteCatalogObjectsResponse response = catalogApi.batchDeleteCatalogObjects(request);
-
-    // If the response is null, we already logged errors.
-    if (response == null) {
+    if (checkAndLogErrors(response.getErrors())) {
       return;
     }
 
