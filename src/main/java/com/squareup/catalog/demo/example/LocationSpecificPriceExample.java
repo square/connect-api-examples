@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import static com.squareup.catalog.demo.util.CatalogObjects.item;
 import static com.squareup.catalog.demo.util.Moneys.usd;
+import static com.squareup.connect.models.SearchCatalogObjectsRequest.ObjectTypesEnum.ITEM;
 import static java.util.Collections.singletonList;
 
 /**
@@ -87,8 +88,6 @@ public class LocationSpecificPriceExample extends Example {
      */
     logger.info("Creating new item with location");
     BatchUpsertCatalogObjectsResponse response = catalogApi.batchUpsertCatalogObjects(request);
-
-    // Check for errors.
     if (checkAndLogErrors(response.getErrors())) {
       return;
     }
@@ -98,6 +97,11 @@ public class LocationSpecificPriceExample extends Example {
      * just created and print them to the screen.
      **/
     CatalogObject newItem = response.getObjects().get(0);
-    logger.info("Created item " + newItem.getItemData().getName() + " (" + newItem.getId()+ ")");
+    logger.info("Created item " + newItem.getItemData().getName() + " (" + newItem.getId() + ")");
+  }
+
+  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi)
+      throws ApiException {
+    cleanCatalogObjectsByName(catalogApi, ITEM, "Soda");
   }
 }
