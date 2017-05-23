@@ -15,8 +15,8 @@
  */
 package com.squareup.catalog.demo.util;
 
-import com.squareup.common.Currency;
-import com.squareup.common.Money;
+import com.squareup.connect.models.Money;
+import com.squareup.connect.models.Money.CurrencyEnum;
 
 public class Moneys {
 
@@ -24,10 +24,9 @@ public class Moneys {
    * Creates a Money object for the specified amount of cents in USD.
    */
   public static Money usd(long cents) {
-    return new Money.Builder() //
-        .amount(cents) //
-        .currency(Currency.USD) //
-        .build();
+    return new Money()
+        .amount(cents)
+        .currency(CurrencyEnum.USD);
   }
 
   private Moneys() {

@@ -15,18 +15,25 @@
  */
 package com.squareup.catalog.demo;
 
-import com.squareup.catalog.demo.api.CatalogApi;
-import com.squareup.catalog.demo.api.LocationApi;
+import com.google.gson.JsonSyntaxException;
 import com.squareup.catalog.demo.example.CreateItemExample;
 import com.squareup.catalog.demo.example.DeleteCategoryExample;
 import com.squareup.catalog.demo.example.Example;
 import com.squareup.catalog.demo.example.LocationSpecificPriceExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
-import java.io.IOException;
+import com.squareup.catalog.demo.util.GsonProvider;
+import com.squareup.connect.ApiClient;
+import com.squareup.connect.ApiException;
+import com.squareup.connect.Configuration;
+import com.squareup.connect.api.CatalogApi;
+import com.squareup.connect.api.LocationsApi;
+import com.squareup.connect.auth.OAuth;
+import com.squareup.connect.models.Error;
+import java.util.List;
+
+import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
 
 public class Main {
-
-  static final String API_BASE_URL = "https://connect.squareup.com/v2/";
 
   private static String USAGE = "USAGE:\n" +
       "  Execute Example: java <example_name> -token <accessToken>\n" +
@@ -91,7 +98,7 @@ public class Main {
 
     // Process arguments associated with the example.
     String accessToken = null;
-    String baseUrl = API_BASE_URL;
+    ApiClient apiClient = Configuration.getDefaultApiClient();
     for (int i = 1; i < args.length; i++) {
       String arg = args[i];
       if (ARG_BASE_URL.equalsIgnoreCase(arg)) {
@@ -99,10 +106,7 @@ public class Main {
           usage(ARG_BASE_URL + " specified without a url");
           return;
         }
-        baseUrl = args[i + 1];
-        if (!baseUrl.endsWith("/")) {
-          baseUrl += "/";
-        }
+        apiClient = new ApiClient().setBasePath(args[i + 1]);
         i++;
       } else if (ARG_TOKEN.equalsIgnoreCase(arg)) {
         if (i == args.length - 1) {
@@ -120,9 +124,14 @@ public class Main {
       usage("You must specify a valid access token");
       return;
     }
-    CatalogApi catalogApi = new CatalogApi(baseUrl, accessToken, logger);
-    LocationApi locationApi = new LocationApi(baseUrl, accessToken, logger);
-    executeExample(command, catalogApi, locationApi);
+
+    // Configure OAuth2 access token for authorization: oauth2
+    OAuth oauth2 = (OAuth) apiClient.getAuthentication("oauth2");
+    oauth2.setAccessToken(accessToken);
+
+    CatalogApi catalogApi = new CatalogApi(apiClient);
+    LocationsApi locationsApi = new LocationsApi(apiClient);
+    executeExample(command, catalogApi, locationsApi);
   }
 
   /**
@@ -164,17 +173,45 @@ public class Main {
    * @param exampleName the name of the example to execute
    * @param catalogApi the CatalogApi utility
    */
-  private void executeExample(String exampleName, CatalogApi catalogApi, LocationApi locationApi) {
+  private void executeExample(String exampleName, CatalogApi catalogApi,
+      LocationsApi locationsApi) {
     for (Example example : examples) {
       if (example.getName().equalsIgnoreCase(exampleName)) {
         try {
-          example.execute(catalogApi, locationApi);
-        } catch (IOException e) {
-          throw new RuntimeException(e);
+          example.execute(catalogApi, locationsApi);
+        } catch (ApiException e) {
+          handleApiException(e);
         }
         return;
       }
     }
     throw new IllegalArgumentException("Example " + exampleName + " not found");
+  }
+
+  /**
+   * Attempts to log {@link Error}s from an {@link ApiException}, or rethrows if the response body
+   * cannot be parsed.
+   */
+  private void handleApiException(ApiException apiException) {
+    try {
+      // If the response includes a body, it means that he server returned some error message.
+      ErrorResponse response =
+          GsonProvider.gson().fromJson(apiException.getResponseBody(), ErrorResponse.class);
+
+      // If we found errors in the response body, log them. Otherwise, rethrow.
+      if (!checkAndLogErrors(response.errors, logger)) {
+        throw new RuntimeException(apiException);
+      }
+    } catch (JsonSyntaxException e) {
+      // If the error message isn't in JSON format, rethrow the error.
+      throw new RuntimeException(apiException);
+    }
+  }
+
+  /**
+   * Represents the response body of an {@link ApiException} that contains server specified errors.
+   */
+  private static class ErrorResponse {
+    List<Error> errors;
   }
 }

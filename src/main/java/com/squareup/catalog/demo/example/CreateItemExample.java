@@ -15,14 +15,14 @@
  */
 package com.squareup.catalog.demo.example;
 
-import com.squareup.catalog.demo.api.CatalogApi;
-import com.squareup.catalog.demo.api.LocationApi;
-import com.squareup.catalog.resources.CatalogObject;
-import com.squareup.catalog.service.BatchUpsertCatalogObjectsRequest;
-import com.squareup.catalog.service.BatchUpsertCatalogObjectsResponse;
-import com.squareup.catalog.service.CatalogObjectBatch;
-import com.squareup.catalog.service.RetrieveCatalogObjectResponse;
-import java.io.IOException;
+import com.squareup.connect.ApiException;
+import com.squareup.connect.api.CatalogApi;
+import com.squareup.connect.api.LocationsApi;
+import com.squareup.connect.models.BatchUpsertCatalogObjectsRequest;
+import com.squareup.connect.models.BatchUpsertCatalogObjectsResponse;
+import com.squareup.connect.models.CatalogObject;
+import com.squareup.connect.models.CatalogObjectBatch;
+import com.squareup.connect.models.RetrieveCatalogObjectResponse;
 import java.util.UUID;
 
 import static com.squareup.catalog.demo.util.CatalogObjects.item;
@@ -42,7 +42,7 @@ public class CreateItemExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationApi locationApi) throws IOException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
     // First create the parent CatalogItem.
     CatalogObject newItem = createItem(catalogApi);
     if (newItem == null) {
@@ -50,14 +50,14 @@ public class CreateItemExample extends Example {
     }
 
     // Now let's retrieve the CatalogItem.
-    retrieveItem(catalogApi, newItem.id);
+    retrieveItem(catalogApi, newItem.getId());
   }
 
   /**
    * Creates a new item and returns it.
    **/
-  private CatalogObject createItem(CatalogApi catalogApi) throws IOException {
-    /**
+  private CatalogObject createItem(CatalogApi catalogApi) throws ApiException {
+    /*
      * Build the request to create the new item.
      *
      * This function call creates a BatchUpsertCatalogObjectsRequest object
@@ -69,40 +69,35 @@ public class CreateItemExample extends Example {
      *
      * Note: this call only *creates* the new objects and packages them for
      * upsert. Nothing has been uploaded to the server at this point.
-     **/
-    BatchUpsertCatalogObjectsRequest request = new BatchUpsertCatalogObjectsRequest.Builder()
-        .idempotency_key(UUID.randomUUID().toString())
-        .batches(singletonList(new CatalogObjectBatch.Builder()
+     */
+    BatchUpsertCatalogObjectsRequest request = new BatchUpsertCatalogObjectsRequest()
+        .idempotencyKey(UUID.randomUUID().toString())
+        .batches(singletonList(new CatalogObjectBatch()
             .objects(singletonList(
                 item("#SODA", "Soda", null,
                     itemVariation("#SODA-SMALL", "Small", 150),
                     itemVariation("#SODA-MEDIUM", "Medium", 175),
-                    itemVariation("#SODA-LARGE", "Large", 200)
-                )))
-            .build()))
-        .build();
+                    itemVariation("#SODA-LARGE", "Large", 200))))));
 
-    /**
+    /*
      * Post the batch upsert to insert the new item.
      *
      * Use the BatchUpsertCatalogObjectsRequest object we just created to
      * upsert the new CatalogObjects to the catalog associated with the
      * access token included on the command line.
-     **/
+     */
     logger.info("Creating new Soda item");
-    BatchUpsertCatalogObjectsResponse response = catalogApi.batchUpsert(request);
-
-    // If the response is null, we already logged errors.
-    if (response == null) {
+    BatchUpsertCatalogObjectsResponse response = catalogApi.batchUpsertCatalogObjects(request);
+    if (checkAndLogErrors(response.getErrors())) {
       return null;
     }
 
-    /**
+    /*
      * If the response is not null, we want to log the list of object IDs that
      * were successfully created in the catalog (e.g., #SODA, #SODA-LARGE)
-     **/
-    CatalogObject newItem = response.objects.get(0);
-    logger.info("Created item " + newItem.id);
+     */
+    CatalogObject newItem = response.getObjects().get(0);
+    logger.info("Created item " + newItem.getId());
     return newItem;
   }
 
@@ -111,25 +106,23 @@ public class CreateItemExample extends Example {
    *
    * @param itemId the ID of the newly created item.
    **/
-  private void retrieveItem(CatalogApi catalogApi, String itemId) {
-    try {
-      // Send GET request to retrieve a single object based on the object ID.
-      logger.info("Retrieving item with id: " + itemId);
-      RetrieveCatalogObjectResponse response = catalogApi.retrieveObject(itemId);
-
-      // If the response is null, we already logged errors.
-      if (response == null) {
-        return;
-      }
-
-      /*
-       * Otherwise, grab the name and object ID of the CatalogItem that was
-       * fetched from the catalog and print them to the screen.
-       **/
-      CatalogObject retrieveditem = response.object;
-      logger.info("Retrieved Item " + retrieveditem.item_data.name + " (" + retrieveditem.id + ")");
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+  private void retrieveItem(CatalogApi catalogApi, String itemId) throws ApiException {
+    // Send GET request to retrieve a single object based on the object ID.
+    logger.info("Retrieving item with id: " + itemId);
+    RetrieveCatalogObjectResponse response = catalogApi.retrieveCatalogObject(itemId, false);
+    if (checkAndLogErrors(response.getErrors())) {
+      return;
     }
+
+    /*
+     * Otherwise, grab the name and object ID of the CatalogItem that was
+     * fetched from the catalog and print them to the screen.
+     */
+    CatalogObject retrieveditem = response.getObject();
+    logger.info("Retrieved Item "
+        + retrieveditem.getItemData().getName()
+        + " ("
+        + retrieveditem.getId()
+        + ")");
   }
 }

@@ -13,27 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.squareup.catalog.demo.api;
+package com.squareup.catalog.demo.util;
 
 import com.squareup.catalog.demo.Logger;
-import com.squareup.catalog.resources.CatalogObject;
-import com.squareup.catalog.service.ListLocationsResponse;
-import java.io.IOException;
+import com.squareup.connect.models.Error;
+import java.util.List;
 
 /**
- * Utility class used to retrieve location information.
+ * Utility to log errors.
  */
-public class LocationApi extends BaseApi {
-
-  public LocationApi(String baseUrl, String accessToken, Logger logger) {
-    super(baseUrl + "locations", accessToken, logger);
-  }
+public class Errors {
 
   /**
-   * Deletes multiple {@link CatalogObject CatalogObjects}.
+   * Logs errors received from the Catalog API.
+   *
+   * @param errors the list of errors returned in the API response
+   * @return true if errors were logged, false if no errors
    */
-  public ListLocationsResponse listLocations()
-      throws IOException {
-    return get("", ListLocationsResponse.class);
+  public static boolean checkAndLogErrors(List<Error> errors, Logger logger) {
+    if (errors == null || errors.isEmpty()) {
+      return false;
+    }
+
+    for (Error error : errors) {
+      logger.error("[" + error.getCode().toString() + "] " + error.getDetail());
+    }
+
+    return true;
+  }
+
+  private Errors() {
   }
 }

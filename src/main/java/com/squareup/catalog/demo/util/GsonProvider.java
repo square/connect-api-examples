@@ -17,16 +17,13 @@ package com.squareup.catalog.demo.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.wire.WireTypeAdapterFactory;
 
 /**
  * Provides the one instance of Java setup to serialize Wire-generated proto classes.
  */
 public class GsonProvider {
 
-  private static Gson INSTANCE = new GsonBuilder()
-      .registerTypeAdapterFactory(new WireTypeAdapterFactory()) //
-      .create();
+  private static Gson INSTANCE = new GsonBuilder().create();
 
   public static Gson gson() {
     return INSTANCE;
