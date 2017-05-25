@@ -25,12 +25,15 @@ import com.squareup.connect.models.BatchUpsertCatalogObjectsResponse;
 import com.squareup.connect.models.CatalogIdMapping;
 import com.squareup.connect.models.CatalogObject;
 import com.squareup.connect.models.CatalogObjectBatch;
+import com.squareup.connect.models.SearchCatalogObjectsRequest;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.squareup.catalog.demo.util.CatalogObjects.category;
 import static com.squareup.catalog.demo.util.CatalogObjects.item;
+import static com.squareup.connect.models.SearchCatalogObjectsRequest.ObjectTypesEnum.CATEGORY;
+import static com.squareup.connect.models.SearchCatalogObjectsRequest.ObjectTypesEnum.ITEM;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
@@ -57,6 +60,14 @@ public class DeleteCategoryExample extends Example {
 
     // Now delete them.
     deleteCategoryAndItems(catalogApi, response.getObjects());
+  }
+
+  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi)
+      throws ApiException {
+    cleanCatalogObjectsByName(catalogApi, ITEM, "Soda");
+    cleanCatalogObjectsByName(catalogApi, ITEM, "Water");
+    cleanCatalogObjectsByName(catalogApi, ITEM, "Juice");
+    cleanCatalogObjectsByName(catalogApi, CATEGORY, "Drinks");
   }
 
   /**
@@ -131,7 +142,7 @@ public class DeleteCategoryExample extends Example {
      * IDs so can use them to populate a new BatchDeleteCatalogObjectsRequest.
      **/
     List<String> idsToDelete =
-        objectsToDelete.stream().map(CatalogObject :: getId).collect(Collectors.toList());
+        objectsToDelete.stream().map(CatalogObject::getId).collect(Collectors.toList());
 
     /*
      * Build the BatchDeleteCatalogObjectsRequest object (request) to remove the

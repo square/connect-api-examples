@@ -30,35 +30,42 @@ import com.squareup.connect.api.LocationsApi;
 import com.squareup.connect.auth.OAuth;
 import com.squareup.connect.models.Error;
 import java.util.List;
+import java.util.Locale;
 
 import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
 
 public class Main {
 
-  private static String USAGE = "USAGE:\n" +
-      "  Execute Example: java <example_name> -token <accessToken>\n" +
+  private static final String USAGE = "USAGE:\n" +
+      "  Execute Example: java <example_name> -token <accessToken> [-cleanup]\n" +
       "  List Examples:   java -list-examples\n" +
       "  Print Usage:     java -usage";
 
   /**
    * Argument used to print usage information.
    */
-  private static String ARG_USAGE = "-usage";
+  private static final String ARG_USAGE = "-usage";
 
   /**
    * Argument used to print example in a readable format.
    */
-  private static String ARG_LIST_EXAMPLES = "-list-examples";
+  private static final String ARG_LIST_EXAMPLES = "-list-examples";
 
   /**
    * Optional Argument used to set the base URL of the Catalog API.
    */
-  private static String ARG_BASE_URL = "-base-url";
+  private static final String ARG_BASE_URL = "-base-url";
+
+  /**
+   * Optional argument used to specify that the example should be cleaned up instead of being
+   * executed.
+   */
+  private static final String ARG_CLEANUP = "-cleanup";
 
   /**
    * Argument used to set the access token. Required when executing an example.
    */
-  private static String ARG_TOKEN = "-token";
+  private static final String ARG_TOKEN = "-token";
 
   public static void main(String[] args) {
     Main main = new Main(new Logger.SystemLogger(),
@@ -98,26 +105,33 @@ public class Main {
 
     // Process arguments associated with the example.
     String accessToken = null;
+    boolean cleanup = false;
     ApiClient apiClient = Configuration.getDefaultApiClient();
     for (int i = 1; i < args.length; i++) {
-      String arg = args[i];
-      if (ARG_BASE_URL.equalsIgnoreCase(arg)) {
-        if (i == args.length - 1) {
-          usage(ARG_BASE_URL + " specified without a url");
+      String arg = args[i].toLowerCase(Locale.US);
+      switch (arg) {
+        case ARG_BASE_URL:
+          if (i == args.length - 1) {
+            usage(ARG_BASE_URL + " specified without a url");
+            return;
+          }
+          apiClient = new ApiClient().setBasePath(args[i + 1]);
+          i++;
+          break;
+        case ARG_CLEANUP:
+          cleanup = true;
+          break;
+        case ARG_TOKEN:
+          if (i == args.length - 1) {
+            usage(ARG_TOKEN + " specified without a token");
+            return;
+          }
+          accessToken = args[i + 1];
+          i++;
+          break;
+        default:
+          usage("Unrecognized argument: " + arg);
           return;
-        }
-        apiClient = new ApiClient().setBasePath(args[i + 1]);
-        i++;
-      } else if (ARG_TOKEN.equalsIgnoreCase(arg)) {
-        if (i == args.length - 1) {
-          usage(ARG_TOKEN + " specified without a token");
-          return;
-        }
-        accessToken = args[i + 1];
-        i++;
-      } else {
-        usage("Unrecognized argument: " + arg);
-        return;
       }
     }
     if (accessToken == null || accessToken.trim().isEmpty()) {
@@ -131,7 +145,7 @@ public class Main {
 
     CatalogApi catalogApi = new CatalogApi(apiClient);
     LocationsApi locationsApi = new LocationsApi(apiClient);
-    executeExample(command, catalogApi, locationsApi);
+    executeExample(command, cleanup, catalogApi, locationsApi);
   }
 
   /**
@@ -171,14 +185,19 @@ public class Main {
    * Executes a single example.
    *
    * @param exampleName the name of the example to execute
+   * @param cleanup if true, cleanup the example instead of executing it
    * @param catalogApi the CatalogApi utility
    */
-  private void executeExample(String exampleName, CatalogApi catalogApi,
+  private void executeExample(String exampleName, boolean cleanup, CatalogApi catalogApi,
       LocationsApi locationsApi) {
     for (Example example : examples) {
       if (example.getName().equalsIgnoreCase(exampleName)) {
         try {
-          example.execute(catalogApi, locationsApi);
+          if (cleanup) {
+            example.cleanup(catalogApi, locationsApi);
+          } else {
+            example.execute(catalogApi, locationsApi);
+          }
         } catch (ApiException e) {
           handleApiException(e);
         }

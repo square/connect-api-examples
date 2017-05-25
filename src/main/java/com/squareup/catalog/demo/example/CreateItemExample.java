@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import static com.squareup.catalog.demo.util.CatalogObjects.item;
 import static com.squareup.catalog.demo.util.CatalogObjects.itemVariation;
+import static com.squareup.connect.models.SearchCatalogObjectsRequest.ObjectTypesEnum.ITEM;
 import static java.util.Collections.singletonList;
 
 /**
@@ -51,6 +52,11 @@ public class CreateItemExample extends Example {
 
     // Now let's retrieve the CatalogItem.
     retrieveItem(catalogApi, newItem.getId());
+  }
+
+  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi)
+      throws ApiException {
+    cleanCatalogObjectsByName(catalogApi, ITEM, "Soda");
   }
 
   /**

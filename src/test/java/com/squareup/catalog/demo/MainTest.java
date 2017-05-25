@@ -124,6 +124,20 @@ public class MainTest {
     verifyUsageLogged();
   }
 
+  @Test public void processArgs_cleanupExample() throws ApiException {
+    ArgumentCaptor<CatalogApi> catalogApiCaptor = ArgumentCaptor.forClass(CatalogApi.class);
+    ArgumentCaptor<LocationsApi> locationApiCaptor = ArgumentCaptor.forClass(LocationsApi.class);
+    main.processArgs(new String[] {"foo", "-token", "abcdef", "-cleanup"});
+    verify(exampleFoo).cleanup(catalogApiCaptor.capture(), locationApiCaptor.capture());
+    CatalogApi catalogApi = catalogApiCaptor.getValue();
+    assertEquals("https://connect.squareup.com", catalogApi.getApiClient().getBasePath());
+    assertEquals("https://connect.squareup.com",
+        locationApiCaptor.getValue().getApiClient().getBasePath());
+
+    verify(exampleFoo, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
+    verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
+  }
+
   @Test public void processArgs_unrecognizedArgument() throws ApiException {
     main.processArgs(new String[] {"bad_name", "-token", "abcdef", "-unrecognized"});
     verify(logger).error(startsWith("Unrecognized"));

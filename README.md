@@ -54,3 +54,16 @@ For example:
 ```
 mvn -q exec:java "-Dexec.args=create_item -token $SQPAT"
 ```
+
+## Cleanup an Example
+
+Some examples create items and other catalog objects in your merchant catalog. You can
+cleanup the objects created by an example using the `-cleanup` flag.
+
+Note that the cleanup code will delete items and other objects by name, and as such may
+delete items with the same name that were not created by the example. 
+
+For example:
+```
+mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -cleanup"
+```
