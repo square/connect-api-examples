@@ -1,0 +1,245 @@
+<div id="successNotification" style="display: none">
+  <p>Card Charged Succesfully!!</p>
+</div>
+
+<form id="payment-form" class="container" action="#" onsubmit="return paymentFormSubmit()">
+  
+  <h2>JS + Bootstrap example</h2>
+  
+  <div class="form-group">
+    <label>Choose your Golden Gate replica</label>
+    <select id="product_id" name="product_id">
+      <option value="001">$1 Paper Origami 1:10,000 scale model (11 inch) </option>
+      <option value="002">$49 Plastic 1:5000 scale model (22 inch)</option>
+      <option value="003">$5000 Metal &amp; Concrete 1:1000 scale replica (9 feet)</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Name</label>
+    <input type="text" id="name" name="name" class="form-control" placeholder="Name"/>
+  </div>
+
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" id="email" name="email" class="form-control" placeholder="Email"/>
+  </div>
+
+  <div class="form-group">
+    <label> Shipping Address </label>
+    <div class="form-group">
+      <label>Street</label>
+      <input type="text" id="street_address_1"  name="street_address_1" class="form-control" placeholder="Address Line 1"/>
+    </div>
+    <div class="form-group">
+      <label>Street</label>
+      <input type="text" id="street_address_2"  name="street_address_2" class="form-control" placeholder="Address Line 2"/>
+    </div>
+    <div class="form-group">
+      <label>City</label>
+      <input type="text" id="city" name="city" class="form-control" placeholder="City"/>
+    </div>
+    <div class="form-group">
+      <label>State</label>
+      <select id="state" name="state">
+        <option value=""></option>
+        <option value="AL">Alabama</option>
+        <option value="AK">Alaska</option>
+        <option value="AZ">Arizona</option>
+        <option value="AR">Arkansas</option>
+        <option value="CA">California</option>
+        <option value="CO">Colorado</option>
+        <option value="CT">Connecticut</option>
+        <option value="DE">Delaware</option>
+        <option value="DC">District of Columbia</option>
+        <option value="FL">Florida</option>
+        <option value="GA">Georgia</option>
+        <option value="HI">Hawaii</option>
+        <option value="ID">Idaho</option>
+        <option value="IL">Illinois</option>
+        <option value="IN">Indiana</option>
+        <option value="IA">Iowa</option>
+        <option value="KS">Kansas</option>
+        <option value="KY">Kentucky</option>
+        <option value="LA">Louisiana</option>
+        <option value="ME">Maine</option>
+        <option value="MD">Maryland</option>
+        <option value="MA">Massachusetts</option>
+        <option value="MI">Michigan</option>
+        <option value="MN">Minnesota</option>
+        <option value="MS">Mississippi</option>
+        <option value="MO">Missouri</option>
+        <option value="MT">Montana</option>
+        <option value="NE">Nebraska</option>
+        <option value="NV">Nevada</option>
+        <option value="NH">New Hampshire</option>
+        <option value="NJ">New Jersey</option>
+        <option value="NM">New Mexico</option>
+        <option value="NY">New York</option>
+        <option value="NC">North Carolina</option>
+        <option value="ND">North Dakota</option>
+        <option value="OH">Ohio</option>
+        <option value="OK">Oklahoma</option>
+        <option value="OR">Oregon</option>
+        <option value="PA">Pennsylvania</option>
+        <option value="RI">Rhode Island</option>
+        <option value="SC">South Carolina</option>
+        <option value="SD">South Dakota</option>
+        <option value="TN">Tennessee</option>
+        <option value="TX">Texas</option>
+        <option value="UT">Utah</option>
+        <option value="VT">Vermont</option>
+        <option value="VA">Virginia</option>
+        <option value="WA">Washington</option>
+        <option value="WV">West Virginia</option>
+        <option value="WI">Wisconsin</option>
+        <option value="WY">Wyoming</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Zip</label>
+      <input type="text" id="zip" name="zip" class="form-control" placeholder="Zip"/>
+    </div>
+  </div>
+
+  <div id="card-errors"></div>
+
+  <div class="form-group sq-form-group">
+    <div class="form-control" id="sq-card-number"></div>
+    <label>Card Number</label>
+  </div>
+  
+  <div class="form-group sq-form-group">
+    <div class="form-control" id="sq-cvv"></div>
+    <label>CVV</label>
+  </div>
+
+  <div class="form-group sq-form-group">
+    <div class="form-control" id="sq-expiration-date"></div>
+    <label>Expiration Date</label>
+  </div>
+
+  <div class="form-group sq-form-group">
+    <div class="form-control" id="sq-postal-code"></div>
+    <label>Postal Code</label>
+  </div>
+  
+  <div class="form-group">
+    <input type="submit" id="submit" value="Buy Now" class="btn btn-primary">
+  </div>
+
+</form>
+
+
+
+<script type="text/javascript">
+var cardNonce;
+var paymentForm = new SqPaymentForm({
+  applicationId: '<%=Rails.application.secrets.square_application_id %>',
+  inputClass: 'sq-input-boot',
+  inputStyles: [
+      {
+        fontSize: '14px',
+        padding: '7px 12px',
+        backgroundColor: "transparent"
+      }
+    ],
+  cardNumber: {
+    elementId: 'sq-card-number',
+    placeholder: '0000 0000 0000 0000'    
+  },
+  cvv: {
+    elementId: 'sq-cvv',
+    placeholder: 'CVV'
+  },
+  expirationDate: {
+    elementId: 'sq-expiration-date',
+    placeholder: 'MM/YY'
+  },
+  postalCode: {
+    elementId: 'sq-postal-code',
+    placeholder: '94110'
+  },
+  callbacks: {
+    cardNonceResponseReceived: function(errors, nonce, cardData) {
+      if (errors){
+        var error_html = ""
+        for (var i =0; i < errors.length; i++){
+          error_html += "<li> " + errors[i].message + " </li>";
+        }
+        document.getElementById("card-errors").innerHTML = error_html;
+        document.getElementById('submit').disabled = false;
+      }else{
+        document.getElementById("card-errors").innerHTML = "";
+        chargeCardWithNonce(nonce);
+      }
+      
+      
+    },
+    unsupportedBrowserDetected: function() {
+      // Alert the buyer
+    }
+  }
+});
+
+var paymentFormSubmit = function(){
+  console.log('submit clicked');
+  document.getElementById('submit').disabled = true;
+  paymentForm.requestCardNonce();
+  return false;
+}
+
+var chargeCardWithNonce = function(nonce) {
+  var product_id = document.getElementById('product_id').value;
+  var name = document.getElementById('name').value;
+  var email = document.getElementById('email').value;
+  var street_address_1 = document.getElementById('street_address_1').value;
+  var street_address_2 = document.getElementById('street_address_2').value;
+  var city = document.getElementById('city').value;
+  var state = document.getElementById('state').value;
+  var zip = document.getElementById('zip').value;
+  
+  var http = new XMLHttpRequest();
+  var url = "/charges/charge_card";
+  var params = "product_id=" + product_id 
+  +"&name=" + name 
+  +"&email=" + email 
+  + "&nonce=" + nonce
+  + "&street_address_1=" + street_address_1
+  + "&street_address_2=" + street_address_2
+  + "&city=" + city
+  + "&state=" + state
+  + "&zip=" + zip;
+
+  http.open("POST", url, true);
+
+  //Send the proper header information along with the request
+  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  http.setRequestHeader("X-CSRF-Token", "<%= form_authenticity_token %>");
+
+  http.onreadystatechange = function() {//Call a function when the state changes.
+      if(http.readyState == 4 && http.status == 200) {
+        var data = JSON.parse(http.responseText)
+        if (data.status == 200) {
+          document.getElementById("successNotification").style.display = "block";
+          document.getElementById("payment-form").style.display = "none";
+          window.scrollTo(0, 0);
+        }else if (data.status == 400){
+          var error_html = ""
+          for (var i =0; i < data.errors.length; i++){
+            error_html += "<li> " + data.errors[i].detail + " </li>";
+          }
+          document.getElementById("card-errors").innerHTML = error_html;
+          document.getElementById('submit').disabled = false;
+        }
+      }
+  }
+  http.send(params);
+}
+
+// required to work with rails turbolinks
+document.addEventListener('page:change', function(){
+  console.log('dom loaded')
+  paymentForm.build()
+});
+</script>

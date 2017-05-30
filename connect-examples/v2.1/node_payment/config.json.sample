@@ -1,0 +1,10 @@
+{
+  "development": {
+    "squareApplicationId": "dev-application-id-here",
+    "squareAccessToken": "dev-access-token-here"
+  },
+  "production": {
+    "squareApplicationId": "prod-application-id-here",
+    "squareAccessToken": "prod-access-token-here"
+  }
+}

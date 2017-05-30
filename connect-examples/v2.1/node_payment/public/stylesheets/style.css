@@ -1,0 +1,100 @@
+body{
+  font-family: Helvetica;
+}
+
+.no-boot{
+  margin: 10px 10%;
+}
+
+
+.no-boot label{
+  display: block;
+}
+
+/* input styles */
+.no-boot input,
+.no-boot select{
+  width: 100%;
+  height: 24px;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  font-family: helvetica;
+  font-size: 14px;
+}
+
+.no-boot input{
+  border: none;
+  border-bottom: 1px solid #b6b6b6;
+}
+
+.no-boot input:focus{
+  outline: 0;
+  border-bottom: 1px solid #66afe9;
+  box-shadow: 0 3px 0 #66afe9;
+}
+
+/*  submit button styles */
+.no-boot input[type=submit]{
+  background-color: #62DF49;
+  color: #fff;
+  height: 44px;
+  width: 45%;
+  cursor: pointer;
+}
+
+.no-boot input[type=submit]:hover{
+  background-color: #56FBD2;
+}
+
+.no-boot input[type=submit]:focus{
+  outline: 0;
+  border-bottom: 0;
+  box-shadow: none;
+}
+
+/* disable submit button so no other actions can take place while form goes through */
+.no-boot input[type=submit][disabled]{
+  cursor: not-allowed;
+  background-color: #8CE67A;
+}
+
+/*  Square Fields */
+.sq-input{
+  margin-bottom: 10px;
+  border: none;
+  border-bottom: 1px solid #b6b6b6;
+}
+
+/*  [iFrame class]--focus is added when the square form is focused
+use similar to other form focus style for consistency */
+.sq-input--focus{
+  outline: 0;
+  border-bottom: 1px solid #66afe9;
+  box-shadow: 0 3px 0 #66afe9;
+}
+
+/* [iFrame class]--error is added when the iFrame local check fails
+use similar styling on other forms to ensure consistent error styles */
+.sq-input--error{
+  background-color: #F3C0C0;
+}
+
+/* error messages */
+.no-boot #card-errors li{
+  list-style-type: none;
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: #E27272;
+  color: white;
+}
+
+/* Success */
+#successNotification{
+  margin: 0;
+  text-align: center;
+  background-image: linear-gradient(-1deg, #72E07B 0%, #56FBD2 100%);
+  border-radius: 4px;
+  padding: 25% 30%;
+  color: white;
+  font-size: 32px;
+}
