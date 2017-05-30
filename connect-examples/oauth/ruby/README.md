@@ -11,15 +11,16 @@ For more information, see [OAuth Overview](https://docs.connect.squareup.com/api
 This application requires gems for the Sinatra web framework and the Unirest HTTP library.
 Install them with `gem install sinatra` and `gem install unirest`.
 
+Alternatively, you can use bundler to install it with `bundle install`
 
 ### Specify your application credentials
 
 In order for the sample to work, you must specify two fields in `oauth-flow.rb`:
 
-* Replace the value of `$application_id` with your application's ID, available on your
+* Replace the value of `APP_ID` with your application's ID, available on your
 [application dashboard](https://connect.squareup.com/apps).
 
-* Replace the value of `$application_secret` with your application's secret, also available on your application dashboard.
+* Replace the value of `APP_SECRET` with your application's secret, also available on your application dashboard.
 
 ### Set your application's Redirect URL
 
