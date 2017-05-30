@@ -3,6 +3,10 @@
 This sample demonstrates processing card payments with Square Connect API, using the
 Square Connect Python client library.
 
+## Requirements
+
+Make sure you have Python 2 >=2.79 or Python 3 >= 3.4
+
 ## Setup
 
 ### Install the Python client library
