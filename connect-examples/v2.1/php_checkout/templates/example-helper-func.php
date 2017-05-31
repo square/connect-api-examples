@@ -15,7 +15,7 @@ function saveCheckoutId($currOrder, $checkoutId) {
 
   // add code to update the order metadata with the provided checkoutId
 
-  return $success ;
+  return $success;
 }
 
 /*******************************************************************************
@@ -33,7 +33,7 @@ function getCheckoutId($currOrder) {
 
   // add code to look up checkoutId from the stored order metadata
 
-  return $checkoutId ;
+  return $checkoutId;
 }
 
 /*******************************************************************************
@@ -50,7 +50,7 @@ function getOrderTotal($currOrder) {
 
     // add code to look up orderTotal from the stored order metadata
 
-    return $orderTotal ;
+    return $orderTotal;
 }
 
 /*******************************************************************************
@@ -70,7 +70,7 @@ function getSalesTax($currOrder) {
 
     // add code to look up or calculate the applicable sales tax for the order
 
-    return $salesTax ;
+    return $salesTax;
 }
 
 /*******************************************************************************
@@ -87,7 +87,7 @@ function getShippingCost($currOrder) {
 
     // add code to look up or calculate the applicable sales tax for the order
 
-    return $shippingAmount ;
+    return $shippingAmount;
 }
 
 /*******************************************************************************
@@ -108,20 +108,20 @@ function verifyTransaction(
   $getResponse,  $apiResponse,  $savedCheckoutId,  $savedOrderTotal) {
 
   // Grab the transation keys returned by Square Checkout
-  $returnedCheckoutId = $getResponse["checkoutId"] ;
-  $returnedOrderId = $getResponse["referenceId"] ;
+  $returnedCheckoutId = $getResponse["checkoutId"];
+  $returnedOrderId = $getResponse["referenceId"];
 
   // HELPER FUNCTION: look up order metadata: Square Checkout checkoutId
-  $savedCheckoutId = getCheckoutID($returnedOrderId) ;
+  $savedCheckoutId = getCheckoutID($returnedOrderId);
 
   // HELPER FUNCTION: look up order metadata: order total
-  $savedOrderTotal = getOrderTotal($returnedOrderId) ;
+  $savedOrderTotal = getOrderTotal($returnedOrderId);
 
   // Initialize the verification variables
-  $calculatedOrderTotal = 0 ; // the order total as calucluated by Checkout
-  $cardCaptured = false ;     // indicates all cards were captured successfully
-  $totalMatch = false ;       // stored and calculated totals match
-  $checkoutIdMatch = false ;  // checkoutID stored with the order and retured
+  $calculatedOrderTotal = 0; // the order total as calucluated by Checkout
+  $cardCaptured = false;     // indicates all cards were captured successfully
+  $totalMatch = false;       // stored and calculated totals match
+  $checkoutIdMatch = false;  // checkoutID stored with the order and retured
                               // with the transaction results match
 
   // The TransactionsApi returns an array that includes a list tender objects.
@@ -130,22 +130,22 @@ function verifyTransaction(
   foreach ($apiResponse['transaction']['tenders'] as $tender) {
 
     // Add the calculated/tendered amount to the overall order total
-    $calculatedOrderTotal += $tender['amount_money']['amount'] ;
+    $calculatedOrderTotal += $tender['amount_money']['amount'];
 
     // If the tender type is a credit card, make sure it was captured
     // successfully. If it wasn't, we can stop here because we know the order
     // didn't complete properly
     if ($tender['type'] == "CARD") {
-      $cardCaptured = ($tender['card_details']['status'] == "CAPTURED") ;
-      if (!cardCaptured) { return false ; }
+      $cardCaptured = ($tender['card_details']['status'] == "CAPTURED");
+      if (!cardCaptured) { return false; }
     }
   }
 
   // Verify the transaction results for checkoutID and order total
-  $totalMatch = ($calculatedOrderTotal == $savedOrderTotal) ;
-  $checkoutIdMatch = ($returnedCheckoutId == $savedCheckoutId) ;
+  $totalMatch = ($calculatedOrderTotal == $savedOrderTotal);
+  $checkoutIdMatch = ($returnedCheckoutId == $savedCheckoutId);
 
-  return ($totalMatch && $cardCaptured && $checkoutIdMatch) ;
+  return ($totalMatch && $cardCaptured && $checkoutIdMatch);
 }
 
 /*******************************************************************************
@@ -221,6 +221,5 @@ function getOrderAsArray($currOrder) {
   // part of its workflow, you should also calculate and store that information
   // for verification later
 
-  return $orderArray ;
+  return $orderArray;
 }
-?>
