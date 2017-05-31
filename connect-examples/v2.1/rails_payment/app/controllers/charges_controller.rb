@@ -37,7 +37,7 @@ class ChargesController < ApplicationController
       locations = locations_api.list_locations.locations
     rescue SquareConnect::ApiError => e
       Rails.logger.error("Error encountered while loading the locations: #{e.message}")
-      render json: {:status => 500, :errors => JSON.parse(e.response_body)["errors"] }, status: :internal_server_error
+      render json: {:status => 500, :errors => JSON.parse(e.response_body)["errors"] }
       return
     end
 
@@ -45,11 +45,17 @@ class ChargesController < ApplicationController
       Array(l.capabilities).include?(SquareConnect::LocationCapability::PROCESSING)
     end
 
+    if location.nil?
+      Rails.logger.error("Can't find a location that can process payments")
+      render json: {:status => 422, :errors => {locations: 'cat not process payments'} }
+      return
+    end
+
     begin
       resp = transactions_api.charge(location.id, request_body)
     rescue SquareConnect::ApiError => e
       Rails.logger.error("Error encountered while charging card:: #{e.message}")
-      render json: {:status => 400, :errors => JSON.parse(e.response_body)["errors"]  }
+      render json: {:status => 400, :errors => JSON.parse(e.response_body)["errors"]}
       return
     end
     puts resp
