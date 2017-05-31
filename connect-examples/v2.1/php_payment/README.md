@@ -34,7 +34,6 @@ for more information on the API sandbox.
 
 You can `grep` for `REPLACE_ME` to find all of the fields to replace.
 
-
 ## Running the sample
 
 From the sample's root directory, run:
@@ -50,6 +49,8 @@ transaction by providing the following card information in the form:
 * Card CVV `111`
 * Card Expiration (Any time in the future)
 * Card Postal Code (Any valid US postal code)
+
+You can find more testing values in this [article](https://docs.connect.squareup.com/articles/using-sandbox)
 
 **Note that if you are _not_ using your sandbox credentials and you enter _real_
 credit card information, YOU WILL CHARGE THE CARD.**
