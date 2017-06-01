@@ -6,4 +6,4 @@ To get the app running:
 
 * `npm start`
 
-* open a browser and navigate to [localhost:3000](localhost:3000)
+* open a browser and navigate to [localhost:3000](http://localhost:3000)
