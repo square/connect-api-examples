@@ -21,7 +21,8 @@ router.post('/charges/charge_card', function(req,res,next){
 	unirest.get(base_url + '/locations')
 	.headers({
 		'Authorization': 'Bearer ' + config.squareAccessToken,
-		'Accept': 'application/json'
+		'Accept': 'application/json',
+		'User-Agent': 'Square-Samples/Node'
 	})
 	.end(function (response) {
 
@@ -58,7 +59,8 @@ router.post('/charges/charge_card', function(req,res,next){
 		.headers({
 			'Authorization': 'Bearer ' + config.squareAccessToken,
 			'Accept': 'application/json',
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			'User-Agent': 'Square-Samples/Node'
 		})
 		.send(request_body)
 		.end(function(response){
