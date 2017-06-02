@@ -24,6 +24,7 @@ namespace PaymentExample
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            Configuration.Default.AccessToken = _accessToken;
             _transactionApi = new TransactionApi();
         }
 
@@ -42,10 +43,9 @@ namespace PaymentExample
             Money amount = new Money(100, Money.CurrencyEnum.USD);
 
             ChargeRequest body = new ChargeRequest(AmountMoney: amount, IdempotencyKey: uuid, CardNonce: nonce);
-
             try
             {
-                var response = _transactionApi.Charge(_accessToken, _locationId, body);
+                var response = _transactionApi.Charge(_locationId, body);
                 return "Transaction complete\n" + response.ToJson();
             }
             catch (ApiException e)
