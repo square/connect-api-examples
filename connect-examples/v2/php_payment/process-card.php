@@ -5,13 +5,6 @@ require 'vendor/autoload.php';
 # Replace these values. You probably want to start with your Sandbox credentials
 # to start: https://docs.connect.squareup.com/articles/using-sandbox/
 
-# The ID of the business location to associate processed payments with.
-# If you're testing things out, use a sandbox location ID.
-#
-# See [Retrieve your business's locations](https://docs.connect.squareup.com/articles/getting-started/#retrievemerchantprofile)
-# for an easy way to get your business's location IDs.
-$location_id = 'REPLACE_ME';
-
 # The access token to use in all Connect API requests. Use your *sandbox* access
 # token if you're just testing things out.
 $access_token = 'REPLACE_ME';
@@ -32,7 +25,27 @@ if (is_null($nonce)) {
   return;
 }
 
-$transaction_api = new \SquareConnect\Api\TransactionApi();
+\SquareConnect\Configuration::getDefaultConfiguration()->setAccessToken($access_token);
+$locations_api = new \SquareConnect\Api\LocationsApi();
+
+try {
+  $locations = $locations_api->listLocations();
+  #We look for a location that can process payments
+  $location = current(array_filter($locations->getLocations(), function($location) {
+    return !empty($location->getCapabilities()) &&
+      in_array('CREDIT_CARD_PROCESSING', $location->getCapabilities());
+  }));
+
+} catch (\SquareConnect\ApiException $e) {
+  echo "Caught exception!<br/>";
+  print_r("<strong>Response body:</strong><br/>");
+  echo "<pre>"; var_dump($e->getResponseBody()); echo "</pre>";
+  echo "<br/><strong>Response headers:</strong><br/>";
+  echo "<pre>"; var_dump($e->getResponseHeaders()); echo "</pre>";
+  exit(1);
+}
+
+$transactions_api = new \SquareConnect\Api\TransactionsApi();
 
 $request_body = array (
 
@@ -55,7 +68,7 @@ $request_body = array (
 # The SDK throws an exception if a Connect endpoint responds with anything besides
 # a 200-level HTTP code. This block catches any exceptions that occur from the request.
 try {
-  $result = $transaction_api->charge($access_token, $location_id, $request_body);
+  $result = $transactions_api->charge($location->getId(), $request_body);
   echo "<pre>";
   print_r($result);
   echo "</pre>";

@@ -2,36 +2,36 @@
 
 // Include the Square Connect API resources, store config, and helper functions
 require_once '/local/path/to/sdk/SquareConnect/autoload.php';
-require_once '/local/path/to/store-config.php' ;
-require_once '/local/path/to/sc-helper-func.php' ;
+require_once '/local/path/to/store-config.php';
+require_once '/local/path/to/sc-helper-func.php';
 
 // pull out the transaction ID returned by Square Checkout
-$returnedTransactionId = $_GET["transactionId"] ;
+$returnedTransactionId = $_GET["transactionId"];
 
 // CONFIG FUNCTION: Create a Square Checkout API client if needed
-initApiClient() ;
+initApiClient();
 
 // Create a new API object to verify the transaction
-$transactionClient = new \SquareConnect\Api\TransactionApi($GLOBALS['API_CLIENT']) ;
+$transactionsClient = new \SquareConnect\Api\TransactionsApi();
 
 // Ping the Transactions API endpoint for transaction details
 try {
 
   // Get transaction details for this order from the Transactions API endpoint
-  $apiResponse = $transactionClient->retrieveTransaction(
+  $apiResponse = $transactionsClient->retrieveTransaction(
     $GLOBALS['LOCATION_ID'],
     $returnedTransactionId
-  ) ;
+  );
 
 } catch (Exception $e) {
   echo "The SquareConnect\Configuration object threw an exception while " .
        "calling TransactionApi->retrieveTransaction: ",
-       $e->getMessage(), PHP_EOL ;
-  exit ;
+       $e->getMessage(), PHP_EOL;
+  exit;
 }
 
 // HELPER FUNCTION: verify the order information
-$validTransaction = verifyTransaction($_GET, $apiResponse, $savedCheckoutId, $savedOrderTotal) ;
+$validTransaction = verifyTransaction($_GET, $apiResponse, $savedCheckoutId, $savedOrderTotal);
 
 if (!$validTransaction) {
 
@@ -48,8 +48,6 @@ if (!$validTransaction) {
      for follow-up
   */
 
-  exit ;
+  exit;
 
 }
-
-?>

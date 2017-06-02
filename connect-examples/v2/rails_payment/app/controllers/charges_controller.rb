@@ -5,10 +5,15 @@ PRODUCT_COST = {
 }
 
 class ChargesController < ApplicationController
-  
+
   def charge_card
-    transaction_api = SquareConnect::TransactionApi.new()
-    
+    SquareConnect.configure do |config|
+      # Configure OAuth2 access token for authorization: oauth2
+      config.access_token = Rails.application.secrets.square_access_token
+    end
+
+    transactions_api = SquareConnect::TransactionsApi.new
+
     #check if product exists
     if !PRODUCT_COST.has_key? params[:product_id]
       render json: {:status => 400, :errors => [{"detail": "Product unavailable"}]  }
@@ -27,34 +32,50 @@ class ChargesController < ApplicationController
 
     # The SDK throws an exception if a Connect endpoint responds with anything besides 200 (success).
     # This block catches any exceptions that occur from the request.
-    locationApi = SquareConnect::LocationApi.new()
-    locations = locationApi.list_locations(Rails.application.secrets.square_access_token)
+    locations_api = SquareConnect::LocationsApi.new
     begin
-      resp = transaction_api.charge(Rails.application.secrets.square_access_token, locations.locations[0].id, request_body)
+      locations = locations_api.list_locations.locations
     rescue SquareConnect::ApiError => e
-      puts 'Error encountered while charging card:'
-      puts e.message
-      render json: {:status => 400, :errors => JSON.parse(e.response_body)["errors"]  }
+      Rails.logger.error("Error encountered while loading the locations: #{e.message}")
+      render json: {:status => 500, :errors => JSON.parse(e.response_body)["errors"] }
+      return
+    end
+
+    location = locations.find do |l|
+      Array(l.capabilities).include?(SquareConnect::LocationCapability::PROCESSING)
+    end
+
+    if location.nil?
+      Rails.logger.error("Can't find a location that can process payments")
+      render json: {:status => 422, :errors => {locations: 'cat not process payments'} }
+      return
+    end
+
+    begin
+      resp = transactions_api.charge(location.id, request_body)
+    rescue SquareConnect::ApiError => e
+      Rails.logger.error("Error encountered while charging card:: #{e.message}")
+      render json: {:status => 400, :errors => JSON.parse(e.response_body)["errors"]}
       return
     end
     puts resp
-    
+
     data = {
-      amount: amount, 
+      amount: amount,
       user: {
-        name: params[:name], 
-        street_address_1: params[:street_address_1], 
-        street_address_2: params[:street_address_2], 
+        name: params[:name],
+        street_address_1: params[:street_address_1],
+        street_address_2: params[:street_address_2],
         state: params[:state],
         zip: params[:zip],
-        city: params[:city]  
+        city: params[:city]
       },
       card: resp.transaction.tenders[0].card_details.card
     }
 
     # send receipt email to user
     ReceiptMailer.charge_email(params[:email],data).deliver_now if Rails.env == "development"
-    
+
     render json: {:status => 200}
   end
 end

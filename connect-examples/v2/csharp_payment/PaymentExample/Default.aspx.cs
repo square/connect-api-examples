@@ -6,16 +6,16 @@ using Square.Connect.Client;
 
 namespace PaymentExample
 {
-   
+
     public partial class Default : System.Web.UI.Page
     {
-        private static TransactionApi _transactionApi;
+        private static TransactionsApi _transactionsApi;
 
-        // The access token to use in all Connect API requests. 
+        // The access token to use in all Connect API requests.
         // Use your *sandbox* accesstoken if you're just testing things out.
-        private static string _accessToken = "REPLACE_ME";
+        Configuration.Default.AccessToken = "REPLACE_ME";
 
-        // The ID of the business location to associate processed payments with.        
+        // The ID of the business location to associate processed payments with.
         // See [Retrieve your business's locations]
         // (https://docs.connect.squareup.com/articles/getting-started/#retrievemerchantprofile)
         // for an easy way to get your business's location IDs.
@@ -24,7 +24,7 @@ namespace PaymentExample
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            _transactionApi = new TransactionApi();
+            _transactionsApi = new TransactionsApi();
         }
 
         [System.Web.Services.WebMethod]
@@ -37,7 +37,7 @@ namespace PaymentExample
             string uuid = NewIdempotencyKey();
 
             // Monetary amounts are specified in the smallest unit of the applicable currency.
-            // This amount is in cents. It's also hard-coded for $1.00, 
+            // This amount is in cents. It's also hard-coded for $1.00,
             // which isn't very useful.
             Money amount = new Money(100, Money.CurrencyEnum.USD);
 
@@ -45,7 +45,7 @@ namespace PaymentExample
 
             try
             {
-                var response = _transactionApi.Charge(_accessToken, _locationId, body);
+                var response = _transactionsApi.Charge(_locationId, body);
                 return "Transaction complete\n" + response.ToJson();
             }
             catch (ApiException e)

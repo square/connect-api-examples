@@ -9,7 +9,7 @@ if (!defined(_SQ_ENDPOINT_LOCATION)) {
   define(
     "_SQ_ENDPOINT_LOCATION",
     "https://connect.squareup.com/v2/locations"
-  ) ;
+  );
 }
 
 // Square Checkout - used to send JSON messages to Square Checkout
@@ -17,7 +17,7 @@ if (!defined(_SQ_ENDPOINT_CHECKOUT)) {
   define(
     "_SQ_ENDPOINT_CHECKOUT",
     "https://connect.squareup.com/v2/locations/{LOCATIONID}/checkouts"
-  ) ;
+  );
 }
 
 /*******************************************************************************
@@ -42,37 +42,37 @@ function querySquareEndpoint($authzToken, $type=POST, $endpointUrl, $jsonData=nu
    * application, or a Personal Access token from your merchant dashboard
    */
 
-  if ($authzToken == null) { return null ; }
+  if ($authzToken == null) { return null; }
 
   // Initialize a curl handle and create an empty array for the request
   // header information
-  $curl_handle = curl_init($endpointUrl) ;
+  $curl_handle = curl_init($endpointUrl);
   $request_headers = array();
 
   // We are sending/receiving JSON data
-  $request_headers[] = "Content-Type: application/json" ;
-  $request_headers[] = "Accept: application/json" ;
+  $request_headers[] = "Content-Type: application/json";
+  $request_headers[] = "Accept: application/json";
 
   // REQUIRED: Without a valid authorization token, Square Endpoints will reject
   // the request
-  $request_headers[] = "Authorization: Bearer $authzToken" ;
+  $request_headers[] = "Authorization: Bearer $authzToken";
 
   // Encode the JSON data and set the message length
   if ($jsonData != null) {
-    $encodedData = json_encode($jsonData) ;
+    $encodedData = json_encode($jsonData);
     curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $encodedData);
-    $request_headers[] = "Content-Length: " . strlen($encodedData) ;
+    $request_headers[] = "Content-Length: " . strlen($encodedData);
   }
 
-  curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, $type) ;
-  curl_setopt($curl_handle, CURLOPT_HTTPHEADER, $request_headers) ;
-  curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1) ;
+  curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, $type);
+  curl_setopt($curl_handle, CURLOPT_HTTPHEADER, $request_headers);
+  curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
 
   // Save the response and close the curl handle
-  $jsonResponse = curl_exec($curl_handle) ;
-  curl_close($curl_handle) ;
+  $jsonResponse = curl_exec($curl_handle);
+  curl_close($curl_handle);
 
-  return $jsonResponse ;
+  return $jsonResponse;
 }
 
 /*******************************************************************************
@@ -86,14 +86,14 @@ function querySquareEndpoint($authzToken, $type=POST, $endpointUrl, $jsonData=nu
  ******************************************************************************/
 function printSquareEndpointError($errorResponse) {
 
-  if ($errorResponse == null) { return ; }
+  if ($errorResponse == null) { return; }
   foreach ($errorResponse as $errorDetail) {
     foreach ($errorDetail as $errorElement => $value) {
-      echo($errorElement . ": " . $value . "<br>") ;
+      echo($errorElement . ": " . $value . "<br>");
     }
   }
-  echo("<br><hr>") ;
-  return ;
+  echo("<br><hr>");
+  return;
 }
 
 /*******************************************************************************
@@ -113,28 +113,28 @@ function printSquareEndpointError($errorResponse) {
 function getLocationId($authzToken = "", $storeName = "") {
 
   // Query the location endpoint using GET
-  $jsonResponse = querySquareEndpoint($authzToken, "GET", _SQ_ENDPOINT_LOCATION) ;
-  $responseArray = json_decode($jsonResponse, true) ;
+  $jsonResponse = querySquareEndpoint($authzToken, "GET", _SQ_ENDPOINT_LOCATION);
+  $responseArray = json_decode($jsonResponse, true);
 
   // If the location endpoint returned an error, print the details and
   // return null
   if ($responseArray["errors"]) {
-    printSquareEndpointError($responseArray["errors"]) ;
-    return null ;
+    printSquareEndpointError($responseArray["errors"]);
+    return null;
   }
 
   // A given account may have multiple locations. If no store name was provided
   // just grab the first valid location ID. Otherwise, look for the ID
   // associated with the provided store
   foreach ($responseArray["locations"] as $location) {
-    if ($storeName == "") { return $location['id'] ; }
-    else if ($storeName == $location['name']) { return $location['id'] ; }
+    if ($storeName == "") { return $location['id']; }
+    else if ($storeName == $location['name']) { return $location['id']; }
   }
 
   // If we get this far, the store name couldn't be found with this account so
   // we return null
 
-  return null ;
+  return null;
 }
 
 /*******************************************************************************
@@ -154,22 +154,20 @@ function getLocationId($authzToken = "", $storeName = "") {
 function getCheckoutUrl($authzToken = "", $orderData = "", $checkoutURL) {
 
   // Query the Checkout endpoint
-  $jsonResponse = querySquareEndpoint($authzToken, "POST", $checkoutURL, $orderData) ;
+  $jsonResponse = querySquareEndpoint($authzToken, "POST", $checkoutURL, $orderData);
 
   // Decode the JSON data as an array
-  $responseArray = json_decode($jsonResponse, true) ;
+  $responseArray = json_decode($jsonResponse, true);
 
   // If there was an error, print the details and return nothing
   if ($responseArray["errors"]) {
-    printSquareEndpointError($responseArray["errors"]) ;
-    return null ;
+    printSquareEndpointError($responseArray["errors"]);
+    return null;
   }
 
   // Return the checkout ID and customer redirect URL
   return array(
     'checkoutID' => $responseArray["checkout"]["id"],
     'checkoutUrl' => $responseArray["checkout"]["checkout_page_url"],
-  ) ;
+  );
 }
-
-?>
