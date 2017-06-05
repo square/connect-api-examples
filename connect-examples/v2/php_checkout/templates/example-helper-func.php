@@ -208,6 +208,7 @@ function verifyTransaction(
  *     "locality" => "{{SHIPPING CITY/TOWNSHIP/ETC}}",
  *     "administrative_district_level_1" => "{{SHIPPING STATE/PROVINCE/ETC}}",
  *     "postal_code" => "{{SHIPPING POSTAL CODE}}",
+ *     "country" => "{{SHIPPING Country}}",
  *     "first_name" => "{{CUSTOMER FIRST NAME}}",
  *     "last_name" => "{{CUSTOMER LAST NAME}}"
  *   )
