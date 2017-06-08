@@ -23,7 +23,7 @@ import static java.util.Collections.singletonList;
  * This example creates a CatalogItemVariation with a location-specific price
  * that overrides its predefined global price. It then uploads the new objects
  * and prints the CatalogItem name and ID to the screen.
- **/
+ */
 public class LocationSpecificPriceExample extends Example {
 
   public LocationSpecificPriceExample() {

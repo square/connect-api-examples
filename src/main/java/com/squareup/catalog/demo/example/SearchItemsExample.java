@@ -30,7 +30,7 @@ import static java.util.Collections.singletonList;
 /**
  * This example searches for CatalogItems with the name "Soda" and prints
  * the names and IDs to the screen.
- **/
+ */
 public class SearchItemsExample extends Example {
 
   public SearchItemsExample() {

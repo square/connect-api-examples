@@ -25,7 +25,6 @@ import com.squareup.connect.models.BatchUpsertCatalogObjectsResponse;
 import com.squareup.connect.models.CatalogIdMapping;
 import com.squareup.connect.models.CatalogObject;
 import com.squareup.connect.models.CatalogObjectBatch;
-import com.squareup.connect.models.SearchCatalogObjectsRequest;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -42,7 +41,7 @@ import static java.util.Collections.singletonList;
  * (soda, water, and juice). It then deletes the newly created category and all
  * of the CatalogItems in the category and prints the list of object IDs that
  * were successfully deleted to the screen.
- **/
+ */
 public class DeleteCategoryExample extends Example {
 
   public DeleteCategoryExample() {
