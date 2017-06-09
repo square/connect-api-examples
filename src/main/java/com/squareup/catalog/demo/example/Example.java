@@ -28,6 +28,9 @@ import com.squareup.connect.models.Error;
 import com.squareup.connect.models.SearchCatalogObjectsRequest;
 import com.squareup.connect.models.SearchCatalogObjectsRequest.ObjectTypesEnum;
 import com.squareup.connect.models.SearchCatalogObjectsResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -122,6 +125,23 @@ public abstract class Example {
         deleteRequest.addObjectIdsItem(catalogObject.getId());
       }
       catalogApi.batchDeleteCatalogObjects(deleteRequest);
+    }
+  }
+
+  /**
+   * Display a message prompting the user to enter information.
+   *
+   * @param message the message displayed the user
+   * @return the value entered by the user
+   */
+  protected String promptUserInput(String message) {
+    System.out.print(message);
+    System.out.flush();
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    try {
+      return br.readLine();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
   }
 }
