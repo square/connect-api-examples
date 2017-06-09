@@ -52,7 +52,7 @@ public class DeleteAllItemsExample extends Example {
     final long startTimeMillis = System.currentTimeMillis();
     do {
       // Retrieve a page of items.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(null, "ITEM");
+      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, "ITEM");
       if (checkAndLogErrors(listResponse.getErrors())) {
         return;
       }

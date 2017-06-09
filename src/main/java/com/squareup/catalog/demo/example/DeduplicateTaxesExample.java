@@ -57,7 +57,7 @@ public class DeduplicateTaxesExample extends Example {
     String cursor = null;
     do {
       // Retrieve a page of taxes.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(null, "TAX");
+      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, "TAX");
       if (checkAndLogErrors(listResponse.getErrors())) {
         return;
       }
