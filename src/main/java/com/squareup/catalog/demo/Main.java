@@ -22,6 +22,7 @@ import com.squareup.catalog.demo.example.DeduplicateTaxesExample;
 import com.squareup.catalog.demo.example.DeleteAllItemsExample;
 import com.squareup.catalog.demo.example.DeleteCategoryExample;
 import com.squareup.catalog.demo.example.Example;
+import com.squareup.catalog.demo.example.ListDiscountsExample;
 import com.squareup.catalog.demo.example.LocationSpecificPriceExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
 import com.squareup.catalog.demo.util.GsonProvider;
@@ -77,6 +78,7 @@ public class Main {
         new DeduplicateTaxesExample(),
         new DeleteAllItemsExample(),
         new DeleteCategoryExample(),
+        new ListDiscountsExample(),
         new LocationSpecificPriceExample(),
         new SearchItemsExample());
     main.processArgs(args);

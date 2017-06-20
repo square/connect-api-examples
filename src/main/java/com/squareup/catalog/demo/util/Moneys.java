@@ -17,6 +17,7 @@ package com.squareup.catalog.demo.util;
 
 import com.squareup.connect.models.Money;
 import com.squareup.connect.models.Money.CurrencyEnum;
+import java.text.NumberFormat;
 
 public class Moneys {
 
@@ -27,6 +28,14 @@ public class Moneys {
     return new Money()
         .amount(cents)
         .currency(CurrencyEnum.USD);
+  }
+
+  /**
+   * Formats Money into a human readable currency string.
+   */
+  public static String format(Money money) {
+    // Note that this assumes the currency is in USD.
+    return NumberFormat.getCurrencyInstance().format(money.getAmount() / 100.0);
   }
 
   private Moneys() {
