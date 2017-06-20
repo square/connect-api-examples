@@ -161,36 +161,64 @@ function verifyTransaction(
  *   "redirect_url" => "{{URL TO CONFIRMATION PAGE}}",
  *   "idempotency_key" => "{{UNIQUE STRING FOR THIS TRANSACTION}}",
  *   "order" => array(
- *     "reference_id" => "{{LOCAL ORDER ID}}",
+ *     "reference_id" => "{{STORE ORDER ID}}",
  *     "line_items" => array(
  *
  *       // List each item in the order as an individual line item
  *       array(
- *         "name" => "{{ITEM NAME}}",
- *         "quantity" => "{{ITEM QUANTITY}}",
+ *         "name" => "{{ITEM_1 NAME}}",
+ *         "quantity" => "{{ITEM_1 QUANTITY}}",
  *         "base_price_money" => array(
- *           "amount" => {{ITEM COST IN BASE MONETARY UNIT}},
- *           "currency" => "{{CURRENCY USED}}"
+ *           "amount" => {{ITEM_1 COST IN BASE MONETARY UNIT}},
+ *           "currency" => "{{ITEM_1 CURRENCY USED}}"
+ *         ),
+ *         "discounts" => array(
+ *           array(
+ *             "name" => "{{ITEM_1_DISCOUNT NAME}}",
+ *             "amount_money" => array(
+ *               "amount" => {{ITEM_1_DISCOUNT AMOUNT}},
+ *               "currency" => "{{ITEM_1_DISCOUNT CURRENCY USED}}"
+ *             )
+ *           )
+ *         ),
+ *         "taxes" => array(
+ *           array(
+ *             "name" => "{{ITEM_1_TAX NAME}}",
+ *             "percentage" => "{{ITEM_1_TAX PERCENTAGE}}",
+ *             "type" => "{{ITEM_1_TAX TYPE}}",
+ *           )
  *         )
  *       ),
- *
- *       // Taxes and shipping need to be calculated in advance and added as
- *       // independent line items each with a quantity of 1
  *       array(
- *         "name" => "Total Tax ({{TAX RATE}}%)",
- *         "quantity" => "1",
+ *         "name" => "{{ITEM_2 NAME}}",
+ *         "quantity" => "{{ITEM_2 QUANTITY}}",
  *         "base_price_money" => array(
- *           "amount" => {{TOTAL TAXES IN BASE MONETARY UNIT}},
- *           "currency" => "{{CURRENCY USED}}"
+ *           "amount" => {{ITEM_2 COST IN BASE MONETARY UNIT}},
+ *           "currency" => "{{ITEM_2 CURRENCY USED}}"
  *         )
  *       ),
  *       array(
- *         "name" => "Shipping",
- *         "quantity" => "1",
+ *         "name" => "{{ITEM_N NAME}}",
+ *         "quantity" => "{{ITEM_N QUANTITY}}",
  *         "base_price_money" => array(
- *           "amount" => {{TOTAL SHIPPING IN BASE MONETARY UNIT}},
- *           "currency" => "{{CURRENCY USED}}"
+ *           "amount" => {{ITEM_N COST IN BASE MONETARY UNIT}},
+ *           "currency" => "{{ITEM_N CURRENCY USED}}"
+ *         ),
+ *         "discounts" => array(
+ *           array(
+ *             "name" => "{{ITEM_N_DISCOUNT NAME}}",
+ *             "amount_money" => array(
+ *               "amount" => {{ITEM_N_DISCOUNT AMOUNT}},
+ *               "currency" => "{{ITEM_N_DISCOUNT CURRENCY USED}}"
+ *             )
+ *           )
  *         )
+ *       )
+ *     ),
+ *     "discounts" => array(
+ *       array(
+ *         "name" => "{{ORDER_DISCOUNT NAME}}",
+ *         "percentage" => "{{ORDER PERCENTAGE USED}",
  *       )
  *     )
  *   ),
