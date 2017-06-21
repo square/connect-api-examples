@@ -54,26 +54,6 @@ function getOrderTotal($currOrder) {
 }
 
 /*******************************************************************************
- * @name: getSalesTax
- * @param: $currOrder - a string or object referencing the current order
- * @return: $salesTax - array;
- *   [0] = int; the total amount of tax to add to the order
- *   [1] - string; the rate applied (e.g., "9.75%")
- *
- * @desc:
- * Takes in an order reference or number from your shopping cart software and
- * returns the total amount that should be added for tax and the tax rate
- * applied to calculate the tax amount. This information should be added to
- * your order array as an additional line item
- ******************************************************************************/
-function getSalesTax($currOrder) {
-
-    // add code to look up or calculate the applicable sales tax for the order
-
-    return $salesTax;
-}
-
-/*******************************************************************************
  * @name: getShippingCost
  * @param: $currOrder - a string or object referencing the current order
  * @return: $shippingAmount - int; the total shipping cost
