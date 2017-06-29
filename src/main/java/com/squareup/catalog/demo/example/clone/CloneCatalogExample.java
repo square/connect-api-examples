@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.example.Example;
 import com.squareup.connect.ApiClient;
 import com.squareup.connect.ApiException;
@@ -42,8 +43,8 @@ import java.util.UUID;
  */
 public class CloneCatalogExample extends Example {
 
-  public CloneCatalogExample() {
-    super("clone_catalog", "Clones catalog objects from one merchant account to another.");
+  public CloneCatalogExample(Logger logger) {
+    super("clone_catalog", "Clones catalog objects from one merchant account to another.", logger);
   }
 
   @Override

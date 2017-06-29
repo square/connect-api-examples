@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
@@ -35,9 +36,9 @@ public class DeleteAllItemsExample extends Example {
       "Are you sure you want to delete ALL items in your Item Library?"
           + " This action cannot be undone. Type 'DELETE' to confirm: ";
 
-  public DeleteAllItemsExample() {
+  public DeleteAllItemsExample(Logger logger) {
     super("delete_all_items",
-        "Delete ALL items. This is a destructive action and cannot be undone.");
+        "Delete ALL items. This is a destructive action and cannot be undone.", logger);
   }
 
   @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi)

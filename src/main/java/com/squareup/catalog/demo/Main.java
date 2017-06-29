@@ -26,6 +26,7 @@ import com.squareup.catalog.demo.example.DeleteCategoryExample;
 import com.squareup.catalog.demo.example.Example;
 import com.squareup.catalog.demo.example.ListDiscountsExample;
 import com.squareup.catalog.demo.example.LocationSpecificPriceExample;
+import com.squareup.catalog.demo.example.RetrieveCatalogObjectExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
 import com.squareup.catalog.demo.util.GsonProvider;
 import com.squareup.connect.ApiClient;
@@ -74,17 +75,19 @@ public class Main {
   private static final String ARG_TOKEN = "-token";
 
   public static void main(String[] args) {
-    Main main = new Main(new Logger.SystemLogger(),
-        new ApplyTaxToAllIItemsExample(),
-        new CloneCatalogExample(),
-        new CreateItemExample(),
-        new DeduplicateTaxesExample(),
-        new DeleteAllItemsExample(),
-        new DeleteCategoryExample(),
-        new ListCategoriesExample(),
-        new ListDiscountsExample(),
-        new LocationSpecificPriceExample(),
-        new SearchItemsExample());
+    Logger logger = new Logger.SystemLogger();
+    Main main = new Main(logger,
+        new ApplyTaxToAllIItemsExample(logger),
+        new CloneCatalogExample(logger),
+        new CreateItemExample(logger),
+        new DeduplicateTaxesExample(logger),
+        new DeleteAllItemsExample(logger),
+        new DeleteCategoryExample(logger),
+        new ListCategoriesExample(logger),
+        new ListDiscountsExample(logger),
+        new LocationSpecificPriceExample(logger),
+        new RetrieveCatalogObjectExample(logger),
+        new SearchItemsExample(logger));
     main.processArgs(args);
   }
 

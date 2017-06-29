@@ -1,5 +1,6 @@
 package com.squareup.catalog.demo.example;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
@@ -26,8 +27,8 @@ import static java.util.Collections.singletonList;
  */
 public class LocationSpecificPriceExample extends Example {
 
-  public LocationSpecificPriceExample() {
-    super("location_specific_price", "Create an item with a location-specific price");
+  public LocationSpecificPriceExample(Logger logger) {
+    super("location_specific_price", "Create an item with a location-specific price", logger);
   }
 
   @Override

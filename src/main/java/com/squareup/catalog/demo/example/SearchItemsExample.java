@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
@@ -33,8 +34,8 @@ import static java.util.Collections.singletonList;
  */
 public class SearchItemsExample extends Example {
 
-  public SearchItemsExample() {
-    super("search_items", "Search for items.");
+  public SearchItemsExample(Logger logger) {
+    super("search_items", "Search for items.", logger);
   }
 
   @Override

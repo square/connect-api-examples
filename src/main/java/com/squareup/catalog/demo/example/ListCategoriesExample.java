@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
@@ -29,8 +30,8 @@ import static com.squareup.connect.models.CatalogObjectType.CATEGORY;
  */
 public class ListCategoriesExample extends Example {
 
-  public ListCategoriesExample() {
-    super("list_categories", "List all categories.");
+  public ListCategoriesExample(Logger logger) {
+    super("list_categories", "List all categories.", logger);
   }
 
   @Override

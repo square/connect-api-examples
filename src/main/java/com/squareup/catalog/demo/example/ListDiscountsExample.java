@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
@@ -30,8 +31,8 @@ import static com.squareup.connect.models.CatalogObjectType.DISCOUNT;
  */
 public class ListDiscountsExample extends Example {
 
-  public ListDiscountsExample() {
-    super("list_discounts", "List all discounts.");
+  public ListDiscountsExample(Logger logger) {
+    super("list_discounts", "List all discounts.", logger);
   }
 
   @Override
