@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.squareup.connect.models.CatalogItem.ProductTypeEnum.REGULAR;
+import static com.squareup.connect.models.CatalogObjectType.ITEM;
+import static com.squareup.connect.models.CatalogObjectType.TAX;
 
 /**
  * This example shows a list of taxes to choose from, then applies the selected tax to
@@ -68,7 +70,7 @@ public class ApplyTaxToAllIItemsExample extends Example {
     String cursor = null;
     do {
       // Retrieve a page of taxes
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, "TAX");
+      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, TAX.toString());
       if (checkAndLogErrors(listResponse.getErrors())) {
         return null;
       }
@@ -99,7 +101,7 @@ public class ApplyTaxToAllIItemsExample extends Example {
 
     // Prompt the user to select a tax.
     String userTaxIndex = promptUserInput("Select a tax to apply to all items: ");
-    int taxIndex = -1;
+    int taxIndex;
     try {
       taxIndex = Integer.parseInt(userTaxIndex);
     } catch (NumberFormatException e) {
@@ -129,7 +131,7 @@ public class ApplyTaxToAllIItemsExample extends Example {
     final long startTimeMillis = System.currentTimeMillis();
     do {
       // Retrieve a page of items.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, "ITEM");
+      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, ITEM.toString());
       if (checkAndLogErrors(listResponse.getErrors())) {
         return;
       }
