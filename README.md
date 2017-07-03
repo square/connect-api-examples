@@ -19,7 +19,9 @@ token:
 2. Click "New Application".
 3. Create an application with the name "Catalog API Demo".
 4. Copy the Personal Access Token that is generated and save it to an
-  environment variable: `export SQPAT={{ YOUR NEW ACCESS TOKEN }} ;`
+  environment variable:
+   
+   `export SQPAT={{ YOUR NEW ACCESS TOKEN }}`
 
 ## STEP 2: Compile the demo
 

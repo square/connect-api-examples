@@ -24,6 +24,8 @@ import com.squareup.connect.models.CatalogObject;
 import com.squareup.connect.models.ListCatalogResponse;
 import java.util.List;
 
+import static com.squareup.connect.models.CatalogObjectType.ITEM;
+
 /**
  * This example deletes all items and variations in a merchant's Item Library.
  */
@@ -52,7 +54,7 @@ public class DeleteAllItemsExample extends Example {
     final long startTimeMillis = System.currentTimeMillis();
     do {
       // Retrieve a page of items.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, "ITEM");
+      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, ITEM.toString());
       if (checkAndLogErrors(listResponse.getErrors())) {
         return;
       }

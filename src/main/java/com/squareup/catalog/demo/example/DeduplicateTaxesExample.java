@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.squareup.connect.models.CatalogObjectType.TAX;
+
 /**
  * This example merges identical taxes (same name, percentage, and inclusion type).
  */
@@ -57,7 +59,7 @@ public class DeduplicateTaxesExample extends Example {
     String cursor = null;
     do {
       // Retrieve a page of taxes.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, "TAX");
+      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, TAX.toString());
       if (checkAndLogErrors(listResponse.getErrors())) {
         return;
       }

@@ -22,7 +22,8 @@ import com.squareup.connect.api.LocationsApi;
 import com.squareup.connect.models.CatalogDiscount;
 import com.squareup.connect.models.CatalogObject;
 import com.squareup.connect.models.ListCatalogResponse;
-import java.util.List;
+
+import static com.squareup.connect.models.CatalogObjectType.DISCOUNT;
 
 /**
  * This example lists all discounts in the catalog.
@@ -38,7 +39,7 @@ public class ListDiscountsExample extends Example {
     String cursor = null;
     do {
       // Retrieve a page of discounts.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, "DISCOUNT");
+      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, DISCOUNT.toString());
       if (checkAndLogErrors(listResponse.getErrors())) {
         return;
       }

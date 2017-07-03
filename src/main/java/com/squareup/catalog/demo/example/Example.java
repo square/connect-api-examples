@@ -144,4 +144,22 @@ public abstract class Example {
       throw new RuntimeException(e);
     }
   }
+
+  /**
+   * Display a message prompting the user to answer a yes or no question.
+   *
+   * @param message the message displayed the user
+   * @return true if yes, false if no
+   */
+  protected boolean promptUserInputYesNo(String message) {
+    String response = promptUserInput(message).trim();
+    if (response.equalsIgnoreCase("y") || response.equalsIgnoreCase("yes")) {
+      return true;
+    } else if (response.equalsIgnoreCase("n") || response.equalsIgnoreCase("no")) {
+      return false;
+    }
+
+    logger.error("Please enter Y or N");
+    throw new IllegalArgumentException("Invalid text entered for yes/no question");
+  }
 }
