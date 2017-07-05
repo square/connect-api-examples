@@ -85,7 +85,7 @@ public class RetrieveCatalogObjectExample extends Example {
         logItemDetails(catalogObject, relatedObjectsMap);
         break;
       case ITEM_VARIATION:
-        logger.info(getItemVariationLogMessage(catalogObject, ""));
+        logItemVariationDetails(catalogObject, relatedObjectsMap);
         break;
       case MODIFIER:
         logger.info(getModifierLogMessage(catalogObject, ""));
@@ -145,7 +145,11 @@ public class RetrieveCatalogObjectExample extends Example {
     // Add item variations.
     logMessage += "\n  Item Variations:";
     for (CatalogObject variationObject : item.getVariations()) {
-      logMessage += "\n" + getItemVariationLogMessage(variationObject, "    ");
+      CatalogItemVariation variation = variationObject.getItemVariationData();
+      logMessage += "\n    [" + variationObject.getType() + "] " + variation.getName()
+          + "\n      ID: " + variationObject.getId()
+          + "\n      Price: " + Moneys.format(variation.getPriceMoney())
+          + "\n      SKU: " + variation.getSku();
     }
 
     // Add taxes.
@@ -185,18 +189,22 @@ public class RetrieveCatalogObjectExample extends Example {
   }
 
   /**
-   * Returns a log message describing a {@link CatalogItemVariation}.
-   *
-   * @param itemVariationObject the {@link CatalogObject} containing the {@link
-   * CatalogItemVariation}.
-   * @param prefix the prefix to apply to each line of the log message
+   * Logs information about a {@link CatalogItemVariation}.
    */
-  private String getItemVariationLogMessage(CatalogObject itemVariationObject, String prefix) {
+  private void logItemVariationDetails(CatalogObject itemVariationObject,
+      Map<String, CatalogObject> relatedObjectsMap) {
     CatalogItemVariation itemVariation = itemVariationObject.getItemVariationData();
-    return prefix + "[" + itemVariationObject.getType() + "] " + itemVariation.getName()
-        + "\n" + prefix + "  ID: " + itemVariationObject.getId()
-        + "\n" + prefix + "  Price: " + Moneys.format(itemVariation.getPriceMoney())
-        + "\n" + prefix + "  SKU: " + itemVariation.getSku();
+    String logMessage = "[" + itemVariationObject.getType() + "] " + itemVariation.getName()
+        + "\n  ID: " + itemVariationObject.getId()
+        + "\n  Price: " + Moneys.format(itemVariation.getPriceMoney())
+        + "\n  SKU: " + itemVariation.getSku();
+
+    // Get the item from the related objects.
+    CatalogObject itemObject = relatedObjectsMap.get(itemVariation.getItemId());
+    CatalogItem item = itemObject.getItemData();
+    logMessage += "\n  Item: " + item.getName() + " (" + itemObject.getId() + ")";
+
+    logger.info(logMessage);
   }
 
   /**

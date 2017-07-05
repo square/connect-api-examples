@@ -131,10 +131,17 @@ public class RetrieveCatalogObjectExampleTest {
   @Test public void logCatalogObjectDetails_itemVariation() {
     CatalogObject catalogObject = catalogObject("id", ITEM_VARIATION)
         .itemVariationData(new CatalogItemVariation()
+            .itemId("itemId")
             .name("name")
             .sku("sku")
             .priceMoney(usd(1000)));
-    example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
+
+    // Add the item as a related object.
+    HashMap<String, CatalogObject> relatedObjects = new HashMap<>();
+    relatedObjects.put("itemId", catalogObject("itemId", ITEM)
+        .itemData(new CatalogItem().name("item_name")));
+
+    example.logCatalogObjectDetails(catalogObject, relatedObjects);
     verify(logger).info(anyString());
   }
 
