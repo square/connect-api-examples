@@ -42,11 +42,12 @@ public abstract class Example {
 
   private final String name;
   private final String description;
-  protected final Logger logger = new Logger.SystemLogger();
+  protected final Logger logger;
 
-  public Example(String name, String description) {
+  public Example(String name, String description, Logger logger) {
     this.name = name;
     this.description = description;
+    this.logger = logger;
   }
 
   public String getName() {

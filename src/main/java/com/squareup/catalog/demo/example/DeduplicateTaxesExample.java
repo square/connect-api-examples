@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
@@ -41,9 +42,9 @@ import static com.squareup.connect.models.CatalogObjectType.TAX;
  */
 public class DeduplicateTaxesExample extends Example {
 
-  public DeduplicateTaxesExample() {
+  public DeduplicateTaxesExample(Logger logger) {
     super("deduplicate_taxes",
-        "Merge identical taxes (same name, percentage, and inclusion type)");
+        "Merge identical taxes (same name, percentage, and inclusion type)", logger);
   }
 
   @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi)

@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
@@ -38,8 +39,8 @@ import static java.util.Collections.singletonList;
  **/
 public class CreateItemExample extends Example {
 
-  public CreateItemExample() {
-    super("create_item", "Create an item, then retrieve it.");
+  public CreateItemExample(Logger logger) {
+    super("create_item", "Create an item, then retrieve it.", logger);
   }
 
   @Override

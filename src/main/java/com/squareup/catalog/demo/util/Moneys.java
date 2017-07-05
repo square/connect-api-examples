@@ -32,10 +32,17 @@ public class Moneys {
 
   /**
    * Formats Money into a human readable currency string.
+   *
+   * @param moneyOrNull the money to format, or null
+   * @return a formatted money string, or null if moneyOrNull is null
    */
-  public static String format(Money money) {
+  public static String format(Money moneyOrNull) {
+    if (moneyOrNull == null) {
+      return null;
+    }
+
     // Note that this assumes the currency is in USD.
-    return NumberFormat.getCurrencyInstance().format(money.getAmount() / 100.0);
+    return NumberFormat.getCurrencyInstance().format(moneyOrNull.getAmount() / 100.0);
   }
 
   private Moneys() {

@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
@@ -44,9 +45,9 @@ import static java.util.Collections.singletonList;
  */
 public class DeleteCategoryExample extends Example {
 
-  public DeleteCategoryExample() {
+  public DeleteCategoryExample(Logger logger) {
     super("delete_category",
-        "Create a category with three items, then delete the category and items.");
+        "Create a category with three items, then delete the category and items.", logger);
   }
 
   @Override

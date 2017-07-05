@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.catalog.demo.Logger;
 import com.squareup.connect.ApiException;
 import com.squareup.connect.api.CatalogApi;
 import com.squareup.connect.api.LocationsApi;
@@ -37,8 +38,8 @@ import static com.squareup.connect.models.CatalogObjectType.TAX;
  **/
 public class ApplyTaxToAllIItemsExample extends Example {
 
-  public ApplyTaxToAllIItemsExample() {
-    super("apply_tax_to_all_items", "Applies a selected tax to all items.");
+  public ApplyTaxToAllIItemsExample(Logger logger) {
+    super("apply_tax_to_all_items", "Applies a selected tax to all items.", logger);
   }
 
   @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi)
