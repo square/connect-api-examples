@@ -17,6 +17,7 @@ package com.squareup.catalog.demo;
 
 import com.google.gson.JsonSyntaxException;
 import com.squareup.catalog.demo.example.ApplyTaxToAllIItemsExample;
+import com.squareup.catalog.demo.example.ListCategoriesExample;
 import com.squareup.catalog.demo.example.clone.CloneCatalogExample;
 import com.squareup.catalog.demo.example.CreateItemExample;
 import com.squareup.catalog.demo.example.DeduplicateTaxesExample;
@@ -80,6 +81,7 @@ public class Main {
         new DeduplicateTaxesExample(),
         new DeleteAllItemsExample(),
         new DeleteCategoryExample(),
+        new ListCategoriesExample(),
         new ListDiscountsExample(),
         new LocationSpecificPriceExample(),
         new SearchItemsExample());

@@ -72,8 +72,9 @@ public class ListDiscountsExample extends Example {
         // Log the name and amount of the discount.
         String logMessage = discount.getName();
         if (amount != null) {
-          logMessage += " (" + amount + ")";
+          logMessage += " [" + amount + "]";
         }
+        logMessage += " (" + discountObject.getId() + ")";
         logger.info(logMessage);
       }
 
