@@ -11,16 +11,18 @@ namespace PaymentExample
     {
         private static TransactionsApi _transactionsApi;
 
-        // The access token to use in all Connect API requests.
-        // Use your *sandbox* accesstoken if you're just testing things out.
-        Configuration.Default.AccessToken = "REPLACE_ME";
-
         // The ID of the business location to associate processed payments with.
         // See [Retrieve your business's locations]
         // (https://docs.connect.squareup.com/articles/getting-started/#retrievemerchantprofile)
         // for an easy way to get your business's location IDs.
         // If you're testing things out, use a sandbox location ID.
         private static string _locationId = "REPLACE_ME";
+        
+        static Default() {
+            // The access token to use in all Connect API requests.
+            // Use your *sandbox* accesstoken if you're just testing things out.
+            Configuration.Default.AccessToken = "REPLACE_ME";
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
