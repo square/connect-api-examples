@@ -36,7 +36,23 @@ public class Errors {
     }
 
     for (Error error : errors) {
-      logger.error("[" + error.getCode().toString() + "] " + error.getDetail());
+      // Convert the category and code to a string.
+      String categoryAndCode = "";
+      if (error.getCategory() != null) {
+        categoryAndCode += error.getCategory().toString();
+      }
+      if (error.getCode() != null) {
+        if (categoryAndCode.length() > 0) {
+          categoryAndCode += ":";
+        }
+        categoryAndCode += error.getCode().toString();
+      }
+      if (categoryAndCode.length() > 0) {
+        categoryAndCode = "[" + categoryAndCode + "] ";
+      }
+
+      // Log the error.
+      logger.error(categoryAndCode + error.getDetail());
     }
 
     return true;
