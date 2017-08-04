@@ -112,12 +112,6 @@ public class MainTest {
     verifyExamplesDidNotExecute();
   }
 
-  @Test public void processArgs_exampleMissingToken() throws ApiException {
-    main.processArgs(new String[] {"foo"});
-    verify(logger).error(anyString());
-    verifyUsageLogged();
-  }
-
   @Test public void processArgs_exampleDanglingToken() throws ApiException {
     main.processArgs(new String[] {"bad_name", "-token"});
     verify(logger).error(anyString());

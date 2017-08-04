@@ -17,18 +17,18 @@ package com.squareup.catalog.demo;
 
 import com.google.gson.JsonSyntaxException;
 import com.squareup.catalog.demo.example.ApplyTaxToAllIItemsExample;
-import com.squareup.catalog.demo.example.GloballyEnableAllItemsExample;
-import com.squareup.catalog.demo.example.ListCategoriesExample;
-import com.squareup.catalog.demo.example.clone.CloneCatalogExample;
 import com.squareup.catalog.demo.example.CreateItemExample;
 import com.squareup.catalog.demo.example.DeduplicateTaxesExample;
 import com.squareup.catalog.demo.example.DeleteAllItemsExample;
 import com.squareup.catalog.demo.example.DeleteCategoryExample;
 import com.squareup.catalog.demo.example.Example;
+import com.squareup.catalog.demo.example.GloballyEnableAllItemsExample;
+import com.squareup.catalog.demo.example.ListCategoriesExample;
 import com.squareup.catalog.demo.example.ListDiscountsExample;
 import com.squareup.catalog.demo.example.LocationSpecificPriceExample;
 import com.squareup.catalog.demo.example.RetrieveCatalogObjectExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
+import com.squareup.catalog.demo.example.clone.CloneCatalogExample;
 import com.squareup.catalog.demo.util.GsonProvider;
 import com.squareup.connect.ApiClient;
 import com.squareup.connect.ApiException;
@@ -41,11 +41,12 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
+import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 
 public class Main {
 
   private static final String USAGE = "USAGE:\n" +
-      "  Execute Example: java <example_name> -token <accessToken> [-cleanup]\n" +
+      "  Execute Example: java <example_name> [-token <accessToken>] [-cleanup]\n" +
       "  List Examples:   java -list-examples\n" +
       "  Print Usage:     java -usage";
 
@@ -151,8 +152,15 @@ public class Main {
           return;
       }
     }
+
+    // Prompt for the access token if not specified as an arg.
+    if (accessToken == null) {
+      accessToken = promptUserInput("Enter access token: ");
+    }
+
+    // Show error if access token is blank.
     if (accessToken == null || accessToken.trim().isEmpty()) {
-      usage("You must specify a valid access token");
+      logger.error("You must specify a valid access token");
       return;
     }
 
