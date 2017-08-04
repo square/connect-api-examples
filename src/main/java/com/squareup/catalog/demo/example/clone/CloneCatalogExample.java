@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
+import static com.squareup.catalog.demo.util.Prompts.promptUserInputYesNo;
+
 /**
  * This example clones catalog objects from one merchant account to another. The accessToken
  * specified when the script is executed is assumed to be the source account from which catalog
@@ -104,18 +107,19 @@ public class CloneCatalogExample extends Example {
     Config config = new Config();
     config.targetAccessToken = promptUserInput("Enter access token of target account: ").trim();
 
-    if (promptUserInputYesNo("Clone all discounts (y/n)? ")) {
+    if (promptUserInputYesNo("Clone all discounts (y/n)? ", logger)) {
       boolean presentAtAllLocationsByDefault =
-          promptUserInputYesNo("  Make cloned discounts available at all locations (y/n)? ");
+          promptUserInputYesNo("  Make cloned discounts available at all locations (y/n)? ",
+              logger);
       config.discountCloneUtil = new DiscountCloneUtil(presentAtAllLocationsByDefault);
     }
 
-    if (promptUserInputYesNo("Clone all modifier lists (y/n)? ")) {
+    if (promptUserInputYesNo("Clone all modifier lists (y/n)? ", logger)) {
       logger.info("  Note: Modifier lists will be enabled at all locations");
       config.modifierListCloneUtil = new ModifierListCloneUtil();
     }
 
-    if (promptUserInputYesNo("Clone all taxes (y/n)? ")) {
+    if (promptUserInputYesNo("Clone all taxes (y/n)? ", logger)) {
       config.taxCloneUtil = new TaxCloneUtil();
     }
 

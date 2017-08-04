@@ -25,6 +25,7 @@ import com.squareup.connect.models.CatalogObject;
 import com.squareup.connect.models.ListCatalogResponse;
 import java.util.List;
 
+import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 import static com.squareup.connect.models.CatalogObjectType.ITEM;
 
 /**

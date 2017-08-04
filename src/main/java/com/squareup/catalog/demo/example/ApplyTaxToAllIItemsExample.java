@@ -28,6 +28,7 @@ import com.squareup.connect.models.UpdateItemTaxesResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 import static com.squareup.connect.models.CatalogItem.ProductTypeEnum.REGULAR;
 import static com.squareup.connect.models.CatalogObjectType.ITEM;
 import static com.squareup.connect.models.CatalogObjectType.TAX;

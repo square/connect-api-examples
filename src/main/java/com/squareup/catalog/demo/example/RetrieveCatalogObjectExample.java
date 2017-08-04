@@ -33,6 +33,8 @@ import com.squareup.connect.models.RetrieveCatalogObjectResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
+
 /**
  * This example retrieves a single catalog object by ID and all related objects.
  */

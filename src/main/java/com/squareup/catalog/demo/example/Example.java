@@ -28,9 +28,6 @@ import com.squareup.connect.models.Error;
 import com.squareup.connect.models.SearchCatalogObjectsRequest;
 import com.squareup.connect.models.SearchCatalogObjectsRequest.ObjectTypesEnum;
 import com.squareup.connect.models.SearchCatalogObjectsResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -127,40 +124,5 @@ public abstract class Example {
       }
       catalogApi.batchDeleteCatalogObjects(deleteRequest);
     }
-  }
-
-  /**
-   * Display a message prompting the user to enter information.
-   *
-   * @param message the message displayed the user
-   * @return the value entered by the user
-   */
-  protected String promptUserInput(String message) {
-    System.out.print(message);
-    System.out.flush();
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    try {
-      return br.readLine();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  /**
-   * Display a message prompting the user to answer a yes or no question.
-   *
-   * @param message the message displayed the user
-   * @return true if yes, false if no
-   */
-  protected boolean promptUserInputYesNo(String message) {
-    String response = promptUserInput(message).trim();
-    if (response.equalsIgnoreCase("y") || response.equalsIgnoreCase("yes")) {
-      return true;
-    } else if (response.equalsIgnoreCase("n") || response.equalsIgnoreCase("no")) {
-      return false;
-    }
-
-    logger.error("Please enter Y or N");
-    throw new IllegalArgumentException("Invalid text entered for yes/no question");
   }
 }
