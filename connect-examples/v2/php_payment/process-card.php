@@ -32,8 +32,9 @@ try {
   $locations = $locations_api->listLocations();
   #We look for a location that can process payments
   $location = current(array_filter($locations->getLocations(), function($location) {
-    return !empty($location->getCapabilities()) &&
-      in_array('CREDIT_CARD_PROCESSING', $location->getCapabilities());
+    $capabilities = $location->getCapabilities();
+    return is_array($capabilities) &&
+      in_array('CREDIT_CARD_PROCESSING', $capabilities);
   }));
 
 } catch (\SquareConnect\ApiException $e) {
