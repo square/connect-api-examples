@@ -47,7 +47,7 @@ class ChargesController < ApplicationController
 
     if location.nil?
       Rails.logger.error("Can't find a location that can process payments")
-      render json: {:status => 422, :errors => {locations: 'cat not process payments'} }
+      render json: {:status => 422, :errors => {locations: 'can not process payments'} }
       return
     end
 
