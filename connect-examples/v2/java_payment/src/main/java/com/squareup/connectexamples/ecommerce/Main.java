@@ -49,7 +49,7 @@ public class Main {
     private static final String SQUARE_APP_ID_ENV_VAR = "SQUARE_APP_ID";
 
     private final ApiClient squareClient = Configuration.getDefaultApiClient();
-    private final String squareLocationId;
+    private final Location squareLocation;
     private final String squareAppId;
 
     public Main() throws ApiException {
@@ -59,7 +59,7 @@ public class Main {
         OAuth oauth2 = (OAuth) squareClient.getAuthentication("oauth2");
         oauth2.setAccessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR));
 
-        squareLocationId = lookupCardProcessingLocation();
+        squareLocation = lookupCardProcessingLocation();
     }
 
     public static void main(String[] args) throws Exception {
@@ -78,7 +78,8 @@ public class Main {
 
     @RequestMapping("/")
     String index(Map<String, Object> model) throws ApiException {
-        model.put("locationId", squareLocationId);
+        model.put("locationId", squareLocation.getId());
+        model.put("locationName", squareLocation.getName());
         model.put("addId", squareAppId);
 
         return "index";
@@ -95,21 +96,20 @@ public class Main {
         TransactionsApi transactionsApi = new TransactionsApi();
         transactionsApi.setApiClient(squareClient);
 
-        ChargeResponse response = transactionsApi.charge(squareLocationId, chargeRequest);
+        ChargeResponse response = transactionsApi.charge(squareLocation.getId(), chargeRequest);
 
         model.put("transactionId", response.getTransaction().getId());
 
         return "charge";
     }
 
-    private String lookupCardProcessingLocation() throws ApiException {
+    private Location lookupCardProcessingLocation() throws ApiException {
         LocationsApi locationsApi = new LocationsApi();
         locationsApi.setApiClient(squareClient);
 
         return locationsApi.listLocations().getLocations().stream()
             .filter(l -> l.getCapabilities().contains(CapabilitiesEnum.PROCESSING))
             .findFirst()
-            .map(Location::getId)
             .orElseThrow(() -> new IllegalStateException(
                 "At least one location must support card processing"));
     }
