@@ -74,21 +74,23 @@
                         currencyCode: "USD",
                         countryCode: "US",
                         total: {
-                            label: "{{ MERCHANT NAME }}",
-                            amount: "100.00",
+                            label: "[[${locationName}]]",
+                            amount: "1.00",
                             pending: false,
                         },
                         lineItems: [{
                             label: "Subtotal",
-                            amount: "80.00",
+                            amount: "0.90",
                             pending: false,
-                        }, {
+                        },
+                        {
                             label: "Shipping",
                             amount: "0.00",
                             pending: true,
-                        }, {
+                        },
+                        {
                             label: "Tax",
-                            amount: "10.00",
+                            amount: "0.10",
                             pending: false,
                         }]
                     };
@@ -212,7 +214,9 @@
       that will be enabled/disabled based on whether or not the domain is
       registered with Apple and the browser supports Apple Pay.
     -->
-    <button class="button-apple-pay" id="sq-apple-pay"></button>
+    <div>
+        <button class="button-apple-pay" id="sq-apple-pay"></button>
+    </div>
     <!--
       Used for Credit Card payments.
 
