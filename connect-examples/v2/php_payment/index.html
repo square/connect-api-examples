@@ -9,6 +9,7 @@
       // If you're just testing things out, replace this with your _Sandbox_ application ID,
       // which is also available there.
       applicationId: 'REPLACE_ME',
+      locationId: 'REPLACE_ME',
       inputClass: 'sq-input',
       cardNumber: {
         elementId: 'sq-card-number',
@@ -45,6 +46,13 @@
         }
       ],
       callbacks: {
+        methodsSupported: function (methods) {
+          // Show the Apple Pay button if Apple Pay is supported.
+          if (methods.applePay === true) {
+            var element = document.getElementById('pay-button-area');
+            element.style.display = 'block';
+          }
+        },
         cardNonceResponseReceived: function(errors, nonce, cardData) {
           if (errors) {
             var errorDiv = document.getElementById('errors');
@@ -68,7 +76,33 @@
         },
         unsupportedBrowserDetected: function() {
           // Alert the buyer that their browser is not supported
-        }
+        },
+        createPaymentRequest: function () {
+          return {
+            requestShippingAddress: false,
+            currencyCode: "USD",
+            countryCode: "US",
+
+            total: {
+              label: "Merchant Name",
+              amount: "1.01",
+              pending: false,
+            },
+
+            lineItems: [
+              {
+                label: "Subtotal",
+                amount: "1.00",
+                pending: false,
+              },
+              {
+                label: "Tax",
+                amount: "0.01",
+                pending: false,
+              }
+            ]
+          };
+        },
       }
     });
     function submitButtonClick(event) {
@@ -94,6 +128,23 @@
       outline-offset: 0px;
       outline-style: auto;
     }
+    .apple-pay-button {
+      display: inline-block;
+      background-size: 100% 60%;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      border-radius: 5px;
+      border-width: 2px;
+      padding: 0px;
+      box-sizing: border-box;
+      min-width: 200px;
+      min-height: 32px;
+      max-height: 64px;
+  }
+  .apple-pay-button-white {
+      background-image: -webkit-named-image(apple-pay-logo-black);
+      background-color: white;
+  }
   </style>
 </head>
 <body>
@@ -101,6 +152,10 @@
   <h1>My Payment Form</h1>
 
   <form id="form" novalidate action="/process-card.php" method="post">
+    <div id="pay-button-area" style="display:none">
+      <button id="sq-apple-pay" class="apple-pay-button apple-pay-button-white" />
+    </div>
+
     <label>Credit Card</label>
     <div id="sq-card-number"></div>
     <label>CVV</label>
