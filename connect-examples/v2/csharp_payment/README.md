@@ -4,8 +4,7 @@ This sample demonstrates processing card payments with Square Connect API, using
 Square Connect C# client library.
 
 ## Frameworks supported
-- .NET 4.0 or later
-- Windows Phone 7.1 (Mango)
+- .NET 4.5 or later
 
 ## Setup
 
@@ -17,11 +16,11 @@ package.config under PaymentExample contains package dependency
 
 2. If there is no warning asking you to restore packages, run the following command in the [Package Manager Console](https://docs.nuget.org/docs/start-here/using-the-package-manager-console):
 
-        Install-Package Square.Connect
+       Update-Package -reinstall -ProjectName CSharpPaymentExample
 
 ### Provide required credentials
 
-Both `PaymentExample/Default.aspx` and `PaymentExample/Default.aspx.cs` have values near the top of the file
+Both `CSharpPaymentExample/Default.aspx` and `CSharpPaymentExample/Default.aspx.cs` have values near the top of the file
 that you need to replace with various credentials associated with your application.
 If you're just testing things out, it's recommended that you use your _sandbox_
 credentials for now. See
@@ -52,3 +51,7 @@ credit card information, YOU WILL CHARGE THE CARD.**
 After entering the card information, you could click `submit` button to get a 
 nonce. Then click `charge` button to send the nonce and you would 
 get the transaction repsonse body in an alert window.
+
+## Apple Pay
+
+Please follow the Apple Pay instructions on [Square Connect Documentation Site](https://docs.connect.squareup.com/articles/adding-payment-form).
