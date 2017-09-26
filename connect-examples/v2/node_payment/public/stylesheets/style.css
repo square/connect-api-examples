@@ -98,3 +98,22 @@ use similar styling on other forms to ensure consistent error styles */
   color: white;
   font-size: 32px;
 }
+
+.apple-pay-button {
+  display: inline-block;
+  background-size: 100% 60%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border-radius: 5px;
+  border-width: 2px;
+  padding: 0px;
+  box-sizing: border-box;
+  min-width: 200px;
+  min-height: 32px;
+  max-height: 64px;
+}
+
+.apple-pay-button-white {
+  background-image: -webkit-named-image(apple-pay-logo-black);
+  background-color: white;
+}

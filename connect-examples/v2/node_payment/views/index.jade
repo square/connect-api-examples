@@ -97,6 +97,9 @@ block content
   <label>Zip</label>
   <input type="text" id="zip" name="zip"  placeholder="Zip"/>
 
+  <div id="apple-pay-area" style="display:none">
+  <button id="sq-apple-pay" class="apple-pay-button apple-pay-button-white" />
+  </div>
 
   <div id="card-errors">
 
@@ -133,6 +136,7 @@ block content
     var cardNonce;
     var paymentForm = new SqPaymentForm({
       applicationId: '#{square_application_id}',
+      locationId: '#{square_location_id}',
       inputClass: 'sq-input',
       inputStyles: [
           {
@@ -157,7 +161,17 @@ block content
         elementId: 'sq-postal-code',
         placeholder: '94110'
       },
+      applePay: {
+        elementId: 'sq-apple-pay'
+      },
       callbacks: {
+        methodsSupported: function (methods) {
+          // Show the Apple Pay button if Apple Pay is supported.
+          if (methods.applePay === true) {
+            var element = document.getElementById('apple-pay-area');
+            element.style.display = 'block';
+          }
+        },
         cardNonceResponseReceived: function(errors, nonce, cardData) {
           if (errors){
             var error_html = ""
@@ -175,7 +189,33 @@ block content
         },
         unsupportedBrowserDetected: function() {
           // Alert the buyer
-        }
+        },
+        createPaymentRequest: function () {
+          return {
+            requestShippingAddress: false,
+            currencyCode: "USD",
+            countryCode: "US",
+
+            total: {
+              label: "#{square_location_name}",
+              amount: "1.01",
+              pending: false,
+            },
+
+            lineItems: [
+              {
+                label: "Subtotal",
+                amount: "1.00",
+                pending: false,
+              },
+              {
+                label: "Tax",
+                amount: "0.01",
+                pending: false,
+              }
+            ]
+          };
+        },
       }
     });
 
@@ -204,9 +244,10 @@ block content
       
       var http = new XMLHttpRequest();
       var url = "/charges/charge_card";
-      var params = "product_id=" + product_id 
-      +"&name=" + name 
-      +"&email=" + email 
+      var params = "location_id=" + '#{square_location_id}'
+      + "&product_id=" + product_id 
+      + "&name=" + name 
+      + "&email=" + email 
       + "&nonce=" + nonce
       + "&street_address_1=" + street_address_1
       + "&street_address_2=" + street_address_2
