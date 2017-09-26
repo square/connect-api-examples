@@ -62,16 +62,28 @@ body{
 }
 
 //Square Fields
+.button-apple-pay {
+  min-width: 200px;
+  min-height: 40px;
+  max-height: 64px;
+  padding: 0;
+  background-image: -webkit-named-image(apple-pay-logo-white);
+  background-color: black;
+  background-size: 100% 60%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border-radius: 5px;
+}
 .sq-input{
-	margin-bottom: 10px;
-	border: none;
+  margin-bottom: 10px;
+  border: none;
   border-bottom: 1px solid #b6b6b6;
 }
 
 //[iFrame class]--focus is added when the square form is focused
 //use similar to other form focus style for consistency
 .sq-input--focus{
-	outline: 0;
+  outline: 0;
   border-bottom: 1px solid #66afe9;
   box-shadow: 0 3px 0 #66afe9;
 }
@@ -79,7 +91,7 @@ body{
 //[iFrame class]--error is added when the iFrame local check fails
 //use similar styling on other forms to ensure consistent error styles
 .sq-input--error{
-	background-color: #F3C0C0;
+  background-color: #F3C0C0;
 }
 
 //error messages
@@ -105,7 +117,7 @@ body{
 /*-------Bootstrap Styling------*/
 
 .sq-input-boot{
-	padding: 0;
+  padding: 0;
 }
 
 //[iFrame class]--focus is added when the square form is focused
@@ -120,7 +132,7 @@ body{
 //[iFrame class]--error is added when the iFrame local check fails
 //use similar styling on other forms to ensure consistent error styles
 .sq-input-boot--error{
-	border-color: #a94442;
+  border-color: #a94442;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
 }
@@ -136,30 +148,30 @@ body{
 
 //make the containing div position relative
 .sq-form-group{
-	position: relative;
+  position: relative;
   height: 57px;
   padding-top: 22px;
 }
 
 //label is after the field in the HTML, but positioned absolutely above the field
 .sq-form-group label{
-	position: absolute;
-	top: 0;
+  position: absolute;
+  top: 0;
 }
 
 //use sibling selector to add style when the form gets the "--error" class
 .sq-input-boot--error+label{
-	color: #a94442;
+  color: #a94442;
 }
 
 .sq-input-boot input{
-	color: #a94442;
+  color: #a94442;
 }
 
 
 //Styles for shopwing the errors
 #card-errors li{
-	padding: 15px;
+  padding: 15px;
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -171,3 +183,9 @@ body{
   list-style-type: none;
 }
 
+.show {
+  display: block;
+}
+.hide {
+  display: none;
+}

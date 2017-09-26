@@ -7,11 +7,6 @@ PRODUCT_COST = {
 class ChargesController < ApplicationController
 
   def charge_card
-    SquareConnect.configure do |config|
-      # Configure OAuth2 access token for authorization: oauth2
-      config.access_token = Rails.application.secrets.square_access_token
-    end
-
     transactions_api = SquareConnect::TransactionsApi.new
 
     #check if product exists
@@ -30,29 +25,9 @@ class ChargesController < ApplicationController
       :idempotency_key => SecureRandom.uuid
     }
 
-    # The SDK throws an exception if a Connect endpoint responds with anything besides 200 (success).
-    # This block catches any exceptions that occur from the request.
-    locations_api = SquareConnect::LocationsApi.new
+    location_id = Rails.application.secrets.square_location_id
     begin
-      locations = locations_api.list_locations.locations
-    rescue SquareConnect::ApiError => e
-      Rails.logger.error("Error encountered while loading the locations: #{e.message}")
-      render json: {:status => 500, :errors => JSON.parse(e.response_body)["errors"] }
-      return
-    end
-
-    location = locations.find do |l|
-      Array(l.capabilities).include?(SquareConnect::LocationCapability::PROCESSING)
-    end
-
-    if location.nil?
-      Rails.logger.error("Can't find a location that can process payments")
-      render json: {:status => 422, :errors => {locations: 'can not process payments'} }
-      return
-    end
-
-    begin
-      resp = transactions_api.charge(location.id, request_body)
+      resp = transactions_api.charge(location_id, request_body)
     rescue SquareConnect::ApiError => e
       Rails.logger.error("Error encountered while charging card:: #{e.message}")
       render json: {:status => 400, :errors => JSON.parse(e.response_body)["errors"]}

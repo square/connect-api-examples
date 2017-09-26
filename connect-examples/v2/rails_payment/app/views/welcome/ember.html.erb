@@ -1,11 +1,11 @@
 
 <div id="form-placeholder"></div>
-  
+
 
 <script type="text/x-handlebars">
 <div class="no-boot">
   {{#if isPaymentSuccess}}
-  
+
   <div id="successNotification">
     Card Charged Succesfully!!
   </div>
@@ -13,9 +13,9 @@
   {{else}}
 
   <form id="payment-form" action="#" onsubmit="return paymentFormSubmit()">
-    
+
     <h2>Ember example</h2>
-    
+
     <label>Choose your Golden Gate replica</label>
     <select id="product_id" value={{product_id}}>
       <option value="001">$1 Paper Origami 1:10,000 scale model (11 inch) </option>
@@ -29,9 +29,9 @@
     <label>Email</label>
     {{input type="email" id="email" value=user.email placeholder="Email"}}
 
-    
+
     <h3> Shipping Address </h3>
-    
+
     <label>Street</label>
     {{input type="text" id="street_address_1" value=user.street_address_1  placeholder="Address Line 1"}}
 
@@ -115,7 +115,7 @@
       <label>Card Number</label>
       <div  id="sq-card-number"></div>
     </div>
-    
+
     <div>
       <label>CVV</label>
       <div  id="sq-cvv"></div>
@@ -130,20 +130,27 @@
       <label>Postal Code</label>
       <div  id="sq-postal-code"></div>
     </div>
-    
+
     <div>
       <input type="submit" id="submit"  {{action "submitForm"}}   disabled={{isProcessing}} value="Buy Now" class="btn btn-primary">
     </div>
 
   </form>
+    <!--
+      Used for Web Apple Pay payments.
 
+      This button is a placeholder for the Web Apple pay button
+      that will be enabled/disabled based on whether or not the domain is
+      registered with Apple and the browser supports Apple Pay.
+    -->
+      <button id="sq-apple-pay" class="button-apple-pay-block {{if supportsApplePay 'show' 'hide'}}"></button>
   {{/if}}
 </div>
 </script>
 
 
 <script type="text/javascript">
-  
+
 var App = Ember.Application.create({
   rootElement: "#form-placeholder"
 });
@@ -156,11 +163,27 @@ App.Router.reopen({
 App.ApplicationController = Ember.Controller.extend({
   user: {name: "abc", "email": "abc@gmail.com", "state":"CA"},
   product_id: "001",
+  products: {
+    "001": {
+      "name": "Paper Origami 1:10,000 scale model (11 inch)",
+      "value":"1.0",
+    },
+    "002": {
+      "name": "Plastic 1:5000 scale model (22 inch)",
+      "value":"49.0",
+    },
+    "003": {
+      "name": "Metal & Concrete 1:1000 scale replica (9 feet)",
+      "value":"5000.0",
+    }
+  },
+  supportsApplePay: false,
   isPaymentSuccess: false, //for showing #successNotification div
   isProcessing: false, //for disabling payment button
   cardErrors: [],
   paymentForm: new SqPaymentForm({
       applicationId: '<%=Rails.application.secrets.square_application_id %>',
+      locationId: '<%=Rails.application.secrets.square_location_id %>',
       inputClass: 'sq-input',
       inputStyles: [
           {
@@ -171,7 +194,7 @@ App.ApplicationController = Ember.Controller.extend({
         ],
       cardNumber: {
         elementId: 'sq-card-number',
-        placeholder: '0000 0000 0000 0000'    
+        placeholder: '0000 0000 0000 0000'
       },
       cvv: {
         elementId: 'sq-cvv',
@@ -185,6 +208,9 @@ App.ApplicationController = Ember.Controller.extend({
         elementId: 'sq-postal-code',
         placeholder: '94110'
       },
+      applePay: {
+        elementId: 'sq-apple-pay'
+      },
       callbacks: {
         cardNonceResponseReceived: function(errors, nonce, cardData) {
           var controller = App.__container__.lookup("controller:application");
@@ -196,11 +222,59 @@ App.ApplicationController = Ember.Controller.extend({
             var boundSend = controller.send.bind(controller);
             boundSend("chargeCardWithNonce", nonce);
           }
-          
+
         },
         unsupportedBrowserDetected: function() {
           // Alert the buyer
+        },
+        methodsSupported: function (methods) {
+          var controller = App.__container__.lookup("controller:application");
+          controller.set('supportsApplePay', methods.applePay);
+        },
+        // Used by Web Apple Pay to create a payment request based on a subset
+        // of the W3C specifications. The payment request below is provided as
+        // guidance. You should add code to create the object
+        // programmatically.
+        createPaymentRequest: function () {
+          var controller = App.__container__.lookup("controller:application");
+          var product_id = controller.get('product_id');
+          var product = controller.get('products')[product_id];
+          return {
+            requestShippingAddress: true,
+            currencyCode: "USD",
+            countryCode: "US",
+            total: {
+              label: product["name"],
+              amount: product["value"],
+              pending: false,
+            }
+          };
+        },
+        // Fill in these cases to respond to various events that can occur while a
+        // buyer is using the payment form.
+        inputEventReceived: function(inputEvent) {
+          switch (inputEvent.eventType) {
+            case 'focusClassAdded':
+              // Handle as desired
+              break;
+            case 'focusClassRemoved':
+              // Handle as desired
+              break;
+            case 'errorClassAdded':
+              // Handle as desired
+              break;
+            case 'errorClassRemoved':
+              // Handle as desired
+              break;
+            case 'cardBrandChanged':
+              // Handle as desired
+              break;
+            case 'postalCodeChanged':
+              // Handle as desired
+              break;
+          }
         }
+
       }
     }),
 
@@ -219,7 +293,7 @@ App.ApplicationController = Ember.Controller.extend({
         nonce: nonce,
         product_id: this.get('product_id'),
         name: this.get('user.name'),
-        email: this.get('user.email'),         
+        email: this.get('user.email'),
         street_address_1: this.get('user.street_address_1'),
         street_address_2: this.get('user.street_address_2'),
         city: this.get('user.city'),
@@ -229,7 +303,7 @@ App.ApplicationController = Ember.Controller.extend({
       $.post(url, data).success(function(data, status) {
         console.log(data);
         if (data.status == 400){
-          // display server side card processing errors 
+          // display server side card processing errors
           this.set("isPaymentSuccess", false);
           var errors = []
           for (var i =0; i < data.errors.length; i++){
