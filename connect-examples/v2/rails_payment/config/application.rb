@@ -33,7 +33,6 @@ module RailsPayment
     SquareConnect.configure do |config|
       # Configure OAuth2 access token for authorization: oauth2
       config.access_token = Rails.application.secrets.square_access_token
-      config.host = 'connect.squareupstaging.com'
     end
   end
 end
