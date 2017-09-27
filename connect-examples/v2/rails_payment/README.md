@@ -20,6 +20,7 @@ bundle exec rake db:create db:migrate # (No db in example, but keeps rails from 
 ```
 SQUARE_APPLICATION_ID=your-app-id
 SQUARE_ACCESS_TOKEN=your-access-token
+SQUARE_LOCATION_ID=your-location-id
 ```
 
 * Run Foreman: `bundle exec foreman start`
