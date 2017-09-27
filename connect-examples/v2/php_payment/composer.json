@@ -1,5 +1,5 @@
 {
   "require": {
-    "square/connect": "2.1.*"
+    "square/connect": "2.3.*"
   }
 }
