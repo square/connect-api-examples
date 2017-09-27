@@ -3,9 +3,9 @@
 </div>
 
 <form id="payment-form" class="container" action="#" onsubmit="return paymentFormSubmit()">
-  
+
   <h2>JS + Bootstrap example</h2>
-  
+
   <div class="form-group">
     <label>Choose your Golden Gate replica</label>
     <select id="product_id" name="product_id">
@@ -108,7 +108,7 @@
     <div class="form-control" id="sq-card-number"></div>
     <label>Card Number</label>
   </div>
-  
+
   <div class="form-group sq-form-group">
     <div class="form-control" id="sq-cvv"></div>
     <label>CVV</label>
@@ -123,20 +123,43 @@
     <div class="form-control" id="sq-postal-code"></div>
     <label>Postal Code</label>
   </div>
-  
+
   <div class="form-group">
     <input type="submit" id="submit" value="Buy Now" class="btn btn-primary">
   </div>
 
 </form>
+<div class="container">
+  <!--
+    Used for Web Apple Pay payments.
 
-
+    This button is a placeholder for the Web Apple pay button
+    that will be enabled/disabled based on whether or not the domain is
+    registered with Apple and the browser supports Apple Pay.
+  -->
+  <button id="sq-apple-pay" class="button-apple-pay hide"></button>
+</div>
 
 <script type="text/javascript">
+var products = {
+  "001": {
+    "name": "Paper Origami 1:10,000 scale model (11 inch)",
+    "value":"1.0",
+  },
+  "002": {
+    "name": "Plastic 1:5000 scale model (22 inch)",
+    "value":"49.0",
+  },
+  "003": {
+    "name": "Metal & Concrete 1:1000 scale replica (9 feet)",
+    "value":"5000.0",
+  }
+};
 var cardNonce;
 var paymentForm = new SqPaymentForm({
   applicationId: '<%=Rails.application.secrets.square_application_id %>',
-  inputClass: 'sq-input-boot',
+  locationId: '<%=Rails.application.secrets.square_location_id %>',
+  inputClass: 'sq-input',
   inputStyles: [
       {
         fontSize: '14px',
@@ -146,7 +169,7 @@ var paymentForm = new SqPaymentForm({
     ],
   cardNumber: {
     elementId: 'sq-card-number',
-    placeholder: '0000 0000 0000 0000'    
+    placeholder: '0000 0000 0000 0000'
   },
   cvv: {
     elementId: 'sq-cvv',
@@ -159,6 +182,10 @@ var paymentForm = new SqPaymentForm({
   postalCode: {
     elementId: 'sq-postal-code',
     placeholder: '94110'
+  },
+  // Used for Web Apple Pay payments
+  applePay: {
+      elementId: 'sq-apple-pay'
   },
   callbacks: {
     cardNonceResponseReceived: function(errors, nonce, cardData) {
@@ -173,11 +200,60 @@ var paymentForm = new SqPaymentForm({
         document.getElementById("card-errors").innerHTML = "";
         chargeCardWithNonce(nonce);
       }
-      
-      
     },
     unsupportedBrowserDetected: function() {
       // Alert the buyer
+    },
+    methodsSupported: function (methods) {
+      if (methods.applePay === true) {
+        var element = document.getElementById('sq-apple-pay');
+        element.style.display = 'block';
+      }
+    },
+    // Used by Web Apple Pay to create a payment request based on a subset
+    // of the W3C specifications. The payment request below is provided as
+    // guidance. You should add code to create the object
+    // programmatically.
+    createPaymentRequest: function () {
+      var product_id = document.getElementById('product_id').value;
+      var product = products[product_id];
+      return {
+        requestShippingAddress: true,
+        currencyCode: "USD",
+        countryCode: "US",
+        total: {
+          label: product["name"],
+          amount: product["value"],
+          pending: false,
+        }
+      };
+    },
+    unsupportedBrowserDetected: function() {
+      // Fill in this callback to alert buyers when their browser is not supported.
+    },
+    // Fill in these cases to respond to various events that can occur while a
+    // buyer is using the payment form.
+    inputEventReceived: function(inputEvent) {
+      switch (inputEvent.eventType) {
+        case 'focusClassAdded':
+          // Handle as desired
+          break;
+        case 'focusClassRemoved':
+          // Handle as desired
+          break;
+        case 'errorClassAdded':
+          // Handle as desired
+          break;
+        case 'errorClassRemoved':
+          // Handle as desired
+          break;
+        case 'cardBrandChanged':
+          // Handle as desired
+          break;
+        case 'postalCodeChanged':
+          // Handle as desired
+          break;
+      }
     }
   }
 });
@@ -198,12 +274,12 @@ var chargeCardWithNonce = function(nonce) {
   var city = document.getElementById('city').value;
   var state = document.getElementById('state').value;
   var zip = document.getElementById('zip').value;
-  
+
   var http = new XMLHttpRequest();
   var url = "/charges/charge_card";
-  var params = "product_id=" + product_id 
-  +"&name=" + name 
-  +"&email=" + email 
+  var params = "product_id=" + product_id
+  +"&name=" + name
+  +"&email=" + email
   + "&nonce=" + nonce
   + "&street_address_1=" + street_address_1
   + "&street_address_2=" + street_address_2

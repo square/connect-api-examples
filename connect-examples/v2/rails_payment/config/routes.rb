@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   get '/react' => 'welcome#react'
 
+  get '/.well-known/apple-developer-merchantid-domain-association' => 'apple#domain_association'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

@@ -4,9 +4,9 @@
   </div>
 
   <form novalidate id="payment-form" ng-hide="isPaymentSuccess">
-    
+
     <h2>Angular example</h2>
-    
+
     <label>Choose your Golden Gate replica</label>
     <select id="product_id" name="product_id" ng-model="data.product_id">
       <option value="001">$1 Paper Origami 1:10,000 scale model (11 inch) </option>
@@ -20,9 +20,9 @@
     <label>Email</label>
     <input ng-model="data.user.email" type="email" id="email" name="email"  placeholder="Email"/>
 
-    
+
     <h3> Shipping Address </h3>
-    
+
     <label>Street</label>
     <input ng-model="data.user.street_address_1" type="text" id="street_address_1" name="street_address_1"  placeholder="Address Line 1"/>
 
@@ -92,7 +92,7 @@
 
     <label>Zip</label>
     <input ng-model="data.user.zip" type="text" id="zip" name="zip"  placeholder="Zip"/>
-    
+
 
     <div id="card-errors" ng-repeat="error in card_errors">
       <li>{{error.message}}</li>
@@ -102,7 +102,7 @@
       <label>Card Number</label>
       <div ng-model="data.card.card_number"  id="sq-card-number"></div>
     </div>
-    
+
     <div>
       <label>CVV</label>
       <div ng-model="data.card.cvv"  id="sq-cvv"></div>
@@ -117,12 +117,20 @@
       <label>Postal Code</label>
       <div ng-model="data.card.postal_code"  id="sq-postal-code"></div>
     </div>
-    
+
     <div>
       <input ng-click="submitForm()" ng-disabled="isProcessing" type="submit" id="submit" value="Buy Now" class="btn btn-primary">
     </div>
 
   </form>
+  <!--
+      Used for Web Apple Pay payments.
+
+      This button is a placeholder for the Web Apple pay button
+      that will be enabled/disabled based on whether or not the domain is
+      registered with Apple and the browser supports Apple Pay.
+    -->
+    <button id="sq-apple-pay" class="button-apple-pay-block" ng-show="supportApplePay"></button>
 </div>
 
 <script>
@@ -133,12 +141,32 @@ angular.module('squareApp', [])
   })
   .controller('PaymentController', ['$scope', '$http', function($scope, $http) {
     //for showing #successNotification div
-    $scope.isPaymentSuccess = false
-    
+    $scope.isPaymentSuccess = false;
+
     //for disabling payment button
-    $scope.isProcessing = false
-    
-    $scope.data = { product_id: "001", user: {}, card: {} }
+    $scope.isProcessing = false;
+    //for disabling apple pay button
+    $scope.supportApplePay = false;
+
+    $scope.data = {
+      product_id: "001",
+      user: {},
+      card: {},
+      products: {
+        "001": {
+          "name": "Paper Origami 1:10,000 scale model (11 inch)",
+          "value":"1.0",
+        },
+        "002": {
+          "name": "Plastic 1:5000 scale model (22 inch)",
+          "value":"49.0",
+        },
+        "003": {
+          "name": "Metal & Concrete 1:1000 scale replica (9 feet)",
+          "value":"5000.0",
+        }
+      }
+    };
 
     $scope.submitForm = function(){
       console.log($scope.data)
@@ -149,6 +177,7 @@ angular.module('squareApp', [])
 
     $scope.paymentForm = new SqPaymentForm({
       applicationId: '<%= Rails.application.secrets.square_application_id %>',
+      locationId: '<%=Rails.application.secrets.square_location_id %>',
       inputClass: 'sq-input',
       inputStyles: [
           {
@@ -159,7 +188,7 @@ angular.module('squareApp', [])
         ],
       cardNumber: {
         elementId: 'sq-card-number',
-        placeholder: '0000 0000 0000 0000'    
+        placeholder: '0000 0000 0000 0000'
       },
       cvv: {
         elementId: 'sq-cvv',
@@ -173,6 +202,9 @@ angular.module('squareApp', [])
         elementId: 'sq-postal-code',
         placeholder: '94110'
       },
+      applePay: {
+        elementId: 'sq-apple-pay'
+      },
       callbacks: {
         cardNonceResponseReceived: function(errors, nonce, cardData) {
           if (errors){
@@ -183,10 +215,52 @@ angular.module('squareApp', [])
             $scope.card_errors = []
             $scope.chargeCardWithNonce(nonce);
           }
-          
+
         },
         unsupportedBrowserDetected: function() {
           // Alert the buyer
+        },
+        methodsSupported: function (methods) {
+          console.log(methods);
+          $scope.supportApplePay = true
+          $scope.$apply(); // required since this is not an angular function
+        },
+        createPaymentRequest: function () {
+          var product = $scope.data.products[$scope.data.product_id];
+          return {
+            requestShippingAddress: true,
+            currencyCode: "USD",
+            countryCode: "US",
+            total: {
+              label: product["name"],
+              amount: product["value"],
+              pending: false,
+            }
+          };
+        },
+        // Fill in these cases to respond to various events that can occur while a
+        // buyer is using the payment form.
+        inputEventReceived: function(inputEvent) {
+          switch (inputEvent.eventType) {
+            case 'focusClassAdded':
+              // Handle as desired
+              break;
+            case 'focusClassRemoved':
+              // Handle as desired
+              break;
+            case 'errorClassAdded':
+              // Handle as desired
+              break;
+            case 'errorClassRemoved':
+              // Handle as desired
+              break;
+            case 'cardBrandChanged':
+              // Handle as desired
+              break;
+            case 'postalCodeChanged':
+              // Handle as desired
+              break;
+          }
         }
       }
     });
@@ -199,7 +273,7 @@ angular.module('squareApp', [])
         nonce: nonce,
         product_id: $scope.data.product_id,
         name: $scope.data.user.name,
-        email: $scope.data.user.email,         
+        email: $scope.data.user.email,
         street_address_1: $scope.data.user.street_address_1,
         street_address_2: $scope.data.user.street_address_2,
         city: $scope.data.user.city,
@@ -208,7 +282,7 @@ angular.module('squareApp', [])
       };
       $http.post(url, data).success(function(data, status) {
         if (data.status == 400){
-          // display server side card processing errors 
+          // display server side card processing errors
           $scope.isPaymentSuccess = false;
           $scope.card_errors = []
           for (var i =0; i < data.errors.length; i++){
@@ -223,7 +297,7 @@ angular.module('squareApp', [])
         $scope.isProcessing = false;
         $scope.card_errors = [{message: "Processing error, please try again!"}];
       })
-      
+
     }
 
     //build payment form after controller loads
