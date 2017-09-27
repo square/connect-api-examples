@@ -1,18 +1,36 @@
+<!DOCTYPE html>
 <html>
-<head>
-  <title>My Payment Form</title>
-  <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
-  <script>
-    var sqPaymentForm = new SqPaymentForm({
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Sample Payment Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="https://js.squareup.com/v2/paymentform">
+    </script>
+    <script>
 
-      // Replace this value with your application's ID (available from the merchant dashboard).
-      // If you're just testing things out, replace this with your _Sandbox_ application ID,
-      // which is also available there.
-      applicationId: 'REPLACE_ME',
+    var applicationId = 'REPLACE_ME'; // <-- Add your application's ID here
+    var locationId = 'REPLACE_ME';    // <-- For Apple Pay, set your location ID here
+
+    // Make sure the application ID is set before continuing.
+    if (applicationId == '') {
+      alert('You need to provide a value for the applicationId variable.');
+    }
+
+    // Create and initialize a payment form object
+    var paymentForm = new SqPaymentForm({
+      applicationId: applicationId,
+      locationId: locationId,
       inputClass: 'sq-input',
+      inputStyles: [
+        {
+          fontSize: '15px'
+        }
+      ],
+      // Used for credit card payments
       cardNumber: {
         elementId: 'sq-card-number',
-        placeholder: "0000 0000 0000 0000"
+        placeholder: '•••• •••• •••• ••••'
       },
       cvv: {
         elementId: 'sq-cvv',
@@ -23,85 +41,192 @@
         placeholder: 'MM/YY'
       },
       postalCode: {
-        elementId: 'sq-postal-code',
-        placeholder: 'Postal Code'
+        elementId: 'sq-postal-code'
       },
-      inputStyles: [
 
-        // Because this object provides no value for mediaMaxWidth or mediaMinWidth,
-        // these styles apply for screens of all sizes, unless overridden by another
-        // input style below.
-        {
-          fontSize: '14px',
-          padding: '3px'
+      // Used for Web Apple Pay payments
+      applePay: {
+          elementId: 'sq-apple-pay'
+      },
+
+      // Payment form callback functions
+      callbacks: {
+
+        // Credit card payments are always supported, but the Web Apple Pay
+        // button should only display if Apple Pay is supported for this
+        // domain. Apple Pay support is determined by the Square JS library
+        // when the page loads. You do not need to modify this function.
+        methodsSupported: function (methods) {
+            if (methods.applePay === true) {
+                // Show apple pay button
+                var element = document.getElementById('sq-apple-pay');
+                element.style.display = 'inline-block';
+            }
         },
 
-        // These styles are applied to inputs ONLY when the screen width is 400px
-        // or smaller. Note that because it doesn't specify a value for padding,
-        // the padding value in the previous object is preserved.
-        {
-          mediaMaxWidth: '400px',
-          fontSize: '18px',
-        }
-      ],
-      callbacks: {
+        // Used by Web Apple Pay to create a payment request based on a subset
+        // of the W3C specifications. The payment request below is provided as
+        // guidance. You should add code to create the object
+        // programmatically.
+        createPaymentRequest: function () {
+            return {
+                requestShippingAddress: true,
+                currencyCode: "USD",
+                countryCode: "US",
+                total: {
+                    label: "Hakuna",
+                    amount: "{{REPLACE_ME}}",
+                    pending: false,
+                },
+                lineItems: [
+                    {
+                        label: "Subtotal",
+                        amount: "{{REPLACE_ME}}",
+                        pending: false,
+                    },
+                    {
+                        label: "Shipping",
+                        amount: "{{REPLACE_ME}}",
+                        pending: true,
+                    },
+                    {
+                        label: "Tax",
+                        amount: "{{REPLACE_ME}}",
+                        pending: false,
+                    }
+                ]
+            };
+        },
+
+        // Used for credit card payments. Called when the SqPaymentForm
+        // completes a request to generate a card nonce, even if the request
+        // failed because of an error.
         cardNonceResponseReceived: function(errors, nonce, cardData) {
-          if (errors) {
-            var errorDiv = document.getElementById('errors');
-            errorDiv.innerHTML = "";
+          if (errors && errors.length > 0) {
+
+            // handle errors. display the error message
+
+            console.log("Encountered errors:");
             errors.forEach(function(error) {
-              var p = document.createElement('p');
-              p.innerHTML = error.message;
-              errorDiv.appendChild(p);
+              console.log('  ' + error.message);
             });
-          } else {
-            // This alert is for debugging purposes only.
-            alert('Nonce received! ' + nonce + ' ' + JSON.stringify(cardData));
 
-            // Assign the value of the nonce to a hidden form element
-            var nonceField = document.getElementById('card-nonce');
-            nonceField.value = nonce;
+            return;
+          }
 
-            // Submit the form
-            document.getElementById('form').submit();
+          // You can delete this line, it's provided for testing purposes
+          alert("nonce received: " + nonce);
+
+          // Set the nonce value to the hidden form field
+          document.getElementById('card-nonce').value = nonce;
+          document.getElementById('nonce-form').submit();
+
+          // Let the form continue to the payment processing page
+          // submitPayment(nonce);
           }
         },
+
         unsupportedBrowserDetected: function() {
-          // Alert the buyer that their browser is not supported
+          // Fill in this callback to alert buyers when their browser is not supported.
+        },
+
+        // Fill in these cases to respond to various events that can occur while a
+        // buyer is using the payment form.
+        inputEventReceived: function(inputEvent) {
+          switch (inputEvent.eventType) {
+            case 'focusClassAdded':
+              // Handle as desired
+              break;
+            case 'focusClassRemoved':
+              // Handle as desired
+              break;
+            case 'errorClassAdded':
+              // Handle as desired
+              break;
+            case 'errorClassRemoved':
+              // Handle as desired
+              break;
+            case 'cardBrandChanged':
+              // Handle as desired
+              break;
+            case 'postalCodeChanged':
+              // Handle as desired
+              break;
+          }
+        },
+
+        paymentFormLoaded: function() {
+          // Fill in this callback to perform actions after the payment form is
+          // done loading (such as setting the postal code field programmatically).
+          // paymentForm.setPostalCode('94103');
         }
-      }
     });
-    function submitButtonClick(event) {
+
+    // Called when a buyer clicks the submit button for a credit card payment
+    function requestCardNonce(event) {
+
+      // Prevent the Submit button from submitting its associated form so
+      // the SqPaymentForm object can generate a credit card nonce first.
       event.preventDefault();
-      sqPaymentForm.requestCardNonce();
+      paymentForm.requestCardNonce();
     }
-  </script>
-  <style type="text/css">
-    .sq-input {
-      border: 1px solid #CCCCCC;
-      margin-bottom: 10px;
-      padding: 1px;
-    }
-    .sq-input--focus {
-      outline-width: 5px;
-      outline-color: #70ACE9;
-      outline-offset: -1px;
-      outline-style: auto;
-    }
-    .sq-input--error {
-      outline-width: 5px;
-      outline-color: #FF9393;
-      outline-offset: 0px;
-      outline-style: auto;
-    }
-  </style>
-</head>
-<body>
 
-  <h1>My Payment Form</h1>
+    </script>
 
-  <form id="form" novalidate action="/cgi-bin/process_card.py" method="post">
-    <label>Credit Card</label>
+    <!--
+      These styles can live in a separate .css file. They're just here to keep this
+      example to a single file.
+    -->
+    <style type="text/css">
+      .sq-input {
+        border: 1px solid rgb(223, 223, 223);
+        outline-offset: -2px;
+        margin-bottom: 5px;
+      }
+      .sq-input--focus {
+        /* Indicates how form inputs should appear when they have focus */
+        outline: 5px auto rgb(59, 153, 252);
+      }
+      .sq-input--error {
+        /* Indicates how form inputs should appear when they contain invalid values */
+        outline: 5px auto rgb(255, 97, 97);
+      }
+
+        /* Indicates how Web Apple Pay Button will appear on your site */
+      .button-apple-pay {
+        min-width: 200px;
+        min-height: 40px;
+        max-height: 64px;
+        padding: 0;
+        background-image: -webkit-named-image(apple-pay-logo-white);
+        background-color: black;
+        background-size: 100% 60%;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        border-radius: 5px;
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!--
+      Used for Web Apple Pay payments.
+
+      This button is a placeholder for the Web Apple pay button
+      that will be enabled/disabled based on whether or not the domain is
+      registered with Apple and the browser supports Apple Pay.
+    -->
+    <button id="sq-apple-pay" class="button-apple-pay"></button>
+
+    <!--
+      Used for Credit Card payments.
+
+      These div elements are the placeholder elements for credit card payments
+      that are replaced by the SqPaymentForm's iframes.
+    -->
+    <label>Card Number</label>
     <div id="sq-card-number"></div>
     <label>CVV</label>
     <div id="sq-cvv"></div>
@@ -109,10 +234,26 @@
     <div id="sq-expiration-date"></div>
     <label>Postal Code</label>
     <div id="sq-postal-code"></div>
-    <input type="hidden" id="card-nonce" name="nonce">
-    <input type="submit" onclick="submitButtonClick(event)" id="card-nonce-submit">
-  </form>
 
-  <div id="errors"></div>
-</body>
+    <!--
+      Used for Credit Card payments.
+
+      After the SqPaymentForm generates a card nonce, *this* form POSTs the generated
+      card nonce to your application's server.
+
+      You should replace the action attribute of the form with the path of
+      the URL you want to POST the nonce to (for example, "/process-card")
+    -->
+    <form id="nonce-form" novalidate action="/cgi-bin/process_card.py" method="post">
+      <!--
+        After it's generated, the nonce is assigned to this hidden input field.
+      -->
+      <input type="hidden" id="card-nonce" name="nonce">
+
+      <!--
+        Clicking this generates a card nonce for a credit card purchase.
+      -->
+      <input type="submit" onclick="requestCardNonce(event)">
+    </form>
+  </body>
 </html>
