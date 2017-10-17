@@ -6,13 +6,57 @@
     <title>My Payment Form</title>
     <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
     <script type="text/javascript">
-      var sqPaymentForm = new SqPaymentForm({
-        applicationId: '<%=ApplicationId%>',
-        locationId: '<%=LocationId%>',
+      // Set the application ID
+      var applicationId = '<%=ApplicationId%>';
+
+      // Set the location ID
+      var locationId = '<%=LocationId%>';
+
+      /*
+      * function: requestCardNonce
+      *
+      * requestCardNonce is triggered when the "Pay with credit card" button is
+      * clicked
+      *
+      * Modifying this function is not required, but can be customized if you
+      * wish to take additional action when the form button is clicked.
+      */
+      function requestCardNonce(event) {
+
+        // Don't submit the form until SqPaymentForm returns with a nonce
+        event.preventDefault();
+
+        // Request a nonce from the SqPaymentForm object
+        paymentForm.requestCardNonce();
+      }
+
+      // Create and initialize a payment form object
+      var paymentForm = new SqPaymentForm({
+
+        // Initialize the payment form elements
+        applicationId: applicationId,
+        locationId: locationId,
         inputClass: 'sq-input',
+
+        // Customize the CSS for SqPaymentForm iframe elements
+        inputStyles: [{
+            fontSize: '.9em'
+        }],
+
+        // Initialize Apple Pay placeholder ID
+        applePay: {
+          elementId: 'sq-apple-pay'
+        },
+
+        // Initialize Masterpass placeholder ID
+        masterpass: {
+          elementId: 'sq-masterpass'
+        },
+
+        // Initialize the credit card placeholders
         cardNumber: {
           elementId: 'sq-card-number',
-          placeholder: "0000 0000 0000 0000"
+          placeholder: '0000 0000 0000 0000'
         },
         cvv: {
           elementId: 'sq-cvv',
@@ -23,169 +67,291 @@
           placeholder: 'MM/YY'
         },
         postalCode: {
-          elementId: 'sq-postal-code',
-          placeholder: 'Postal Code'
+          elementId: 'sq-postal-code'
         },
-        applePay: {
-          elementId: 'sq-apple-pay'
-        },
-        inputStyles: [
-          // Because this object provides no value for mediaMaxWidth or mediaMinWidth,
-          // these styles apply for screens of all sizes, unless overridden by another
-          // input style below.
-          {
-            fontSize: '14px',
-            padding: '3px'
-          },
-          // These styles are applied to inputs ONLY when the screen width is 400px
-          // or smaller. Note that because it doesn't specify a value for padding,
-          // the padding value in the previous object is preserved.
-          {
-            mediaMaxWidth: '400px',
-            fontSize: '18px',
-          }
-        ],
+
+        // SqPaymentForm callback functions
         callbacks: {
+
+          /*
+          * callback function: methodsSupported
+          * Triggered when: the page is loaded.
+          */
           methodsSupported: function (methods) {
-            // Show the Apple Pay button if Apple Pay is supported.
+
+            var applePayBtn = document.getElementById('sq-apple-pay');
+            var applePayLabel = document.getElementById('sq-apple-pay-label');
+            var masterpassBtn = document.getElementById('sq-masterpass');
+            var masterpassLabel = document.getElementById('sq-masterpass-label');
+
+            // Only show the button if Apple Pay for Web is enabled
+            // Otherwise, display the wallet not enabled message.
             if (methods.applePay === true) {
-              var element = document.getElementById('sq-apple-pay');
-              element.style.display = 'inline-block';
+              applePayBtn.style.display = 'inline-block';
+              applePayLabel.style.display = 'none' ;
+            }
+            // Only show the button if Masterpass is enabled
+            // Otherwise, display the wallet not enabled message.
+            if (methods.masterpass === true) {
+              masterpassBtn.style.display = 'inline-block';
+              masterpassLabel.style.display = 'none';
             }
           },
+
+          /*
+          * callback function: createPaymentRequest
+          * Triggered when: a digital wallet payment button is clicked.
+          */
           createPaymentRequest: function () {
-            return {
-              requestShippingAddress: false,
+
+            var paymentRequestJson = {
+              requestShippingAddress: true,
               currencyCode: "USD",
               countryCode: "US",
-
               total: {
-                label: "Blue Glass Cafe",
-                amount: "1.01",
-                pending: false,
-              },
-
-              lineItems: [
-                {
-                  label: "Subtotal",
-                  amount: "1.00",
-                  pending: false,
-                },
-                {
-                  label: "Tax",
-                  amount: "0.01",
-                  pending: false,
-                }
-              ]
-            };
+                label: "MERCHANT NAME",
+                amount: "10.00",
+                pending: false
+              }
+			};
+            return paymentRequestJson ;
           },
-          cardNonceResponseReceived: function (errors, nonce, cardData) {
+
+          /*
+          * callback function: cardNonceResponseReceived
+          * Triggered when: SqPaymentForm completes a card nonce request
+          */
+          cardNonceResponseReceived: function(errors, nonce, cardData) {
             if (errors) {
-              var errorDiv = document.getElementById('errors');
-              errorDiv.innerHTML = "";
-              errors.forEach(function (error) {
-                var p = document.createElement('p');
-                p.innerHTML = error.message;
-                errorDiv.appendChild(p);
+              // Log errors from nonce generation to the Javascript console
+              console.log("Encountered errors:");
+              errors.forEach(function(error) {
+                console.log('  ' + error.message);
               });
-            } else {
-              // This alert is for debugging purposes only.
-              alert('Nonce received! ' + nonce + ' ' + JSON.stringify(cardData));
-              // Assign the value of the nonce to a hidden form element
-              var nonceField = document.getElementById('cardNonce');
-              nonceField.value = nonce;
+
+              return;
+            }
+
+            alert('Nonce received: ' + nonce); /* FOR TESTING ONLY */
+
+            // Assign the nonce value to the hidden form field
+            document.getElementById('card-nonce').value = nonce;
+
+            // Invoke the Charge Method in Default.aspx.cs
+            PageMethods.Charge(nonce, function(response, userContext, methodName) {
+              alert(response);
+            });
+
+          },
+
+          /*
+          * callback function: unsupportedBrowserDetected
+          * Triggered when: the page loads and an unsupported browser is detected
+          */
+          unsupportedBrowserDetected: function() {
+            /* PROVIDE FEEDBACK TO SITE VISITORS */
+          },
+
+          /*
+          * callback function: inputEventReceived
+          * Triggered when: visitors interact with SqPaymentForm iframe elements.
+          */
+          inputEventReceived: function(inputEvent) {
+            switch (inputEvent.eventType) {
+              case 'focusClassAdded':
+                /* HANDLE AS DESIRED */
+                break;
+              case 'focusClassRemoved':
+                /* HANDLE AS DESIRED */
+                break;
+              case 'errorClassAdded':
+                /* HANDLE AS DESIRED */
+                break;
+              case 'errorClassRemoved':
+                /* HANDLE AS DESIRED */
+                break;
+              case 'cardBrandChanged':
+                /* HANDLE AS DESIRED */
+                break;
+              case 'postalCodeChanged':
+                /* HANDLE AS DESIRED */
+                break;
             }
           },
-          unsupportedBrowserDetected: function () {
-            // Alert the buyer that their browser is not supported
+
+          /*
+          * callback function: paymentFormLoaded
+          * Triggered when: SqPaymentForm is fully loaded
+          */
+          paymentFormLoaded: function() {
+            /* HANDLE AS DESIRED */
           }
         }
       });
-      function submitButtonClick(event) {
-        event.preventDefault();
-        sqPaymentForm.requestCardNonce();
-      }
-      function SendNonce() {
-        PageMethods.Charge(document.getElementById('cardNonce').value, OnSuccess);
-      }
-      function Clear() {
-        // Submit the form
-        document.getElementById('form').submit();
-      }
-      function OnSuccess(response, userContext, methodName) {
-        alert(response);
-      }
     </script>
+
     <style type="text/css" runat="server">
+      /* Define how SqPaymentForm iframes should look */
       .sq-input {
-        border: 1px solid #CCCCCC;
-        margin-bottom: 10px;
-        padding: 1px;
-      }
-
-      .sq-input--focus {
-        outline-width: 5px;
-        outline-color: #70ACE9;
-        outline-offset: -1px;
-        outline-style: auto;
-      }
-
-      .sq-input--error {
-        outline-width: 5px;
-        outline-color: #FF9393;
-        outline-offset: 0px;
-        outline-style: auto;
-      }
-
-      .apple-pay-button {
+        border: 1px solid rgb(223, 223, 223);
+        outline-offset: -2px;
+        margin-bottom: 5px;
         display: inline-block;
+      }
+
+      /* Define how SqPaymentForm iframes should look when they have focus */
+      .sq-input--focus {
+        outline: 5px auto rgb(59, 153, 252);
+      }
+
+      /* Define how SqPaymentForm iframes should look when they contain invalid values */
+      .sq-input--error {
+        outline: 5px auto rgb(255, 97, 97);
+      }
+
+      /* Customize the "Pay with Credit Card" button */
+      .button-credit-card {
+        min-width: 200px;
+        min-height: 20px;
+        padding: 0;
+        margin: 5px;
+        line-height: 20px;
+        box-shadow: 2px 2px 1px rgb(200, 200, 200);
+        background: rgb(255, 255, 255);
+        border-radius: 5px;
+        border: 1px solid rgb(200, 200, 200);
+        font-weight: bold;
+        cursor:pointer;
+      }
+
+
+      /* Customize the "{{Wallet}} not enabled" message */
+      .wallet-not-enabled {
+        min-width: 200px;
+        min-height: 40px;
+        max-height: 64px;
+        padding: 0;
+        margin: 10px;
+        line-height: 40px;
+        background: #eee;
+        border-radius: 5px;
+        font-weight: lighter;
+        font-style: italic;
+        font-family: inherit;
+        display: block;
+      }
+
+      /* Customize the Apple Pay on the Web button */
+      .button-apple-pay {
+        min-width: 200px;
+        min-height: 40px;
+        max-height: 64px;
+        padding: 0;
+        margin: 10px;
+        background-image: -webkit-named-image(apple-pay-logo-white);
+        background-color: black;
         background-size: 100% 60%;
         background-repeat: no-repeat;
         background-position: 50% 50%;
         border-radius: 5px;
-        border-width: 2px;
-        padding: 0px;
-        box-sizing: border-box;
-        min-width: 200px;
-        min-height: 32px;
-        max-height: 64px;
-      }
-
-      .apple-pay-button-white {
-        background-image: -webkit-named-image(apple-pay-logo-black);
-        background-color: white;
-      }
-
-      #sq-apple-pay {
+        cursor:pointer;
         display: none;
+      }
+
+      /* Customize the Masterpass button */
+      .button-masterpass {
+        min-width: 200px;
+        min-height: 40px;
+        max-height: 40px;
+        padding: 0;
+        margin: 10px;
+        background-image: url(https://static.masterpass.com/dyn/img/btn/global/mp_chk_btn_147x034px.svg);
+        background-color: black;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        border-radius: 5px;
+        border-color: rgb(255, 255, 255);
+        cursor:pointer;
+        display: none;
+      }
+
+      #sq-walletbox {
+        float:left;
+        margin:5px;
+        padding:10px;
+        text-align: center;
+        vertical-align: top;
+        font-weight: bold;
+      }
+
+      #sq-ccbox {
+        float:left;
+        margin:5px;
+        padding:10px;
+        text-align: center;
+        vertical-align: top;
+        font-weight: bold;
       }
     </style>
   </head>
 
   <body>
-    <h1>My Payment Form</h1>
-    <form id="form" runat="server" novalidate="novalidate">
-      <asp:ScriptManager ID="ScriptManager" runat="server" EnablePageMethods="true">
-      </asp:ScriptManager>
-      <label>Credit Card</label>
-      <div id="sq-card-number"></div>
-      <label>CVV</label>
-      <div id="sq-cvv"></div>
-      <label>Expiration Date</label>
-      <div id="sq-expiration-date"></div>
-      <label>Postal Code</label>
-      <div id="sq-postal-code"></div>
-      <input type="hidden" id="cardNonce" name="nonce" />
-      <input type="submit" onclick="submitButtonClick(event)" id="btnSubmit" />
-      <input id="btnCharge" type="button" value="Charge" onclick="SendNonce()" />
-      <input id="btnClear" type="button" value="Clear" onclick="Clear()" />
+    <div id="sq-ccbox">
+      <!--
+        You should replace the action attribute of the form with the path of
+        the URL you want to POST the nonce to (for example, "/process-card")
+      -->
+      <form id="form" runat="server" novalidate="novalidate">
+        Pay with a Credit Card
+        <asp:ScriptManager ID="ScriptManager" runat="server" EnablePageMethods="true">
+        </asp:ScriptManager>
+        <table>
+        <tbody>
+          <tr>
+            <td>Card Number:</td>
+            <td><div id="sq-card-number"></div></td>
+          </tr>
+          <tr>
+            <td>CVV:</td>
+            <td><div id="sq-cvv"></div></td>
+          </tr>
+          <tr>
+            <td>Expiration Date: </td>
+            <td><div id="sq-expiration-date"></div></td>
+          </tr>
+          <tr>
+            <td>Postal Code:</td>
+            <td><div id="sq-postal-code"></div></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <button id="sq-creditcard" class="button-credit-card" onclick="requestCardNonce(event)">
+                Pay with card
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        </table>
+    
+        <!--
+          After a nonce is generated it will be assigned to this hidden input field.
+        -->
+        <input type="hidden" id="card-nonce" name="nonce">
+      </form>
+    </div>
+    
+    <div id="sq-walletbox">
+      Pay with a Digital Wallet
+      <div id="sq-apple-pay-label" class="wallet-not-enabled">Apple Pay for Web not enabled</div>
+      <!-- Placholder for Apple Pay for Web button -->
+      <button id="sq-apple-pay" class="button-apple-pay"></button>
+    
+      <div id="sq-masterpass-label" class="wallet-not-enabled">Masterpass not enabled</div>
+      <!-- Placholder for Masterpass button -->
+      <button id="sq-masterpass" class="button-masterpass"></button>
+    </div>
 
-      <p>
-        <button id="sq-apple-pay" class="apple-pay-button apple-pay-button-white"></button>
-      </p>
-    </form>
-
-    <div id="errors"></div>
   </body>
 
   </html>
