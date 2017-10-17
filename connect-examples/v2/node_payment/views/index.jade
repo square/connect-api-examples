@@ -97,17 +97,13 @@ block content
   <label>Zip</label>
   <input type="text" id="zip" name="zip"  placeholder="Zip"/>
 
-  <div id="apple-pay-area" style="display:none">
-  <button id="sq-apple-pay" class="apple-pay-button apple-pay-button-white" />
-  </div>
-
   <div id="card-errors">
 
   </div>
 
   <div>
   <label>Card Number</label>
-  <div  id="sq-card-number"></div>
+  <div id="sq-card-number"></div>
   </div>
 
   <div>
@@ -130,6 +126,17 @@ block content
   </div>
 
   </form>
+
+  <div id="sq-walletbox">
+  <h2>Pay with a Digital Wallet</h2>
+  <div id="sq-apple-pay-label" class="wallet-not-enabled">Apple Pay for Web not enabled</div>
+  <!-- Placholder for Apple Pay for Web button -->
+  <button id="sq-apple-pay" class="button-apple-pay"></button>
+
+  <div id="sq-masterpass-label" class="wallet-not-enabled">Masterpass not enabled</div>
+  <!-- Placholder for Masterpass button -->
+  <button id="sq-masterpass" class="button-masterpass"></button>
+  </div>
   </div>
 
   script(type='text/javascript').
@@ -161,15 +168,36 @@ block content
         elementId: 'sq-postal-code',
         placeholder: '94110'
       },
+
+      // Initialize Apple Pay placeholder ID
       applePay: {
         elementId: 'sq-apple-pay'
       },
+
+      // Initialize Masterpass placeholder ID
+      masterpass: {
+        elementId: 'sq-masterpass'
+      },
+
       callbacks: {
         methodsSupported: function (methods) {
-          // Show the Apple Pay button if Apple Pay is supported.
+
+          var applePayBtn = document.getElementById('sq-apple-pay');
+          var applePayLabel = document.getElementById('sq-apple-pay-label');
+          var masterpassBtn = document.getElementById('sq-masterpass');
+          var masterpassLabel = document.getElementById('sq-masterpass-label');
+
+          // Only show the button if Apple Pay for Web is enabled
+          // Otherwise, display the wallet not enabled message.
           if (methods.applePay === true) {
-            var element = document.getElementById('apple-pay-area');
-            element.style.display = 'block';
+            applePayBtn.style.display = 'inline-block';
+            applePayLabel.style.display = 'none' ;
+          }
+          // Only show the button if Masterpass is enabled
+          // Otherwise, display the wallet not enabled message.
+          if (methods.masterpass === true) {
+            masterpassBtn.style.display = 'inline-block';
+            masterpassLabel.style.display = 'none';
           }
         },
         cardNonceResponseReceived: function(errors, nonce, cardData) {
