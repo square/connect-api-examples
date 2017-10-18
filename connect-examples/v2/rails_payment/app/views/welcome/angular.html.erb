@@ -15,23 +15,23 @@
     </select>
 
     <label>Name</label>
-    <input ng-model="data.user.name" type="text" id="name" name="name"  placeholder="Name"/>
+    <input ng-model="data.user.name" type="text" id="name" name="name" placeholder="Name"/>
 
     <label>Email</label>
-    <input ng-model="data.user.email" type="email" id="email" name="email"  placeholder="Email"/>
+    <input ng-model="data.user.email" type="email" id="email" name="email" placeholder="Email"/>
 
 
     <h3> Shipping Address </h3>
 
     <label>Street</label>
-    <input ng-model="data.user.street_address_1" type="text" id="street_address_1" name="street_address_1"  placeholder="Address Line 1"/>
+    <input ng-model="data.user.street_address_1" type="text" id="street_address_1" name="street_address_1" placeholder="Address Line 1"/>
 
 
     <label>Street</label>
-    <input ng-model="data.user.street_address_2" type="text" id="street_address_2" name="street_address_2"  placeholder="Address Line 2"/>
+    <input ng-model="data.user.street_address_2" type="text" id="street_address_2" name="street_address_2" placeholder="Address Line 2"/>
 
     <label>City</label>
-    <input ng-model="data.user.city" type="text" id="city" name="city"  placeholder="City"/>
+    <input ng-model="data.user.city" type="text" id="city" name="city" placeholder="City"/>
 
 
     <label>State</label>
@@ -91,7 +91,7 @@
     </select>
 
     <label>Zip</label>
-    <input ng-model="data.user.zip" type="text" id="zip" name="zip"  placeholder="Zip"/>
+    <input ng-model="data.user.zip" type="text" id="zip" name="zip" placeholder="Zip"/>
 
 
     <div id="card-errors" ng-repeat="error in card_errors">
@@ -100,22 +100,22 @@
 
     <div>
       <label>Card Number</label>
-      <div ng-model="data.card.card_number"  id="sq-card-number"></div>
+      <div ng-model="data.card.card_number" id="sq-card-number"></div>
     </div>
 
     <div>
       <label>CVV</label>
-      <div ng-model="data.card.cvv"  id="sq-cvv"></div>
+      <div ng-model="data.card.cvv" id="sq-cvv"></div>
     </div>
 
     <div>
       <label>Expiration Date</label>
-      <div ng-model="data.card.expiration_date"  id="sq-expiration-date"></div>
+      <div ng-model="data.card.expiration_date" id="sq-expiration-date"></div>
     </div>
 
     <div>
       <label>Postal Code</label>
-      <div ng-model="data.card.postal_code"  id="sq-postal-code"></div>
+      <div ng-model="data.card.postal_code" id="sq-postal-code"></div>
     </div>
 
     <div>
@@ -123,14 +123,16 @@
     </div>
 
   </form>
-  <!--
-      Used for Web Apple Pay payments.
+  <div id="sq-walletbox" ng-hide="isPaymentSuccess">
+    Pay with a Digital Wallet
+    <div id="sq-apple-pay-label" class="wallet-not-enabled" ng-hide="supportApplePay">Apple Pay for Web not enabled</div>
+    <!-- Placeholder for Apple Pay for Web button -->
+    <button id="sq-apple-pay" class="button-apple-pay" ng-style="supportApplePay && {'display': 'inline-block'}"></button>
 
-      This button is a placeholder for the Web Apple pay button
-      that will be enabled/disabled based on whether or not the domain is
-      registered with Apple and the browser supports Apple Pay.
-    -->
-    <button id="sq-apple-pay" class="button-apple-pay-block" ng-show="supportApplePay"></button>
+    <div id="sq-masterpass-label" class="wallet-not-enabled" ng-hide="supportMasterpass">Masterpass not enabled</div>
+    <!-- Placeholder for Masterpass button -->
+    <button id="sq-masterpass" class="button-masterpass" ng-style="supportMasterpass && {'display': 'inline-block'}"></button>
+  </div>
 </div>
 
 <script>
@@ -147,6 +149,8 @@ angular.module('squareApp', [])
     $scope.isProcessing = false;
     //for disabling apple pay button
     $scope.supportApplePay = false;
+    //for disabling masterpass button
+    $scope.supportMasterpass = false;
 
     $scope.data = {
       product_id: "001",
@@ -202,29 +206,56 @@ angular.module('squareApp', [])
         elementId: 'sq-postal-code',
         placeholder: '94110'
       },
+      // Initialize Apple Pay placeholder ID
       applePay: {
         elementId: 'sq-apple-pay'
       },
+      // Initialize Masterpass placeholder ID
+      masterpass: {
+        elementId: 'sq-masterpass'
+      },
       callbacks: {
+        /*
+        * callback function: cardNonceResponseReceived
+        * Triggered when: SqPaymentForm completes a card nonce request
+        */
         cardNonceResponseReceived: function(errors, nonce, cardData) {
-          if (errors){
+          if (errors) {
             $scope.card_errors = errors
             $scope.isProcessing = false;
-            $scope.$apply(); // required since this is not an angular function
-          }else{
+          } else {
             $scope.card_errors = []
             $scope.chargeCardWithNonce(nonce);
           }
 
         },
+        /*
+        * callback function: unsupportedBrowserDetected
+        * Triggered when: the page loads and an unsupported browser is detected
+        */
         unsupportedBrowserDetected: function() {
           // Alert the buyer
         },
+        /*
+        * callback function: methodsSupported
+        * Triggered when: the page is loaded.
+        */
         methodsSupported: function (methods) {
-          console.log(methods);
-          $scope.supportApplePay = true
-          $scope.$apply(); // required since this is not an angular function
+          // Only show the button if Apple Pay for Web is enabled
+          // Otherwise, display the wallet not enabled message.
+          if (methods.applePay === true) {
+            $scope.supportApplePay = true;
+          }
+          // Only show the button if Masterpass is enabled
+          // Otherwise, display the wallet not enabled message.
+          if (methods.masterpass === true) {
+            $scope.supportMasterpass = true;
+          }
         },
+        /*
+        * callback function: createPaymentRequest
+        * Triggered when: a digital wallet payment button is clicked.
+        */
         createPaymentRequest: function () {
           var product = $scope.data.products[$scope.data.product_id];
           return {
