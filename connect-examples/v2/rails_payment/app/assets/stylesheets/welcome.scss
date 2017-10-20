@@ -62,18 +62,63 @@ body{
 }
 
 //Square Fields
+.wallet-not-enabled {
+  min-width: 200px;
+  min-height: 40px;
+  max-height: 64px;
+  padding: 0;
+  margin: 10px;
+  line-height: 40px;
+  background: #eee;
+  border-radius: 5px;
+  font-weight: lighter;
+  font-style: italic;
+  font-family: inherit;
+  display: block;
+}
+
 .button-apple-pay {
   min-width: 200px;
   min-height: 40px;
   max-height: 64px;
   padding: 0;
+  margin: 10px;
   background-image: -webkit-named-image(apple-pay-logo-white);
   background-color: black;
   background-size: 100% 60%;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-radius: 5px;
+  cursor:pointer;
+  display: none;
 }
+
+.button-masterpass {
+  min-width: 200px;
+  min-height: 40px;
+  max-height: 40px;
+  padding: 0;
+  margin: 10px;
+  background-image: url(https://static.masterpass.com/dyn/img/btn/global/mp_chk_btn_147x034px.svg);
+  background-color: black;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border-radius: 5px;
+  border-color: rgb(255, 255, 255);
+  cursor:pointer;
+  display: none;
+}
+
+#sq-walletbox {
+  float:left;
+  margin:5px;
+  padding:10px;
+  text-align: center;
+  vertical-align: top;
+  font-weight: bold;
+}
+
 .sq-input{
   margin-bottom: 10px;
   border: none;
