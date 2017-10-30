@@ -122,14 +122,16 @@
       <input type="submit" id="submit" value="Buy Now" class="btn btn-primary">
     </div>
   </form>
-  <!--
-      Used for Web Apple Pay payments.
+  <div id="sq-walletbox">
+    Pay with a Digital Wallet
+    <div id="sq-apple-pay-label" class="wallet-not-enabled">Apple Pay for Web not enabled</div>
+    <!-- Placeholder for Apple Pay for Web button -->
+    <button id="sq-apple-pay" class="button-apple-pay"></button>
 
-      This button is a placeholder for the Web Apple pay button
-      that will be enabled/disabled based on whether or not the domain is
-      registered with Apple and the browser supports Apple Pay.
-    -->
-    <button id="sq-apple-pay" class="button-apple-pay hide"></button>
+    <div id="sq-masterpass-label" class="wallet-not-enabled">Masterpass not enabled</div>
+    <!-- Placeholder for Masterpass button -->
+    <button id="sq-masterpass" class="button-masterpass"></button>
+  </div>
 </div>
 
 <script type="text/javascript">
@@ -175,11 +177,19 @@ var paymentForm = new SqPaymentForm({
     elementId: 'sq-postal-code',
     placeholder: '94110'
   },
-  // Used for Web Apple Pay payments
+  // Initialize Apple Pay placeholder ID
   applePay: {
-      elementId: 'sq-apple-pay'
+    elementId: 'sq-apple-pay'
+  },
+  // Initialize Masterpass placeholder ID
+  masterpass: {
+    elementId: 'sq-masterpass'
   },
   callbacks: {
+    /*
+    * callback function: cardNonceResponseReceived
+    * Triggered when: SqPaymentForm completes a card nonce request
+    */
     cardNonceResponseReceived: function(errors, nonce, cardData) {
       if (errors){
         var error_html = ""
@@ -194,18 +204,34 @@ var paymentForm = new SqPaymentForm({
         chargeCardWithNonce(nonce);
       }
     },
+    /*
+    * callback function: unsupportedBrowserDetected
+    * Triggered when: the page loads and an unsupported browser is detected
+    */
     unsupportedBrowserDetected: function() {
       // Alert the buyer
     },
+    /*
+    * callback function: methodsSupported
+    * Triggered when: the page is loaded.
+    */
     methodsSupported: function (methods) {
+      // Only show the button if Apple Pay for Web is enabled
+      // Otherwise, display the wallet not enabled message.
       if (methods.applePay === true) {
         $("#sq-apple-pay").show();
+        $("#sq-apple-pay-label").hide();
+      }
+
+      if (methods.masterpass === true) {
+        $("#sq-masterpass").show();
+        $("#sq-masterpass-label").hide();
       }
     },
-    // Used by Web Apple Pay to create a payment request based on a subset
-    // of the W3C specifications. The payment request below is provided as
-    // guidance. You should add code to create the object
-    // programmatically.
+    /*
+     * callback function: createPaymentRequest
+     * Triggered when: a digital wallet payment button is clicked.
+     */
     createPaymentRequest: function () {
       var product_id = $('#product_id').val();
       var product = products[product_id];
@@ -220,8 +246,10 @@ var paymentForm = new SqPaymentForm({
         }
       };
     },
-    // Fill in these cases to respond to various events that can occur while a
-    // buyer is using the payment form.
+    /*
+     * callback function: inputEventReceived
+     * Triggered when: visitors interact with SqPaymentForm iframe elements.
+     */
     inputEventReceived: function(inputEvent) {
       switch (inputEvent.eventType) {
         case 'focusClassAdded':

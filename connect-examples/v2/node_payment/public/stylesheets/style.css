@@ -99,21 +99,62 @@ use similar styling on other forms to ensure consistent error styles */
   font-size: 32px;
 }
 
-.apple-pay-button {
-  display: inline-block;
+/* Customize the "{{Wallet}} not enabled" message */
+.wallet-not-enabled {
+  min-width: 200px;
+  min-height: 40px;
+  max-height: 64px;
+  padding: 0;
+  margin: 10px;
+  line-height: 40px;
+  background: #eee;
+  border-radius: 5px;
+  font-weight: lighter;
+  font-style: italic;
+  font-family: inherit;
+  display: block;
+}
+
+/* Customize the Apple Pay on the Web button */
+.button-apple-pay {
+  min-width: 200px;
+  min-height: 40px;
+  max-height: 64px;
+  padding: 0;
+  margin: 10px;
+  background-image: -webkit-named-image(apple-pay-logo-white);
+  background-color: black;
   background-size: 100% 60%;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   border-radius: 5px;
-  border-width: 2px;
-  padding: 0px;
-  box-sizing: border-box;
-  min-width: 200px;
-  min-height: 32px;
-  max-height: 64px;
+  cursor:pointer;
+  display: none;
 }
 
-.apple-pay-button-white {
-  background-image: -webkit-named-image(apple-pay-logo-black);
-  background-color: white;
+/* Customize the Masterpass button */
+.button-masterpass {
+  min-width: 200px;
+  min-height: 40px;
+  max-height: 40px;
+  padding: 0;
+  margin: 10px;
+  background-image: url(https://static.masterpass.com/dyn/img/btn/global/mp_chk_btn_147x034px.svg);
+  background-color: black;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border-radius: 5px;
+  border-color: rgb(255, 255, 255);
+  cursor:pointer;
+  display: none;
+}
+
+#sq-walletbox {
+  float:left;
+  margin:5px;
+  padding:10px;
+  text-align: center;
+  vertical-align: top;
+  font-weight: bold;
 }
