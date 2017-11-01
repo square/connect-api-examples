@@ -30,7 +30,7 @@ $locations_api = new \SquareConnect\Api\LocationsApi();
 
 try {
   $locations = $locations_api->listLocations();
-  #We look for a location that can process payments
+  # We look for a location that can process payments
   $location = current(array_filter($locations->getLocations(), function($location) {
     $capabilities = $location->getCapabilities();
     return is_array($capabilities) &&
@@ -48,6 +48,9 @@ try {
 
 $transactions_api = new \SquareConnect\Api\TransactionsApi();
 
+# To learn more about splitting transactions with additional recipients,
+# see the Transactions API documentation on our [developer site]
+# (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
 $request_body = array (
 
   "card_nonce" => $nonce,

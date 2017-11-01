@@ -219,6 +219,21 @@ function verifyTransaction(
  *     "country" => "{{SHIPPING Country}}",
  *     "first_name" => "{{CUSTOMER FIRST NAME}}",
  *     "last_name" => "{{CUSTOMER LAST NAME}}"
+ *   ),
+ *
+ *   // To learn more about splitting transactions with additional recipients,
+ *   // see the Transactions API documentation on our [developer site]
+ *   // (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
+ *
+ *   "additional_recipients" => array(
+ *     array(
+ *       "location_id" => "{{RECIPIENT LOCATION ID}}",
+ *       "description" => "{{DESCRIPTION}}",
+ *       "amount_money" => array(
+ *         "amount" => {{AMOUNT TO RECIPIENT}},
+ *         "currency" => {{CURRENCY USED}}
+ *       )
+ *     )
  *   )
  * )
  ******************************************************************************/

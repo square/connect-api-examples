@@ -46,6 +46,9 @@ namespace CSharpPaymentExample
             // which isn't very useful.
             Money amount = new Money(100, Money.CurrencyEnum.USD);
 
+            // To learn more about splitting transactions with additional recipients,
+            // see the Transactions API documentation on our [developer site]
+            // (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
             ChargeRequest body = new ChargeRequest(AmountMoney: amount, IdempotencyKey: uuid, CardNonce: nonce);
 
             try

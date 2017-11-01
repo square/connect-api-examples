@@ -51,7 +51,7 @@ function initApiClient() {
 
     $apiResponse = $locationsApi->listLocations()->getLocations();
 
-    // There may be more than one location assocaited with the account (e.g,. a
+    // There may be more than one location associated with the account (e.g,. a
     // brick-and-mortar store and an online store), so we need to run through
     // the response and pull the right location ID
     foreach ($apiResponse['locations'] as $location) {

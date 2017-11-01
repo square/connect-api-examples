@@ -7,8 +7,8 @@ var config = require('.././config.json')[app.get('env')];
 var unirest = require('unirest');
 var base_url = "https://connect.squareup.com/v2";
 
-// data store for product cost
-var product_cost = {"001": 100, "002": 4900, "003": 500000} 
+// Data store for product cost
+var product_cost = {"001": 100, "002": 4900, "003": 500000};
 
 function findLocation(callback) {
 	unirest.get(base_url + '/locations')
@@ -19,11 +19,11 @@ function findLocation(callback) {
 	.end(function(response) {
 		for (var i = response.body.locations.length - 1; i >= 0; i--) {
 			location = response.body.locations[i];
-			if(location.capabilities && location.capabilities.indexOf("CREDIT_CARD_PROCESSING")>-1){
+			if (location.capabilities && location.capabilities.indexOf("CREDIT_CARD_PROCESSING")>-1) {
 				callback(location, null);
 				return;
 			}
-			if(i==0){
+			if (i==0) {
 				callback(null, {status: 400, errors: [{"detail": "No locations have credit card processing available."}]});
 			}
 		}
@@ -51,14 +51,17 @@ router.post('/charges/charge_card', function(req,res,next){
 
 	var token = require('crypto').randomBytes(64).toString('hex');
 
-	//Check if product exists
+	// Check if product exists
 	if (!product_cost.hasOwnProperty(request_params.product_id)) {
 		return res.json({status: 400, errors: [{"detail": "Product Unavailable"}] })
 	}
 
-	//Make sure amount is a valid integer
+	// Make sure amount is a valid integer
 	var amount = product_cost[request_params.product_id]
 
+	// To learn more about splitting transactions with additional recipients,
+	// see the Transactions API documentation on our [developer site]
+	// (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
 	request_body = {
 		card_nonce: request_params.nonce,
 		amount_money: {

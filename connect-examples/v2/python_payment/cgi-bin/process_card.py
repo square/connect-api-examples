@@ -36,13 +36,16 @@ idempotency_key = str(uuid.uuid1())
 # Monetary amounts are specified in the smallest unit of the applicable currency.
 # This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
 amount = {'amount': 100, 'currency': 'USD'}
+
+# To learn more about splitting transactions with additional recipients,
+# see the Transactions API documentation on our [developer site]
+# (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
 body = {'idempotency_key': idempotency_key, 'card_nonce': nonce, 'amount_money': amount}
 
 
 # The SDK throws an exception if a Connect endpoint responds with anything besides
 # a 200-level HTTP code. This block catches any exceptions that occur from the request.
 try:
-  # Charge
   api_response = api_instance.charge(location_id, body)
   res = api_response.transaction
 except ApiException as e:

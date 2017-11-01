@@ -87,6 +87,9 @@ public class Main {
 
     @PostMapping("/charge")
     String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException {
+        // To learn more about splitting transactions with additional recipients,
+        // see the Transactions API documentation on our [developer site]
+        // (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
         ChargeRequest chargeRequest = new ChargeRequest()
             .idempotencyKey(UUID.randomUUID().toString())
             .amountMoney(new Money().amount(1_00L).currency(CurrencyEnum.USD))
