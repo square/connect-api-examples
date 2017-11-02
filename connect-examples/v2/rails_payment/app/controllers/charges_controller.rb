@@ -9,12 +9,15 @@ class ChargesController < ApplicationController
   def charge_card
     transactions_api = SquareConnect::TransactionsApi.new
 
-    #check if product exists
+    # Check if product exists
     if !PRODUCT_COST.has_key? params[:product_id]
       render json: {:status => 400, :errors => [{"detail": "Product unavailable"}]  }
       return
     end
 
+    # To learn more about splitting transactions with additional recipients,
+    # see the Transactions API documentation on our [developer site]
+    # (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
     amount = PRODUCT_COST[params[:product_id]]
     request_body = {
       :card_nonce => params[:nonce],
@@ -48,7 +51,7 @@ class ChargesController < ApplicationController
       card: resp.transaction.tenders[0].card_details.card
     }
 
-    # send receipt email to user
+    # Send receipt email to user
     ReceiptMailer.charge_email(params[:email],data).deliver_now if Rails.env == "development"
 
     render json: {:status => 200}
