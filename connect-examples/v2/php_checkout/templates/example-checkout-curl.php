@@ -26,7 +26,7 @@ if ($GLOBALS['STORE_NAME'] == null) {
 $orderArray = getOrderAsArray(/*Order ID or object from cart workflow */);
 
 // CURL HELPER FUNCTION: Get the location ID for the store
-$GLOBALS['LOCATION_ID'] = getMyLocationId($authzToken, $GLOBALS['STORE_NAME']);
+$GLOBALS['LOCATION_ID'] = getLocationId($authzToken, $GLOBALS['STORE_NAME']);
 if ($GLOBALS['LOCATION_ID'] == null) {
   echo "The location ID for '" . $GLOBALS['STORE_NAME'] . "' not found.";
   return;
