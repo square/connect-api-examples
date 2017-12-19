@@ -4,7 +4,7 @@ The root page has the selections for the different implemetations.
 
 Ruby version: 2.3.1
 
-Rails version: 4.2.6
+Rails version: 4.2.7
 
 To get the app running:
 
