@@ -1,6 +1,6 @@
 # README
 
-The root page has the selections for the different implemetations.
+The root page has the selections for the different implementations.
 
 Ruby version: 2.3.6
 
