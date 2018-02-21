@@ -33,7 +33,7 @@ try {
 // HELPER FUNCTION: verify the order information
 $validTransaction = verifyTransaction($_GET, $apiResponse, $savedCheckoutId, $savedOrderTotal);
 
-if (!$validTransaction) {
+if ($validTransaction) {
 
   /* add code to print the order confirmation or redirect to an existing
   confirmation page */
@@ -43,11 +43,8 @@ if (!$validTransaction) {
   // information (e.g., a mismatch between the checkout and order IDs) or
   // Square Checkout encountered an unexpected card error.
 
-  /*
-     add code to print an error message and provide contact information
-     for follow-up
-  */
+  /* add code to print an error message and provide contact information
+  for follow-up */
 
   exit;
-
 }
