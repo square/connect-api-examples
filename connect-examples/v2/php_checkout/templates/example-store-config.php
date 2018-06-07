@@ -74,7 +74,7 @@ function initApiClient() {
       );
       exit;
     }
-
+    $GLOBALS['API_CLIENT'] = $locationsApi->getApiClient();
     $GLOBALS['API_CLIENT_SET'] = true;
 
   } catch (Exception $e) {
