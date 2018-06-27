@@ -1,0 +1,57 @@
+.container {
+    width: 920px;
+    margin: 0 auto;
+}
+
+#square-logo {
+    height: 32px;
+    width: 32px;
+    background: url("https://cdn.glitch.com/4c9bc573-ca4c-48de-8afe-501eddad0b79%2Fsquare-logo.svg?1521834224783") center center no-repeat;
+    margin: 0 auto;
+    padding-top: 25px;
+}
+
+body {
+  background-color: #ececec;
+}
+
+.header {
+  text-align: center;
+  margin-top: 0;
+}
+
+.form-container {
+  text-align: center;
+}
+
+form {
+  width:100%;
+  margin-top: 25px;
+}
+
+input {
+  border: 1px solid #E0E2E3;
+  border-radius: 4px;
+  outline-offset: -2px;
+  display: inline-block;
+  font-size: 18px;
+  font-family: "HelveticaNeue";
+  padding: 15px;
+  color: #373F4A;
+}
+
+button {
+  background: #0EB00E;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.10), 0 2px 2px 0 rgba(0,0,0,0.10);
+  border-radius: 4px;
+  cursor:pointer;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 24px;
+  padding: 15px;
+  margin-top: 10px;
+  outline: none;
+  font-family: "HelveticaNeue-Bold", Helvetica, Arial, sans-serif;
+}
