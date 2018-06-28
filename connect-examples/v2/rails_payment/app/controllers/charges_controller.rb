@@ -38,22 +38,6 @@ class ChargesController < ApplicationController
     end
     puts resp
 
-    data = {
-      amount: amount,
-      user: {
-        name: params[:name],
-        street_address_1: params[:street_address_1],
-        street_address_2: params[:street_address_2],
-        state: params[:state],
-        zip: params[:zip],
-        city: params[:city]
-      },
-      card: resp.transaction.tenders[0].card_details.card
-    }
-
-    # Send receipt email to user
-    ReceiptMailer.charge_email(params[:email],data).deliver_now if Rails.env == "development"
-
     render json: {:status => 200}
   end
 end

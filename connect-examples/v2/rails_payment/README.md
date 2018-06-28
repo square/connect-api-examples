@@ -25,6 +25,6 @@ SQUARE_LOCATION_ID=your-location-id
 
 * Run Foreman: `bundle exec foreman start`
 
-* The application runs in `http://localhost:3000/` and mailcatcher (`http://127.0.0.1:1080/`) is used to test emails
+* The application runs in `http://localhost:3000/`
 
 * [Testing using the API sandbox](https://docs.connect.squareup.com/articles/using-sandbox)
