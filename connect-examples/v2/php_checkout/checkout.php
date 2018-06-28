@@ -1,12 +1,15 @@
 <?php
   require 'vendor/autoload.php';
+  define("IS_PROD", false);
 
   // dotenv is used to read from the '.env' file created
   $dotenv = new Dotenv\Dotenv(__DIR__);
   $dotenv->load();
 
-  $access_token = $_ENV["ACCESS_TOKEN"];
-  $location_id = $_ENV["LOCATION_ID"];
+  $access_token = (IS_PROD)  ?  $_ENV["PROD_ACCESS_TOKEN"]
+                             :  $_ENV["SANDBOX_ACCESS_TOKEN"];
+  $location_id =  (IS_PROD)  ?  $_ENV["PROD_LOCATION_ID"]
+                             :  $_ENV["SANDBOX_LOCATION_ID"];
   // setup authorization
   \SquareConnect\Configuration::getDefaultConfiguration()->setAccessToken($access_token);
 
