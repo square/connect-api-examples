@@ -1,5 +1,6 @@
 <?php
   require 'vendor/autoload.php';
+  // Change to true if production, false if sandbox
   define("IS_PROD", false);
 
   // dotenv is used to read from the '.env' file created
@@ -15,24 +16,33 @@
 
   // make sure we actually are on a POST with an amount
   if (isset($_POST["amount"])) {
-    $checkout_api = new \SquareConnect\Api\CheckoutApi();
-    $request_body = new \SquareConnect\Model\CreateCheckoutRequest(
-      [
-        "idempotency_key" => uniqid(),
-        "order" => [
-          "line_items" => [
-          [
-            "name" => "Test Payment",
-            "quantity" => "1",
-            "base_price_money" => [
-              "amount" => intval($_POST["amount"] * 100),
-              "currency" => "USD"
-            ]
-          ]]
+    try {
+      $checkout_api = new \SquareConnect\Api\CheckoutApi();
+      $request_body = new \SquareConnect\Model\CreateCheckoutRequest(
+        [
+          "idempotency_key" => uniqid(),
+          "order" => [
+            "line_items" => [
+            [
+              "name" => "Test Payment",
+              "quantity" => "1",
+              "base_price_money" => [
+                // multiply by 100 due to it being in cents
+                "amount" => intval($_POST["amount"] * 100),
+                "currency" => "USD"
+              ]
+            ]]
+          ]
         ]
-      ]
-    );
-    $response = $checkout_api->createCheckout($location_id, $request_body);
+      );
+      $response = $checkout_api->createCheckout($location_id, $request_body);
+    } catch (Exception $e) {
+      // if an error occurs, output the message
+      echo $e->getMessage();
+      exit();
+    }
+    // this redirects to the Square hosted checkout page
     header("Location: ".$response->getCheckout()->getCheckoutPageUrl());
+    exit();
   }
 ?>

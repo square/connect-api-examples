@@ -21,3 +21,8 @@ php -S localhost:8888
 ```
 
 This will start the server on `localhost:8888`, which you can navigate to in your favorite browser.
+
+For more information about Checkout please visit: 
+* https://docs.connect.squareup.com/payments/checkout/overview
+* https://docs.connect.squareup.com/api/connect/v2#navsection-checkout
+* https://github.com/square/connect-php-sdk/blob/master/docs/Api/CheckoutApi.md
