@@ -8,7 +8,8 @@ It takes a single payment, declared by the user, and creates an order to use in 
 To get it running:
 
 * Clone/download to your local computer.
-* Rename `.envsample` to `.env` and fill in the values.
+* Place your credentials in `.env`
+  * <b>WARNING</b>: never upload .env with your credential/access_token
 * In `checkout.php` there's a variable, `IS_PROD` to switch between production and sandbox; change it based on your needs.
 * Downloaded composer (https://getcomposer.org/download/)
 * Run the following command in your terminal to download the required packages (in the directory you copied the project to):
