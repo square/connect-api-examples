@@ -10,10 +10,6 @@ body{
   -moz-osx-font-smoothing: grayscale;
 }
 
-.no-boot{
-
-}
-
 //input styles
 .no-boot input,
 .no-boot select{
@@ -248,7 +244,7 @@ input {
 #nonce-form {
   background-color: #f7f7f7;
   padding: 25px;
-  text-align: right;
+  text-align: left;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 

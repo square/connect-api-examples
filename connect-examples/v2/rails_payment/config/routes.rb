@@ -1,21 +1,12 @@
 Rails.application.routes.draw do
   post 'charges/charge_card'
 
-  get 'welcome/index'
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'welcome#index'
+  root 'welcome#js'
   get '/js' => 'welcome#js'
-  get '/js_bootstrap' => 'welcome#js_bootstrap'
-  get '/angular' => 'welcome#angular'
-
-  get '/jquery' => 'welcome#jquery'
-  get '/ember' => 'welcome#ember'
-
-  get '/react' => 'welcome#react'
 
   get '/.well-known/apple-developer-merchantid-domain-association' => 'apple#domain_association'
 
