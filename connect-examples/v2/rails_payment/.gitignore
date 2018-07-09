@@ -15,5 +15,4 @@
 /log/*
 !/log/.keep
 tmp/
-.env
 .byebug_history

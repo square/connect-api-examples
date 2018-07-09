@@ -19,13 +19,13 @@ class ChargesController < ApplicationController
     location_id = Rails.application.secrets.square_location_id
     begin
       resp = transactions_api.charge(location_id, request_body)
+      # print entire transaction to terminal
+      puts resp.transaction
+      render json: {:status => 200}
     rescue SquareConnect::ApiError => e
       Rails.logger.error("Error encountered while charging card:: #{e.message}")
       render json: {:status => 400, :errors => JSON.parse(e.response_body)["errors"]}
       return
     end
-    puts resp
-
-    render json: {:status => 200}
   end
 end

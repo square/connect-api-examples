@@ -5,8 +5,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'welcome#js'
-  get '/js' => 'welcome#js'
+  root 'welcome#index'
 
   get '/.well-known/apple-developer-merchantid-domain-association' => 'apple#domain_association'
 

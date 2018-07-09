@@ -1,10 +1,8 @@
 <div class="no-boot">
-  <div id="successNotification" style="display: none">
-    Card Charged Succesfully!!
-  </div>
-
-    <div id="sq-ccbox">
-
+  <div id="sq-ccbox">
+    <div id="successNotification" style="display: none">
+      Card Charged Successfully!!
+    </div>
     <form id="nonce-form" action="#" onsubmit="return paymentFormSubmit()">
       <div id="card-errors"></div>
 
@@ -184,11 +182,10 @@ var paymentForm = new SqPaymentForm({
 });
 
 var paymentFormSubmit = function(){
-  console.log('submit clicked');
   document.getElementById('submit').disabled = true;
   paymentForm.requestCardNonce();
   return false;
-}
+};
 
 var chargeCardWithNonce = function(nonce) {
   var http = new XMLHttpRequest();
@@ -202,29 +199,29 @@ var chargeCardWithNonce = function(nonce) {
   http.setRequestHeader("X-CSRF-Token", "<%= form_authenticity_token %>");
 
   http.onreadystatechange = function() {//Call a function when the state changes.
-      if(http.readyState == 4 && http.status == 200) {
-        var data = JSON.parse(http.responseText)
-        if (data.status == 200) {
+      if(http.readyState === 4 && http.status === 200) {
+        let data = JSON.parse(http.responseText);
+        if (data.status === 200) {
           document.getElementById("successNotification").style.display = "block";
-          document.getElementById("payment-form").style.display = "none";
+          document.getElementById("nonce-form").style.display = "none";
           window.scrollTo(0, 0);
-        }else if (data.status == 400){
-          var error_html = ""
-          for (var i =0; i < data.errors.length; i++){
+        }else if (data.status === 400){
+          let error_html = "";
+          for (let i =0; i < data.errors.length; i++){
             error_html += "<li> " + data.errors[i].detail + " </li>";
           }
           document.getElementById("card-errors").innerHTML = error_html;
           document.getElementById('submit').disabled = false;
         }
       }
-  }
+  };
   http.send(params);
-}
+};
 
 // required to work with rails turbolinks
 document.addEventListener('page:change', function(){
-  console.log('dom loaded')
-  paymentForm.build()
+  console.log('dom loaded');
+  paymentForm.build();
 });
 
 </script>
