@@ -24,7 +24,7 @@ SQUARE_ACCESS_TOKEN=your-access-token
 SQUARE_LOCATION_ID=your-location-id
 ```
 
-* Run the application: `rails s`
+* Run the application: `bin/rails s`
 
 * The application runs in `http://localhost:3000/`
 
