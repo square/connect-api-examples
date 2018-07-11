@@ -5,20 +5,15 @@ body{
   font-family: Helvetica;
 }
 
-.no-boot{
-  margin: 10px 10%;
-}
-
-
-.no-boot label{
-  display: block;
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 //input styles
 .no-boot input,
 .no-boot select{
   width: 100%;
-  height: 24px;
   margin-bottom: 10px;
   padding: 4px 10px;
   font-family: helvetica;
@@ -26,27 +21,38 @@ body{
 }
 
 .no-boot input{
-  border: none;
-  border-bottom: 1px solid #b6b6b6;
+  border: 1px solid #E0E2E3;
+  border-radius: 4px;
+  outline-offset: -2px;
+  display: inline-block;
 }
 
 .no-boot input:focus{
-  outline: 0;
-  border-bottom: 1px solid #66afe9;
-  box-shadow: 0 3px 0 #66afe9;
+  border: 1px solid #4A90E2;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.10), 0 2px 2px 0 rgba(0,0,0,0.10);
 }
 
 //submit button styles
 .no-boot input[type=submit]{
-  background-color: #62DF49;
-  color: #fff;
-  height: 44px;
-  width: 45%;
-  cursor: pointer;
+  min-height: 45px;
+  background: #0EB00E;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.10), 0 2px 2px 0 rgba(0,0,0,0.10);
+  border-radius: 4px;
+  cursor:pointer;
+  display:block;
+  font-size: 16px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 24px;
+  padding: 15px;
+  margin-top: 10px;
+  outline: none;
+  font-family: "HelveticaNeue-Bold", Helvetica, Arial, sans-serif;
 }
 
 .no-boot input[type=submit]:hover{
-  background-color: #56FBD2;
+  background-color: #12df12;
 }
 
 .no-boot input[type=submit]:focus{
@@ -119,24 +125,31 @@ body{
   font-weight: bold;
 }
 
+input {
+  border: 1px solid #E0E2E3;
+  border-radius: 4px;
+  outline-offset: -2px;
+}
+
 .sq-input{
-  margin-bottom: 10px;
-  border: none;
-  border-bottom: 1px solid #b6b6b6;
+  border: 1px solid #E0E2E3;
+  border-radius: 4px;
+  outline-offset: -2px;
+  display: inline-block;
 }
 
 //[iFrame class]--focus is added when the square form is focused
 //use similar to other form focus style for consistency
 .sq-input--focus{
-  outline: 0;
-  border-bottom: 1px solid #66afe9;
-  box-shadow: 0 3px 0 #66afe9;
+  border: 1px solid #4A90E2;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.10), 0 2px 2px 0 rgba(0,0,0,0.10);
 }
 
 //[iFrame class]--error is added when the iFrame local check fails
 //use similar styling on other forms to ensure consistent error styles
 .sq-input--error{
-  background-color: #F3C0C0;
+  border: 1px solid red;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.10), 0 2px 2px 0 rgba(0,0,0,0.10);
 }
 
 //error messages
@@ -154,7 +167,7 @@ body{
   text-align: center;
   background-image: linear-gradient(-1deg, #72E07B 0%, #56FBD2 100%);
   border-radius: 4px;
-  padding: 25% 30%;
+  padding: 5% 5%;
   color: white;
   font-size: 32px;
 }
@@ -200,8 +213,39 @@ body{
 
 //label is after the field in the HTML, but positioned absolutely above the field
 .sq-form-group label{
-  position: absolute;
-  top: 0;
+  font-size: 18px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 700;
+  line-height: 19.8px;
+  padding-right: 12px;
+  display: inline-block;
+  width:20%;
+}
+
+.label {
+  font-size: 18px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 700;
+  line-height: 19.8px;
+  padding-right: 12px;
+}
+
+#sq-ccbox {
+  float:left;
+  margin:5px;
+  padding:10px;
+  text-align: center;
+  vertical-align: top;
+  font-weight: bold;
+}
+
+#nonce-form {
+  background-color: #f7f7f7;
+  padding: 25px;
+  text-align: left;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 //use sibling selector to add style when the form gets the "--error" class
