@@ -40,11 +40,6 @@ function requestCardNonce(event) {
     applePay: {
       elementId: 'sq-apple-pay'
     },
-
-    googlePay: {
-      elementId: 'sq-google-pay'
-    },
-
     // Initialize Masterpass placeholder ID
     masterpass: {
       elementId: 'sq-masterpass'
@@ -80,21 +75,12 @@ function requestCardNonce(event) {
         var applePayLabel = document.getElementById('sq-apple-pay-label');
         var masterpassBtn = document.getElementById('sq-masterpass');
         var masterpassLabel = document.getElementById('sq-masterpass-label');
-        var googlePayBtn = document.getElementById('sq-google-pay');
-        var googlePayLabel = document.getElementById('sq-google-pay-label');
 
         // Only show the button if Apple Pay for Web is enabled
         // Otherwise, display the wallet not enabled message.
         if (methods.applePay === true) {
           applePayBtn.style.display = 'inline-block';
           applePayLabel.style.display = 'none';
-        }
-
-        // Only show the button if Google Pay is enabled
-        // Otherwise, display the wallet not enabled message.
-        if (methods.googlePay === true) {
-          googlePayBtn.style.display = 'block';
-          googlePayLabel.style.display = 'none' ;
         }
 
         // Only show the button if Masterpass is enabled
