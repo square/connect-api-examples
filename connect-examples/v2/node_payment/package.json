@@ -13,6 +13,6 @@
     "jade": "*",
     "morgan": "*",
     "serve-favicon": "*",
-    "unirest": "latest"
+    "square-connect": "*",
   }
 }

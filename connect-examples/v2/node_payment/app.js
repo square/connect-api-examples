@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var squareConnect = require('square-connect');
 
 var routes = require('./routes/index');
 
@@ -23,6 +24,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '.well-known')));
 
 app.use('/', routes);
+
+// Set Square Connect credentials
+var defaultClient = SquareConnect.ApiClient.instance;
+
+// Configure OAuth2 access token for authorization: oauth2
+var oauth2 = defaultClient.authentications['oauth2'];
+oauth2.accessToken = config.squareAccessToken;
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

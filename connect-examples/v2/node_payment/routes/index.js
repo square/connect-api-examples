@@ -4,45 +4,12 @@ var router = express.Router();
 var app = express();
 var config = require('.././config.json')[app.get('env')];
 
-var unirest = require('unirest');
-var base_url = "https://connect.squareup.com/v2";
-
-// Data store for product cost
-var product_cost = {"001": 100, "002": 4900, "003": 500000};
-
-function findLocation(callback) {
-	unirest.get(base_url + '/locations')
-	.headers({
-		'Authorization': 'Bearer ' + config.squareAccessToken,
-		'Accept': 'application/json'
-	})
-	.end(function(response) {
-		for (var i = response.body.locations.length - 1; i >= 0; i--) {
-			location = response.body.locations[i];
-			if (location.capabilities && location.capabilities.indexOf("CREDIT_CARD_PROCESSING")>-1) {
-				callback(location, null);
-				return;
-			}
-			if (i==0) {
-				callback(null, {status: 400, errors: [{"detail": "No locations have credit card processing available."}]});
-			}
-		}
-	});
-}
-
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	findLocation(function(location, error){
-		if (error) {
-			res.json(error);
-		} else {
-			res.render('index', {
-				'title': 'Express Node.js Implementation',
-				'square_application_id': config.squareApplicationId,
-				'square_location_id': location.id,
-				'square_location_name': location.name,
-			});
-		}
+	res.render('index', {
+		'title': 'Express Node.js Implementation',
+		'square_application_id': config.squareApplicationId,
+		'square_location_id': config.locationId,
 	});
 });
 
