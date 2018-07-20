@@ -23,8 +23,6 @@ namespace sqRazorSample.Pages
 
         public void OnPost()
         {
-            
-            string amountString = "100";
             string nonce = Request.Form["nonce"];
             TransactionsApi transactionsApi = new TransactionsApi();
             // Every payment you process with the SDK must have a unique idempotency key.
@@ -36,7 +34,7 @@ namespace sqRazorSample.Pages
             // Monetary amounts are specified in the smallest unit of the applicable currency.
             // This amount is in cents. It's also hard-coded for $1.00,
             // which isn't very useful.
-            Money amount = new Money(Convert.ToInt32(amountString), Money.CurrencyEnum.USD);
+            Money amount = new Money(100, Money.CurrencyEnum.USD);
 
             // To learn more about splitting transactions with additional recipients,
             // see the Transactions API documentation on our [developer site]

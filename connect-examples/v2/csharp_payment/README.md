@@ -25,8 +25,8 @@ After cloneing this sample project to local, open command line tool, and from th
 
 ### Provide required credentials
 
-Open './appsettings.json' and replace "AccessToken", "LocationId" and "ApplicationId" with the ids you get from your square application created in [Square Developer Portal](https://connect.squareup.com/apps).
-<b>WARNING</b>: never upload .env with your credentials/access_token.
+Open `./appsettings.json` and replace "AccessToken", "LocationId" and "ApplicationId" with the ids you get from your square application created in [Square Developer Portal](https://connect.squareup.com/apps).
+<b>WARNING</b>: never upload `appsettings.json` with your credentials/access_token.
 
 If you're just testing things out, it's recommended that you use your _sandbox_
 credentials for now. See

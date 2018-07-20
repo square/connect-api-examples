@@ -36,5 +36,6 @@
     <Content Remove="wwwroot\lib\jquery\.bower.json" />
     <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
     <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <Content Remove="appsettings.Development.json" />
   </ItemGroup>
 </Project>
