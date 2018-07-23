@@ -2,7 +2,7 @@
 
 This example demonstrates a bare-bones Ruby implementation of the Square Connect OAuth flow. The application links merchants to the OAuth Permissions form and handles the result of the authorization, which is sent to the application's Redirect URL.
 
-For more information, see [OAuth Overview](https://docs.connect.squareup.com/api/connect/v1/#oauth-overview), along with the comments included in `oauth-flow.rb`.
+For more information, see [OAuth Overview](https://docs.connect.squareup.com/api/oauth#oauth-overview), along with the comments included in `oauth-flow.rb`.
 
 ## Setup
 
