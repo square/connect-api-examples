@@ -1,0 +1,142 @@
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Define how SqPaymentForm iframes should look */
+.sq-input {
+    border: 1px solid #E0E2E3;
+    border-radius: 4px;
+    outline-offset: -2px;
+    display: inline-block;
+}
+
+/* Define how SqPaymentForm iframes should look when they have focus */
+.sq-input--focus {
+    border: 1px solid #4A90E2;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.10), 0 2px 2px 0 rgba(0,0,0,0.10);
+}
+
+/* Define how SqPaymentForm iframes should look when they contain invalid values */
+.sq-input--error {
+    border: 1px solid red;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.10), 0 2px 2px 0 rgba(0,0,0,0.10);
+}
+
+.label {
+    font-size: 18px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 19.8px;
+    padding-right: 12px;
+}
+
+.button-credit-card:hover {
+    background-color: #12df12;
+}
+
+/* Customize the "Pay with Credit Card" button */
+.button-credit-card {
+    width: 100%;
+    min-height: 45px;
+    background: #0EB00E;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.10), 0 2px 2px 0 rgba(0,0,0,0.10);
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    font-size: 16px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 24px;
+    padding: 15px;
+    margin-top: 10px;
+    outline: none;
+    font-family: "HelveticaNeue-Bold", Helvetica, Arial, sans-serif;
+}
+
+
+/* Customize the "{{Wallet}} not enabled" message */
+.wallet-not-enabled {
+    min-width: 200px;
+    min-height: 40px;
+    max-height: 64px;
+    padding: 0;
+    margin: 10px;
+    line-height: 40px;
+    background: #eee;
+    border-radius: 5px;
+    font-weight: lighter;
+    font-style: italic;
+    font-family: inherit;
+    display: block;
+}
+
+/* Customize the Apple Pay on the Web button */
+.button-apple-pay {
+    min-width: 200px;
+    min-height: 40px;
+    max-height: 64px;
+    padding: 0;
+    margin: 10px;
+    background-image: -webkit-named-image(apple-pay-logo-white);
+    background-color: black;
+    background-size: 100% 60%;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    border-radius: 5px;
+    cursor: pointer;
+    display: none;
+}
+
+/* Customize the Masterpass button */
+.button-masterpass {
+    min-width: 200px;
+    min-height: 40px;
+    max-height: 40px;
+    padding: 0;
+    margin: 10px;
+    background-image: url(https://static.masterpass.com/dyn/img/btn/global/mp_chk_btn_147x034px.svg);
+    background-color: black;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    border-radius: 5px;
+    border-color: rgb(255, 255, 255);
+    cursor: pointer;
+    display: none;
+}
+
+#sq-walletbox {
+    float: left;
+    margin: 5px;
+    padding: 10px;
+    text-align: center;
+    vertical-align: top;
+    font-weight: bold;
+}
+
+#sq-ccbox {
+    float: left;
+    margin: 5px;
+    padding: 10px;
+    text-align: center;
+    vertical-align: top;
+    font-weight: bold;
+}
+
+#sq-card-number::placeholder {
+    color: black;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+#nonce-form {
+    background-color: #f7f7f7;
+    padding: 25px;
+    text-align: right;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

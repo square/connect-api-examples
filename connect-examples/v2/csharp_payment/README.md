@@ -1,57 +1,57 @@
 # Payment processing example: Csharp
 
 This sample demonstrates processing card payments with Square Connect API, using the
-Square Connect C# client library.
-
-## Frameworks supported
-- .NET 4.5 or later
+Square Connect C# client library and dotnet core.
 
 ## Setup
 
-### Install the C# client library
+### Requirements
 
-package.config under PaymentExample contains package dependency
+* Download and install [.net core 2.0](https://www.microsoft.com/net/download/macos)
+* Signup a Square account from [Square website](https://squareup.com/signup)
+* You have learned the basics from [Square Developer Docs](https://docs.connect.squareup.com/)
 
-1. Import the SquareConnect.sln to your Visual Studio
+### Setup your square account
 
-2. If there is no warning asking you to restore packages, run the following command in the [Package Manager Console](https://docs.nuget.org/docs/start-here/using-the-package-manager-console):
+1. Login to [Square Dashboard](https://squareup.com/dashboard/)
+2. Create some items from [Items Tab](https://squareup.com/dashboard/items/library)
+3. Go to [Square Developer Portal](https://connect.squareup.com/apps) and create a new application.
 
-       Update-Package -reinstall -ProjectName CSharpPaymentExample
+### Build the project
+
+After cloneing this sample project to local, open command line tool, and from the project root directory run:
+
+    dotnet build
 
 ### Provide required credentials
 
-Both `CSharpPaymentExample/Default.aspx` and `CSharpPaymentExample/Default.aspx.cs` have values near the top of the file
-that you need to replace with various credentials associated with your application.
+Open `./appsettings.json` and replace "AccessToken", "LocationId" and "ApplicationId" with the ids you get from your square application created in [Square Developer Portal](https://connect.squareup.com/apps).
+<b>WARNING</b>: never upload `appsettings.json` with your credentials/access_token.
+
 If you're just testing things out, it's recommended that you use your _sandbox_
 credentials for now. See
 [this article](https://docs.connect.squareup.com/articles/using-sandbox/)
 for more information on the API sandbox.
 
-You can `grep` for `REPLACE_ME` to find all of the fields to replace.
-
-
 ## Running the sample
 
-After building your project, the localhost browser would pop up and 
-you could see the card form.
+Run the command from the project root directory:
 
-If you're using your sandbox credentials, you can test a valid credit card
-transaction by providing the following card information in the form:
+    dotnet run
 
-* Card Number 4532 7597 3454 5858
-* Card CVV 111
-* Card Expiration (Any time in the future)
-* Card Postal Code (Any valid US postal code)
+Then you can visit:
+
+    http://localhost:5000
+
+* You'll see a simple payment form that will charge $1.00.
+* You can test a valid credit card transaction by providing the following card information in the form:
+
+    * Card Number 4532 7597 3454 5858
+    * Card CVV 111
+    * Card Expiration (Any time in the future)
+    * Card Postal Code (Any valid US postal code)
 
 You can find more testing values in this [article](https://docs.connect.squareup.com/articles/using-sandbox)
 
 **Note that if you are _not_ using your sandbox credentials and you enter _real_
 credit card information, YOU WILL CHARGE THE CARD.**
-
-After entering the card information, you could click `submit` button to get a 
-nonce. Then click `charge` button to send the nonce and you would 
-get the transaction repsonse body in an alert window.
-
-## Apple Pay
-
-Please follow the Apple Pay instructions on [Square Connect Documentation Site](https://docs.connect.squareup.com/articles/adding-payment-form).

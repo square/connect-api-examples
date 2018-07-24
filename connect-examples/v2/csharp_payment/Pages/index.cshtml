@@ -1,0 +1,65 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Check Out";
+}
+@section Scripts {
+    <!-- link to the SqPaymentForm library -->
+    <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+    <script type="text/javascript">
+        window.applicationId = "@Model.ApplicationId";
+        window.locationId = "@Model.LocationId";
+    </script>
+    <!-- link to the local SqPaymentForm initialization -->
+    <script type="text/javascript" src="~/js/sqpaymentform.js"></script>
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/sqpaymentform.css" />
+}
+
+<div id="sq-ccbox">
+    <form id="nonce-form" novalidate action="ProcessPayment" method="post">
+        <table>
+            <tbody>
+                <tr>
+                    <td class="label">Card Number:</td>
+                    <td><div id="sq-card-number"></div></td>
+                </tr>
+                <tr>
+                    <td class="label">CVV:</td>
+                    <td><div id="sq-cvv"></div></td>
+                </tr>
+                <tr>
+                    <td class="label">Expiration Date: </td>
+                    <td><div id="sq-expiration-date" autocompletetype="cc-exp-date"></div></td>
+                </tr>
+                <tr>
+                    <td class="label">Postal Code:</td>
+                    <td><div id="sq-postal-code"></div></td>
+                    <div id="error"></div>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button id="sq-creditcard" class="button-credit-card" onclick="requestCardNonce(event)">
+                            Pay $1.00 Now
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!--
+          After a nonce is generated it will be assigned to this hidden input field.
+        -->
+        <input type="hidden" id="card-nonce" name="nonce">
+    </form>
+</div>
+<div id="sq-walletbox">
+    Pay with a Digital Wallet
+    <div id="sq-apple-pay-label" class="wallet-not-enabled">Apple Pay for Web not enabled</div>
+    <!-- Placeholder for Apple Pay for Web button -->
+    <button id="sq-apple-pay" class="button-apple-pay"></button>
+    <div id="sq-masterpass-label" class="wallet-not-enabled">Masterpass not enabled</div>
+    <!-- Placeholder for Masterpass button -->
+    <button id="sq-masterpass" class="button-masterpass"></button>
+</div>
