@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "NODE_ENV=production node ./bin/www",
+    "test": "NODE_ENV=sandbox node ./bin/www"
   },
   "dependencies": {
     "body-parser": "*",
@@ -13,6 +14,6 @@
     "jade": "*",
     "morgan": "*",
     "serve-favicon": "*",
-    "square-connect": "*",
+    "square-connect": "^2.20180712.0"
   }
 }

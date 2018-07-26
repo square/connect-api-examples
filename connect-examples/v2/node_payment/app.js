@@ -4,11 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var squareConnect = require('square-connect');
+squareConnect = require('square-connect');
 
 var routes = require('./routes/index');
 
 var app = express();
+var config = require('./config')[app.get('env')];
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,7 +27,7 @@ app.use(express.static(path.join(__dirname, '.well-known')));
 app.use('/', routes);
 
 // Set Square Connect credentials
-var defaultClient = SquareConnect.ApiClient.instance;
+var defaultClient = squareConnect.ApiClient.instance;
 
 // Configure OAuth2 access token for authorization: oauth2
 var oauth2 = defaultClient.authentications['oauth2'];

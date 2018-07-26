@@ -1,50 +1,47 @@
 extends layout
-
 block content
-  html.
+  script(type="text/javascript" src="https://js.squareup.com/v2/paymentform")
+  script(type="text/javascript").
+    window.applicationId= "#{square_application_id}";
+    window.locationId= "#{square_location_id}";
+  script(type="text/javascript" src="/js/sqpaymentform.js")
 
-  <form id="nonce-form" novalidate action="process-payment" method="post">
-    <table>
-        <tbody>
-            <tr>
-                <td class="label">Card Number:</td>
-                <td><div id="sq-card-number"></div></td>
-            </tr>
-            <tr>
-                <td class="label">CVV:</td>
-                <td><div id="sq-cvv"></div></td>
-            </tr>
-            <tr>
-                <td class="label">Expiration Date: </td>
-                <td><div id="sq-expiration-date" autocompletetype="cc-exp-date"></div></td>
-            </tr>
-            <tr>
-                <td class="label">Postal Code:</td>
-                <td><div id="sq-postal-code"></div></td>
-                <div id="error"></div>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <button id="sq-creditcard" class="button-credit-card" onclick="requestCardNonce(event)">
-                        Pay $1.00 Now
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <!--
-      After a nonce is generated it will be assigned to this hidden input field.
-    -->
-    <input type="hidden" id="card-nonce" name="nonce">
-  </form>
-  </div>
-  <div id="sq-walletbox">
-  Pay with a Digital Wallet
-  <div id="sq-apple-pay-label" class="wallet-not-enabled">Apple Pay for Web not enabled</div>
-  <!-- Placeholder for Apple Pay for Web button -->
-  <button id="sq-apple-pay" class="button-apple-pay"></button>
-  <div id="sq-masterpass-label" class="wallet-not-enabled">Masterpass not enabled</div>
-  <!-- Placeholder for Masterpass button -->
-  <button id="sq-masterpass" class="button-masterpass"></button>
-  </div>
+  div(id="sq-ccbox")
+    form(id="nonce-form" novalidate action="process-payment" method="post")
+      table
+        tbody
+          tr
+            td(class="label") Card Number:
+            td
+              div(id="sq-card-number")
+          tr
+            td(class="label") CVV:
+            td
+              div(id="sq-cvv")
+          tr
+            td(class="label") Expiration Date:
+            td
+              div(id="sq-expiration-date" autocompletetype="cc-exp-date")
+          tr
+            td(class="label") Postal Code:
+            td
+              div(id="sq-postal-code")
+            div(id="error")
+          tr
+            td
+            td
+              button(id="sq-creditcard" class="button-credit-card" onclick="requestCardNonce(event)").
+                Pay $1.00 Now
+
+      input(type="hidden" id="card-nonce" name="nonce")
+
+  div(id="sq-walletbox")
+    Pay with a Digital Wallet
+    div(id="sq-apple-pay-label" class="wallet-not-enabled").
+      Apple Pay for Web not enabled
+    <!-- Placeholder for Apple Pay for Web button -->
+    button(id="sq-apple-pay" class="button-apple-pay").
+    div(id="sq-masterpass-label" class="wallet-not-enabled").
+      Masterpass not enabled
+    <!-- Placeholder for Masterpass button -->
+    button(id="sq-masterpass" class="button-masterpass").
