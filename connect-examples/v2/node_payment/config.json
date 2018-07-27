@@ -1,0 +1,12 @@
+{
+  "sandbox": {
+    "squareApplicationId": "sandbox-application-id-here",
+    "squareAccessToken": "sandbox-access-token-here",
+    "squareLocationId": "sandbox-location-id-here"
+  },
+  "production": {
+    "squareApplicationId": "prod-application-id-here",
+    "squareAccessToken": "prod-access-token-here",
+    "squareLocationId": "prod-location-id-here"
+  }
+}

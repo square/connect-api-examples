@@ -164,7 +164,7 @@ function requestCardNonce(event) {
             /* HANDLE AS DESIRED */
             break;
           case 'errorClassAdded':
-            document.getElementById("error").innerHTML = "Here's an error!";
+            document.getElementById("error").innerHTML = "Please fix all errors.";
             break;
           case 'errorClassRemoved':
             /* HANDLE AS DESIRED */

@@ -7,8 +7,9 @@ var config = require('.././config.json')[app.get('env')];
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+	// Set the app and location ids for sqpaymentform.js to use
 	res.render('index', {
-		'title': 'Express Node.js Implementation',
+		'title': 'Make Payment',
 		'square_application_id': config.squareApplicationId,
 		'square_location_id': config.squareLocationId
 	});
@@ -17,29 +18,28 @@ router.get('/', function(req, res, next) {
 router.post('/process-payment', function(req,res,next){
 	var request_params = req.body;
 
-	var token = require('crypto').randomBytes(64).toString('hex');
+	var idempotency_key = require('crypto').randomBytes(64).toString('hex');
 
-
-	// To learn more about splitting transactions with additional recipients,
-	// see the Transactions API documentation on our [developer site]
-	// (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
+	// Charge the customer's card
 	var transactions_api = new squareConnect.TransactionsApi();
 	var request_body = {
 		card_nonce: request_params.nonce,
 		amount_money: {
-			amount: 100,
+			amount: 100, // $1.00 charge
 			currency: 'USD'
 		},
-		idempotency_key: token
+		idempotency_key: idempotency_key
 	};
 	transactions_api.charge(config.squareLocationId, request_body).then(function(data) {
-		console.log(util.inspect(data));
+		console.log(util.inspect(data, false, null));
 		res.render('process-payment', {
+			'title': 'Payment Successful',
 			'result': "Payment Successful (see console for transaction output)"
 		});
 	}, function(error) {
-		console.log(util.inspect(error));
+		console.log(util.inspect(error.status, false, null));
 		res.render('process-payment', {
+			'title': 'Payment Failure',
 			'result': "Payment Failed (see console for error output)"
 		});
 	});
