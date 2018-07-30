@@ -11,7 +11,7 @@
     "cookie-parser": "*",
     "debug": "*",
     "express": "*",
-    "jade": "*",
+    "pug": "*",
     "morgan": "*",
     "serve-favicon": "*",
     "square-connect": "^2.20180712.0"
