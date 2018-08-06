@@ -25,14 +25,10 @@ php composer.phar install
 
 ### Provide required credentials
 
-Both `process-card.php` and `index.html` have values near the top of the file
-that you need to replace with various credentials associated with your application.
-If you're just testing things out, it's recommended that you use your _sandbox_
-credentials for now. See
+3. Please update the values found in .env. If you plan on using sandbox, then set
+USE_PROD=false. (<b>WARNING</b>: never upload .env with your credentials/access_token.) See
 [this article](https://docs.connect.squareup.com/articles/using-sandbox/)
 for more information on the API sandbox.
-
-You can `grep` for `REPLACE_ME` to find all of the fields to replace.
 
 ## Running the sample
 
