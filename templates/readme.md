@@ -1,6 +1,6 @@
 # Square developer platform application source code templates
 
-We keep all of our cool templates here and we add to this template library frequenty. Keep checking back for more cool stuff
+We keep all of our cool templates here and we add to this template library frequently. Keep checking back for more cool stuff
 
 
 ## Web UI templates
