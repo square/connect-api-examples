@@ -5,6 +5,22 @@ var applicationId = "REPLACE_ME";
 var locationId = "REPLACE_ME";
 
 /*
+ * function: buildForm
+ *
+ * Renders the Payment Form after checking for a supported host browser
+ *
+ * This helper function should be used when integrating Payment Form
+ * in a single-page application and initializing SqPaymentForm after the
+ * page DOM is loaded.
+*/
+function buildForm(){
+  if (paymentForm.isSupportedBrowser()) {
+    paymentForm.build()
+  }
+}
+
+
+/*
  * function: requestCardNonce
  *
  * requestCardNonce is triggered when the "Pay with credit card" button is
