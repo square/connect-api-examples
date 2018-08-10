@@ -11,6 +11,6 @@ Find code templates for our web platform solutions
 
 Basic Templates:
 
-* [HTML Payment Form](./web-ui/sqpaymentform.html)
-* [Payment Form Stylesheet](./web-ui/sqpaymentform.css)
-* [Payment Form javascript](./web-ui/sqpaymentform.js)
+* [HTML Payment Form](./web-ui/payment-form/basic/sqpaymentform.html)
+* [Payment Form Stylesheet](./web-ui/payment-form/basic/sqpaymentform.css)
+* [Payment Form javascript](./web-ui/payment-form/basic/sqpaymentform.js)
