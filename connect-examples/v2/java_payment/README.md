@@ -1,6 +1,6 @@
 # Java Payment Form Example
 
-This example hosts a payment form in a Java. It is a Spring Boot app and requires Java 8 or newer.
+This example hosts a payment form in Java. It is a Spring Boot app and requires Java 8 or newer.
 
 ## Setting up
 
