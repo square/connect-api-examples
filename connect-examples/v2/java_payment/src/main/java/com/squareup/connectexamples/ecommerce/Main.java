@@ -22,11 +22,8 @@ import com.squareup.connect.Configuration;
 import com.squareup.connect.api.LocationsApi;
 import com.squareup.connect.api.TransactionsApi;
 import com.squareup.connect.auth.OAuth;
-import com.squareup.connect.models.ChargeRequest;
-import com.squareup.connect.models.ChargeResponse;
-import com.squareup.connect.models.Location;
+import com.squareup.connect.models.*;
 import com.squareup.connect.models.Location.CapabilitiesEnum;
-import com.squareup.connect.models.Money;
 import com.squareup.connect.models.Money.CurrencyEnum;
 import java.util.Map;
 import java.util.UUID;
@@ -48,8 +45,12 @@ public class Main {
     // This must be set in order for the application to start.
     private static final String SQUARE_APP_ID_ENV_VAR = "SQUARE_APP_ID";
 
+    // The environment variable containing a Square location ID.
+    // This must be set in order for the application to start.
+    private static final String SQUARE_LOCATION_ID_ENV_VAR = "SQUARE_LOCATION_ID";
+
     private final ApiClient squareClient = Configuration.getDefaultApiClient();
-    private final Location squareLocation;
+    private final String squareLocationId;
     private final String squareAppId;
 
     public Main() throws ApiException {
@@ -59,7 +60,7 @@ public class Main {
         OAuth oauth2 = (OAuth) squareClient.getAuthentication("oauth2");
         oauth2.setAccessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR));
 
-        squareLocation = lookupCardProcessingLocation();
+        squareLocationId = mustLoadEnvironmentVariable(SQUARE_LOCATION_ID_ENV_VAR);
     }
 
     public static void main(String[] args) throws Exception {
@@ -78,9 +79,8 @@ public class Main {
 
     @RequestMapping("/")
     String index(Map<String, Object> model) throws ApiException {
-        model.put("locationId", squareLocation.getId());
-        model.put("locationName", squareLocation.getName());
-        model.put("addId", squareAppId);
+        model.put("locationId", squareLocationId);
+        model.put("appId", squareAppId);
 
         return "index";
     }
@@ -99,21 +99,13 @@ public class Main {
         TransactionsApi transactionsApi = new TransactionsApi();
         transactionsApi.setApiClient(squareClient);
 
-        ChargeResponse response = transactionsApi.charge(squareLocation.getId(), chargeRequest);
+        ChargeResponse response = transactionsApi.charge(squareLocationId, chargeRequest);
 
         model.put("transactionId", response.getTransaction().getId());
 
+        // Print the object to the console just to see it
+        System.out.print(response.getTransaction());
+
         return "charge";
-    }
-
-    private Location lookupCardProcessingLocation() throws ApiException {
-        LocationsApi locationsApi = new LocationsApi();
-        locationsApi.setApiClient(squareClient);
-
-        return locationsApi.listLocations().getLocations().stream()
-            .filter(l -> l.getCapabilities().contains(CapabilitiesEnum.PROCESSING))
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException(
-                "At least one location must support card processing"));
     }
 }
