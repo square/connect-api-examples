@@ -13,9 +13,9 @@ Make sure you have Python 2 >=2.79 or Python 3 >= 3.4
 
 1. Make sure you have Python 2 >=2.79 or Python 3 >= 3.4 installed from [python.org](https://www.python.org/).
 
-2. Run the following command for install `squareconnect` package:
+2. Run the following command to install `squareconnect` package:
 
-        pip install squareconnect
+        pip install git+https://github.com/square/connect-python-sdk.git
 
 ### Provide required credentials
 

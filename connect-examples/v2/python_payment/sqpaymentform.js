@@ -1,9 +1,3 @@
-// Set the application ID
-var applicationId = "REPLACE_ME";
-
-// Set the location ID
-var locationId = "REPLACE_ME";
-
 /*
  * function: requestCardNonce
  *
@@ -13,6 +7,7 @@ var locationId = "REPLACE_ME";
  * Modifying this function is not required, but can be customized if you
  * wish to take additional action when the form button is clicked.
  */
+
 function requestCardNonce(event) {
 
   // Don't submit the form until SqPaymentForm returns with a nonce

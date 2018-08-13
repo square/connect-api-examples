@@ -1,4 +1,22 @@
-<!DOCTYPE html>
+#!/usr/bin/env python
+# coding: utf-8
+import ConfigParser
+
+# To read your secret credentials
+config = ConfigParser.ConfigParser()
+config.read('config.ini')
+
+if config.get("DEFAULT", "is_prod") == "true":
+    app_id = config.get("PRODUCTION", "app_id")
+else:
+    app_id = config.get("SANDBOX", "app_id")
+
+if config.get("DEFAULT", "is_prod") == "true":
+    location_id = config.get("PRODUCTION", "location_id")
+else:
+    location_id = config.get("SANDBOX", "location_id")
+
+html = """<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -8,6 +26,11 @@
 
     <!-- link to the SqPaymentForm library -->
     <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+
+    <script type="application/javascript">
+        window.applicationId = '""" + app_id + """';
+        window.locationId = '""" + location_id + """';
+    </script>
 
     <!-- link to the local SqPaymentForm initialization -->
     <script type="text/javascript" src="/sqpaymentform.js"></script>
@@ -75,3 +98,5 @@
     </div>
   </body>
 </html>
+"""
+print(html)

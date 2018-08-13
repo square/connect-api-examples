@@ -3,11 +3,16 @@
 from __future__ import print_function
 import uuid
 import cgi
+import ConfigParser
 
 import squareconnect
 from squareconnect.rest import ApiException
 from squareconnect.apis.transactions_api import TransactionsApi
 from squareconnect.apis.locations_api import LocationsApi
+
+# To read your secret credentials
+config = ConfigParser.ConfigParser()
+config.read('config.ini')
 
 # Create instance of FieldStorage
 form = cgi.FieldStorage()
@@ -16,14 +21,23 @@ nonce = form.getvalue('nonce')
 
 # The access token to use in all Connect API requests. Use your *sandbox* access
 # token if you're just testing things out.
-squareconnect.configuration.access_token = 'REPLACE_ME'
+if config.get("DEFAULT", "is_prod") == "true":
+    access_token = config.get("PRODUCTION", "access_token")
+else:
+    access_token = config.get("SANDBOX", "access_token")
+
+squareconnect.configuration.access_token = access_token
 
 # The ID of the business location to associate processed payments with.
 # See [Retrieve your business's locations]
 # (https://docs.connect.squareup.com/articles/getting-started/#retrievemerchantprofile)
 # for an easy way to get your business's location IDs.
 # If you're testing things out, use a sandbox location ID.
-location_id = 'REPLACE_ME'
+if config.get("DEFAULT", "is_prod") == "true":
+    location_id = config.get("PRODUCTION", "location_id")
+else:
+    location_id = config.get("SANDBOX", "location_id")
+location_id = location_id
 
 api_instance = TransactionsApi()
 
