@@ -1,18 +1,52 @@
 # Square Connect API Examples
 
-**IMPORTANT:** On 16 February 2016, changes were made to the representation of a
-Square merchant in the Connect API. These changes slightly altered the behavior of the
-Connect API for applications created after 16 February. The samples in this repository
-now reflect this altered behavior. If you created your Connect API application _before_
-16 February, samples that reflect your application's behavior are available in the
-`v1` directory.
+This repository contains code samples demonstrating the functionality of the
+Square Connect API and templates to simplify use of our SDKs and APIs.
 
-On 23 May 2017, We made a significant improvement to our SDK to expand their
-functionality and make them even easier to use. Unfortunately, some of the
-changes are not backward compatible.  The samples in this repository now contain
-three different folders `v1`, `v2.0`, and `v2.1`.  You can read more about the
-new SDK in our [blog post](https://medium.com/square-corner-blog/announcing-our-new-versions-of-our-client-sdks-1336d26e8099)
 
-This repository contains simple code samples that demonstrate use of the Square Connect API. Complete documentation for the API is available at [connect.squareup.com](https://connect.squareup.com).
+## In this repository
 
-If you have questions about Square Connect API features or implementation, please see the [FAQ](https://docs.connect.squareup.com/articles/faq/).
+* `connect-examples/oauth` - samples implementing OAuth
+* `connect-examples/v1` - samples demonstrating Connect v1 functionality
+* `connect-examples/v2` - samples demonstrating Connect v2 functionality
+* `templates/` - code blocks and function definitions to simplify common usage
+
+
+## Getting help
+
+Complete documentation for Square APIs is available at
+[docs.connect.squareup.com].
+
+If you have questions about Square Connect API features or implementation,
+you can ask for help on [Stack Overflow] or in our [Slack community].
+
+
+--------------------------------------------------------------------------------
+
+## Release notes
+
+### 2018-08-13
+
+Updating directory structure and submitting inaugural code templates.
+
+### 2017-05-23
+
+On 23 May 2017, we improved our SDKs to expand their functionality and make them
+easier to use. Unfortunately, some of the changes are not backward compatible.
+You can read more about the changes in our [SDK blog post].
+
+
+### 2016-02-16
+
+On 16 February 2016, we changed the way merchant data is represented in the
+Connect APIs. The data change also altered API behavior slightly. The samples
+in this repository reflect this altered behavior. If you created your Connect
+API application *before* 16 February, you can find samples that reflect your
+application's behavior in the `v1` directory.
+
+
+[//]: # "Link anchor definitions"
+[SDK blog post]: https://medium.com/square-corner-blog/announcing-our-new-versions-of-our-client-sdks-1336d26e8099
+[Stack Overflow]: https://stackoverflow.com/questions/tagged/square-connect
+[Slack community]: https://squ.re/2Hks3YE
+[docs.connect.squareup.com]: https://docs.connect.squareup.com
