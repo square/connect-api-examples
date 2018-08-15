@@ -25,6 +25,10 @@ you can ask for help on [Stack Overflow] or in our [Slack community].
 
 ## Release notes
 
+### 2018-08-15
+All V2 examples have been updated to remove vulnerable libraries and to ensure
+consistency between examples.
+
 ### 2018-08-13
 
 Updating directory structure and submitting inaugural code templates.
