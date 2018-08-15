@@ -35,6 +35,11 @@ var paymentForm = new SqPaymentForm({
       fontSize: '.9em'
   }],
 
+
+  //REPLACE_ME: Apple Pay placeholder
+
+  //REPLACE_ME: Masterpass placeholder
+
   // Initialize the credit card placeholders
   cardNumber: {
     elementId: 'sq-card-number',
@@ -55,6 +60,11 @@ var paymentForm = new SqPaymentForm({
   // SqPaymentForm callback functions
   callbacks: {
 
+//REPLACE_ME: methodsSupported
+
+//REPLACE_ME: createPaymentRequest
+
+//REPLACE_ME: validateShippingContact
 
     /*
      * callback function: cardNonceResponseReceived
