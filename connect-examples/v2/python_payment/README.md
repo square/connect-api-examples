@@ -35,7 +35,7 @@ From the sample's root directory, run:
 
     python -m CGIHTTPServer
 
-You can then visit `localhost:8000` in your browser to see the card form.
+You can then visit `localhost:8000/cgi-bin/index.py` in your browser to see the card form.
 
 If you're using your sandbox credentials, you can test a valid credit card
 transaction by providing the following card information in the form:

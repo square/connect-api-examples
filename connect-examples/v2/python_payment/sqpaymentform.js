@@ -48,7 +48,7 @@ var paymentForm = new SqPaymentForm({
     // Initialize the credit card placeholders
     cardNumber: {
         elementId: 'sq-card-number',
-        placeholder: '•••• •••• •••• ••••'
+        placeholder: '1234 1234 1234 1234'
     },
     cvv: {
         elementId: 'sq-cvv',
