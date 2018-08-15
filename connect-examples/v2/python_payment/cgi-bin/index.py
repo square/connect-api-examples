@@ -6,6 +6,8 @@ import ConfigParser
 config = ConfigParser.ConfigParser()
 config.read('config.ini')
 
+
+# Retrive credentials based on is_prod
 if config.get("DEFAULT", "is_prod") == "true":
     app_id = config.get("PRODUCTION", "app_id")
 else:
@@ -15,6 +17,9 @@ if config.get("DEFAULT", "is_prod") == "true":
     location_id = config.get("PRODUCTION", "location_id")
 else:
     location_id = config.get("SANDBOX", "location_id")
+
+
+# print out the entire SqPaymentForm web page
 
 html = """<!DOCTYPE html>
 <html>

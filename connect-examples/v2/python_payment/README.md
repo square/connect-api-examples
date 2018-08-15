@@ -19,14 +19,14 @@ Make sure you have Python 2 >=2.79 or Python 3 >= 3.4
 
 ### Provide required credentials
 
-Both `/cgi-bin/process_card.py` and `index.html` have values near the top of the file
-that you need to replace with various credentials associated with your application.
+Replace all your credentials in `config.ini`. Note that there's sandbox and
+production credentials. Use `is_prod` (true/false) to choose between them.
+(**WARNING**: never upload `config.ini` with your credentials/access_token.)
+
 If you're just testing things out, it's recommended that you use your _sandbox_
 credentials for now. See
 [this article](https://docs.connect.squareup.com/articles/using-sandbox/)
 for more information on the API sandbox.
-
-You can `grep` for `REPLACE_ME` to find all of the fields to replace.
 
 
 ## Running the sample
