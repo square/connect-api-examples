@@ -7,7 +7,6 @@
  * Modifying this function is not required, but can be customized if you
  * wish to take additional action when the form button is clicked.
  */
-
 function requestCardNonce(event) {
 
   // Don't submit the form until SqPaymentForm returns with a nonce
@@ -139,7 +138,6 @@ var paymentForm = new SqPaymentForm({
                 console.log("Encountered errors:");
                 errors.forEach(function (error) {
                     console.log('  ' + error.message);
-                    alert(error.message);
                 });
 
                 return;

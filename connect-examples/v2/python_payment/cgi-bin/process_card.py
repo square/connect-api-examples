@@ -21,10 +21,9 @@ nonce = form.getvalue('nonce')
 
 # The access token to use in all Connect API requests. Use your *sandbox* access
 # token if you're just testing things out.
-if config.get("DEFAULT", "is_prod") == "true":
-    access_token = config.get("PRODUCTION", "access_token")
-else:
-    access_token = config.get("SANDBOX", "access_token")
+config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
+access_token = config.get(config_type, "access_token")
+location_id = config.get(config_type, "location_id")
 
 squareconnect.configuration.access_token = access_token
 

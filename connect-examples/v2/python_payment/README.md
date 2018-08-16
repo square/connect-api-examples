@@ -21,6 +21,7 @@ Make sure you have Python 2 >=2.79 or Python 3 >= 3.4
 
 Replace all your credentials in `config.ini`. Note that there's sandbox and
 production credentials. Use `is_prod` (true/false) to choose between them.
+Do not use quotes around the strings in the `config.ini` file.
 (**WARNING**: never upload `config.ini` with your credentials/access_token.)
 
 If you're just testing things out, it's recommended that you use your _sandbox_

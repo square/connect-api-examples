@@ -8,19 +8,11 @@ config.read('config.ini')
 
 
 # Retrive credentials based on is_prod
-if config.get("DEFAULT", "is_prod") == "true":
-    app_id = config.get("PRODUCTION", "app_id")
-else:
-    app_id = config.get("SANDBOX", "app_id")
-
-if config.get("DEFAULT", "is_prod") == "true":
-    location_id = config.get("PRODUCTION", "location_id")
-else:
-    location_id = config.get("SANDBOX", "location_id")
-
+config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
+app_id = config.get(config_type, "app_id")
+location_id = config.get(config_type, "location_id")
 
 # print out the entire SqPaymentForm web page
-
 html = """<!DOCTYPE html>
 <html>
   <head>
@@ -50,7 +42,7 @@ html = """<!DOCTYPE html>
           You should replace the action attribute of the form with the path of
           the URL you want to POST the nonce to (for example, "/process-card")
         -->
-        <form id="nonce-form" novalidate action="/charge" method="post">
+        <form id="nonce-form" novalidate action="process_card.py" method="post">
             <div id="error"></div>
             <table>
                 <tbody>
