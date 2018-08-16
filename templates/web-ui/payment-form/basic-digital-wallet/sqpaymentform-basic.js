@@ -1,8 +1,8 @@
 // Set the application ID
-var applicationId = "";
+var applicationId = "REPLACE_ME";
 
 // Set the location ID
-var locationId = "";
+var locationId = "REPLACE_ME";
 
 /*
  * function: requestCardNonce
@@ -35,10 +35,15 @@ var paymentForm = new SqPaymentForm({
       fontSize: '.9em'
   }],
 
+  // Initialize Apple Pay placeholder ID
+  applePay: {
+    elementId: 'sq-apple-pay'
+  },
 
-  //REPLACE_ME: Apple Pay placeholder
-
-  //REPLACE_ME: Masterpass placeholder
+  // Initialize Masterpass placeholder ID
+  masterpass: {
+    elementId: 'sq-masterpass'
+  },
 
   // Initialize the credit card placeholders
   cardNumber: {
@@ -60,11 +65,53 @@ var paymentForm = new SqPaymentForm({
   // SqPaymentForm callback functions
   callbacks: {
 
-//REPLACE_ME: methodsSupported
+    /*
+     * callback function: methodsSupported
+     * Triggered when: the page is loaded.
+     */
+    methodsSupported: function (methods) {
 
-//REPLACE_ME: createPaymentRequest
+      var applePayBtn = document.getElementById('sq-apple-pay');
+      var applePayLabel = document.getElementById('sq-apple-pay-label');
+      var masterpassBtn = document.getElementById('sq-masterpass');
+      var masterpassLabel = document.getElementById('sq-masterpass-label');
 
-//REPLACE_ME: validateShippingContact
+      // Only show the button if Apple Pay for Web is enabled
+      // Otherwise, display the wallet not enabled message.
+      if (methods.applePay === true) {
+        applePayBtn.style.display = 'inline-block';
+        applePayLabel.style.display = 'none' ;
+      }
+      // Only show the button if Masterpass is enabled
+      // Otherwise, display the wallet not enabled message.
+      if (methods.masterpass === true) {
+        masterpassBtn.style.display = 'inline-block';
+        masterpassLabel.style.display = 'none';
+      }
+    },
+
+    /*
+     * callback function: createPaymentRequest
+     * Triggered when: a digital wallet payment button is clicked.
+     */
+    createPaymentRequest: function () {
+
+      var paymentRequestJson ;
+      /* ADD CODE TO SET/CREATE paymentRequestJson */
+      return paymentRequestJson ;
+    },
+
+    /*
+     * callback function: validateShippingContact
+     * Triggered when: a shipping address is selected/changed in a digital
+     *                 wallet UI that supports address selection.
+     */
+    validateShippingContact: function (contact) {
+
+      var validationErrorObj ;
+      /* ADD CODE TO SET validationErrorObj IF ERRORS ARE FOUND */
+      return validationErrorObj ;
+    },
 
     /*
      * callback function: cardNonceResponseReceived
