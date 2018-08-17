@@ -6,7 +6,8 @@ Form Setup guide at [docs.connect.squareup.com].
 
 ## In this directory
 
-* `basic` - templates for a basic Payment Form integration
+* `basic` - templates for a basic Payment Form integration.
+* `basic-digital-wallet` - templates for a basic Payment Form integration. Includes Digital Wallet support.
 
 [//]: # "Link anchor definitions"
 [docs.connect.squareup.com]: https://docs.connect.squareup.com
