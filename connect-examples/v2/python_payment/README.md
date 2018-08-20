@@ -13,20 +13,21 @@ Make sure you have Python 2 >=2.79 or Python 3 >= 3.4
 
 1. Make sure you have Python 2 >=2.79 or Python 3 >= 3.4 installed from [python.org](https://www.python.org/).
 
-2. Run the following command for install `squareconnect` package:
+2. Run the following command to install `squareconnect` package:
 
-        pip install squareconnect
+        pip install git+https://github.com/square/connect-python-sdk.git
 
 ### Provide required credentials
 
-Both `/cgi-bin/process_card.py` and `index.html` have values near the top of the file
-that you need to replace with various credentials associated with your application.
+Replace all your credentials in `config.ini`. Note that there's sandbox and
+production credentials. Use `is_prod` (true/false) to choose between them.
+Do not use quotes around the strings in the `config.ini` file.
+(**WARNING**: never upload `config.ini` with your credentials/access_token.)
+
 If you're just testing things out, it's recommended that you use your _sandbox_
 credentials for now. See
 [this article](https://docs.connect.squareup.com/articles/using-sandbox/)
 for more information on the API sandbox.
-
-You can `grep` for `REPLACE_ME` to find all of the fields to replace.
 
 
 ## Running the sample
@@ -35,7 +36,7 @@ From the sample's root directory, run:
 
     python -m CGIHTTPServer
 
-You can then visit `localhost:8000` in your browser to see the card form.
+You can then visit `localhost:8000/cgi-bin/index.py` in your browser to see the card form.
 
 If you're using your sandbox credentials, you can test a valid credit card
 transaction by providing the following card information in the form:
