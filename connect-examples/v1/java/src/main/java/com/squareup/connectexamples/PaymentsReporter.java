@@ -13,10 +13,9 @@
 package com.squareup.connectexamples;
 
 import java.text.NumberFormat;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -84,9 +83,13 @@ public class PaymentsReporter {
 
       // Restrict the request to the 2014 calendar year, eight hours behind UTC.
       // Unirest URL-encodes query parameters automatically.
+      String begin_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+              .format(java.sql.Date.valueOf( LocalDate.of(LocalDate.now().getYear() - 1, 1, 1)));
+      String end_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+              .format(java.sql.Date.valueOf(LocalDate.of(LocalDate.now().getYear(), 1, 1)));
       String requestPath = Unirest.get(_connectHost + "/v1/" + locationId + "/payments")
-          .queryString("begin_time", "2015-01-01T00:00:00-08:00")
-          .queryString("end_time", "2016-01-01T00:00:00-08:00")
+          .queryString("begin_time", begin_time)
+          .queryString("end_time", end_time)
           .getUrl();
 
       HttpResponse<JsonNode> response = null;
@@ -191,7 +194,7 @@ public class PaymentsReporter {
 
     // Print a sales report similar to the Sales Summary in the merchant dashboard.
     System.out.println("");
-    System.out.println("==SALES REPORT FOR 2014==");
+    System.out.println("==SALES REPORT FOR " + (LocalDate.now().getYear() - 1) + "==");
     System.out.println("Gross Sales:      " + this.formatMoney(basePurchases - discounts));
     System.out.println("Discounts:        " + this.formatMoney(discounts));
     System.out.println("Net Sales:        " + this.formatMoney(basePurchases));
