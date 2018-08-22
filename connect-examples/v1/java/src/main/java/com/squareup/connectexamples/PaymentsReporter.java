@@ -49,7 +49,7 @@ public class PaymentsReporter {
 
 
   // Obtains all of the business's location IDs. Each location has its own collection of payments.
-  public List<String> getLocationIds() {
+  public List<String> getLocationIds() throws Exception {
     String requestPath = Unirest.get(_connectHost + "/v1/me/locations").getUrl();
 
     HttpResponse<JsonNode> response = null;
@@ -62,6 +62,10 @@ public class PaymentsReporter {
 
     List<String> locationIds = new ArrayList();
 
+    if (response.getStatus() != 200) {
+      throw new Exception("Error encountered while listing locations: " + response.getBody());
+    }
+
     if (response != null && response.getBody().isArray()) {
       JSONArray locationArray = response.getBody().getArray();
       for (int i = 0; i < locationArray.length(); i++) {
@@ -73,7 +77,7 @@ public class PaymentsReporter {
   }
 
   // Retrieves all of a merchant's payments from 2015
-  public List<JSONObject> get2015Payments(List<String> locationIds) {
+  public List<JSONObject> get2015Payments(List<String> locationIds) throws Exception {
 
     List<JSONObject> payments = new ArrayList<JSONObject>();
 
@@ -105,6 +109,10 @@ public class PaymentsReporter {
 
           // If any HTTP request fails during method execution, return null to indicate an error
           return null;
+        }
+
+        if (response.getStatus() != 200) {
+          throw new Exception("Error encountered while listing payments: " + response.getBody());
         }
 
         if (response != null && response.getBody().isArray()) {
@@ -209,10 +217,14 @@ public class PaymentsReporter {
 
   // Call the methods defined above
   public static void main(String[] args) {
-    PaymentsReporter reporter = new PaymentsReporter();
-    List<JSONObject> payments = reporter.get2015Payments(reporter.getLocationIds());
-    if (payments != null) {
-      reporter.printSalesReport(payments);
+    try {
+      PaymentsReporter reporter = new PaymentsReporter();
+      List<JSONObject> payments = reporter.get2015Payments(reporter.getLocationIds());
+      if (payments != null) {
+        reporter.printSalesReport(payments);
+      }
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
     }
   }
 }
