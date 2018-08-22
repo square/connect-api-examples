@@ -48,17 +48,17 @@ public class ItemManager {
     // Indentation is included to reflect the structure of the corresponding JSON.
 
     JSONObject requestBody = new JSONObject();                       // {
-      requestBody.append("name", "Milkshake");                       //   "name": "Milkshake",
+      requestBody.put("name", "Milkshake");                          //   "name": "Milkshake",
       JSONArray variations = new JSONArray();                        //
-      requestBody.append("variations", variations);                  //   "variations": [
+      requestBody.put("variations", variations);                     //   "variations": [
         JSONObject variationSmall = new JSONObject();                //
         variations.put(variationSmall);                              //     {
-          variationSmall.append("name", "Small");                    //       "name": "Small",
-          variationSmall.append("pricing_type", "FIXED_PRICING");    //       "pricing_type": "FIXED_PRICING",
+          variationSmall.put("name", "Small");                       //       "name": "Small",
+          variationSmall.put("pricing_type", "FIXED_PRICING");       //       "pricing_type": "FIXED_PRICING",
           JSONObject variationSmallPrice = new JSONObject();         //
-          variationSmall.append("price_money", variationSmallPrice); //       "price_money": {
-            variationSmallPrice.append("currency_code", "USD");      //         "currency_code": "USD",
-            variationSmallPrice.append("amount", 400);               //         "amount": 400
+          variationSmall.put("price_money", variationSmallPrice);    //       "price_money": {
+            variationSmallPrice.put("currency_code", "USD");         //         "currency_code": "USD",
+            variationSmallPrice.put("amount", 400);                  //         "amount": 400
                                                                      //       }
                                                                      //     }
                                                                      //   ]
@@ -66,6 +66,7 @@ public class ItemManager {
 
     JsonNode bodyNode = new JsonNode(requestBody.toString());
     HttpResponse<JsonNode> response = null;
+    System.out.print(bodyNode);
     try {
       response = Unirest.post(_connectHost + "/v1/" + _locationId + "/items").body(bodyNode).asJson();
     } catch (UnirestException e) {
@@ -78,6 +79,7 @@ public class ItemManager {
       return response.getBody().getObject();
     } else {
       System.out.println("Item creation failed");
+      System.out.println(response.getBody());
       return null;
     }
   }
