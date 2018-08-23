@@ -72,11 +72,9 @@ public class ItemManager {
       return null;
     }
 
-    if (response.getStatus() != 200) {
+    if (response != null && response.getStatus() != 200) {
       throw new Exception("Error encountered while creating item: " + response.getBody());
-    }
-
-    if (response != null && response.getStatus() == 200) {
+    } else if (response != null && response.getStatus() == 200) {
       System.out.println("Successfully created item:");
       System.out.println(response.getBody().getObject().toString(2));
       return response.getBody().getObject();
@@ -98,11 +96,9 @@ public class ItemManager {
       return null;
     }
 
-    if (response.getStatus() != 200) {
+    if (response != null && response.getStatus() != 200) {
       throw new Exception("Error encountered while updating item: " + response.getBody());
-    }
-
-    if (response != null && response.getStatus() == 200) {
+    } else if (response != null && response.getStatus() == 200) {
       System.out.println("Successfully updated item:");
       System.out.println(response.getBody().getObject().toString(2));
       return response.getBody().getObject();
@@ -121,11 +117,9 @@ public class ItemManager {
       return null;
     }
 
-    if (response.getStatus() != 200) {
+    if (response != null && response.getStatus() != 200) {
       throw new Exception("Error encountered while deleting item: " + response.getBody());
-    }
-
-    if (response != null && response.getStatus() == 200) {
+    } else if (response != null && response.getStatus() == 200) {
       System.out.println("Successfully deleted item");
       return response.getBody().getObject();
     } else {

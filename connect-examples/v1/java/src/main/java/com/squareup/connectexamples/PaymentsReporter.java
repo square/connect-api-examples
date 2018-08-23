@@ -62,11 +62,9 @@ public class PaymentsReporter {
 
     List<String> locationIds = new ArrayList();
 
-    if (response.getStatus() != 200) {
+    if (response != null && response.getStatus() != 200) {
       throw new Exception("Error encountered while listing locations: " + response.getBody());
-    }
-
-    if (response != null && response.getBody().isArray()) {
+    } else if (response != null && response.getBody().isArray()) {
       JSONArray locationArray = response.getBody().getArray();
       for (int i = 0; i < locationArray.length(); i++) {
         locationIds.add(locationArray.getJSONObject(i).getString("id"));
@@ -77,7 +75,7 @@ public class PaymentsReporter {
   }
 
   // Retrieves all of a merchant's payments from 2015
-  public List<JSONObject> get2015Payments(List<String> locationIds) throws Exception {
+  public List<JSONObject> getPayments(List<String> locationIds) throws Exception {
 
     List<JSONObject> payments = new ArrayList<JSONObject>();
 
@@ -111,11 +109,9 @@ public class PaymentsReporter {
           return null;
         }
 
-        if (response.getStatus() != 200) {
+        if (response != null && response.getStatus() != 200) {
           throw new Exception("Error encountered while listing payments: " + response.getBody());
-        }
-
-        if (response != null && response.getBody().isArray()) {
+        } else if (response != null && response.getBody().isArray()) {
 
           // Read the converted JSON body into the cumulative list of results
           JSONArray paymentArray = response.getBody().getArray();
@@ -219,7 +215,7 @@ public class PaymentsReporter {
   public static void main(String[] args) {
     try {
       PaymentsReporter reporter = new PaymentsReporter();
-      List<JSONObject> payments = reporter.get2015Payments(reporter.getLocationIds());
+      List<JSONObject> payments = reporter.getPayments(reporter.getLocationIds());
       if (payments != null) {
         reporter.printSalesReport(payments);
       }
