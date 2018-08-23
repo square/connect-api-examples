@@ -5,7 +5,7 @@ These examples demonstrate performing common Connect API tasks in Java.
 These examples use the [Unirest HTTP library](http://unirest.io/java.html), which is
 installed automatically during the **Compile with Maven** step below.
 
-These examples require Java SE 6 or later.
+These examples require Java SE 8 or later.
 
 ## Setup
 

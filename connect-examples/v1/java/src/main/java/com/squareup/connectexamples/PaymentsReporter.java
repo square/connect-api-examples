@@ -13,10 +13,9 @@
 package com.squareup.connectexamples;
 
 import java.text.NumberFormat;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -50,7 +49,7 @@ public class PaymentsReporter {
 
 
   // Obtains all of the business's location IDs. Each location has its own collection of payments.
-  public List<String> getLocationIds() {
+  public List<String> getLocationIds() throws Exception {
     String requestPath = Unirest.get(_connectHost + "/v1/me/locations").getUrl();
 
     HttpResponse<JsonNode> response = null;
@@ -63,7 +62,9 @@ public class PaymentsReporter {
 
     List<String> locationIds = new ArrayList();
 
-    if (response != null && response.getBody().isArray()) {
+    if (response != null && response.getStatus() != 200) {
+      throw new Exception("Error encountered while listing locations: " + response.getBody());
+    } else if (response != null && response.getBody().isArray()) {
       JSONArray locationArray = response.getBody().getArray();
       for (int i = 0; i < locationArray.length(); i++) {
         locationIds.add(locationArray.getJSONObject(i).getString("id"));
@@ -74,7 +75,7 @@ public class PaymentsReporter {
   }
 
   // Retrieves all of a merchant's payments from 2015
-  public List<JSONObject> get2015Payments(List<String> locationIds) {
+  public List<JSONObject> getPayments(List<String> locationIds) throws Exception {
 
     List<JSONObject> payments = new ArrayList<JSONObject>();
 
@@ -84,9 +85,13 @@ public class PaymentsReporter {
 
       // Restrict the request to the 2014 calendar year, eight hours behind UTC.
       // Unirest URL-encodes query parameters automatically.
+      String begin_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+              .format(java.sql.Date.valueOf( LocalDate.of(LocalDate.now().getYear() - 1, 1, 1)));
+      String end_time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+              .format(java.sql.Date.valueOf(LocalDate.of(LocalDate.now().getYear(), 1, 1)));
       String requestPath = Unirest.get(_connectHost + "/v1/" + locationId + "/payments")
-          .queryString("begin_time", "2015-01-01T00:00:00-08:00")
-          .queryString("end_time", "2016-01-01T00:00:00-08:00")
+          .queryString("begin_time", begin_time)
+          .queryString("end_time", end_time)
           .getUrl();
 
       HttpResponse<JsonNode> response = null;
@@ -104,7 +109,9 @@ public class PaymentsReporter {
           return null;
         }
 
-        if (response != null && response.getBody().isArray()) {
+        if (response != null && response.getStatus() != 200) {
+          throw new Exception("Error encountered while listing payments: " + response.getBody());
+        } else if (response != null && response.getBody().isArray()) {
 
           // Read the converted JSON body into the cumulative list of results
           JSONArray paymentArray = response.getBody().getArray();
@@ -191,7 +198,7 @@ public class PaymentsReporter {
 
     // Print a sales report similar to the Sales Summary in the merchant dashboard.
     System.out.println("");
-    System.out.println("==SALES REPORT FOR 2014==");
+    System.out.println("==SALES REPORT FOR " + (LocalDate.now().getYear() - 1) + "==");
     System.out.println("Gross Sales:      " + this.formatMoney(basePurchases - discounts));
     System.out.println("Discounts:        " + this.formatMoney(discounts));
     System.out.println("Net Sales:        " + this.formatMoney(basePurchases));
@@ -206,10 +213,14 @@ public class PaymentsReporter {
 
   // Call the methods defined above
   public static void main(String[] args) {
-    PaymentsReporter reporter = new PaymentsReporter();
-    List<JSONObject> payments = reporter.get2015Payments(reporter.getLocationIds());
-    if (payments != null) {
-      reporter.printSalesReport(payments);
+    try {
+      PaymentsReporter reporter = new PaymentsReporter();
+      List<JSONObject> payments = reporter.getPayments(reporter.getLocationIds());
+      if (payments != null) {
+        reporter.printSalesReport(payments);
+      }
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
     }
   }
 }

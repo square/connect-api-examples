@@ -40,7 +40,7 @@ public class ItemManager {
   }
 
   // Creates a "Milkshake" item.
-  public JSONObject createItem() {
+  public JSONObject createItem() throws Exception {
 
     // This code block demonstrates building a JSON request body with JSONObject and JSONArray
     // objects. You can instead provide request bodies as simple JSON strings if you prefer.
@@ -48,17 +48,17 @@ public class ItemManager {
     // Indentation is included to reflect the structure of the corresponding JSON.
 
     JSONObject requestBody = new JSONObject();                       // {
-      requestBody.append("name", "Milkshake");                       //   "name": "Milkshake",
+      requestBody.put("name", "Milkshake");                          //   "name": "Milkshake",
       JSONArray variations = new JSONArray();                        //
-      requestBody.append("variations", variations);                  //   "variations": [
+      requestBody.put("variations", variations);                     //   "variations": [
         JSONObject variationSmall = new JSONObject();                //
         variations.put(variationSmall);                              //     {
-          variationSmall.append("name", "Small");                    //       "name": "Small",
-          variationSmall.append("pricing_type", "FIXED_PRICING");    //       "pricing_type": "FIXED_PRICING",
+          variationSmall.put("name", "Small");                       //       "name": "Small",
+          variationSmall.put("pricing_type", "FIXED_PRICING");       //       "pricing_type": "FIXED_PRICING",
           JSONObject variationSmallPrice = new JSONObject();         //
-          variationSmall.append("price_money", variationSmallPrice); //       "price_money": {
-            variationSmallPrice.append("currency_code", "USD");      //         "currency_code": "USD",
-            variationSmallPrice.append("amount", 400);               //         "amount": 400
+          variationSmall.put("price_money", variationSmallPrice);    //       "price_money": {
+            variationSmallPrice.put("currency_code", "USD");         //         "currency_code": "USD",
+            variationSmallPrice.put("amount", 400);                  //         "amount": 400
                                                                      //       }
                                                                      //     }
                                                                      //   ]
@@ -72,18 +72,19 @@ public class ItemManager {
       return null;
     }
 
-    if (response != null && response.getStatus() == 200) {
+    if (response != null && response.getStatus() != 200) {
+      throw new Exception("Error encountered while creating item: " + response.getBody());
+    } else if (response != null && response.getStatus() == 200) {
       System.out.println("Successfully created item:");
       System.out.println(response.getBody().getObject().toString(2));
       return response.getBody().getObject();
     } else {
-      System.out.println("Item creation failed");
       return null;
     }
   }
 
   // Updates the Milkshake item to rename it to "Malted Milkshake"
-  public JSONObject updateItem(String itemId) {
+  public JSONObject updateItem(String itemId) throws Exception{
 
     // This method uses a simple hardcoded string request body (as opposed to createItem above)
     String requestBody = "{\"name\": \"Malted Milkshake\"}";
@@ -95,18 +96,19 @@ public class ItemManager {
       return null;
     }
 
-    if (response != null && response.getStatus() == 200) {
+    if (response != null && response.getStatus() != 200) {
+      throw new Exception("Error encountered while updating item: " + response.getBody());
+    } else if (response != null && response.getStatus() == 200) {
       System.out.println("Successfully updated item:");
       System.out.println(response.getBody().getObject().toString(2));
       return response.getBody().getObject();
     } else {
-      System.out.println("Item update failed");
       return null;
     }
   }
 
   // Deletes the Malted Milkshake item.
-  public JSONObject deleteItem(String itemId) {
+  public JSONObject deleteItem(String itemId) throws Exception {
 
     HttpResponse<JsonNode> response = null;
     try {
@@ -115,7 +117,9 @@ public class ItemManager {
       return null;
     }
 
-    if (response != null && response.getStatus() == 200) {
+    if (response != null && response.getStatus() != 200) {
+      throw new Exception("Error encountered while deleting item: " + response.getBody());
+    } else if (response != null && response.getStatus() == 200) {
       System.out.println("Successfully deleted item");
       return response.getBody().getObject();
     } else {
@@ -127,14 +131,18 @@ public class ItemManager {
   // Call the methods defined above
   public static void main(String[] args) {
     ItemManager manager = new ItemManager();
-    JSONObject item = manager.createItem();
 
-    // Update and delete the item only if it was successfully created
-    if (item != null) {
-      manager.updateItem(item.get("id").toString());
-      manager.deleteItem(item.get("id").toString());
-    } else {
-      System.out.println("Aborting");
+    try {
+      JSONObject item = manager.createItem();
+      // Update and delete the item only if it was successfully created
+      if (item != null) {
+        manager.updateItem(item.get("id").toString());
+        manager.deleteItem(item.get("id").toString());
+      } else {
+        System.out.println("Aborting");
+      }
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
     }
   }
 }
