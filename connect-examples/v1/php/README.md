@@ -26,3 +26,9 @@ with the value `REPLACE_ME`. Most commonly, you must provide your personal acces
 token, which is available from the [application dashboard](https://connect.squareup.com/apps).
 
 See the comments in each sample for details.
+
+#### Run item-management
+    php item-management.php
+#### Run webhooks or payment-report
+    php -S localhost:8000
+Visit localhost:8000/payment-report.php or localhost:8000/webhooks.php
