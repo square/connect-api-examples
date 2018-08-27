@@ -54,7 +54,7 @@ function createItem() {
     error_log(json_encode($response->body, JSON_PRETTY_PRINT));
     return $response->body;
   } else {
-    error_log('Item creation failed');
+    error_log('Item creation failed: ' . $response->raw_body);
     return NULL;
   }
 }
@@ -74,7 +74,7 @@ function updateItem($itemId) {
     error_log(json_encode($response->body, JSON_PRETTY_PRINT));
     return $response->body;
   } else {
-    error_log('Item update failed');
+    error_log('Item update failed: ' . $response->raw_body);
     return NULL;
   }
 }
@@ -89,7 +89,7 @@ function deleteItem($itemId) {
     error_log('Successfully deleted item');
     return $response->body;
   } else {
-    error_log('Item deletion failed');
+    error_log('Item deletion failed: ' . $response->raw_body);
     return NULL;
   }
 }

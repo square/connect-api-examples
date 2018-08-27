@@ -49,15 +49,15 @@ function getLocationIds() {
 }
 
 # Retrieves all of a merchant's payments from 2015
-function get2015Payments($location_ids) {
+function getPayments($location_ids) {
   global $accessToken, $connectHost, $requestHeaders;
 
   # Restrict the request to the 2015 calendar year, eight hours behind UTC
   # Make sure to URL-encode all parameters
   $parameters = http_build_query(
   	array(
-  	  'begin_time' => '2015-01-01T00:00:00-08:00',
-  	  'end_time'   => '2016-01-01T00:00:00-08:00'
+  	  'begin_time' => date("m-d-y",strtotime("last year January 1st")),
+  	  'end_time'   => date("m-d-y",strtotime("this year January 1st"))
   	)
   );
 
@@ -65,13 +65,14 @@ function get2015Payments($location_ids) {
 
   foreach ($location_ids as $location_id) {
     $requestPath = $connectHost . '/v1/' . $location_id . '/payments?' . $parameters;
+    # Send a GET request to the List Payments endpoint
+    $response = Unirest\Request::get($requestPath, $requestHeaders);
+    if ($response->code != 200) {
+      break;
+    }
     $moreResults = true;
 
-    while ($moreResults) {
-
-      # Send a GET request to the List Payments endpoint
-      $response = Unirest\Request::get($requestPath, $requestHeaders);
-
+    while ($moreResults && $response->code == 200) {
       # Read the converted JSON body into the cumulative array of results
       $payments = array_merge($payments, $response->body);
 
@@ -86,6 +87,12 @@ function get2015Payments($location_ids) {
           # <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
           # This line extracts the URL from the angle brackets surrounding it.
           $requestPath = explode('>', explode('<', $paginationHeader)[1])[0];
+
+          # Send a GET request to the List Payments endpoint
+          $response = Unirest\Request::get($requestPath, $requestHeaders);
+          if ($response->code != 200) {
+            break;
+          }
         } else {
           $moreResults = false;
         }
@@ -93,6 +100,11 @@ function get2015Payments($location_ids) {
         $moreResults = false;
       }
     }
+  }
+
+  if ($response->code != 200) {
+    echo $response->raw_body;
+    return null;
   }
 
   # Remove potential duplicate values from the list of payments
@@ -148,7 +160,7 @@ function printSalesReport($payments) {
 
   # Print a sales report similar to the Sales Summary in the merchant dashboard.
   echo '<pre>';
-  echo '==SALES REPORT FOR 2015==' . '<br/>';
+  echo '==SALES REPORT FOR ' . date("Y",strtotime("last year")) . '==' . '<br/>';
   echo 'Gross Sales:       ' . formatMoney($basePurchases - $discounts) . '<br/>';
   echo 'Discounts:         ' . formatMoney($discounts) . '<br/>';
   echo 'Net Sales:         ' . formatMoney($basePurchases) . '<br/>';
@@ -164,7 +176,9 @@ function printSalesReport($payments) {
 }
 
 # Call the functions defined above
-$payments = get2015Payments(getLocationIds());
-printSalesReport($payments);
+$payments = getPayments(getLocationIds());
+if ($payments != null) {
+  printSalesReport($payments);
+}
 
 ?>
