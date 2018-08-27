@@ -25,7 +25,8 @@ config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "S
 access_token = config.get(config_type, "access_token")
 location_id = config.get(config_type, "location_id")
 
-squareconnect.configuration.access_token = access_token
+api_client = squareconnect.ApiClient()
+api_client.configuration.access_token = access_token
 
 # The ID of the business location to associate processed payments with.
 # See [Retrieve your business's locations]
@@ -38,7 +39,7 @@ else:
     location_id = config.get("SANDBOX", "location_id")
 location_id = location_id
 
-api_instance = TransactionsApi()
+api_instance = TransactionsApi(api_client)
 
 # Every payment you process with the SDK must have a unique idempotency key.
 # If you're unsure whether a particular payment succeeded, you can reattempt
