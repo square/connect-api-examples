@@ -1,6 +1,6 @@
 <?php
 
-# Demonstrates generating a 2015 payments report with the Square Connect API.
+# Demonstrates generating last year's payments report with the Square Connect API.
 # Replace the value of the `$accessToken` variable below before running this script.
 #
 # This sample assumes all monetary amounts are in US dollars. You can alter the
@@ -48,11 +48,11 @@ function getLocationIds() {
   return $locationIds;
 }
 
-# Retrieves all of a merchant's payments from 2015
+# Retrieves all of a merchant's payments from last year
 function getPayments($location_ids) {
   global $accessToken, $connectHost, $requestHeaders;
 
-  # Restrict the request to the 2015 calendar year, eight hours behind UTC
+  # Restrict the request to the last calendar year, eight hours behind UTC
   # Make sure to URL-encode all parameters
   $parameters = http_build_query(
   	array(
