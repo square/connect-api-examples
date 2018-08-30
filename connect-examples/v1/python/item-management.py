@@ -56,6 +56,7 @@ def create_item():
     return response_body
   else:
     print 'Item creation failed'
+    print response_body
     return None
 
 # Updates the Milkshake item to rename it to "Malted Milkshake"
@@ -73,6 +74,7 @@ def update_item(item_id):
     return response_body
   else:
     print 'Item update failed'
+    print response_body
     return None
 
 # Deletes the Malted Milkshake item.
@@ -86,6 +88,7 @@ def delete_item(item_id):
     return response_body
   else:
     print 'Item deletion failed'
+    print response_body
     return None
 
 if __name__ == '__main__':
