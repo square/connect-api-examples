@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Demonstrates generating a 2015 payments report with the Square Connect API.
+# Demonstrates generating last year's payments report with the Square Connect API.
 # Replace the value of the `access_token` variable below before running this script.
 #
 # This sample assumes all monetary amounts are in US dollars. You can alter the
@@ -12,7 +12,7 @@
 # To install Python on Windows:
 # https://www.python.org/download/
 
-import httplib, urllib, json, locale
+import httplib, urllib, json, locale, datetime
 from urlparse import urlparse
 
 # Your application's personal access token.
@@ -23,10 +23,10 @@ access_token = 'REPLACE_ME'
 request_headers = {'Authorization': 'Bearer ' + access_token,
                    'Accept': 'application/json',
                    'Content-Type': 'application/json'}
-  
+
 # The base URL for every Connect API request
 connection = httplib.HTTPSConnection('connect.squareup.com')
-                   
+
 # Uses the locale to format currency amounts correctly
 locale.setlocale(locale.LC_ALL, 'en_US')
 
@@ -44,21 +44,26 @@ def get_location_ids():
   # Transform the JSON array of locations into a Python list
   locations = json.loads(response.read())
 
+  if response.status != 200:
+    raise ValueError("Error while getting locations", locations)
+
   location_ids = []
   for location in locations:
     location_ids.append(location['id'])
 
   return location_ids
 
+# Downloads all of a business's payments from last year
+def get_payments(location_ids):
 
-# Downloads all of a business's payments from 2015
-def get_2015_payments(location_ids):
-  
-  # Restrict all requests to the 2015 calendar year, eight hours behind UTC
+  # Restrict all requests to the last calendar year, eight hours behind UTC
   # Make sure to URL-encode all parameters
-  parameters = urllib.urlencode({'begin_time': '2015-01-01T00:00:00-08:00',
-                                 'end_time'  : '2016-01-01T00:00:00-08:00'})
-  
+  today = datetime.date.today()
+  begin_time = datetime.date(today.year - 1, 1, 1)
+  end_time = datetime.date(today.year, 1, 1)
+  parameters = urllib.urlencode({'begin_time': begin_time,
+                                 'end_time'  : end_time})
+
   payments = []
 
   # For each location...
@@ -68,17 +73,21 @@ def get_2015_payments(location_ids):
 
     request_path = '/v1/' + location_id + '/payments?' + parameters
     more_results = True
-    
+
     # ...as long as there are more payments to download from the location...
     while more_results:
 
       # ...send a GET request to /v1/LOCATION_ID/payments
       connection.request('GET', request_path, '', request_headers)
       response = connection.getresponse()
+      response_body = json.loads(response.read());
+
+      if response.status != 200:
+        raise ValueError("Error while getting payments", response_body)
 
       # Read the response body JSON into the cumulative list of results
-      payments = payments + json.loads(response.read())
-      
+      payments = payments + response_body
+
       # Check whether pagination information is included in a response header, indicating more results
       pagination_header = response.getheader('link', '')
       if "rel='next'" not in pagination_header:
@@ -126,7 +135,7 @@ def print_sales_report(payments):
     refunds         = refunds         + payment['refunded_money']['amount']
 
 
-    # When a refund is applied to a credit card payment, Square returns to the merchant a percentage 
+    # When a refund is applied to a credit card payment, Square returns to the merchant a percentage
     # of the processing fee corresponding to the refunded portion of the payment. This amount
     # is not currently returned by the Connect API, but we can calculate it as shown:
 
@@ -141,10 +150,11 @@ def print_sales_report(payments):
 
   # Calculate the amount of pre-tax, pre-tip money collected
   base_purchases = collected_money - taxes - tips
-  
+
   # Print a sales report similar to the Sales Summary in the merchant dashboard.
+  year = datetime.date(datetime.date.today().year - 1, 1, 1).year
   print ''
-  print '==SALES REPORT FOR 2015=='
+  print '==SALES REPORT FOR ' + str(year) + '=='
   print 'Gross Sales:       ' + format_money(base_purchases - discounts)
   print 'Discounts:         ' + format_money(discounts)
   print 'Net Sales:         ' + format_money(base_purchases)
@@ -155,14 +165,16 @@ def print_sales_report(payments):
   print 'Refunds:           ' + format_money(refunds)
   print 'Fees returned:     ' + format_money(returned_processing_fees)
   print 'Net total:         ' + format_money(net_money + refunds + returned_processing_fees)
-    
+
 
 if __name__ == '__main__':
+  try:
+    # Get all of last year's payments from all of the business's locations
+    payments = get_payments(get_location_ids())
 
-  # Get all 2015 payments from all of the business's locations
-  payments = get_2015_payments(get_location_ids())
-
-  # Print a sales summary report of the payments
-  print_sales_report(payments)
+    # Print a sales summary report of the payments
+    print_sales_report(payments)
+  except ValueError as e:
+      print(e.args)
 
   connection.close()
