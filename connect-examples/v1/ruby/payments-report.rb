@@ -1,4 +1,4 @@
-# Demonstrates generating a 2015 payments report with the Square Connect API.
+# Demonstrates generating the last year's payments report with the Square Connect API.
 # Replace the value of the `ACCESS_TOKEN` variable below before running this script.
 #
 # This sample assumes all monetary amounts are in US dollars. You can alter the
@@ -10,6 +10,7 @@
 require 'set'
 require 'unirest'
 require 'uri'
+require 'date'
 
 
 # Replace this value with your application's personal access token,
@@ -40,24 +41,28 @@ def get_location_ids()
   request_path = '/v1/me/locations'
   response = Unirest.get CONNECT_HOST + request_path,
                headers: REQUEST_HEADERS
-  locations = response.body
   location_ids = []
+  if response.code == 200
+    locations = response.body
 
-  for location in locations
-    location_ids.push(location['id'])
+    for location in locations
+      location_ids.push(location['id'])
+    end
+  else
+    raise response.body.to_s
   end
 
   return location_ids
 end
 
-# Retrieves all of a merchant's payments from 2015
-def get_2015_payments(location_ids)
+# Retrieves all of a merchant's payments from last year
+def get_payments(location_ids)
 
-  # Restrict the request to the 2015 calendar year, eight hours behind UTC
+  # Restrict the request to the last calendar year, eight hours behind UTC
   # Make sure to URL-encode all parameters
   parameters = URI.encode_www_form(
-    'begin_time' => '2015-01-01T00:00:00-08:00',
-    'end_time'   => '2016-01-01T00:00:00-08:00'
+    'begin_time' => Date.new(Time.now.year - 1, 1, 1).iso8601.to_s,
+    'end_time'   => Date.new(Time.now.year, 1, 1).iso8601.to_s
   )
 
   payments = []
@@ -76,26 +81,30 @@ def get_2015_payments(location_ids)
       response = Unirest.get request_path,
                    headers: REQUEST_HEADERS,
                    parameters: parameters
+      if response.code == 200
 
-      # Read the converted JSON body into the cumulative array of results
-      payments += response.body
+        # Read the converted JSON body into the cumulative array of results
+        payments += response.body
 
-      # Check whether pagination information is included in a response header, indicating more results
-      if response.headers.has_key?(:link)
-        pagination_header = response.headers[:link]
-        if pagination_header.include? "rel='next'"
+        # Check whether pagination information is included in a response header, indicating more results
+        if response.headers.has_key?(:link)
+          pagination_header = response.headers[:link]
+          if pagination_header.include? "rel='next'"
 
-          # Extract the next batch URL from the header.
-          #
-          # Pagination headers have the following format:
-          # <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
-          # This line extracts the URL from the angle brackets surrounding it.
-          request_path = pagination_header.split('<')[1].split('>')[0]
+            # Extract the next batch URL from the header.
+            #
+            # Pagination headers have the following format:
+            # <https://connect.squareup.com/v1/MERCHANT_ID/payments?batch_token=BATCH_TOKEN>;rel='next'
+            # This line extracts the URL from the angle brackets surrounding it.
+            request_path = pagination_header.split('<')[1].split('>')[0]
+          else
+            more_results = false
+          end
         else
           more_results = false
         end
       else
-        more_results = false
+        raise response.body.to_s
       end
     end
   end
@@ -106,7 +115,7 @@ def get_2015_payments(location_ids)
   unique_payments = []
   for payment in payments
     if seen_payment_ids.include? payment['id']
-      next 
+      next
     end
     seen_payment_ids.add(payment['id'])
     unique_payments.push(payment)
@@ -134,7 +143,7 @@ def print_sales_report(payments)
     refunds         = refunds         + payment['refunded_money']['amount']
 
 
-    # When a refund is applied to a credit card payment, Square returns to the merchant a percentage 
+    # When a refund is applied to a credit card payment, Square returns to the merchant a percentage
     # of the processing fee corresponding to the refunded portion of the payment. This amount
     # is not currently returned by the Connect API, but we can calculate it as shown:
 
@@ -142,23 +151,23 @@ def print_sales_report(payments)
     if payment['processing_fee_money']['amount'] < 0 && payment['refunded_money']['amount'] < 0
 
         # ...calculate the percentage of the payment that was refunded...
-        percentage_refunded = payment['refunded_money']['amount'] / 
+        percentage_refunded = payment['refunded_money']['amount'] /
                               payment['total_collected_money']['amount'].to_f
 
         # ...and multiply that percentage by the original processing fee
-        returned_processing_fees = returned_processing_fees + 
+        returned_processing_fees = returned_processing_fees +
                                    (payment['processing_fee_money']['amount'] * percentage_refunded)
     end
   end
 
-  
+
 
   # Calculate the amount of pre-tax, pre-tip money collected
   base_purchases = collected_money - taxes - tips
 
   # Print a sales report similar to the Sales Summary in the merchant dashboard.
   puts ''
-  puts '==SALES REPORT FOR 2015=='
+  puts '==SALES REPORT FOR ' + (Time.now.year - 1).to_s + '=='
   puts 'Gross Sales:       ' + format_money(base_purchases - discounts)
   puts 'Discounts:         ' + format_money(discounts)
   puts 'Net Sales:         ' + format_money(base_purchases)
@@ -172,5 +181,9 @@ def print_sales_report(payments)
 end
 
 # Call the functions defined above
-payments = get_2015_payments(get_location_ids())
-print_sales_report(payments)
+begin
+  payments = get_payments(get_location_ids())
+  print_sales_report(payments)
+rescue StandardError => e
+  puts e.message
+end

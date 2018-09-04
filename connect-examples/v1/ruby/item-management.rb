@@ -74,6 +74,7 @@ def update_item(item_id)
     return response.body
   else
     puts 'Item update failed'
+    puts response.body
     return nil
   end
 end
@@ -88,6 +89,7 @@ def delete_item(item_id)
     return response.body
   else
     puts 'Item deletion failed'
+    puts response.body
     return nil
   end
 end
@@ -100,4 +102,5 @@ if my_item
   delete_item(my_item['id'])
 else
   puts 'Aborting'
+  puts response.body
 end
