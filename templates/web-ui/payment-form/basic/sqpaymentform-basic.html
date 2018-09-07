@@ -17,51 +17,46 @@
 
 <body>
 
-<div id="sq-ccbox">
-  <!--
-    You should replace the action attribute of the form with the path of
-    the URL you want to POST the nonce to (for example, "/process-card")
-  -->
-  <form id="nonce-form" novalidate action="path/to/payment/processing/page" method="post">
-    Pay with a Credit Card
-    <table>
-    <tbody>
-      <tr>
-        <td>Card Number:</td>
-        <td><div id="sq-card-number"></div></td>
-      </tr>
-      <tr>
-        <td>CVV:</td>
-        <td><div id="sq-cvv"></div></td>
-      </tr>
-      <tr>
-        <td>Expiration Date: </td>
-        <td><div id="sq-expiration-date"></div></td>
-      </tr>
-      <tr>
-        <td>Postal Code:</td>
-        <td><div id="sq-postal-code"></div></td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <button id="sq-creditcard" class="button-credit-card" onclick="requestCardNonce(event)">
-            Pay with card
-          </button>
-        </td>
-      </tr>
-    </tbody>
-    </table>
-
-    <!--
-      After a nonce is generated it will be assigned to this hidden input field.
-    -->
-    <input type="hidden" id="card-nonce" name="nonce">
-  </form>
-</div>
-
-<!-- REPLACE_ME: Apple Pay button -->
-<!-- REPLACE_ME: Masterpass button -->
+  <div id="form-container">
 
 
+    <div id="sq-ccbox">
+      <!--
+        You should replace the action attribute of the form with the path of
+        the URL you want to POST the nonce to (for example, "/process-card")
+      -->
+      <form id="nonce-form" novalidate action=".process-card.php" method="post">
+        <fieldset>
+          <span class="label">Card Number</span>
+          <div id="sq-card-number"></div>
+
+          <div class="third">
+            <span class="label">Expiration</span>
+            <div id="sq-expiration-date"></div>
+          </div>
+
+          <div class="third">
+            <span class="label">CVV</span>
+            <div id="sq-cvv"></div>
+          </div>
+
+          <div class="third">
+            <span class="label">Postal</span>
+            <div id="sq-postal-code"></div>
+          </div>
+        </fieldset>
+
+        <button id="sq-creditcard" class="button-credit-card" onclick="requestCardNonce(event)">Pay $1.00</button>
+
+        <div id="error"></div>
+
+        <!--
+          After a nonce is generated it will be assigned to this hidden input field.
+        -->
+        <input type="hidden" id="card-nonce" name="nonce">
+      </form>
+    </div> <!-- end #sq-ccbox -->
+
+  </div> <!-- end #form-container -->
 </body>
 </html>
