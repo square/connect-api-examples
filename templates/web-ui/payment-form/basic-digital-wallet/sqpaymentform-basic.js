@@ -32,7 +32,15 @@ var paymentForm = new SqPaymentForm({
 
   // Customize the CSS for SqPaymentForm iframe elements
   inputStyles: [{
-      fontSize: '.9em'
+    fontSize: '16px',
+    fontFamily: 'Helvetica Neue',
+    padding: '16px',
+    color: '#373F4A',
+    backgroundColor: 'transparent',
+    lineHeight: '24px',
+    placeholderColor: '#CCC',
+    _webkitFontSmoothing: 'antialiased',
+    _mozOsxFontSmoothing: 'grayscale'
   }],
 
   // Initialize Apple Pay placeholder ID
@@ -48,7 +56,7 @@ var paymentForm = new SqPaymentForm({
   // Initialize the credit card placeholders
   cardNumber: {
     elementId: 'sq-card-number',
-    placeholder: '•••• •••• •••• ••••'
+    placeholder: '• • • •  • • • •  • • • •  • • • •'
   },
   cvv: {
     elementId: 'sq-cvv',
@@ -59,7 +67,8 @@ var paymentForm = new SqPaymentForm({
     placeholder: 'MM/YY'
   },
   postalCode: {
-    elementId: 'sq-postal-code'
+    elementId: 'sq-postal-code',
+    placeholder: '12345'
   },
 
   // SqPaymentForm callback functions
@@ -71,6 +80,7 @@ var paymentForm = new SqPaymentForm({
      */
     methodsSupported: function (methods) {
 
+      var walletBox = document.getElementById('sq-walletbox');
       var applePayBtn = document.getElementById('sq-apple-pay');
       var applePayLabel = document.getElementById('sq-apple-pay-label');
       var masterpassBtn = document.getElementById('sq-masterpass');
@@ -79,13 +89,15 @@ var paymentForm = new SqPaymentForm({
       // Only show the button if Apple Pay for Web is enabled
       // Otherwise, display the wallet not enabled message.
       if (methods.applePay === true) {
-        applePayBtn.style.display = 'inline-block';
-        applePayLabel.style.display = 'none' ;
+        walletBox.style.display = 'block';
+        applePayBtn.style.display = 'block';
+        applePayLabel.style.display = 'none';
       }
       // Only show the button if Masterpass is enabled
       // Otherwise, display the wallet not enabled message.
       if (methods.masterpass === true) {
-        masterpassBtn.style.display = 'inline-block';
+        walletBox.style.display = 'block';
+        masterpassBtn.style.display = 'block';
         masterpassLabel.style.display = 'none';
       }
     },
@@ -96,9 +108,24 @@ var paymentForm = new SqPaymentForm({
      */
     createPaymentRequest: function () {
 
-      var paymentRequestJson ;
-      /* ADD CODE TO SET/CREATE paymentRequestJson */
-      return paymentRequestJson ;
+      return {
+        requestShippingAddress: false,
+        requestBillingInfo: true,
+        currencyCode: "USD",
+        countryCode: "US",
+        total: {
+          label: "MERCHANT NAME",
+          amount: "100",
+          pending: false
+        },
+        lineItems: [
+          {
+            label: "Subtotal",
+            amount: "100",
+            pending: false
+          }
+        ]
+      }
     },
 
     /*
@@ -108,28 +135,26 @@ var paymentForm = new SqPaymentForm({
      */
     validateShippingContact: function (contact) {
 
-      var validationErrorObj ;
+      var validationErrorObj;
       /* ADD CODE TO SET validationErrorObj IF ERRORS ARE FOUND */
-      return validationErrorObj ;
+      return validationErrorObj;
     },
 
     /*
      * callback function: cardNonceResponseReceived
      * Triggered when: SqPaymentForm completes a card nonce request
      */
-    cardNonceResponseReceived: function(errors, nonce, cardData, billingContact, shippingContact) {
+    cardNonceResponseReceived: function (errors, nonce, cardData) {
       if (errors) {
         // Log errors from nonce generation to the Javascript console
         console.log("Encountered errors:");
-        errors.forEach(function(error) {
+        errors.forEach(function (error) {
           console.log('  ' + error.message);
+          alert(error.message);
         });
 
         return;
       }
-
-      alert('Nonce received: ' + nonce); /* FOR TESTING ONLY */
-
       // Assign the nonce value to the hidden form field
       document.getElementById('card-nonce').value = nonce;
 
@@ -142,7 +167,7 @@ var paymentForm = new SqPaymentForm({
      * callback function: unsupportedBrowserDetected
      * Triggered when: the page loads and an unsupported browser is detected
      */
-    unsupportedBrowserDetected: function() {
+    unsupportedBrowserDetected: function () {
       /* PROVIDE FEEDBACK TO SITE VISITORS */
     },
 
@@ -150,7 +175,7 @@ var paymentForm = new SqPaymentForm({
      * callback function: inputEventReceived
      * Triggered when: visitors interact with SqPaymentForm iframe elements.
      */
-    inputEventReceived: function(inputEvent) {
+    inputEventReceived: function (inputEvent) {
       switch (inputEvent.eventType) {
         case 'focusClassAdded':
           /* HANDLE AS DESIRED */
@@ -159,10 +184,11 @@ var paymentForm = new SqPaymentForm({
           /* HANDLE AS DESIRED */
           break;
         case 'errorClassAdded':
-          /* HANDLE AS DESIRED */
+          document.getElementById("error").innerHTML = "Please fix all errors.";
           break;
         case 'errorClassRemoved':
           /* HANDLE AS DESIRED */
+          document.getElementById("error").style.display = "none";
           break;
         case 'cardBrandChanged':
           /* HANDLE AS DESIRED */
@@ -177,8 +203,9 @@ var paymentForm = new SqPaymentForm({
      * callback function: paymentFormLoaded
      * Triggered when: SqPaymentForm is fully loaded
      */
-    paymentFormLoaded: function() {
+    paymentFormLoaded: function () {
       /* HANDLE AS DESIRED */
+      console.log("The form loaded!");
     }
   }
 });

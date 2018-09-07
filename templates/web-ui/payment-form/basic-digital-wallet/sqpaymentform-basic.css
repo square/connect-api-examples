@@ -1,102 +1,213 @@
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body, html {
+  color: #373F4A;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+}
+
+iframe {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+button {
+  border: 0;
+}
+
+hr {
+  height: 1px;
+  border: 0;
+  background-color: #CCC;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+
+#form-container {
+  position: relative;
+  width: 380px;
+  margin: 0 auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0.5;
+  text-transform: uppercase;
+}
+
+.third {
+  float: left;
+  width: calc((100% - 32px) / 3);
+  padding: 0;
+  margin: 0 16px 16px 0;
+}
+
+.third:last-of-type {
+  margin-right: 0;
+}
+
 /* Define how SqPaymentForm iframes should look */
 .sq-input {
-  border: 1px solid rgb(223, 223, 223);
+  box-sizing: border-box;
+  border: 1px solid #E0E2E3;
+  border-radius: 4px;
   outline-offset: -2px;
-  margin-bottom: 5px;
   display: inline-block;
+  -webkit-transition: border-color .2s ease-in-out, background .2s ease-in-out;
+     -moz-transition: border-color .2s ease-in-out, background .2s ease-in-out;
+      -ms-transition: border-color .2s ease-in-out, background .2s ease-in-out;
+          transition: border-color .2s ease-in-out, background .2s ease-in-out;
 }
 
 /* Define how SqPaymentForm iframes should look when they have focus */
 .sq-input--focus {
-  outline: 5px auto rgb(59, 153, 252);
+  border: 1px solid #4A90E2;
+  background-color: rgba(74,144,226,0.02);
 }
+
 
 /* Define how SqPaymentForm iframes should look when they contain invalid values */
 .sq-input--error {
-  outline: 5px auto rgb(255, 97, 97);
+  border: 1px solid #E02F2F;
+  background-color: rgba(244,47,47,0.02);
+}
+
+#sq-card-number {
+  margin-bottom: 16px;
 }
 
 /* Customize the "Pay with Credit Card" button */
 .button-credit-card {
-  min-width: 200px;
-  min-height: 20px;
-  padding: 0;
-  margin: 5px;
-  line-height: 20px;
-  box-shadow: 2px 2px 1px rgb(200, 200, 200);
-  background: rgb(255, 255, 255);
-  border-radius: 5px;
-  border: 1px solid rgb(200, 200, 200);
-  font-weight: bold;
-  cursor:pointer;
-}
-
-
-/* Customize the "{{Wallet}} not enabled" message */
-.wallet-not-enabled {
-  min-width: 200px;
-  min-height: 40px;
-  max-height: 64px;
-  padding: 0;
-  margin: 10px;
-  line-height: 40px;
-  background: #eee;
-  border-radius: 5px;
-  font-weight: lighter;
-  font-style: italic;
-  font-family: inherit;
+  width: 100%;
+  height: 56px;
+  margin-top: 10px;
+  background: #4A90E2;
+  border-radius: 4px;
+  cursor: pointer;
   display: block;
+  color: #FFFFFF;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-align: center;
+  -webkit-transition: background .2s ease-in-out;
+     -moz-transition: background .2s ease-in-out;
+      -ms-transition: background .2s ease-in-out;
+          transition: background .2s ease-in-out;
 }
+
+.button-credit-card:hover {
+  background-color: #4281CB;
+}
+
 
 /* Customize the Apple Pay on the Web button */
-.button-apple-pay {
-  min-width: 200px;
-  min-height: 40px;
-  max-height: 64px;
+#sq-apple-pay {
+  width: 100%;
+  height: 48px;
   padding: 0;
-  margin: 10px;
+  margin: 24px 0 16px 0;
   background-image: -webkit-named-image(apple-pay-logo-white);
   background-color: black;
   background-size: 100% 60%;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  border-radius: 5px;
-  cursor:pointer;
+  border-radius: 4px;
+  cursor: pointer;
   display: none;
 }
 
 /* Customize the Masterpass button */
-.button-masterpass {
-  min-width: 200px;
-  min-height: 40px;
-  max-height: 40px;
+#sq-masterpass {
+  width: 100%;
+  height: 48px;
   padding: 0;
-  margin: 10px;
-  background-image: url(https://static.masterpass.com/dyn/img/btn/global/mp_chk_btn_147x034px.svg);
+  margin: 24px 0 24px;
+  background-image: url("https://masterpass.com/dyn/img/acc/global/mp_mark_hor_wht.svg");
   background-color: black;
-  background-size: 100% 100%;
+  background-size: 100% 60%;
   background-repeat: no-repeat;
-  background-position: 50% 50%;
-  border-radius: 5px;
-  border-color: rgb(255, 255, 255);
-  cursor:pointer;
+  background-position: calc((100% - 32px) / 2) 50%;
+  border-radius: 4px;
+  cursor: pointer;
   display: none;
 }
 
-#sq-walletbox {
-  float:left;
-  margin:5px;
-  padding:10px;
-  text-align: center;
-  vertical-align: top;
-  font-weight: bold;
+#sq-masterpass::after {
+  box-sizing: border-box;
+  float: right;
+  width: 32px;
+  height: 48px;
+  padding-top: 12px;
+  content: url("data:image/svg+xml; utf8, <svg width='14' height='24' viewBox='0 0 14 24' xmlns='http://www.w3.org/2000/svg'><path d='M1.891 23.485c-.389 0-.778-.144-1.075-.436a1.46 1.46 0 0 1 0-2.102l9.141-8.944L.817 3.06a1.463 1.463 0 0 1 0-2.104 1.544 1.544 0 0 1 2.15 0l10.217 9.994a1.464 1.464 0 0 1 0 2.105L2.966 23.049a1.525 1.525 0 0 1-1.075.436' fill='#FFF' fill-rule='evenodd'/></svg>");
+  background-color: #E6761F;
+  border-radius: 0 4px 4px 0;
 }
 
-#sq-ccbox {
-  float:left;
-  margin:5px;
-  padding:10px;
+#sq-walletbox {
+  margin: 0;
+  padding: 0;
   text-align: center;
   vertical-align: top;
+  width:100%;
+  height:123;
+  display:none;
+}
+
+#sq-walletbox-divider {
+  height: 24px;
+  margin: 24px 0 24px;
+  color: #CCC;
+  font-size: 14px;
   font-weight: bold;
+  line-height: 24px;
+  letter-spacing: 0.5;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+#sq-walletbox-divider-label {
+  padding: 0 24px;
+  background-color: #FFF;
+}
+
+#sq-walletbox-divider hr {
+  margin-top: -12px;
+}
+
+.wallet-not-enabled {
+  width: 100%;
+  color: #8594A7;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  background-color: #eee;
+  border-radius: 4px;
+  margin: 24px 0 24px;
+  padding: 12px 0;
+}
+
+#error {
+  width: 100%;
+  margin-top: 16px;
+  font-size: 14px;
+  color: red;
+  font-weight: 500;
+  text-align: center;
+  opacity: 0.8;
 }
