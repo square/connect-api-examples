@@ -184,7 +184,7 @@ var paymentForm = new SqPaymentForm({
           /* HANDLE AS DESIRED */
           break;
         case 'errorClassAdded':
-          document.getElementById("error").innerHTML = "Please fix all errors.";
+          document.getElementById("error").innerHTML = "Please fix card information errors before continuing.";
           break;
         case 'errorClassRemoved':
           /* HANDLE AS DESIRED */
