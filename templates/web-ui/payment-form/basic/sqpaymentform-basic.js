@@ -32,18 +32,27 @@ var paymentForm = new SqPaymentForm({
 
   // Customize the CSS for SqPaymentForm iframe elements
   inputStyles: [{
-      fontSize: '.9em'
+    fontSize: '16px',
+    fontFamily: 'Helvetica Neue',
+    padding: '16px',
+    color: '#373F4A',
+    backgroundColor: 'transparent',
+    lineHeight: '24px',
+    placeholderColor: '#CCC',
+    _webkitFontSmoothing: 'antialiased',
+    _mozOsxFontSmoothing: 'grayscale'
   }],
 
+  // Initialize Apple Pay placeholder ID
+  applePay: false,
 
-  //REPLACE_ME: Apple Pay placeholder
-
-  //REPLACE_ME: Masterpass placeholder
+  // Initialize Masterpass placeholder ID
+  masterpass: false,
 
   // Initialize the credit card placeholders
   cardNumber: {
     elementId: 'sq-card-number',
-    placeholder: '•••• •••• •••• ••••'
+    placeholder: '• • • •  • • • •  • • • •  • • • •'
   },
   cvv: {
     elementId: 'sq-cvv',
@@ -54,35 +63,55 @@ var paymentForm = new SqPaymentForm({
     placeholder: 'MM/YY'
   },
   postalCode: {
-    elementId: 'sq-postal-code'
+    elementId: 'sq-postal-code',
+    placeholder: '12345'
   },
 
   // SqPaymentForm callback functions
   callbacks: {
+    /*
+     * callback function: createPaymentRequest
+     * Triggered when: a digital wallet payment button is clicked.
+     * Replace the JSON object declaration with a function that creates
+     * a JSON object with Digital Wallet payment details
+     */
+    createPaymentRequest: function () {
 
-//REPLACE_ME: methodsSupported
-
-//REPLACE_ME: createPaymentRequest
-
-//REPLACE_ME: validateShippingContact
+      return {
+        requestShippingAddress: false,
+        requestBillingInfo: true,
+        currencyCode: "USD",
+        countryCode: "US",
+        total: {
+          label: "MERCHANT NAME",
+          amount: "100",
+          pending: false
+        },
+        lineItems: [
+          {
+            label: "Subtotal",
+            amount: "100",
+            pending: false
+          }
+        ]
+      }
+    },
 
     /*
      * callback function: cardNonceResponseReceived
      * Triggered when: SqPaymentForm completes a card nonce request
      */
-    cardNonceResponseReceived: function(errors, nonce, cardData, billingContact, shippingContact) {
+    cardNonceResponseReceived: function (errors, nonce, cardData) {
       if (errors) {
         // Log errors from nonce generation to the Javascript console
         console.log("Encountered errors:");
-        errors.forEach(function(error) {
+        errors.forEach(function (error) {
           console.log('  ' + error.message);
+          alert(error.message);
         });
 
         return;
       }
-
-      alert('Nonce received: ' + nonce); /* FOR TESTING ONLY */
-
       // Assign the nonce value to the hidden form field
       document.getElementById('card-nonce').value = nonce;
 
@@ -95,7 +124,7 @@ var paymentForm = new SqPaymentForm({
      * callback function: unsupportedBrowserDetected
      * Triggered when: the page loads and an unsupported browser is detected
      */
-    unsupportedBrowserDetected: function() {
+    unsupportedBrowserDetected: function () {
       /* PROVIDE FEEDBACK TO SITE VISITORS */
     },
 
@@ -103,7 +132,7 @@ var paymentForm = new SqPaymentForm({
      * callback function: inputEventReceived
      * Triggered when: visitors interact with SqPaymentForm iframe elements.
      */
-    inputEventReceived: function(inputEvent) {
+    inputEventReceived: function (inputEvent) {
       switch (inputEvent.eventType) {
         case 'focusClassAdded':
           /* HANDLE AS DESIRED */
@@ -112,10 +141,11 @@ var paymentForm = new SqPaymentForm({
           /* HANDLE AS DESIRED */
           break;
         case 'errorClassAdded':
-          /* HANDLE AS DESIRED */
+          document.getElementById("error").innerHTML = "Please fix card information errors before continuing.";
           break;
         case 'errorClassRemoved':
           /* HANDLE AS DESIRED */
+          document.getElementById("error").style.display = "none";
           break;
         case 'cardBrandChanged':
           /* HANDLE AS DESIRED */
@@ -130,8 +160,9 @@ var paymentForm = new SqPaymentForm({
      * callback function: paymentFormLoaded
      * Triggered when: SqPaymentForm is fully loaded
      */
-    paymentFormLoaded: function() {
+    paymentFormLoaded: function () {
       /* HANDLE AS DESIRED */
+      console.log("The form loaded!");
     }
   }
 });
