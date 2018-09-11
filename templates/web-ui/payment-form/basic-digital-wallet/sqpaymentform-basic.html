@@ -36,10 +36,11 @@
 
     <div id="sq-ccbox">
       <!--
-        You should replace the action attribute of the form with the path of
-        the URL you want to POST the nonce to (for example, "/process-card")
+        Be sure to replace the action attribute of the form with the path of
+        the Transaction API charge endpoint URL you want to POST the nonce to
+        (for example, "/process-card")
       -->
-      <form id="nonce-form" novalidate action=".process-card.php" method="post">
+      <form id="nonce-form" novalidate action="PATH/TO/PAYMENT/PROCESSING/PAGE" method="post">
         <fieldset>
           <span class="label">Card Number</span>
           <div id="sq-card-number"></div>

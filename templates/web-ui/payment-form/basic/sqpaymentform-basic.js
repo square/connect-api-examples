@@ -72,6 +72,8 @@ var paymentForm = new SqPaymentForm({
     /*
      * callback function: createPaymentRequest
      * Triggered when: a digital wallet payment button is clicked.
+     * Replace the JSON object declaration with a function that creates
+     * a JSON object with Digital Wallet payment details
      */
     createPaymentRequest: function () {
 
@@ -139,7 +141,7 @@ var paymentForm = new SqPaymentForm({
           /* HANDLE AS DESIRED */
           break;
         case 'errorClassAdded':
-          document.getElementById("error").innerHTML = "Please fix all errors.";
+          document.getElementById("error").innerHTML = "Please fix card information errors before continuing.";
           break;
         case 'errorClassRemoved':
           /* HANDLE AS DESIRED */
