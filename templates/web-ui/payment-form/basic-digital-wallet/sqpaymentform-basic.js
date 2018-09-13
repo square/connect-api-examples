@@ -53,6 +53,11 @@ var paymentForm = new SqPaymentForm({
     elementId: 'sq-masterpass'
   },
 
+  // Initialize Google Pay placeholder ID
+  googlePay: {
+    elementId: 'sq-google-pay'
+  },
+
   // Initialize the credit card placeholders
   cardNumber: {
     elementId: 'sq-card-number',
@@ -83,6 +88,8 @@ var paymentForm = new SqPaymentForm({
       var walletBox = document.getElementById('sq-walletbox');
       var applePayBtn = document.getElementById('sq-apple-pay');
       var applePayLabel = document.getElementById('sq-apple-pay-label');
+      var googlePayBtn = document.getElementById('sq-google-pay');
+      var googlePayLabel = document.getElementById('sq-google-pay-label');
       var masterpassBtn = document.getElementById('sq-masterpass');
       var masterpassLabel = document.getElementById('sq-masterpass-label');
 
@@ -100,6 +107,14 @@ var paymentForm = new SqPaymentForm({
         masterpassBtn.style.display = 'block';
         masterpassLabel.style.display = 'none';
       }
+      // Only show the button if Google Pay is enabled
+      // Otherwise, display the wallet not enabled message.
+      if (methods.googlePay === true) {
+        googlePayBtn.style.display = 'inline-block';
+        googlePayLabel.style.display = 'none' ;
+      }
+
+
     },
 
     /*
