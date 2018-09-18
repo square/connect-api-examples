@@ -2,9 +2,10 @@
 <html>
 <head>
   <title>RailsPayment</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <!-- <%= stylesheet_link_tag 'application', 'https://raw.githubusercontent.com/square/connect-api-examples/master/templates/web-ui/payment-form/basic/sqpaymentform-basic.css' %> -->
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/square/connect-api-examples/master/templates/web-ui/payment-form/basic-digital-wallet/sqpaymentform-basic.css">
   <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
 </head>
 <body>

@@ -1,65 +1,65 @@
-<div class="no-boot">
+<div id="form-container">
+  <div id="sq-walletbox">
+    <div id="sq-apple-pay-label" class="wallet-not-enabled">Apple Pay for Web not enabled.</div>
+    <!-- Placeholder for Apple Pay for Web button -->
+    <button id="sq-apple-pay"></button>
+
+    <div id="sq-masterpass-label" class="wallet-not-enabled">Masterpass not enabled.</div>
+    <!-- Placeholder for Masterpass button -->
+    <button id="sq-masterpass"></button>
+
+    <div id="sq-walletbox-divider">
+      <span id="sq-walletbox-divider-label">Or</span>
+      <hr />
+    </div>
+  </div>
+
   <div id="sq-ccbox">
     <div id="successNotification" style="display: none">
       Card Charged Successfully!!
     </div>
-    <form id="nonce-form" action="#" onsubmit="return paymentFormSubmit()">
-      <div id="card-errors"></div>
+    <form id="nonce-form" onsubmit="return paymentFormSubmit()">
+      <fieldset>
 
-      <div>
-        <label>Card Number</label>
+        <span class="label">Card Number</span>
         <div id="sq-card-number"></div>
-      </div>
 
-      <div>
-        <label>CVV</label>
-        <div id="sq-cvv"></div>
-      </div>
+        <div class="third">
+          <span class="label">Expiration</span>
+          <div id="sq-expiration-date"></div>
+        </div>
 
-      <div>
-        <label>Expiration Date</label>
-        <div id="sq-expiration-date"></div>
-      </div>
+        <div class="third">
+          <span class="label">CVV</span>
+          <div id="sq-cvv"></div>
+        </div>
 
-      <div>
-        <label>Postal Code</label>
-        <div id="sq-postal-code"></div>
-      </div>
-
-      <div>
-        <input type="submit" id="submit" value="Pay $1.00 Now" class="btn btn-primary">
-      </div>
+        <div class="third">
+          <span class="label">Postal</span>
+          <div id="sq-postal-code"></div>
+        </div>
+      </fieldset>
+      <input type="submit" id="sq-creditcard" class="button-credit-card" value="Pay $1.00 Now">
+      <div id="error"></div>
     </form>
   </div>
-</div>
-
-<div id="sq-walletbox">
-  Pay with a Digital Wallet
-  <div id="sq-apple-pay-label" class="wallet-not-enabled">Apple Pay for Web not enabled</div>
-  <!-- Placeholder for Apple Pay for Web button -->
-  <button id="sq-apple-pay" class="button-apple-pay"></button>
-
-  <div id="sq-masterpass-label" class="wallet-not-enabled">Masterpass not enabled</div>
-  <!-- Placeholder for Masterpass button -->
-  <button id="sq-masterpass" class="button-masterpass"></button>
 </div>
 <script type="text/javascript">
 var paymentForm = new SqPaymentForm({
   applicationId: '<%=Rails.application.secrets.square_application_id %>',
   locationId: '<%=Rails.application.secrets.square_location_id %>',
   inputClass: 'sq-input',
-  inputStyles: [
-      {
-        fontSize: '18px',
-        fontFamily: 'Helvetica Neue',
-        padding: '15px',
-        color: '#373F4A',
-        lineHeight: '24px',
-        placeholderColor: '#BDBFBF',
-        _webkitFontSmoothing: 'antialiased',
-        _mozOsxFontSmoothing: 'grayscale'
-      }
-    ],
+  inputStyles: [{
+      fontSize: '16px',
+      fontFamily: 'Helvetica Neue',
+      padding: '16px',
+      color: '#373F4A',
+      backgroundColor: 'transparent',
+      lineHeight: '24px',
+      placeholderColor: '#CCC',
+      _webkitFontSmoothing: 'antialiased',
+      _mozOsxFontSmoothing: 'grayscale'
+    }],
   cardNumber: {
     elementId: 'sq-card-number',
     placeholder: '0000 0000 0000 0000'
@@ -78,7 +78,7 @@ var paymentForm = new SqPaymentForm({
   },
   // Initialize Apple Pay placeholder ID
   applePay: {
-    elementId: 'sq-apple-pay'
+    elementId: 'sq-appley-pay'
   },
   // Initialize Masterpass placeholder ID
   masterpass: {
@@ -95,10 +95,10 @@ var paymentForm = new SqPaymentForm({
         for (var i =0; i < errors.length; i++){
           error_html += "<li> " + errors[i].message + " </li>";
         }
-        document.getElementById("card-errors").innerHTML = error_html;
-        document.getElementById('submit').disabled = false;
+        document.getElementById("error").innerHTML = error_html;
+        document.getElementById('sq-creditcard').disabled = false;
       }else{
-        document.getElementById("card-errors").innerHTML = "";
+        document.getElementById("error").innerHTML = "";
         chargeCardWithNonce(nonce);
       }
     },
@@ -114,22 +114,22 @@ var paymentForm = new SqPaymentForm({
     * Triggered when: the page is loaded.
     */
     methodsSupported: function (methods) {
-
+      var walletBox = document.getElementById('sq-walletbox');
       var applePayBtn = document.getElementById('sq-apple-pay');
       var applePayLabel = document.getElementById('sq-apple-pay-label');
       var masterpassBtn = document.getElementById('sq-masterpass');
       var masterpassLabel = document.getElementById('sq-masterpass-label');
 
-      // Only show the button if Apple Pay for Web is enabled
-      // Otherwise, display the wallet not enabled message.
       if (methods.applePay === true) {
-        applePayBtn.style.display = 'inline-block';
-        applePayLabel.style.display = 'none' ;
+        walletBox.style.display = 'block';
+        applePayBtn.style.display = 'block';
+        applePayLabel.style.display = 'none';
       }
       // Only show the button if Masterpass is enabled
       // Otherwise, display the wallet not enabled message.
       if (methods.masterpass === true) {
-        masterpassBtn.style.display = 'inline-block';
+        walletBox.style.display = 'block';
+        masterpassBtn.style.display = 'block';
         masterpassLabel.style.display = 'none';
       }
     },
@@ -182,7 +182,7 @@ var paymentForm = new SqPaymentForm({
 });
 
 var paymentFormSubmit = function(){
-  document.getElementById('submit').disabled = true;
+  document.getElementById('sq-creditcard').disabled = true;
   paymentForm.requestCardNonce();
   return false;
 };
@@ -210,8 +210,8 @@ var chargeCardWithNonce = function(nonce) {
           for (let i =0; i < data.errors.length; i++){
             error_html += "<li> " + data.errors[i].detail + " </li>";
           }
-          document.getElementById("card-errors").innerHTML = error_html;
-          document.getElementById('submit').disabled = false;
+          document.getElementById("error").innerHTML = error_html;
+          document.getElementById('sq-creditcard').disabled = false;
         }
       }
   };
