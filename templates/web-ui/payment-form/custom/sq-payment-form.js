@@ -10,8 +10,8 @@ function requestCardNonce(event) {
 
 var paymentForm = new SqPaymentForm({
   // Initialize the payment form elements
-  applicationId: '<TODO: Replace This Placeholder With Your Application ID>',
-  locationId: '<TODO: Replace This Placeholder With Your Location ID>',
+  applicationId: applicationId,
+  locationId: locationId,
   inputClass: 'sq-input',
 
   // Customize the CSS for SqPaymentForm iframe elements
