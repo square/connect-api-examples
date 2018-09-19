@@ -211,18 +211,6 @@ fieldset {
   margin-top: -12px;
 }
 
-.wallet-not-enabled {
-  width: 100%;
-  color: #8594A7;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 24px;
-  background-color: #eee;
-  border-radius: 4px;
-  margin: 24px 0 24px;
-  padding: 12px 0;
-}
-
 #error {
   width: 100%;
   margin-top: 16px;
