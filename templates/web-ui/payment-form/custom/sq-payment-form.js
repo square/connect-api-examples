@@ -120,7 +120,6 @@ var paymentForm = new SqPaymentForm({
         return;
       }else{
         document.getElementById("error").innerHTML = "";
-        chargeCardWithNonce(nonce);
       }
 
       // Assign the nonce value to the hidden form field
