@@ -63,7 +63,7 @@ var paymentForm = new SqPaymentForm({
      * Triggered when: the page is loaded.
      */
     methodsSupported: function (methods) {
-      if (!methods.masterpass && !methods.applePay) {
+      if (!methods.masterpass || !methods.applePay) {
         var walletBox = document.getElementById('sq-walletbox');
         walletBox.style.display = 'none';
       }
