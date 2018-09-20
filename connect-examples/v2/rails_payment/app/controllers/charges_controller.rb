@@ -1,5 +1,5 @@
 class ChargesController < ApplicationController
-
+  skip_before_action :verify_authenticity_token
   def charge_card
     transactions_api = SquareConnect::TransactionsApi.new
 
@@ -19,13 +19,9 @@ class ChargesController < ApplicationController
     location_id = Rails.application.secrets.square_location_id
     begin
       resp = transactions_api.charge(location_id, request_body)
-      # print entire transaction to terminal
-      puts resp.transaction
-      render json: {:status => 200}
+      @transaction = resp.transaction
     rescue SquareConnect::ApiError => e
-      Rails.logger.error("Error encountered while charging card:: #{e.message}")
-      render json: {:status => 400, :errors => JSON.parse(e.response_body)["errors"]}
-      return
+      @error = e.response_body
     end
   end
 end
