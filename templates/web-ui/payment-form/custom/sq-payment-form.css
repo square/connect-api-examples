@@ -128,6 +128,7 @@
   height: 48px;
   margin-bottom: 12px;
   width: 100%;
+  display: none;
 }
 .sq-masterpass {
   background-color: #000;
@@ -139,6 +140,7 @@
   height: 42px;
   margin-bottom: 16px;
   width: 100%;
+  display: none;
 }
 
 .sq-button:hover {

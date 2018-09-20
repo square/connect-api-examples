@@ -7,7 +7,6 @@ function requestCardNonce(event) {
   // Request a nonce from the SqPaymentForm object
   paymentForm.requestCardNonce();
 }
-
 var paymentForm = new SqPaymentForm({
   // Initialize the payment form elements
   applicationId: applicationId,
@@ -66,6 +65,9 @@ var paymentForm = new SqPaymentForm({
       if (!methods.masterpass && !methods.applePay) {
         var walletBox = document.getElementById('sq-walletbox');
         walletBox.style.display = 'none';
+      } else {
+        var walletBox = document.getElementById('sq-walletbox');
+        walletBox.style.display = 'inline';
       }
 
       // Only show the button if Apple Pay for Web is enabled
