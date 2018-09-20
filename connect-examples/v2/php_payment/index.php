@@ -27,10 +27,10 @@ $dotenv->load();
   </script>
 
   <!-- link to the local SqPaymentForm initialization -->
-  <script type="text/javascript" src="/sq-payment-form.js"></script>
-
+  <!-- <script type="text/javascript" src="https://cdn.rawgit.com/square/connect-api-examples/sjosey-add-custom-template/templates/web-ui/payment-form/custom/sq-payment-form.js"></script> -->
+  <script type="text/javascript" src="/sqpaymentform.js"> </script>
   <!-- link to the custom styles for SqPaymentForm -->
-  <link rel="stylesheet" type="text/css" href="/sq-payment-form.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/square/connect-api-examples/sjosey-add-custom-template/templates/web-ui/payment-form/custom/sq-payment-form.css">
 </head>
 <body>
   <!-- Begin Payment Form -->
@@ -57,7 +57,7 @@ $dotenv->load();
         Learn more about how to setup the server component of the payment form here:
         https://docs.connect.squareup.com/payments/transactions/processing-payment-rest
       -->
-      <form id="nonce-form" novalidate action="/process-card.php">
+      <form id="nonce-form" novalidate action="/process-card.php" method="post">
         <div class="sq-field">
           <label class="sq-label">Card Number</label>
           <div id="sq-card-number"></div>
