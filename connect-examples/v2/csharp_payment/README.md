@@ -19,7 +19,7 @@ Square Connect C# client library and dotnet core.
 
 ### Build the project
 
-After cloneing this sample project to local, open command line tool, and from the project root directory run:
+After cloning this sample project to local, open command line tool, and from the project root directory run:
 
     dotnet build
 

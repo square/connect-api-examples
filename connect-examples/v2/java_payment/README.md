@@ -21,8 +21,8 @@ Note that Apple Pay cannot be tested when running locally. You'll need to deploy
 
 ## Running locally
 
-The app can be run on a command line using Maven. The application expects two environment variables
-to be set: `SQUARE_APP_ID` and `SQUARE_ACCESS_TOKEN`. Both of these can be copied from the
+The app can be run on a command line using Maven. The application expects three environment variables
+to be set: `SQUARE_APP_ID`, `SQUARE_LOCATION_ID` and `SQUARE_ACCESS_TOKEN`. Both of these can be copied from the
 [Developer Dashboard](https://connect.squareup.com/apps). Keep in mind that the access token is
 sensitive and must remain private.
 

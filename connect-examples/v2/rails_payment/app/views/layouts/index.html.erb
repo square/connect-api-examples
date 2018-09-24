@@ -2,10 +2,16 @@
 <html>
 <head>
   <title>RailsPayment</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <!-- <%= stylesheet_link_tag 'application', 'https://raw.githubusercontent.com/square/connect-api-examples/master/templates/web-ui/payment-form/basic/sqpaymentform-basic.css' %> -->
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
-  <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+  <script type="text/javascript">
+    window.applicationId = '<%=Rails.application.secrets.square_application_id %>';
+    window.locationId = '<%=Rails.application.secrets.square_location_id %>';
+  </script>
+  <%= javascript_include_tag 'application', "https://js.squareup.com/v2/paymentform", 'data-turbolinks-track' => true%>
+  <%= stylesheet_link_tag 'application', 'https://cdn.rawgit.com/square/connect-api-examples/master/templates/web-ui/payment-form/custom/sq-payment-form.css', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'https://cdn.rawgit.com/square/connect-api-examples/master/templates/web-ui/payment-form/custom/sq-payment-form.js', 'data-turbolinks-track' => true %>
 </head>
 <body>
 

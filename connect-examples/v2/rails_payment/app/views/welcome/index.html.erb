@@ -1,227 +1,57 @@
-<div class="no-boot">
-  <div id="sq-ccbox">
-    <div id="successNotification" style="display: none">
-      Card Charged Successfully!!
+<!-- Begin Payment Form -->
+<div class="sq-payment-form">
+  <!--
+    Square's JS will automatically hide these buttons if they are unsupported
+    by the current device.
+  -->
+  <div id="sq-walletbox">
+    <button id="sq-apple-pay" class="sq-apple-pay"></button>
+    <button id="sq-masterpass" class="sq-masterpass"></button>
+    <div class="sq-wallet-divider">
+      <span class="sq-wallet-divider__text">Or</span>
     </div>
-    <form id="nonce-form" action="#" onsubmit="return paymentFormSubmit()">
-      <div id="card-errors"></div>
+  </div>
+  <div id="sq-ccbox">
+    <!--
+      You should replace the action attribute of the form with the path of
+      the URL you want to POST the nonce to (for example, "/process-card").
 
-      <div>
-        <label>Card Number</label>
+      You need to then make a "Charge" request to Square's transaction API with
+      this nonce to securely charge the customer.
+
+      Learn more about how to setup the server component of the payment form here:
+      https://docs.connect.squareup.com/payments/transactions/processing-payment-rest
+    -->
+    <form id="nonce-form" novalidate action="/charges/charge_card" method="post">
+      <div class="sq-field">
+        <label class="sq-label">Card Number</label>
         <div id="sq-card-number"></div>
       </div>
-
-      <div>
-        <label>CVV</label>
-        <div id="sq-cvv"></div>
+      <div class="sq-field-wrapper">
+        <div class="sq-field sq-field--in-wrapper">
+          <label class="sq-label">CVV</label>
+          <div id="sq-cvv"></div>
+        </div>
+        <div class="sq-field sq-field--in-wrapper">
+          <label class="sq-label">Expiration</label>
+          <div id="sq-expiration-date"></div>
+        </div>
+        <div class="sq-field sq-field--in-wrapper">
+          <label class="sq-label">Postal</label>
+          <div id="sq-postal-code"></div>
+        </div>
       </div>
-
-      <div>
-        <label>Expiration Date</label>
-        <div id="sq-expiration-date"></div>
+      <div class="sq-field">
+        <button id="sq-creditcard" class="sq-button" onclick="requestCardNonce(event)">
+          Pay $1.00 Now
+        </button>
       </div>
-
-      <div>
-        <label>Postal Code</label>
-        <div id="sq-postal-code"></div>
-      </div>
-
-      <div>
-        <input type="submit" id="submit" value="Pay $1.00 Now" class="btn btn-primary">
-      </div>
+      <!--
+        After a nonce is generated it will be assigned to this hidden input field.
+      -->
+      <div id="error"></div>
+      <input type="hidden" id="card-nonce" name="nonce">
     </form>
   </div>
 </div>
-
-<div id="sq-walletbox">
-  Pay with a Digital Wallet
-  <div id="sq-apple-pay-label" class="wallet-not-enabled">Apple Pay for Web not enabled</div>
-  <!-- Placeholder for Apple Pay for Web button -->
-  <button id="sq-apple-pay" class="button-apple-pay"></button>
-
-  <div id="sq-masterpass-label" class="wallet-not-enabled">Masterpass not enabled</div>
-  <!-- Placeholder for Masterpass button -->
-  <button id="sq-masterpass" class="button-masterpass"></button>
-</div>
-<script type="text/javascript">
-var paymentForm = new SqPaymentForm({
-  applicationId: '<%=Rails.application.secrets.square_application_id %>',
-  locationId: '<%=Rails.application.secrets.square_location_id %>',
-  inputClass: 'sq-input',
-  inputStyles: [
-      {
-        fontSize: '18px',
-        fontFamily: 'Helvetica Neue',
-        padding: '15px',
-        color: '#373F4A',
-        lineHeight: '24px',
-        placeholderColor: '#BDBFBF',
-        _webkitFontSmoothing: 'antialiased',
-        _mozOsxFontSmoothing: 'grayscale'
-      }
-    ],
-  cardNumber: {
-    elementId: 'sq-card-number',
-    placeholder: '0000 0000 0000 0000'
-  },
-  cvv: {
-    elementId: 'sq-cvv',
-    placeholder: 'CVV'
-  },
-  expirationDate: {
-    elementId: 'sq-expiration-date',
-    placeholder: 'MM/YY'
-  },
-  postalCode: {
-    elementId: 'sq-postal-code',
-    placeholder: '94110'
-  },
-  // Initialize Apple Pay placeholder ID
-  applePay: {
-    elementId: 'sq-apple-pay'
-  },
-  // Initialize Masterpass placeholder ID
-  masterpass: {
-    elementId: 'sq-masterpass'
-  },
-  callbacks: {
-    /*
-    * callback function: cardNonceResponseReceived
-    * Triggered when: SqPaymentForm completes a card nonce request
-    */
-    cardNonceResponseReceived: function(errors, nonce, cardData) {
-      if (errors){
-        var error_html = ""
-        for (var i =0; i < errors.length; i++){
-          error_html += "<li> " + errors[i].message + " </li>";
-        }
-        document.getElementById("card-errors").innerHTML = error_html;
-        document.getElementById('submit').disabled = false;
-      }else{
-        document.getElementById("card-errors").innerHTML = "";
-        chargeCardWithNonce(nonce);
-      }
-    },
-    /*
-    * callback function: unsupportedBrowserDetected
-    * Triggered when: the page loads and an unsupported browser is detected
-    */
-    unsupportedBrowserDetected: function() {
-      // Alert the buyer
-    },
-    /*
-    * callback function: methodsSupported
-    * Triggered when: the page is loaded.
-    */
-    methodsSupported: function (methods) {
-
-      var applePayBtn = document.getElementById('sq-apple-pay');
-      var applePayLabel = document.getElementById('sq-apple-pay-label');
-      var masterpassBtn = document.getElementById('sq-masterpass');
-      var masterpassLabel = document.getElementById('sq-masterpass-label');
-
-      // Only show the button if Apple Pay for Web is enabled
-      // Otherwise, display the wallet not enabled message.
-      if (methods.applePay === true) {
-        applePayBtn.style.display = 'inline-block';
-        applePayLabel.style.display = 'none' ;
-      }
-      // Only show the button if Masterpass is enabled
-      // Otherwise, display the wallet not enabled message.
-      if (methods.masterpass === true) {
-        masterpassBtn.style.display = 'inline-block';
-        masterpassLabel.style.display = 'none';
-      }
-    },
-    /*
-     * callback function: createPaymentRequest
-     * Triggered when: a digital wallet payment button is clicked.
-     */
-    createPaymentRequest: function () {
-      return {
-        requestShippingAddress: true,
-        currencyCode: "USD",
-        countryCode: "US",
-        total: {
-          label: "Test",
-          amount: 100,
-          pending: false,
-        }
-      };
-    },
-    unsupportedBrowserDetected: function() {
-      // Fill in this callback to alert buyers when their browser is not supported.
-    },
-    /*
-    * callback function: inputEventReceived
-    * Triggered when: visitors interact with SqPaymentForm iframe elements.
-    */
-    inputEventReceived: function(inputEvent) {
-      switch (inputEvent.eventType) {
-        case 'focusClassAdded':
-          // Handle as desired
-          break;
-        case 'focusClassRemoved':
-          // Handle as desired
-          break;
-        case 'errorClassAdded':
-          // Handle as desired
-          break;
-        case 'errorClassRemoved':
-          // Handle as desired
-          break;
-        case 'cardBrandChanged':
-          // Handle as desired
-          break;
-        case 'postalCodeChanged':
-          // Handle as desired
-          break;
-      }
-    }
-  }
-});
-
-var paymentFormSubmit = function(){
-  document.getElementById('submit').disabled = true;
-  paymentForm.requestCardNonce();
-  return false;
-};
-
-var chargeCardWithNonce = function(nonce) {
-  var http = new XMLHttpRequest();
-  var url = "/charges/charge_card";
-  var params = "nonce=" + nonce;
-
-  http.open("POST", url, true);
-
-  //Send the proper header information along with the request
-  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  http.setRequestHeader("X-CSRF-Token", "<%= form_authenticity_token %>");
-
-  http.onreadystatechange = function() {//Call a function when the state changes.
-      if(http.readyState === 4 && http.status === 200) {
-        let data = JSON.parse(http.responseText);
-        if (data.status === 200) {
-          document.getElementById("successNotification").style.display = "block";
-          document.getElementById("nonce-form").style.display = "none";
-          window.scrollTo(0, 0);
-        }else if (data.status === 400){
-          let error_html = "";
-          for (let i =0; i < data.errors.length; i++){
-            error_html += "<li> " + data.errors[i].detail + " </li>";
-          }
-          document.getElementById("card-errors").innerHTML = error_html;
-          document.getElementById('submit').disabled = false;
-        }
-      }
-  };
-  http.send(params);
-};
-
-// required to work with rails turbolinks
-document.addEventListener('page:change', function(){
-  console.log('dom loaded');
-  paymentForm.build();
-});
-
-</script>
+<!-- End Payment Form -->
