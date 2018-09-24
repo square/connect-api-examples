@@ -10,7 +10,7 @@ namespace sqRazorSample.Pages
     public class ProcessPaymentModel : PageModel
     {
         private readonly string LocationId;
-        
+
         public string ResultMessage
         {
             get;
@@ -44,7 +44,7 @@ namespace sqRazorSample.Pages
             try
             {
                 var response = transactionsApi.Charge(LocationId, body);
-                this.ResultMessage = "Transaction complete!   " + response.ToJson();
+                this.ResultMessage = "Transaction complete! " + response.ToJson();
             }
             catch (ApiException e)
             {
