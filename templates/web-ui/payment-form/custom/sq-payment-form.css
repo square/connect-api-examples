@@ -1,0 +1,159 @@
+.sq-field-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 16px;
+}
+
+.sq-field {
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.sq-field:first-child {
+  margin-left: 0;
+}
+
+.sq-field:last-child {
+  margin-right: 0;
+}
+
+.sq-field--in-wrapper {
+  flex-grow: 1;
+  margin: 0 8px;
+}
+
+.sq-label {
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.sq-input {
+  background-color: #fff;
+  border-style: solid;
+  border-width: 1px;
+  overflow: hidden;
+  transition: border-color 0.25s ease;
+  width: 100%;
+}
+
+.sq-input--focus {
+  background-color: #fbfdff;
+}
+
+.sq-input--error {
+  background-color: #fbfdff;
+}
+
+.sq-button {
+  color: #fff;
+  padding: 16px;
+  width: 100%;
+}
+
+.sq-button:active {
+  color: #fff;
+}
+.sq-payment-form {
+  max-width: 100%;
+  padding: 20px 20px 5px;
+  width: 380px;
+}
+
+.sq-label {
+  color: #000000;
+  font-size: 14px;
+  font-family: "Helvetica Neue", "Helvetica", sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.sq-input {
+  border-color: #E0E2E3;
+  border-radius: 4px;
+}
+
+.sq-input--focus {
+  border-color: #4A90E2;
+}
+
+.sq-input--error {
+  border-color: #e02e2f;
+}
+
+.sq-button {
+  background: #4A90E2;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.sq-button:active {
+  background: #4A90E2;
+}
+.sq-wallet-divider {
+  margin: 24px 0;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+
+.sq-wallet-divider:after, .sq-wallet-divider::after, .sq-wallet-divider:before, .sq-wallet-divider::before {
+  background: #bbb;
+  content: '';
+  display: block;
+  height: 1px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 9px;
+}
+
+.sq-wallet-divider:after, .sq-wallet-divider::after {
+  right: 65%;
+}
+
+.sq-wallet-divider:before, .sq-wallet-divider::before {
+  left: 65%;
+}
+
+.sq-wallet-divider__text {
+  color: #bbb;
+  padding: 10px;
+  text-transform: uppercase;
+}
+.sq-apple-pay {
+  -webkit-appearance: -apple-pay-button;
+  border: none;
+  height: 48px;
+  margin-bottom: 12px;
+  width: 100%;
+  display: none;
+}
+.sq-masterpass {
+  background-color: #000;
+  background-image: url(https://masterpass.com/dyn/img/btn/global/mp_chk_btn_384x048px.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center right;
+  border-radius: 5px;
+  height: 42px;
+  margin-bottom: 16px;
+  width: 100%;
+  display: none;
+}
+
+.sq-button:hover {
+  cursor: pointer;
+  background-color: #4281CB;
+}
+
+#error {
+  width: 100%;
+  margin-top: 16px;
+  font-size: 14px;
+  color: red;
+  font-weight: 500;
+  text-align: center;
+  opacity: 0.8;
+}
