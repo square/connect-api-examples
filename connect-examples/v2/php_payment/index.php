@@ -27,9 +27,9 @@ $dotenv->load();
   </script>
 
   <!-- link to the local SqPaymentForm initialization -->
-  <script type="text/javascript" src="https://cdn.rawgit.com/square/connect-api-examples/master/templates/web-ui/payment-form/custom/sq-payment-form.js"></script>
+  <script type="text/javascript" src="./sq-payment-form.js"></script>
   <!-- link to the custom styles for SqPaymentForm -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/square/connect-api-examples/master/templates/web-ui/payment-form/custom/sq-payment-form.css">
+  <link rel="stylesheet" type="text/css" href="./sq-payment-form.css">
 </head>
 <body>
   <!-- Begin Payment Form -->
@@ -39,6 +39,7 @@ $dotenv->load();
       by the current device.
     -->
     <div id="sq-walletbox">
+      <button id="sq-google-pay" class="button-google-pay"></button>
       <button id="sq-apple-pay" class="sq-apple-pay"></button>
       <button id="sq-masterpass" class="sq-masterpass"></button>
       <div class="sq-wallet-divider">

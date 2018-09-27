@@ -44,6 +44,7 @@ html = """<!DOCTYPE html>
         by the current device.
       -->
       <div id="sq-walletbox">
+        <button id="sq-google-pay" class="button-google-pay"></button>
         <button id="sq-apple-pay" class="sq-apple-pay"></button>
         <button id="sq-masterpass" class="sq-masterpass"></button>
         <div class="sq-wallet-divider">
