@@ -27,6 +27,11 @@ var paymentForm = new SqPaymentForm({
     _mozOsxFontSmoothing: 'grayscale'
   }],
 
+  // Initialize Google Pay button ID
+  googlePay: {
+    elementId: 'sq-google-pay'
+  },
+
   // Initialize Apple Pay placeholder ID
   applePay: {
     elementId: 'sq-apple-pay'
@@ -62,12 +67,18 @@ var paymentForm = new SqPaymentForm({
      * Triggered when: the page is loaded.
      */
     methodsSupported: function (methods) {
-      if (!methods.masterpass && !methods.applePay) {
+      if (!methods.masterpass && !methods.applePay && !methods.googlePay) {
         var walletBox = document.getElementById('sq-walletbox');
         walletBox.style.display = 'none';
       } else {
         var walletBox = document.getElementById('sq-walletbox');
-        walletBox.style.display = 'inline';
+        walletBox.style.display = 'block';
+      }
+
+      // Only show the button if Google Pay is enabled
+      if (methods.googlePay === true) {
+        var googlePayBtn = document.getElementById('sq-google-pay');
+        googlePayBtn.style.display = 'inline-block';
       }
 
       // Only show the button if Apple Pay for Web is enabled
@@ -89,9 +100,39 @@ var paymentForm = new SqPaymentForm({
      */
     createPaymentRequest: function () {
 
-      var paymentRequestJson ;
-      /* ADD CODE TO SET/CREATE paymentRequestJson */
-      return paymentRequestJson ;
+      var paymentRequestJson = {
+        requestShippingAddress: false,
+        requestBillingInfo: true,
+        shippingContact: {
+          familyName: "CUSTOMER LAST NAME",
+          givenName: "CUSTOMER FIRST NAME",
+          email: "mycustomer@example.com",
+          country: "USA",
+          region: "CA",
+          city: "San Francisco",
+          addressLines: [
+            "1455 Market St #600"
+          ],
+          postalCode: "94103",
+          phone:"14255551212"
+        },
+        currencyCode: "USD",
+        countryCode: "US",
+        total: {
+          label: "MERCHANT NAME",
+          amount: "1.00",
+          pending: false
+        },
+        lineItems: [
+          {
+            label: "Subtotal",
+            amount: "1.00",
+            pending: false
+          }
+        ]
+      };
+
+      return paymentRequestJson;
     },
 
     /*
