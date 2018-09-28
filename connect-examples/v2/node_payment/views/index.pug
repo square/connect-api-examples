@@ -4,10 +4,11 @@ block content
   script(type="text/javascript").
     window.applicationId= "#{square_application_id}";
     window.locationId= "#{square_location_id}";
-  script(type="text/javascript" src="https://cdn.rawgit.com/square/connect-api-examples/master/templates/web-ui/payment-form/custom/sq-payment-form.js")
+  script(type="text/javascript" src="https://cdn.rawgit.com/square/connect-api-examples/a8cc6d7e624cb57991f6a0ff76a241836d5b9059/templates/web-ui/payment-form/custom/sq-payment-form.js")
 
   div(class="sq-payment-form")
     div(id="sq-walletbox")
+      button(id="sq-google-pay" class="sq-google-pay").
       button(id="sq-apple-pay" class="sq-apple-pay").
       button(id="sq-masterpass" class="sq-masterpass").
       div(class="sq-wallet-divider")
