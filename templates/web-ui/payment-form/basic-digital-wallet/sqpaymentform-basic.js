@@ -29,6 +29,7 @@ var paymentForm = new SqPaymentForm({
   applicationId: applicationId,
   locationId: locationId,
   inputClass: 'sq-input',
+  autoBuild: false,
 
   // Customize the CSS for SqPaymentForm iframe elements
   inputStyles: [{
@@ -51,6 +52,11 @@ var paymentForm = new SqPaymentForm({
   // Initialize Masterpass placeholder ID
   masterpass: {
     elementId: 'sq-masterpass'
+  },
+
+  // Initialize Google Pay placeholder ID
+  googlePay: {
+    elementId: 'sq-google-pay'
   },
 
   // Initialize the credit card placeholders
@@ -82,23 +88,25 @@ var paymentForm = new SqPaymentForm({
 
       var walletBox = document.getElementById('sq-walletbox');
       var applePayBtn = document.getElementById('sq-apple-pay');
-      var applePayLabel = document.getElementById('sq-apple-pay-label');
+      var googlePayBtn = document.getElementById('sq-google-pay');
       var masterpassBtn = document.getElementById('sq-masterpass');
-      var masterpassLabel = document.getElementById('sq-masterpass-label');
 
       // Only show the button if Apple Pay for Web is enabled
       // Otherwise, display the wallet not enabled message.
       if (methods.applePay === true) {
         walletBox.style.display = 'block';
         applePayBtn.style.display = 'block';
-        applePayLabel.style.display = 'none';
       }
       // Only show the button if Masterpass is enabled
       // Otherwise, display the wallet not enabled message.
       if (methods.masterpass === true) {
         walletBox.style.display = 'block';
         masterpassBtn.style.display = 'block';
-        masterpassLabel.style.display = 'none';
+      }
+      // Only show the button if Google Pay is enabled
+      if (methods.googlePay === true) {
+        walletBox.style.display = 'block';
+        googlePayBtn.style.display = 'inline-block';
       }
     },
 
