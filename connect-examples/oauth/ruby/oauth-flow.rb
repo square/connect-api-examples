@@ -13,23 +13,17 @@
 #
 # This sample requires the following gems:
 #   sinatra (http://www.sinatrarb.com/)
-#   unirest (http://unirest.io/ruby.html)
 
 require 'sinatra'
-require 'unirest'
+require 'square_connect'
 
 # Your application's ID and secret, available from your application dashboard.
 APP_ID     = 'REPLACE_ME'
 APP_SECRET = 'REPLACE_ME'
 
-# Headers to provide to OAuth API endpoints
-OAUTH_REQUEST_HEADERS = {
-  'Authorization' => "Client #{APP_SECRET}",
-  'Accept' => 'application/json',
-  'Content-Type' => 'application/json'
-}
+CONNECT_HOST = "https://connect.squareup.com"
 
-CONNECT_HOST = 'https://connect.squareup.com'
+oauth_api = SquareConnect::OAuthApi.new
 
 # Serves the link that merchants click to authorize your application
 get '/' do
@@ -54,16 +48,14 @@ get '/callback' do
       'code' => authorization_code
     }
 
-    response = Unirest.post "#{CONNECT_HOST}/oauth2/token",
-                            headers: OAUTH_REQUEST_HEADERS,
-                            parameters: oauth_request_body
+    response = oauth_api.obtain_token(oauth_request_body)
 
     # Extract the returned access token from the response body
-    if response.body.key?('access_token')
+    if response.access_token
 
       # Here, instead of printing the access token, your application server should store it securely
       # and use it in subsequent requests to the Connect API on behalf of the merchant.
-      puts 'Access token: ' + response.body['access_token']
+      puts 'Access token: ' + response.access_token
       return 'Authorization succeeded!'
 
     # The response from the Obtain Token endpoint did not include an access token. Something went wrong.
