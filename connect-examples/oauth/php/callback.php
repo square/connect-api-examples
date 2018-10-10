@@ -1,6 +1,4 @@
 <?php
-use SquareConnect\ApiException;
-
 # This sample demonstrates a bare-bones implementation of the Square Connect OAuth flow:
 #
 # 1. A merchant clicks the authorization link served by the root path (http://localhost:8000/)
@@ -42,12 +40,13 @@ function callback() {
     try {
       $response = $oauth_api->obtainToken($body);
 
-      # Extract the returned access token from the response body
-      if ($response->getAccessToken() != null) {
+      # Extract the returned access token from the ObtainTokenResposne
+      $accessToken = $response->getAccessToken();
+      if ($accessToken != null) {
 
         # Here, instead of printing the access token, your application server should store it securely
         # and use it in subsequent requests to the Connect API on behalf of the merchant.
-        error_log('Access token: ' . $response->getAccessToken());
+        error_log('Access token: ' . $accessToken);
         error_log('Authorization succeeded!');
 
         # The response from the Obtain Token endpoint did not include an access token. Something went wrong.
