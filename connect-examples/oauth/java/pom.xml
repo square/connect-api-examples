@@ -14,7 +14,19 @@
       <artifactId>unirest-java</artifactId>
       <version>1.4.6</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.squareup</groupId>
+      <artifactId>connect</artifactId>
+      <version>2.20180918.0</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
+
+  <properties>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+  </properties>
 
   <build>
     <plugins>

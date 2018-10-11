@@ -20,10 +20,10 @@
 
 package com.squareup.oauthexample;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import com.squareup.connect.ApiException;
+import com.squareup.connect.api.OAuthApi;
+import com.squareup.connect.models.ObtainTokenRequest;
+import com.squareup.connect.models.ObtainTokenResponse;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -102,40 +102,25 @@ public class OAuthHandler {
         return;
       }
 
-      // Provide the code in a request to the Obtain Token endpoint
-      JSONObject oauthRequestBody = new JSONObject();
-      oauthRequestBody.put("client_id", _applicationId);
-      oauthRequestBody.put("client_secret", _applicationSecret);
-      oauthRequestBody.put("code", authorizationCode);
+      ObtainTokenRequest body = new ObtainTokenRequest();
+      body.setClientId(_applicationId);
+      body.setClientSecret(_applicationSecret);
+      body.setCode(authorizationCode);
 
-      JsonNode bodyNode = new JsonNode(oauthRequestBody.toString());
-
-      HttpResponse<JsonNode> response;
+      OAuthApi oAuthApi = new OAuthApi();
+      ObtainTokenResponse response = null;
       try {
-        response = Unirest.post(_connectHost + "/oauth2/token").body(bodyNode).asJson();
-      } catch (UnirestException e) {
-        System.out.println("Code exchange failed!");
+        response = oAuthApi.obtainToken(body);
+      } catch (ApiException e) {
+        System.out.print(e.getResponseBody());
         t.sendResponseHeaders(405, 0);
         t.getResponseBody().close();
         return;
       }
 
       if (response != null) {
-        JSONObject responseBody = response.getBody().getObject();
-        if (responseBody.has("access_token")) {
-
-          // Here, instead of printing the access token, your application server should store it
-          // securely and use it in subsequent requests to the Connect API on behalf of the merchant.
-          System.out.println("Access token: " + responseBody.getString("access_token"));
-          System.out.println("Authorization succeeded!");
-          t.sendResponseHeaders(200, 0);
-          t.getResponseBody().close();
-        }
-
-        // The response from the Obtain Token endpoint did not include an access token.
-        // Something went wrong.
-      } else {
-        System.out.println("Code exchange failed!");
+        System.out.println("Access token: " + response.getAccessToken());
+        System.out.println("Authorization succeeded!");
         t.sendResponseHeaders(200, 0);
         t.getResponseBody().close();
       }
@@ -147,11 +132,6 @@ public class OAuthHandler {
 
   // Start up the server, listening on port 8000
   public static void main(String[] args) {
-
-    // Set headers common to every Connect API request
-    Unirest.setDefaultHeader("Authorization", "");
-    Unirest.setDefaultHeader("Content-Type", "application/json");
-    Unirest.setDefaultHeader("Accept", "application/json");
 
     try {
       int portNumber = 8000;
