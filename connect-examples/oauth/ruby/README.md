@@ -6,11 +6,10 @@ For more information, see [OAuth Overview](https://docs.connect.squareup.com/api
 
 ## Setup
 
-### Install Sinatra and Unirest
+### Install Square SDK and Sinatra
 
-This application requires gems for the Sinatra web framework and the Unirest HTTP library.
-Install them with `gem install sinatra` and `gem install unirest`.
-
+This application requires gems for the Sinatra web framework and Square Connect
+Install them with `bundle install`
 
 ### Specify your application credentials
 

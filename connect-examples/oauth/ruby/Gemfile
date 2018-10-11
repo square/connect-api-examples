@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+
+ruby '2.3.1'
+gem 'square_connect'
+gem 'sinatra', '~> 2.0'
