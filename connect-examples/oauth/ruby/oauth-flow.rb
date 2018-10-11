@@ -50,7 +50,7 @@ get '/callback' do
 
     response = oauth_api.obtain_token(oauth_request_body)
 
-    # Extract the returned access token from the response body
+    # Extract the returned access token from the ObtainTokenResponse object
     if response.access_token
 
       # Here, instead of printing the access token, your application server should store it securely
