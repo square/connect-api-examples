@@ -6,10 +6,16 @@ For more information, see [OAuth Overview](https://docs.connect.squareup.com/api
 
 ## Setup
 
+### Install SquareConnect SDK
+Open your terminal at this directory and type:
+```
+pip install git+https://github.com/square/connect-python-sdk.git
+```
+
 ### Install Bottle
 
 This application requires Python and the Bottle web framework. If you have Python
-installed, you can install Bottle by following 
+installed, you can install Bottle by following
 [these steps](http://bottlepy.org/docs/dev/tutorial.html#installation).
 
 ### Specify your application credentials
