@@ -87,19 +87,19 @@ var paymentForm = new SqPaymentForm({
     createPaymentRequest: function () {
 
       return {
-        requestShippingAddress: false,
+        requestShippingAddress: true,
         requestBillingInfo: true,
         currencyCode: "USD",
         countryCode: "US",
         total: {
           label: "MERCHANT NAME",
-          amount: "100",
+          amount: "100.00",
           pending: false
         },
         lineItems: [
           {
             label: "Subtotal",
-            amount: "100",
+            amount: "100.00",
             pending: false
           }
         ]
