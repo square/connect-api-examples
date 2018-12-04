@@ -48,42 +48,7 @@ fieldset {
   text-transform: uppercase;
 }
 
-.third {
-  float: left;
-  width: calc((100% - 32px) / 3);
-  padding: 0;
-  margin: 0 16px 16px 0;
-}
 
-.third:last-of-type {
-  margin-right: 0;
-}
-
-
-/* Customize the "Pay with Credit Card" button */
-.button-credit-card {
-  width: 100%;
-  height: 56px;
-  margin-top: 10px;
-  background: #4A90E2;
-  border-radius: 4px;
-  cursor: pointer;
-  display: block;
-  color: #FFFFFF;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 700;
-  letter-spacing: 0;
-  text-align: center;
-  -webkit-transition: background .2s ease-in-out;
-     -moz-transition: background .2s ease-in-out;
-      -ms-transition: background .2s ease-in-out;
-          transition: background .2s ease-in-out;
-}
-
-.button-credit-card:hover {
-  background-color: #4281CB;
-}
 
 
 /* Customize the Apple Pay on the Web button */
@@ -158,36 +123,4 @@ fieldset {
   width:100%;
   height:123;
   display:none;
-}
-
-#sq-walletbox-divider {
-  height: 24px;
-  margin: 24px 0 24px;
-  color: #CCC;
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 24px;
-  letter-spacing: 0.5;
-  text-align: center;
-  text-transform: uppercase;
-  width: 100%;
-}
-
-#sq-walletbox-divider-label {
-  padding: 0 24px;
-  background-color: #FFF;
-}
-
-#sq-walletbox-divider hr {
-  margin-top: -12px;
-}
-
-#error {
-  width: 100%;
-  margin-top: 16px;
-  font-size: 14px;
-  color: red;
-  font-weight: 500;
-  text-align: center;
-  opacity: 0.8;
 }
