@@ -27,9 +27,9 @@ $dotenv->load();
   </script>
 
   <!-- link to the local SqPaymentForm initialization -->
-  <script type="text/javascript" src="https://cdn.rawgit.com/square/connect-api-examples/a8cc6d7e624cb57991f6a0ff76a241836d5b9059/templates/web-ui/payment-form/custom/sq-payment-form.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/square/connect-api-examples@a8cc6d7e624cb57991f6a0ff76a241836d5b9059/templates/web-ui/payment-form/custom/sq-payment-form.js"></script>
   <!-- link to the custom styles for SqPaymentForm -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/square/connect-api-examples/a8cc6d7e624cb57991f6a0ff76a241836d5b9059/templates/web-ui/payment-form/custom/sq-payment-form.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/square/connect-api-examples@a8cc6d7e624cb57991f6a0ff76a241836d5b9059/templates/web-ui/payment-form/custom/sq-payment-form.css">
 </head>
 <body>
   <!-- Begin Payment Form -->
