@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
-import ConfigParser
+import configparser
 
 # To read your secret credentials
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('config.ini')
 
 
