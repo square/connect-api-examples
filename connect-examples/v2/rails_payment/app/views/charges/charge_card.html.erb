@@ -1,1 +1,5 @@
-<%= @transaction %>
+<% if @transaction %>
+  <%= @transaction %>
+<% else %>
+  <%= @error %>
+<% end %>
