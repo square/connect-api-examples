@@ -1,7 +1,7 @@
 <?php
 require 'vendor/autoload.php';
 // dotenv is used to read from the '.env' file created for credentials
-$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv = Dotenv\Dotenv::create(__DIR__);
 $dotenv->load();
 ?>
 <html>
