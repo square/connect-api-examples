@@ -11,10 +11,11 @@
         window.locationId = "@Model.LocationId";
     </script>
     <!-- link to the local SqPaymentForm initialization -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/square/connect-api-examples/templates/web-ui/payment-form/custom/sq-payment-form.js"></script>
+    <script type="text/javascript" src="~/js/sq-payment-form.js"></script>
 }
 @section Styles {
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/square/connect-api-examples/templates/web-ui/payment-form/custom/sq-payment-form.css" />
+  <!-- link to the local SqPaymentForm style customization -->
+    <link rel="stylesheet" href="~/css/sq-payment-form.css" />
 }
 
 <!-- Begin Payment Form -->
@@ -62,7 +63,7 @@
         </div>
       </div>
       <div class="sq-field">
-        <button id="sq-creditcard" class="sq-button" onclick="requestCardNonce(event)">
+        <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
           Pay $1.00 Now
         </button>
       </div>
