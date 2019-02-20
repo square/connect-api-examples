@@ -60,7 +60,7 @@ credit card information, YOU WILL CHARGE THE CARD.**
 
 ## Application Flow
 
-This is an ASP.NET Core Razon application. The web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
+This is an ASP.NET Core Razor application. The web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
 
 Square Online payment solution is a 2-step process: 
 
