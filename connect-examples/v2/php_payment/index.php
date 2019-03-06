@@ -27,9 +27,9 @@ $dotenv->load();
   </script>
 
   <!-- link to the local SqPaymentForm initialization -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/square/connect-api-examples/templates/web-ui/payment-form/custom/sq-payment-form.js"></script>
+  <script type="text/javascript" src="js/sq-payment-form.js"></script>
   <!-- link to the custom styles for SqPaymentForm -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/square/connect-api-examples/templates/web-ui/payment-form/custom/sq-payment-form.css">
+  <link rel="stylesheet" type="text/css" href="css/sq-payment-form.css">
 </head>
 <body>
   <!-- Begin Payment Form -->
@@ -77,7 +77,7 @@ $dotenv->load();
           </div>
         </div>
         <div class="sq-field">
-          <button id="sq-creditcard" class="sq-button" onclick="requestCardNonce(event)">
+          <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
             Pay $1.00 Now
           </button>
         </div>
