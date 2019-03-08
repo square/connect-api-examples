@@ -103,7 +103,7 @@ After the buyer enters their information in the form and clicks **Pay $1 Now**, 
 * The **onGetCardNonce** event handler executes. It first generates a nonce by calling the **SqPaymentForm.requestCardNonce** function.
 * **SqPaymentForm.requestCardNonce** invokes **SqPaymentForm.cardNonceResponseReceived** callback. This callback  assigns the nonce to a form field and posts the form to the payment processing page:
 
-    ```
+    ```javascript
     document.getElementById('card-nonce').value = nonce;
     document.getElementById('nonce-form').submit();  
     ```
@@ -112,26 +112,27 @@ After the buyer enters their information in the form and clicks **Pay $1 Now**, 
 
 ### Step 2: Charge the Payment Source Using the Nonce 
 All the remaining actions take place in the **ProcessPayment.cshtml.cs**.  This server-side component uses the Square .NET SDK C# wrapper library to call the Connect V2 **Transaction** API to charge the payment source using the nonce.
-```public void OnPost()
-        {
-            string nonce = Request.Form["nonce"];
-            TransactionsApi transactionsApi = new TransactionsApi();
-            string uuid = NewIdempotencyKey();
+```csharp
+public void OnPost()
+{
+    string nonce = Request.Form["nonce"];
+    TransactionsApi transactionsApi = new TransactionsApi();
+    string uuid = NewIdempotencyKey();
 
-            Money amount = new Money(100, Money.CurrencyEnum.USD);
+    Money amount = new Money(100, Money.CurrencyEnum.USD);
 
-            ChargeRequest body = new ChargeRequest(AmountMoney: amount, IdempotencyKey: uuid, CardNonce: nonce);
+    ChargeRequest body = new ChargeRequest(AmountMoney: amount, IdempotencyKey: uuid, CardNonce: nonce);
 
-            try
-            {
-                var response = transactionsApi.Charge(LocationId, body);
-                this.ResultMessage = "Transaction complete! " + response.ToJson();
-            }
-            catch (ApiException e)
-            {
-                this.ResultMessage = e.Message;
-            }
-        }
+    try
+    {
+        var response = transactionsApi.Charge(LocationId, body);
+        this.ResultMessage = "Transaction complete! " + response.ToJson();
+    }
+    catch (ApiException e)
+    {
+        this.ResultMessage = e.Message;
+    }
+}
 ```
 
 
