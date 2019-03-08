@@ -64,9 +64,12 @@ This is an ASP.NET Core Razor application. The web application implements the Sq
 
 Square Online payment solution is a 2-step process: 
 
-1. Generate a nonce -  Using a Square Payment Form (client-side JavaScript library **SqPaymentForm**) you accept payment source information and generate a secure payment token (nonce).
+1. Generate a nonce -  Using a Square Payment Form (a client-side JavaScript library 
+called the **SqPaymentForm**) you accept payment source information and generate a secure payment token (nonce).
 
-    NOTE: The SqPaymentForm library renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token (nonce). For more information, see https://docs.connect.squareup.com/payments/sqpaymentform/what-it-does .
+    NOTE: The SqPaymentForm library renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token (nonce). For more information, see https://docs.connect.squareup.com/payments/sqpaymentform/what-it-does.
+
+    After embeded the Square Payment form in your web application, it will look similar to the following screenshot:
 
     <img src="./PaymentFormExample.png" width="300"/>
 
@@ -74,9 +77,9 @@ Square Online payment solution is a 2-step process:
 
 ### Step 1: Generate a Nonce
 
-When the page loads it renders the form defined in the **index.cshtml** view file. The page also downloads and executes the following scripts defined in the view file:
+When the webpage loads it renders the Square Payment form defined in the **index.cshtml**  file. The page also downloads and executes the following scripts defined in the view file:
 
-**Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform) - The library provides the SqPaymentForm object you create in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
+The **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
 
 **sq-payment-form.js** - This code provides two things:
 
@@ -89,18 +92,18 @@ When the page loads it renders the form defined in the **index.cshtml** view fil
         cardNumber: {
             elementId: 'sq-card-number',               
             placeholder: '•••• •••• •••• ••••'
-        },
+        }
         ```
     * **SqPaymentForm.cardNonceResponseReceived** is one of the callbacks the code provides implementation for. 
 
 * Provides the **onGetCardNonce** event handler code that executes after you choose click **Pay $1.00 Now**.
 
-After you fill the form and choose Pay $1 Now, the application does the following: 
+After the buyer enters their information in the form and clicks **Pay $1 Now**, the application does the following: 
 
-* The **onGetCardNonce** event handler executes. It first generates a nonce by calling the **SqPaymentForm.requestCardNonce** async function.
+* The **onGetCardNonce** event handler executes. It first generates a nonce by calling the **SqPaymentForm.requestCardNonce** function.
 * **SqPaymentForm.requestCardNonce** invokes **SqPaymentForm.cardNonceResponseReceived** callback. This callback  assigns the nonce to a form field and posts the form to the payment processing page:
 
-    ```
+    ```javascript
     document.getElementById('card-nonce').value = nonce;
     document.getElementById('nonce-form').submit();  
     ```
@@ -108,7 +111,29 @@ After you fill the form and choose Pay $1 Now, the application does the followin
     This invokes the form action **ProcessPayment**, described in next step.
 
 ### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **ProcessPayment.cshtml.cs**.  This server-side component uses the Square .NET SDK C# wrapper library to call the Connect V2 Transaction API to charge the payment source using the nonce.
+All the remaining actions take place in the **ProcessPayment.cshtml.cs**.  This server-side component uses the Square .NET SDK C# wrapper library to call the Connect V2 **Transaction** API to charge the payment source using the nonce.
+```csharp
+public void OnPost()
+{
+    string nonce = Request.Form["nonce"];
+    TransactionsApi transactionsApi = new TransactionsApi();
+    string uuid = NewIdempotencyKey();
+
+    Money amount = new Money(100, Money.CurrencyEnum.USD);
+
+    ChargeRequest body = new ChargeRequest(AmountMoney: amount, IdempotencyKey: uuid, CardNonce: nonce);
+
+    try
+    {
+        var response = transactionsApi.Charge(LocationId, body);
+        this.ResultMessage = "Transaction complete! " + response.ToJson();
+    }
+    catch (ApiException e)
+    {
+        this.ResultMessage = e.Message;
+    }
+}
+```
 
 
 
