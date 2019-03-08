@@ -1,7 +1,11 @@
 # Payment processing example: PHP
 
 This sample demonstrates processing card payments with Square Connect API, using the
-Square Connect PHP client library.
+Square Connect PHP client library. There are two sections in this ReadMe.
+* [Setup](#setup) - Provides instructions for you to download and run the app.
+* [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the PHP web application.
+
+
 
 ## Setup
 
@@ -52,7 +56,7 @@ You can find more testing values in this [article](https://docs.connect.squareup
 credit card information, YOU WILL CHARGE THE CARD.**
 ## Application Flow
 
-This is an ASP.NET Core Razor application. The web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
+The PHP web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
 
 Square Online payment solution is a 2-step process: 
 
@@ -61,17 +65,20 @@ called the **SqPaymentForm**) you accept payment source information and generate
 
     NOTE: The SqPaymentForm library renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token (nonce). For more information, see https://docs.connect.squareup.com/payments/sqpaymentform/what-it-does.
 
-    After embeded the Square Payment form in your web application, it will look similar to the following screenshot:
+    After embedding the Square Payment form in your web application, it will look similar to the following screenshot:
 
-    <img src="./PaymentFormExample.png" width="300"/>
+    <img src="./PaymentFormExamplePHP.png" width="300"/>
 
-2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 Transaction API, you charge the payment source using the nonce.
+2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
+**Transaction** API, you charge the payment source using the nonce.
+s
+The following sections describe how the PHP sample implements these steps.
 
 ### Step 1: Generate a Nonce
 
-When the webpage loads it renders the Square Payment form defined in the **index.cshtml**  file. The page also downloads and executes the following scripts defined in the view file:
+When the page loads it renders the form defined in the index.php file. The page also downloads and executes the following scripts defined in the file:
 
-The **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
+ **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
 
 **sq-payment-form.js** - This code provides two things:
 
@@ -88,40 +95,38 @@ The **Square Payment Form Javascript library** (https://js.squareup.com/v2/payme
         ```
     * **SqPaymentForm.cardNonceResponseReceived** is one of the callbacks the code provides implementation for. 
 
-* Provides the **onGetCardNonce** event handler code that executes after you choose click **Pay $1.00 Now**.
+* Provides the **onGetCardNonce** event handler code that executes after you click **Pay $1.00 Now**.
 
 After the buyer enters their information in the form and clicks **Pay $1 Now**, the application does the following: 
 
 * The **onGetCardNonce** event handler executes. It first generates a nonce by calling the **SqPaymentForm.requestCardNonce** function.
 * **SqPaymentForm.requestCardNonce** invokes **SqPaymentForm.cardNonceResponseReceived** callback. This callback  assigns the nonce to a form field and posts the form to the payment processing page:
 
-    ```
+    ```javascript
     document.getElementById('card-nonce').value = nonce;
     document.getElementById('nonce-form').submit();  
     ```
 
-    This invokes the form action **ProcessPayment**, described in next step.
+    This invokes the form action **process-card.php**, described in next step.
 
 ### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **ProcessPayment.cshtml.cs**.  This server-side component uses the Square .NET SDK C# wrapper library to call the Connect V2 **Transaction** API to charge the payment source using the nonce.
-```public void OnPost()
-        {
-            string nonce = Request.Form["nonce"];
-            TransactionsApi transactionsApi = new TransactionsApi();
-            string uuid = NewIdempotencyKey();
+All the remaining actions take place in the **process-card.php**.  This server-side component uses the Square PHP SDK library to call the Connect V2 **Transaction** API to charge the payment source using the nonce as shown in the following code fragment. 
+```php
+$transactions_api = new \SquareConnect\Api\TransactionsApi();
 
-            Money amount = new Money(100, Money.CurrencyEnum.USD);
+$request_body = array (
+  "card_nonce" => $nonce,
+  "amount_money" => array (
+    "amount" => 100,
+    "currency" => "USD"
+  ),
+  "idempotency_key" => uniqid()
+);
 
-            ChargeRequest body = new ChargeRequest(AmountMoney: amount, IdempotencyKey: uuid, CardNonce: nonce);
-
-            try
-            {
-                var response = transactionsApi.Charge(LocationId, body);
-                this.ResultMessage = "Transaction complete! " + response.ToJson();
-            }
-            catch (ApiException e)
-            {
-                this.ResultMessage = e.Message;
-            }
-        }
+try {
+  $result = $transactions_api->charge($location_id, $request_body);
+}
 ```
+
+
+
