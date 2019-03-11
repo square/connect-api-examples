@@ -101,10 +101,7 @@ public class Main {
 
         ChargeResponse response = transactionsApi.charge(squareLocationId, chargeRequest);
 
-        model.put("transactionId", response.getTransaction().getId());
-
-        // Print the object to the console just to see it
-        System.out.print(response.getTransaction());
+        model.put("transaction", response.getTransaction());
 
         return "charge";
     }

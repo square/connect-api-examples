@@ -31,16 +31,15 @@ router.post('/process-payment', function(req,res,next){
 		idempotency_key: idempotency_key
 	};
 	transactions_api.charge(config.squareLocationId, request_body).then(function(data) {
-		console.log(util.inspect(data, false, null));
+		var json= JSON.stringify(data);
 		res.render('process-payment', {
 			'title': 'Payment Successful',
-			'result': "Payment Successful (see console for transaction output)"
+			'result': json
 		});
 	}, function(error) {
-		console.log(util.inspect(error.status, false, null));
 		res.render('process-payment', {
 			'title': 'Payment Failure',
-			'result': "Payment Failed (see console for error output)"
+			'result': error.response.text
 		});
 	});
 

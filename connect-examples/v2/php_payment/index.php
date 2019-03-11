@@ -1,7 +1,7 @@
 <?php
 require 'vendor/autoload.php';
 // dotenv is used to read from the '.env' file created for credentials
-$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv = Dotenv\Dotenv::create(__DIR__);
 $dotenv->load();
 ?>
 <html>
@@ -27,9 +27,9 @@ $dotenv->load();
   </script>
 
   <!-- link to the local SqPaymentForm initialization -->
-  <script type="text/javascript" src="https://cdn.rawgit.com/square/connect-api-examples/a8cc6d7e624cb57991f6a0ff76a241836d5b9059/templates/web-ui/payment-form/custom/sq-payment-form.js"></script>
+  <script type="text/javascript" src="js/sq-payment-form.js"></script>
   <!-- link to the custom styles for SqPaymentForm -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/square/connect-api-examples/a8cc6d7e624cb57991f6a0ff76a241836d5b9059/templates/web-ui/payment-form/custom/sq-payment-form.css">
+  <link rel="stylesheet" type="text/css" href="css/sq-payment-form.css">
 </head>
 <body>
   <!-- Begin Payment Form -->
@@ -77,7 +77,7 @@ $dotenv->load();
           </div>
         </div>
         <div class="sq-field">
-          <button id="sq-creditcard" class="sq-button" onclick="requestCardNonce(event)">
+          <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
             Pay $1.00 Now
           </button>
         </div>
