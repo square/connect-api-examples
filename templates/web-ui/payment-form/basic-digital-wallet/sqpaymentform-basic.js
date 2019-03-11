@@ -113,6 +113,7 @@ var paymentForm = new SqPaymentForm({
     /*
      * callback function: createPaymentRequest
      * Triggered when: a digital wallet payment button is clicked.
+     * Note: shippingOptions is ignored by Google Pay
      */
     createPaymentRequest: function () {
 
@@ -132,27 +133,23 @@ var paymentForm = new SqPaymentForm({
             amount: "100",
             pending: false
           }
+        ],
+        shippingOptions: [
+          {
+            id: "1",
+            label: "SHIPPING LABEL",
+            amount: "SHIPPING COST"
+          }
         ]
       }
     },
 
-    /*
-     * callback function: validateShippingContact
-     * Triggered when: a shipping address is selected/changed in a digital
-     *                 wallet UI that supports address selection.
-     */
-    validateShippingContact: function (contact) {
-
-      var validationErrorObj;
-      /* ADD CODE TO SET validationErrorObj IF ERRORS ARE FOUND */
-      return validationErrorObj;
-    },
 
     /*
      * callback function: cardNonceResponseReceived
      * Triggered when: SqPaymentForm completes a card nonce request
      */
-    cardNonceResponseReceived: function (errors, nonce, cardData) {
+    cardNonceResponseReceived: function (errors, nonce, cardData, billingContact, shippingContact, shippingOption) {
       if (errors) {
         // Log errors from nonce generation to the Javascript console
         console.log("Encountered errors:");
@@ -162,6 +159,16 @@ var paymentForm = new SqPaymentForm({
         });
 
         return;
+      }
+
+      // shippingContact provides the final contact information for the payment
+      if (shippingContact) {
+
+      }
+
+      // shippingOption privides the shipping options selected in the Apple Pay sheet
+      if (shippingOption) {
+
       }
       // Assign the nonce value to the hidden form field
       document.getElementById('card-nonce').value = nonce;
@@ -215,5 +222,62 @@ var paymentForm = new SqPaymentForm({
       /* HANDLE AS DESIRED */
       console.log("The form loaded!");
     }
-  }
+  },
+  shippingOptionChanged: function(shippingOption, done) {
+
+    //This example creates a new array of line items that includes only 1 line
+    //item. The item for a shipping option.  Production code would get the
+    //array of line items from the original PaymentRequest and add/update a line
+    //item for the shippingOption argument of this callback.
+    const newLineItems = [{
+        label: shippingOption.label,
+        amount: shippingOption.amount,
+        pending: false
+      }];
+    const newTotal = {
+      label: "Total",
+
+      // TODO: total amount to be calc'd based on difference between old and new
+      // amount of this shippingOption.amount if shippingOption.amount was
+      // updated.
+      //   -- OR --
+      // Increment total amount if the line item for this shippingOption is new.
+      amount: "SOME_AMOUNT + shippingOption.amount",
+      pending: false
+    };
+
+    done({
+      //Note: newLineItems REPLACES the set of the line items in the PaymentRequest
+      // newTotal REPLACES the original payment total.
+      lineItems: newLineItems,
+      total: newTotal
+    });
+   },
+   shippingContactChanged: function (shippingContact, done) {
+    var valid = true;
+    var errors = {};
+
+    if (!shippingContact.postalCode) {
+      errors.postalCode = "postal code is required";
+      valid = false;
+    }
+    if (!shippingContact.addressLines) {
+      errors.addressLines = "address lines are required";
+      valid = false;
+    }
+
+    if (!valid) {
+      done({shippingContactErrors: errors});
+      return;
+    }
+
+    // Shipping address unserviceable.
+    if (shippingContact.country != 'US') {
+      done({error: 'Shipping to outside of the U.S. is not available.'});
+      return;
+    }
+
+    // No changes to contact shipping address required
+    done();
+   }
 });
