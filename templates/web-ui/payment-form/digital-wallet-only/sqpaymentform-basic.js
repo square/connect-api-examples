@@ -102,20 +102,15 @@ var paymentForm = new SqPaymentForm({
             amount: "100.00",
             pending: false
           }
+        ],
+        shippingOptions: [
+          {
+            id: "1",
+            label: "SHIPPING LABEL",
+            amount: "SHIPPING COST"
+          }
         ]
       }
-    },
-
-    /*
-     * callback function: validateShippingContact
-     * Triggered when: a shipping address is selected/changed in a digital
-     *                 wallet UI that supports address selection.
-     */
-    validateShippingContact: function (contact) {
-
-      var validationErrorObj;
-      /* ADD CODE TO SET validationErrorObj IF ERRORS ARE FOUND */
-      return validationErrorObj;
     },
 
     /*
@@ -156,6 +151,73 @@ var paymentForm = new SqPaymentForm({
     paymentFormLoaded: function () {
       /* HANDLE AS DESIRED */
       console.log("The form loaded!");
-    }
+    },
+
+    /*
+     * callback function: shippingOptionChanged
+     * Triggered when: Apple Pay sheet shipping option changed
+     */
+    shippingOptionChanged: function(shippingOption, done) {
+
+      //This example creates a new array of line items that includes only 1 line
+      //item. The item for a shipping option.  Production code would get the
+      //array of line items from the original PaymentRequest and add/update a line
+      //item for the shippingOption argument of this callback.
+      const newLineItems = [{
+          label: shippingOption.label,
+          amount: shippingOption.amount,
+          pending: false
+        }];
+      const newTotal = {
+        label: "Total",
+
+        // TODO: total amount to be calc'd based on difference between old and new
+        // amount of this shippingOption.amount if shippingOption.amount was
+        // updated.
+        //   -- OR --
+        // Increment total amount if the line item for this shippingOption is new.
+        amount: "SOME_AMOUNT + shippingOption.amount",
+        pending: false
+      };
+
+      done({
+        //Note: newLineItems REPLACES the set of the line items in the PaymentRequest
+        // newTotal REPLACES the original payment total.
+        lineItems: newLineItems,
+        total: newTotal
+      });
+     },
+
+    /*
+     * callback function: shippingContactChanged
+     * Triggered when: Apple Pay sheet shipping contact changed
+     */
+     shippingContactChanged: function (shippingContact, done) {
+      var valid = true;
+      var errors = {};
+
+      if (!shippingContact.postalCode) {
+        errors.postalCode = "postal code is required";
+        valid = false;
+      }
+      if (!shippingContact.addressLines) {
+        errors.addressLines = "address lines are required";
+        valid = false;
+      }
+
+      if (!valid) {
+        done({shippingContactErrors: errors});
+        return;
+      }
+
+      // Shipping address unserviceable.
+      if (shippingContact.country != 'US') {
+        done({error: 'Shipping to outside of the U.S. is not available.'});
+        return;
+      }
+
+      // No changes to contact shipping address required
+      done();
+     }
   }
 });
