@@ -2,7 +2,7 @@
   require 'vendor/autoload.php';
 
   // dotenv is used to read from the '.env' file created
-  $dotenv = new Dotenv\Dotenv(__DIR__);
+  $dotenv = Dotenv\Dotenv::create(__DIR__);
   $dotenv->load();
 
   $access_token = ($_ENV["USE_PROD"] == 'true')  ?  $_ENV["PROD_ACCESS_TOKEN"]
