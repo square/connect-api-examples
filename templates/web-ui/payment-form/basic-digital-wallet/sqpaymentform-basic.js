@@ -280,7 +280,7 @@ var paymentForm = new SqPaymentForm({
       }
 
       // Shipping address unserviceable.
-      if (shippingContact.country != 'US') {
+      if (shippingContact.country !== 'US') {
         done({error: 'Shipping to outside of the U.S. is not available.'});
         return;
       }
