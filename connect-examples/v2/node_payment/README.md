@@ -4,6 +4,8 @@
 with both your sandbox and production credentials.
 <b>WARNING</b>: never upload `config.json` with your credentials/access_token.
 
+* Ensure you have npm installed (`npm -v` in your terminal). If not please follow the instructions for your OS: https://www.npmjs.com/get-npm
+
 * Open your terminal and type the following to install the packages:
 ```
 npm install
