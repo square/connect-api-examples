@@ -40,3 +40,80 @@ After running the above command, you can open a browser and go to
 The default port used is `5000`, but this can be configured in the `application.properties` file.
 
 If the credentials are not set or are invalid, the app will fail during startup.
+
+
+## Application Flow
+
+The PHP web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
+
+Square Online payment solution is a 2-step process: 
+
+1. Generate a nonce -  Using a Square Payment Form (a client-side JavaScript library 
+called the **SqPaymentForm**) you accept payment source information and generate a secure payment token (nonce).
+
+    NOTE: The SqPaymentForm library renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token (nonce). For more information, see https://docs.connect.squareup.com/payments/sqpaymentform/what-it-does.
+
+    After embedding the Square Payment form in your web application, it will look similar to the following screenshot:
+
+    <img src="./PaymentFormExampleJava.png" width="300"/>
+
+2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
+**Transaction** API, you charge the payment source using the nonce.
+s
+The following sections describe how the PHP sample implements these steps.
+
+### Step 1: Generate a Nonce
+
+When the page loads it renders the form defined in the index.html file. The page also downloads and executes the following scripts defined in the file:
+
+ **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
+
+**sq-payment-form.js** - This code provides two things:
+
+* Initializes the **SqPaymentForm** object by initializing various 
+[configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail). For example,
+
+    * Maps the **SqPaymentForm.cardNumber** configuration field to corresponding form field:  
+
+        ```javascript
+        cardNumber: {
+            elementId: 'sq-card-number',               
+            placeholder: '•••• •••• •••• ••••'
+        }
+        ```
+    * **SqPaymentForm.cardNonceResponseReceived** is one of the callbacks the code provides implementation for. 
+
+* Provides the **onGetCardNonce** event handler code that executes after you click **Pay $1.00 Now**.
+
+After the buyer enters their information in the form and clicks **Pay $1 Now**, the application does the following: 
+
+* The **onGetCardNonce** event handler executes. It first generates a nonce by calling the **SqPaymentForm.requestCardNonce** function.
+* **SqPaymentForm.requestCardNonce** invokes **SqPaymentForm.cardNonceResponseReceived** callback. This callback  assigns the nonce to a form field and posts the form to the payment processing page:
+
+    ```javascript
+    document.getElementById('card-nonce').value = nonce;
+    document.getElementById('nonce-form').submit();  
+    ```
+
+    This invokes the form action **charge**, described in next step.
+
+### Step 2: Charge the Payment Source Using the Nonce 
+All the remaining actions take place in the **Main.java**.  This server-side component uses the Square Java SDK library to call the Connect V2 **Transaction** API to charge the payment source using the nonce as shown in the following code fragment. 
+```java
+String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException {
+        ChargeRequest chargeRequest = new ChargeRequest()
+            .idempotencyKey(UUID.randomUUID().toString())
+            .amountMoney(new Money().amount(1_00L).currency(CurrencyEnum.USD))
+            .cardNonce(form.getNonce())
+            .note("From a Square sample Java app");
+
+        TransactionsApi transactionsApi = new TransactionsApi();
+        transactionsApi.setApiClient(squareClient);
+
+        ChargeResponse response = transactionsApi.charge(squareLocationId, chargeRequest);
+
+        model.put("transaction", response.getTransaction());
+
+        return "charge";
+    }
+```	
