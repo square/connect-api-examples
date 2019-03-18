@@ -44,7 +44,7 @@ If the credentials are not set or are invalid, the app will fail during startup.
 
 ## Application Flow
 
-The PHP web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
+The Java web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
 
 Square Online payment solution is a 2-step process: 
 
@@ -60,7 +60,7 @@ called the **SqPaymentForm**) you accept payment source information and generate
 2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
 **Transaction** API, you charge the payment source using the nonce.
 s
-The following sections describe how the PHP sample implements these steps.
+The following sections describe how the Java sample implements these steps.
 
 ### Step 1: Generate a Nonce
 
