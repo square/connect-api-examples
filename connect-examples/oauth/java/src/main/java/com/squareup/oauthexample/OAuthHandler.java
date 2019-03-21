@@ -106,6 +106,7 @@ public class OAuthHandler {
       body.setClientId(_applicationId);
       body.setClientSecret(_applicationSecret);
       body.setCode(authorizationCode);
+      body.setGrantType("authorization_code");
 
       OAuthApi oAuthApi = new OAuthApi();
       ObtainTokenResponse response = null;

@@ -44,6 +44,7 @@ def callback():
     oauth_request_body.client_id = application_id
     oauth_request_body.client_secret = application_secret
     oauth_request_body.code = authorization_code
+    oauth_request_body.grant_type = 'authorization_code'
 
     response = oauth_api.obtain_token(oauth_request_body)
 
