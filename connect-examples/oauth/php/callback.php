@@ -36,6 +36,7 @@ function callback() {
     $body->setClientId($applicationId);
     $body->setClientSecret($applicationSecret);
     $body->setCode($authorizationCode);
+    $body->setGrantType('authorization_code');
 
     try {
       $response = $oauth_api->obtainToken($body);

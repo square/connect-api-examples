@@ -45,7 +45,8 @@ get '/callback' do
     oauth_request_body = {
       'client_id' => APP_ID,
       'client_secret' => APP_SECRET,
-      'code' => authorization_code
+      'code' => authorization_code,
+      'grant_type' => 'authorization_code'
     }
 
     response = oauth_api.obtain_token(oauth_request_body)
