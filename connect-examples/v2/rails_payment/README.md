@@ -31,7 +31,7 @@ SQUARE_LOCATION_ID=your-location-id
 * [Testing using the API sandbox](https://docs.connect.squareup.com/articles/using-sandbox)
 ## Application Flow
 
-The Java web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
+The rails web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
 
 Square Online payment solution is a 2-step process: 
 
@@ -53,7 +53,7 @@ The following sections describe how the Java sample implements these steps.
 
 When the page loads it renders the form defined in the **/welcome/index.html.erb** file. The page also downloads and executes the following scripts defined in the file:
 
- **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
+ **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform) It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
 
 **sq-payment-form.js** - This code provides two things:
 
