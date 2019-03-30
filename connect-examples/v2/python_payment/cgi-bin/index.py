@@ -30,10 +30,10 @@ html = """<!DOCTYPE html>
     </script>
 
     <!-- link to the local SqPaymentForm initialization -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/square/connect-api-examples/templates/web-ui/payment-form/custom/sq-payment-form.js"></script>
+    <script type="text/javascript" src="/sq-payment-form.js"></script>
 
     <!-- link to the custom styles for SqPaymentForm -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/square/connect-api-examples/templates/web-ui/payment-form/custom/sq-payment-form.css">
+    <link rel="stylesheet" type="text/css" href="/sq-payment-form.css">
   </head>
 
   <body>
@@ -82,7 +82,7 @@ html = """<!DOCTYPE html>
             </div>
           </div>
           <div class="sq-field">
-            <button id="sq-creditcard" class="sq-button" onclick="requestCardNonce(event)">
+            <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
               Pay $1.00 Now
             </button>
           </div>
