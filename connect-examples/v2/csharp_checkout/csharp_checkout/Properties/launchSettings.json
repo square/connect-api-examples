@@ -15,11 +15,19 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "csharp_checkout": {
+    "Sandbox": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Sandbox"
+      },
+      "applicationUrl": "http://localhost:5000/"
+    },
+    "Production": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "applicationUrl": "http://localhost:5000/"
     }
