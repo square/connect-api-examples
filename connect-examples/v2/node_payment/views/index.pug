@@ -4,7 +4,7 @@ block content
   script(type="text/javascript").
     window.applicationId= "#{square_application_id}";
     window.locationId= "#{square_location_id}";
-  script(type="text/javascript" src="https://cdn.jsdelivr.net/gh/square/connect-api-examples/templates/web-ui/payment-form/custom/sq-payment-form.js")
+  script(type="text/javascript" src="/js/sq-payment-form.js")
 
   div(class="sq-payment-form")
     div(id="sq-walletbox")
@@ -31,7 +31,7 @@ block content
             label(class="sq-label") Postal Code
             div(id="sq-postal-code")
         div(class="sq-field")
-            button(id="sq-creditcard" class="sq-button" onclick="requestCardNonce(event)").
+            button(id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)").
               Pay $1.00 Now
 
         div(id="error")
