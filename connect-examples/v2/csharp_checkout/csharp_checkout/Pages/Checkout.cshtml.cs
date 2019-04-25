@@ -14,13 +14,7 @@ namespace csharp_checkout.Pages
 
     public CheckoutModel(IConfiguration configuration)
     {
-      this.locationId = configuration["AppSettings:LocationId"];
-    }
-
-    public string ResultMessage
-    {
-      get;
-      set;
+      locationId = configuration["AppSettings:LocationId"];
     }
 
     public IActionResult OnPost()
@@ -30,28 +24,35 @@ namespace csharp_checkout.Pages
 
       try
       {
+        // create line items for the order
+        List<CreateOrderRequestLineItem> lineItems = new List<CreateOrderRequestLineItem>()
+          {
+            new CreateOrderRequestLineItem(
+              Name: "Test Payment",
+              Quantity: "1",
+              BasePriceMoney: new Money(Amount: 500,
+                                        Currency: Money.CurrencyEnum.USD)
+            )
+          };
 
+        // create order with the line items
+        CreateOrderRequest order = new CreateOrderRequest(
+          LineItems: lineItems
+        );
+
+        // create checkout request with the previously created order
         CreateCheckoutRequest body = new CreateCheckoutRequest(
           IdempotencyKey: Guid.NewGuid().ToString(),
-          Order: new CreateOrderRequest(
-              LineItems: new List<CreateOrderRequestLineItem>()
-              {
-                new CreateOrderRequestLineItem(
-                  Name: "Test Payment",
-                  Quantity: "1",
-                  BasePriceMoney: new Money(Amount: 500,
-                                            Currency: Money.CurrencyEnum.USD)
-                )
-              }
-        ));
+          Order: order
+        );
 
+        // create checkout response, and redirect to checkout page if successful
         CreateCheckoutResponse response = checkoutApi.CreateCheckout(locationId, body);
         return Redirect(response.Checkout.CheckoutPageUrl);
       }
       catch (Square.Connect.Client.ApiException e)
       {
-        this.ResultMessage = e.Message;
-        return null;
+        return RedirectToPage("Error", new { error = e.Message});
       }
     }
   }
