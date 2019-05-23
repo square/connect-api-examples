@@ -8,7 +8,7 @@ Form Setup guide at [docs.connect.squareup.com].
 
 * `basic` - templates for a basic Payment Form integration.
 * `basic-digital-wallet` - templates for a basic Payment Form integration. Includes support for Apple Pay, Google Pay, and Masterpass digital wallets.
-* `digital-wallet-only` - templates for a basic Payment Form integration with digital wallet. Does not include support for payment cards.
+* `digital-wallet-only` - templates for a basic `SqPaymentForm` library integration with digital wallet buttons only. **Does not include support for payment card fields**.
 
 [//]: # "Link anchor definitions"
 [docs.connect.squareup.com]: https://docs.connect.squareup.com/payments/sqpaymentform/setup
