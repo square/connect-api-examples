@@ -8,7 +8,6 @@ var locationId = "REPLACE_ME";
 function buildForm(form) {
   if (SqPaymentForm.isSupportedBrowser()) {
     form.build();
-    form.recalculateSize();
   }
 }
 
