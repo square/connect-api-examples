@@ -1,0 +1,277 @@
+/*
+Copyright 2019 Square Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/*
+    PRODUCTS
+*/
+
+html, body{
+    background-color: var(--white);
+}
+
+.products {
+    display: grid;
+    grid-template-columns: 200px 200px 200px 200px;
+    grid-gap: 40px;
+    width: 920px;
+    padding: 8px 20px 48px 20px;
+    margin: 0 auto;
+}
+
+.product {
+    display: inline-block;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 4px;
+    box-shadow: var(--box-shadow);
+    padding: 0;
+}
+
+/* .product:nth-child(4n) {
+    margin-right: 0;
+} */
+
+.product .image-container {
+    position: absolute;
+    height: 200px;
+    width: 200px;
+    border-radius: 4px;
+    box-shadow: 0 0 1px 0 rgba(0,0,0,0.10), 0 2px 2px 0 rgba(0,0,0,0.10), 0 1px 2px 0 rgba(0,0,0,0.10);
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+}
+
+.product .image-container:hover {
+    margin-top: -2px;
+    margin-bottom: 2px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.10), 0 1px 16px 0 rgba(0,0,0,0.10), 0 2px 4px 0 rgba(0,0,0,0.10);
+    filter: grayscale(100%);
+}
+
+.image-container .product-image {
+    height: 200px;
+    width: 200px;
+    border-radius: 4px;
+}
+
+.image-container .image-overlay {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color:var(--overlay-color, rgba(0,0,0,0.5));
+    text-align: center;
+    border-radius: 4px;
+
+    -webkit-transition: all .2s ease-in-out;
+       -moz-transition: all .2s ease-in-out;
+        -ms-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
+}
+
+.product .image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.image-container .image-overlay button {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 1px solid #fff;
+    background-color: transparent;
+    border-radius: 4px;
+    padding: 8px 24px;
+    font-weight: 500;
+    line-height: 24px;
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+}
+.image-container .image-overlay button:focus { outline: 0; }
+
+.form-control {
+    margin:10px;
+    padding: 14px 16px;
+    height: 58px;
+}
+
+
+.modal.is-open {
+    opacity: 1;
+    visibility: visible;
+    top: 50%;
+
+    -webkit-transition: all .2s ease-in-out;
+       -moz-transition: all .2s ease-in-out;
+        -ms-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
+}
+
+.modal.no-fade {
+    top: 50%;
+    -webkit-transition: all 0s ease-in-out, opacity .4s ease-in-out;
+       -moz-transition: all 0s ease-in-out, opacity .4s ease-in-out;
+        -ms-transition: all 0s ease-in-out, opacity .4s ease-in-out;
+            transition: all 0s ease-in-out, opacity .4s ease-in-out;
+}
+
+.modal.is-open.no-fade {
+    -webkit-transition: all 0s ease-in-out;
+       -moz-transition: all 0s ease-in-out;
+        -ms-transition: all 0s ease-in-out;
+            transition: all 0s ease-in-out;
+}
+
+.veil {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #000;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 999;
+
+    -webkit-transition: all .2s ease-in-out;
+       -moz-transition: all .2s ease-in-out;
+        -ms-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
+}
+.veil.visible {
+    opacity: 0.5;
+    visibility: visible;
+}
+
+
+
+    .close {
+        height: 24px;
+        width: 24px;
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        text-indent: -999px;
+        white-space: nowrap;
+        overflow: hidden;
+        border: 0;
+        background: url("https://cdn.glitch.com/4c9bc573-ca4c-48de-8afe-501eddad0b79%2Ficon-close-inactive.svg?1521834224941") center center no-repeat;
+        transition: all .1s ease-in-out;
+        cursor: pointer;
+    }
+
+    .close:hover { background: url("https://cdn.glitch.com/4c9bc573-ca4c-48de-8afe-501eddad0b79%2Ficon-close-active.svg?1521834225254") center center no-repeat; }
+    .close:focus { outline: 0; }
+
+    .modal-image {
+        height: 400px;
+        width: 400px;
+        float: left;
+    }
+
+    .modal {
+        position: fixed;
+        top: 51%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        opacity: 0;
+        visibility: hidden;
+        height: 400px;
+        width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        box-shadow: 0 16px 24px 2px rgba(0,0,0,0.10), 0 8px 32px 4px rgba(0,0,0,0.10), 0 8px 8px 0 rgba(0,0,0,0.10);
+        z-index: 1000;
+
+        -webkit-transition: all .2s ease-in-out;
+        -moz-transition: all .2s ease-in-out;
+        -ms-transition: all .2s ease-in-out;
+        transition: all .2s ease-in-out;
+    }
+
+    .modal .product-info {
+        height: 400px;
+        width: 400px;
+        float: right;
+    }
+
+    .modal .product-title {
+        margin: 32px 32px 16px 32px;
+        font-size: 22px;
+        color: var(--dark-gray);
+    }
+
+    .modal .product-description {
+        margin: 0 32px 0 32px;
+    }
+
+    .modal .product-meta {
+        position: absolute;
+        bottom: 0;
+        width: 400px;
+        margin-left: 32px;
+        margin-right: 32px;
+    }
+
+    .modal .productCost {
+        margin: 0;
+        padding: 0;
+        width: 338px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 22px
+    }
+
+    .modal .product-purchase {
+        width: 100%;
+        height: 64px;
+        margin-left: -32px;
+        margin-top: 24px;
+        color: #fff;
+        border: none;
+        background-color: var(--green);
+        transition: all .1s ease-in-out;
+        cursor: pointer;
+        padding: 16px 62px;
+        border-radius: 0px;
+    }
+
+    .modal .product-purchase:focus { outline: 0; }
+
+    .product-purchase.unavailable{
+        background-color: var(--light-gray);
+    }
+
+.btn {
+    border-radius: 0;
+}
+
+.modal-body {
+    min-width: 800px;
+    padding: 0;
+}
+
+.modal-content {
+    border: none;
+    overflow: hidden;
+    border-radius: .3em;
+}
+
+

@@ -1,0 +1,40 @@
+//- Copyright 2019 Square Inc.
+ 
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+ 
+//-     http://www.apache.org/licenses/LICENSE-2.0
+ 
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License. 
+
+div(class="panel pickup-details" , style="height: fit-content;")
+  h4(class="panel-title") Payment Details
+  div(class="panel-field")
+    label(class="sq-label") Name on Card
+  input(class="panel-input full", type="text", name="card_name",id="name",placeholder="Full name",onchange="handleChange(this)", autocomplete="cc-name")
+  div(class="panel-field")
+    label(class="sq-label") Email Address
+    input(class="panel-input full",type="email",name="card_email",id="email",placeholder="Email address",onchange="handleChange(this)",autocomplete="email")
+  div(id="sq-ccbox")
+    div(class="sq-field")
+      label(class="sq-label") Card Number
+      div(id="sq-card-number")
+    div(class="sq-field-wrapper")
+      div(class="sq-field sq-field--in-wrapper")
+        label(class="sq-label") CVV
+        div(id="sq-cvv")
+      div(class="sq-field sq-field--in-wrapper")
+        label(class="sq-label") Expiration
+        div(id="sq-expiration-date")
+      div(class="sq-field sq-field--in-wrapper")
+        label(class="sq-label") Zip Code
+        div(id="sq-postal-code")
+    div(id="error")
+    input(type="hidden" id="item-data" name="item_var_id" value=item ? item.variationId : "")
+    input(type="hidden" id="item-data-object" name="item_obj_id" value=item ? item.objectId : "")
+    input(type="hidden" id="card-nonce" name="nonce")
