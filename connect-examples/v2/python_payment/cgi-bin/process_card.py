@@ -5,11 +5,7 @@ import uuid
 import cgi
 import ConfigParser
 
-import squareconnect
-from squareconnect.rest import ApiException
-from squareconnect.configuration import Configuration
-from squareconnect.api_client import ApiClient
-from squareconnect.apis.payments_api import PaymentsApi
+from square.client import Client
 
 # To read your secret credentials
 config = ConfigParser.ConfigParser()
@@ -25,15 +21,13 @@ nonce = form.getvalue('nonce')
 config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
 access_token = config.get(config_type, "access_token")
 
-api_config = Configuration()
-# Set 'host' to switch between sandbox env and production env
-# sandbox: https://connect.squareupsandbox.com
-# production: https://connect.squareup.com
-api_config.host = "https://connect.squareupsandbox.com"
-api_client = ApiClient(api_config)
-api_client.configuration.access_token = access_token
-
-api_instance = PaymentsApi(api_client)
+# Create an instance of the API Client 
+# and initialize it with the credentials 
+# for the Square account whose assets you want to manage
+client = Client(
+    access_token=access_token,
+    environment=config.get(config_type, "environment"),
+)
 
 # Every payment you process with the SDK must have a unique idempotency key.
 # If you're unsure whether a particular payment succeeded, you can reattempt
@@ -52,11 +46,11 @@ body = {'idempotency_key': idempotency_key, 'source_id': nonce, 'amount_money': 
 
 # The SDK throws an exception if a Connect endpoint responds with anything besides
 # a 200-level HTTP code. This block catches any exceptions that occur from the request.
-try:
-  api_response = api_instance.create_payment(body)
-  res = api_response.payment
-except ApiException as e:
-  res = "Exception when calling PaymentsApi->create_payment: {}".format(e)
+api_response = client.payments.create_payment(body)
+if api_response.is_success():
+  res = api_response.body['payment']
+elif api_response.is_error():
+  res = "Exception when calling PaymentsApi->create_payment: {}".format(api_response.errors)
 
 # Display the result
 print ('Content-type:text/html\r\n\r\n')
