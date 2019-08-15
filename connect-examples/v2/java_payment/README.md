@@ -1,8 +1,11 @@
 # Java Payment Form Example
 
-This example hosts a payment form in Java. It is a Spring Boot app and requires Java 8 or newer.
+This example hosts a payment form in Java. It is a Spring Boot app and requires Java 8 or newer. There are two sections in this ReadMe.
 
-## Setting up
+* [Setup](#setup) - Provides instructions for you to download and run the app.
+* [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the Java example.
+
+## Setup
 
 First, you'll need to have created a Square application. If you haven't done this yet, you can quickly
 set on up in the [Square Developer Portal](https://connect.squareup.com/apps).

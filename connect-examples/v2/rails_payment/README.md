@@ -1,4 +1,12 @@
-# README
+# Payment processing example: Ruby On Rails
+
+
+There are two sections in this ReadMe.
+
+* [Setup](#setup) - Provides instructions for you to download and run the app.
+* [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the Rails example.
+
+## Setup
 
 The root page has the selections for the different implementations.
 
@@ -29,6 +37,7 @@ SQUARE_LOCATION_ID=your-location-id
 * The application runs in `http://localhost:3000/`
 
 * [Testing using the API sandbox](https://docs.connect.squareup.com/articles/using-sandbox)
+
 ## Application Flow
 
 The rails web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
