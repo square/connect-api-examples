@@ -73,7 +73,7 @@ called the **SqPaymentForm**) you accept payment source information and generate
 
     <img src="./PaymentFormExample.png" width="300"/>
 
-2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 Transaction API, you charge the payment source using the nonce.
+2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 Payments API, you charge the payment source using the nonce.
 
 ### Step 1: Generate a Nonce
 
@@ -111,7 +111,7 @@ After the buyer enters their information in the form and clicks **Pay $1 Now**, 
     This invokes the form action **ProcessPayment**, described in next step.
 
 ### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **ProcessPayment.cshtml.cs**.  This server-side component uses the Square .NET SDK C# wrapper library to call the Connect V2 **Transaction** API to charge the payment source using the nonce.
+All the remaining actions take place in the **ProcessPayment.cshtml.cs**.  This server-side component uses the Square .NET SDK C# wrapper library to call the Connect V2 **Payments** API to charge the payment source using the nonce.
 ```csharp
 public void OnPost()
 {

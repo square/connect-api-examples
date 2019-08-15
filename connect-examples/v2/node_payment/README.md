@@ -1,5 +1,12 @@
 # Payment processing example: Node JS
 
+There are two sections in this ReadMe.
+
+* [Setup](#setup) - Provides instructions for you to download and run the app.
+* [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the Node.js example.
+
+## Setup
+
 * Open `config.json` and fill in values for squareApplicationId & squareAccessToken & squareLocationId
 with both your sandbox and production credentials.
 <b>WARNING</b>: never upload `config.json` with your credentials/access_token.
@@ -40,7 +47,7 @@ called the **SqPaymentForm**) you accept payment source information and generate
     <img src="./PaymentFormExampleNode.png" width="300"/> 
 
 2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
-**Transaction** API, you charge the payment source using the nonce.
+**Payments** API, you charge the payment source using the nonce.
 
 The following sections describe how the Node JS sample implements these steps.
 
