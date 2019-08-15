@@ -29,9 +29,12 @@ sensitive and must remain private.
 To get up and running, first clone the repo to your local computer.
 Then open a command line terminal and run the following command:
 
-```
+```bash
+cd <example repo root>/connect-examples/v2/square-connect-sdk/java
+mvn install -DskipTests 
+cd <example repo root>/connect-examples/v2/java_payment
 # The following command sets environment variables and starts the application locally:
-SQUARE_APP_ID=replace_me SQUARE_ACCESS_TOKEN=replace_me SQUARE_LOCATION_ID=replace_me mvn spring-boot:run
+SQUARE_ENV=<sandbox or production> SQUARE_APP_ID=replace_me SQUARE_ACCESS_TOKEN=replace_me SQUARE_LOCATION_ID=replace_me mvn spring-boot:run
 ```
 
 After running the above command, you can open a browser and go to
@@ -58,7 +61,7 @@ called the **SqPaymentForm**) you accept payment source information and generate
     <img src="./PaymentFormExampleJava.png" width="300"/>
 
 2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
-**Transaction** API, you charge the payment source using the nonce.
+**Payments** API, you charge the payment source using the nonce.
 s
 The following sections describe how the Java sample implements these steps.
 
@@ -98,22 +101,21 @@ After the buyer enters their information in the form and clicks **Pay $1 Now**, 
     This invokes the form action **charge**, described in next step.
 
 ### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **Main.java**.  This server-side component uses the Square Java SDK library to call the Connect V2 **Transaction** API to charge the payment source using the nonce as shown in the following code fragment. 
+All the remaining actions take place in the **Main.java**.  This server-side component uses the Square Java SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
 ```java
 String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException {
-        ChargeRequest chargeRequest = new ChargeRequest()
-            .idempotencyKey(UUID.randomUUID().toString())
-            .amountMoney(new Money().amount(1_00L).currency(CurrencyEnum.USD))
-            .cardNonce(form.getNonce())
-            .note("From a Square sample Java app");
+    CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest()
+        .idempotencyKey(UUID.randomUUID().toString())
+        .amountMoney(new Money().amount(1_00L).currency("USD"))
+        .sourceId(form.getNonce())
+        .note("From a Square sample Java app");
 
-        TransactionsApi transactionsApi = new TransactionsApi();
-        transactionsApi.setApiClient(squareClient);
+    PaymentsApi paymentsApi = new PaymentsApi(squareClient);
 
-        ChargeResponse response = transactionsApi.charge(squareLocationId, chargeRequest);
+    CreatePaymentResponse response = paymentsApi.createPayment(createPaymentRequest);
 
-        model.put("transaction", response.getTransaction());
+    model.put("payment", response.getPayment());
 
-        return "charge";
-    }
+    return "charge";
+}
 ```	

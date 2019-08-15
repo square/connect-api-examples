@@ -13,9 +13,9 @@ Make sure you have Python 2 >=2.79 or Python 3 >= 3.4
 
 1. Make sure you have Python 2 >=2.79 or Python 3 >= 3.4 installed from [python.org](https://www.python.org/).
 
-2. Run the following command to install `squareconnect` package:
+2. Run the following command to install `squareup` package:
 
-        pip install git+https://github.com/square/connect-python-sdk.git
+    pip install squareup
 
 ### Provide required credentials
 
@@ -66,7 +66,7 @@ called the **SqPaymentForm**) you accept payment source information and generate
     <img src="./PaymentFormExamplePython.png" width="300"/> 
 
 2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
-**Transaction** API, you charge the payment source using the nonce.
+**Payments** API, you charge the payment source using the nonce.
 s
 The following sections describe how the Python sample implements these steps.
 
@@ -85,7 +85,7 @@ When the page loads it renders the form defined in the **cgi-bin/index.py** file
 
         ```javascript
         cardNumber: {
-            elementId: 'sq-card-number',               
+            elementId: 'sq-card-number',
             placeholder: '•••• •••• •••• ••••'
         }
         ```
@@ -106,29 +106,29 @@ After the buyer enters their information in the form and clicks **Pay $1.00 Now*
     This invokes the form action **/charges/charge_card**, described in next step.
 
 ### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **cgi-bin/process_card.py**.  This server-side component uses the Square Python SDK library to call the Connect V2 **Transaction** API to charge the payment source using the nonce as shown in the following code fragment. 
+All the remaining actions take place in the **cgi-bin/process_card.py**.  This server-side component uses the Square Python SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
 ```python
 ...
 nonce = form.getvalue('nonce')
 
 config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
 access_token = config.get(config_type, "access_token")
-location_id = config.get(config_type, "location_id")
 
-api_client = squareconnect.ApiClient()
-api_client.configuration.access_token = access_token
-...
+client = Client(
+    access_token=access_token,
+    environment=config.get(config_type, "environment"),
+)
 
-api_instance = TransactionsApi(api_client)
 idempotency_key = str(uuid.uuid1())
+
 amount = {'amount': 100, 'currency': 'USD'}
 
-body = {'idempotency_key': idempotency_key, 'card_nonce': nonce, 'amount_money': amount}
+body = {'idempotency_key': idempotency_key, 'source_id': nonce, 'amount_money': amount}
 
-try:
-  api_response = api_instance.charge(location_id, body)
-  res = api_response.transaction
-except ApiException as e:
-  res = "Exception when calling TransactionApi->charge: {}".format(e)
+api_response = client.payments.create_payment(body)
+if api_response.is_success():
+  res = api_response.body['payment']
+elif api_response.is_error():
+  res = "Exception when calling PaymentsApi->create_payment: {}".format(api_response.errors)
 ...
 ```	

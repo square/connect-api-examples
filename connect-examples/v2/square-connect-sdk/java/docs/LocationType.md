@@ -1,0 +1,10 @@
+
+# LocationType
+
+
+* `"PHYSICAL"`
+
+* `"MOBILE"`
+
+
+

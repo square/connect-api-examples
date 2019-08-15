@@ -1,0 +1,10 @@
+
+# RegisterDomainResponseStatus
+
+
+* `"PENDING"`
+
+* `"VERIFIED"`
+
+
+

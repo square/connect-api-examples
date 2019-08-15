@@ -1,15 +1,16 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 squareConnect = require('square-connect');
 
-var routes = require('./routes/index');
+const routes = require('./routes/index');
 
-var app = express();
-var config = require('./config')[app.get('env')];
+const app = express();
+const env = app.get('env');
+const config = require('./config')[env];
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,7 +20,9 @@ app.set('view engine', 'pug');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '.well-known')));
@@ -27,15 +30,20 @@ app.use(express.static(path.join(__dirname, '.well-known')));
 app.use('/', routes);
 
 // Set Square Connect credentials
-var defaultClient = squareConnect.ApiClient.instance;
+const defaultClient = squareConnect.ApiClient.instance;
 
 // Configure OAuth2 access token for authorization: oauth2
-var oauth2 = defaultClient.authentications['oauth2'];
+const oauth2 = defaultClient.authentications['oauth2'];
 oauth2.accessToken = config.squareAccessToken;
 
+// Set 'basePath' to switch between sandbox env and production env
+// sandbox: https://connect.squareupsandbox.com
+// production: https://connect.squareup.com
+defaultClient.basePath = (env === 'sandbox' ? 'https://connect.squareupsandbox.com' : 'https://connect.squareup.com');
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+app.use(function (req, res, next) {
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
@@ -44,8 +52,8 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+if (env === 'sandbox') {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -56,7 +64,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,

@@ -9,7 +9,7 @@ namespace sqRazorSample.Pages
 {
     public class ProcessPaymentModel : PageModel
     {
-        private readonly string LocationId;
+        readonly Configuration configuration;
 
         public string ResultMessage
         {
@@ -18,13 +18,19 @@ namespace sqRazorSample.Pages
         }
 
         public ProcessPaymentModel(IConfiguration configuration) {
-            this.LocationId = configuration["AppSettings:LocationId"];
+            // Set 'basePath' to switch between sandbox env and production env
+            // sandbox: https://connect.squareupsandbox.com
+            // production: https://connect.squareup.com
+            string basePath = configuration["AppSettings:Environment"] == "sandbox" ?
+                "https://connect.squareupsandbox.com" : "https://connect.squareup.com";
+            this.configuration = new Configuration(new ApiClient(basePath));
+            this.configuration.AccessToken = configuration["AppSettings:AccessToken"];
         }
 
         public void OnPost()
         {
             string nonce = Request.Form["nonce"];
-            TransactionsApi transactionsApi = new TransactionsApi();
+            PaymentsApi paymentsApi = new PaymentsApi(configuration: this.configuration);
             // Every payment you process with the SDK must have a unique idempotency key.
             // If you're unsure whether a particular payment succeeded, you can reattempt
             // it with the same idempotency key without worrying about double charging
@@ -34,17 +40,17 @@ namespace sqRazorSample.Pages
             // Monetary amounts are specified in the smallest unit of the applicable currency.
             // This amount is in cents. It's also hard-coded for $1.00,
             // which isn't very useful.
-            Money amount = new Money(100, Money.CurrencyEnum.USD);
+            Money amount = new Money(100, "USD");
 
-            // To learn more about splitting transactions with additional recipients,
-            // see the Transactions API documentation on our [developer site]
-            // (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
-            ChargeRequest body = new ChargeRequest(AmountMoney: amount, IdempotencyKey: uuid, CardNonce: nonce);
+            // To learn more about splitting payments with additional recipients,
+            // see the Payments API documentation on our [developer site]
+            // (https://developer.squareup.com/docs/payments-api/overview).
+            CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest(AmountMoney: amount, IdempotencyKey: uuid, SourceId: nonce);
 
             try
             {
-                var response = transactionsApi.Charge(LocationId, body);
-                this.ResultMessage = "Transaction complete! " + response.ToJson();
+                var response = paymentsApi.CreatePayment(createPaymentRequest);
+                this.ResultMessage = "Payment complete! " + response.ToJson();
             }
             catch (ApiException e)
             {

@@ -1,0 +1,10 @@
+
+# EmployeeStatus
+
+
+* `"ACTIVE"`
+
+* `"INACTIVE"`
+
+
+

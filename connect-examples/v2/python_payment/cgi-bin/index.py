@@ -9,6 +9,7 @@ config.read('config.ini')
 
 # Retrive credentials based on is_prod
 config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
+payment_form_url = "https://js.squareup.com/v2/paymentform" if config_type == "PRODUCTION" else "https://js.squareupsandbox.com/v2/paymentform";
 app_id = config.get(config_type, "app_id")
 location_id = config.get(config_type, "location_id")
 
@@ -22,7 +23,7 @@ html = """<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- link to the SqPaymentForm library -->
-    <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+    <script type="text/javascript" src=""" + payment_form_url + """></script>
 
     <script type="application/javascript">
         window.applicationId = '""" + app_id + """';
@@ -56,11 +57,11 @@ html = """<!DOCTYPE html>
           You should replace the action attribute of the form with the path of
           the URL you want to POST the nonce to (for example, "/process-card").
 
-          You need to then make a "Charge" request to Square's transaction API with
+          You need to then make a "Charge" request to Square's Payments API with
           this nonce to securely charge the customer.
 
           Learn more about how to setup the server component of the payment form here:
-          https://docs.connect.squareup.com/payments/transactions/processing-payment-rest
+          https://developer.squareup.com/docs/payments-api/overview
         -->
         <form id="nonce-form" novalidate action="process_card.py">
           <div class="sq-field">

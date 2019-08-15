@@ -1,0 +1,10 @@
+
+# OrderFulfillmentPickupDetailsScheduleType
+
+
+* `"SCHEDULED"`
+
+* `"ASAP"`
+
+
+

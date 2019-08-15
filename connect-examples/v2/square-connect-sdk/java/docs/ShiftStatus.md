@@ -1,0 +1,10 @@
+
+# ShiftStatus
+
+
+* `"OPEN"`
+
+* `"CLOSED"`
+
+
+

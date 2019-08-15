@@ -5,7 +5,7 @@
 }
 @section Scripts {
     <!-- link to the SqPaymentForm library -->
-    <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+    <script type="text/javascript" src="@Model.PaymentFormUrl"></script>
     <script type="text/javascript">
         window.applicationId = "@Model.ApplicationId";
         window.locationId = "@Model.LocationId";

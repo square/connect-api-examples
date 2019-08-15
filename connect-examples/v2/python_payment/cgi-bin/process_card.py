@@ -5,10 +5,7 @@ import uuid
 import cgi
 import ConfigParser
 
-import squareconnect
-from squareconnect.rest import ApiException
-from squareconnect.apis.transactions_api import TransactionsApi
-from squareconnect.apis.locations_api import LocationsApi
+from square.client import Client
 
 # To read your secret credentials
 config = ConfigParser.ConfigParser()
@@ -23,23 +20,14 @@ nonce = form.getvalue('nonce')
 # token if you're just testing things out.
 config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
 access_token = config.get(config_type, "access_token")
-location_id = config.get(config_type, "location_id")
 
-api_client = squareconnect.ApiClient()
-api_client.configuration.access_token = access_token
-
-# The ID of the business location to associate processed payments with.
-# See [Retrieve your business's locations]
-# (https://docs.connect.squareup.com/articles/getting-started/#retrievemerchantprofile)
-# for an easy way to get your business's location IDs.
-# If you're testing things out, use a sandbox location ID.
-if config.get("DEFAULT", "is_prod") == "true":
-    location_id = config.get("PRODUCTION", "location_id")
-else:
-    location_id = config.get("SANDBOX", "location_id")
-location_id = location_id
-
-api_instance = TransactionsApi(api_client)
+# Create an instance of the API Client 
+# and initialize it with the credentials 
+# for the Square account whose assets you want to manage
+client = Client(
+    access_token=access_token,
+    environment=config.get(config_type, "environment"),
+)
 
 # Every payment you process with the SDK must have a unique idempotency key.
 # If you're unsure whether a particular payment succeeded, you can reattempt
@@ -51,19 +39,18 @@ idempotency_key = str(uuid.uuid1())
 # This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
 amount = {'amount': 100, 'currency': 'USD'}
 
-# To learn more about splitting transactions with additional recipients,
-# see the Transactions API documentation on our [developer site]
-# (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
-body = {'idempotency_key': idempotency_key, 'card_nonce': nonce, 'amount_money': amount}
-
+# To learn more about splitting payments with additional recipients,
+# see the Payments API documentation on our [developer site]
+# (https://developer.squareup.com/docs/payments-api/overview).
+body = {'idempotency_key': idempotency_key, 'source_id': nonce, 'amount_money': amount}
 
 # The SDK throws an exception if a Connect endpoint responds with anything besides
 # a 200-level HTTP code. This block catches any exceptions that occur from the request.
-try:
-  api_response = api_instance.charge(location_id, body)
-  res = api_response.transaction
-except ApiException as e:
-  res = "Exception when calling TransactionApi->charge: {}".format(e)
+api_response = client.payments.create_payment(body)
+if api_response.is_success():
+  res = api_response.body['payment']
+elif api_response.is_error():
+  res = "Exception when calling PaymentsApi->create_payment: {}".format(api_response.errors)
 
 # Display the result
 print ('Content-type:text/html\r\n\r\n')

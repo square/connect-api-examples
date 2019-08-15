@@ -8,7 +8,14 @@ $dotenv->load();
 <head>
   <title>My Payment Form</title>
   <!-- link to the SqPaymentForm library -->
-  <script type="text/javascript" src="https://js.squareup.com/v2/paymentform"></script>
+  <script type="text/javascript" src=
+    <?php
+        echo "\"";
+        echo ($_ENV["USE_PROD"] == 'true')  ?  "https://js.squareup.com/v2/paymentform"
+                                            :  "https://js.squareupsandbox.com/v2/paymentform";
+        echo "\"";
+    ?>
+  ></script>
   <script type="text/javascript">
     window.applicationId =
       <?php
@@ -51,11 +58,11 @@ $dotenv->load();
         You should replace the action attribute of the form with the path of
         the URL you want to POST the nonce to (for example, "/process-card").
 
-        You need to then make a "Charge" request to Square's transaction API with
+        You need to then make a "Charge" request to Square's Payments API with
         this nonce to securely charge the customer.
 
         Learn more about how to setup the server component of the payment form here:
-        https://docs.connect.squareup.com/payments/transactions/processing-payment-rest
+        https://developer.squareup.com/docs/payments-api/overview
       -->
       <form id="nonce-form" novalidate action="/process-card.php" method="post">
         <div class="sq-field">

@@ -1,0 +1,10 @@
+
+# LocationStatus
+
+
+* `"ACTIVE"`
+
+* `"INACTIVE"`
+
+
+

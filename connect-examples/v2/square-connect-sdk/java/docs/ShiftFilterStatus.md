@@ -1,0 +1,10 @@
+
+# ShiftFilterStatus
+
+
+* `"OPEN"`
+
+* `"CLOSED"`
+
+
+

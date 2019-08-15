@@ -14,6 +14,6 @@
     "pug": "*",
     "morgan": "*",
     "serve-favicon": "*",
-    "square-connect": "^2.20180712.0"
+    "square-connect": "2.20190814.0"
   }
 }

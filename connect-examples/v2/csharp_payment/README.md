@@ -27,7 +27,7 @@ After cloning this sample project to local, open command line tool, and from the
 
 ### Provide required credentials
 
-Open `./appsettings.json` and replace "AccessToken", "LocationId" and "ApplicationId" with the ids you get from your square application created in [Square Developer Portal](https://connect.squareup.com/apps).
+Open `./appsettings.json`, specify "Environment" and replace "AccessToken", "LocationId" and "ApplicationId" with the ids you get from your square application created in [Square Developer Portal](https://connect.squareup.com/apps).
 <b>WARNING</b>: never upload `appsettings.json` with your credentials/access_token.
 
 If you're just testing things out, it's recommended that you use your _sandbox_
@@ -116,17 +116,17 @@ All the remaining actions take place in the **ProcessPayment.cshtml.cs**.  This 
 public void OnPost()
 {
     string nonce = Request.Form["nonce"];
-    TransactionsApi transactionsApi = new TransactionsApi();
+    IPaymentsApi paymentsApi = new PaymentsApi(this.BasePath);
+    paymentsApi.Configuration.AccessToken = this.AccessToken;
+
     string uuid = NewIdempotencyKey();
+    Money amount = new Money(100, "USD");
 
-    Money amount = new Money(100, Money.CurrencyEnum.USD);
-
-    ChargeRequest body = new ChargeRequest(AmountMoney: amount, IdempotencyKey: uuid, CardNonce: nonce);
-
+    CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest(AmountMoney: amount, IdempotencyKey: uuid, SourceId: nonce);
     try
     {
-        var response = transactionsApi.Charge(LocationId, body);
-        this.ResultMessage = "Transaction complete! " + response.ToJson();
+        var response = paymentsApi.CreatePayment(createPaymentRequest);
+        this.ResultMessage = "Payment complete! " + response.ToJson();
     }
     catch (ApiException e)
     {

@@ -1,0 +1,8 @@
+
+# V1FeeAdjustmentType
+
+
+* `"TAX"`
+
+
+

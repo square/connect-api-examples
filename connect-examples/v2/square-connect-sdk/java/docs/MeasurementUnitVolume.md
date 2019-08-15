@@ -1,0 +1,28 @@
+
+# MeasurementUnitVolume
+
+
+* `"GENERIC_FLUID_OUNCE"`
+
+* `"GENERIC_SHOT"`
+
+* `"GENERIC_CUP"`
+
+* `"GENERIC_PINT"`
+
+* `"GENERIC_QUART"`
+
+* `"GENERIC_GALLON"`
+
+* `"IMPERIAL_CUBIC_INCH"`
+
+* `"IMPERIAL_CUBIC_FOOT"`
+
+* `"IMPERIAL_CUBIC_YARD"`
+
+* `"METRIC_MILLILITER"`
+
+* `"METRIC_LITER"`
+
+
+
