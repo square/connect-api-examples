@@ -28,10 +28,5 @@ module RailsPayment
 
     error_msg = "\n\n#{'*'*110}\n\n**** Fatal config error: Set your required env vars, or '.env' file. (See README.rdoc and '.env')\n\n#{'*'*110}\n"
     raise error_msg unless Rails.application.secrets.square_application_id.present? && Rails.application.secrets.square_access_token.present?
-
-    SquareConnect.configure do |config|
-      # Configure OAuth2 access token for authorization: oauth2
-      config.access_token = Rails.application.secrets.square_access_token
-    end
   end
 end

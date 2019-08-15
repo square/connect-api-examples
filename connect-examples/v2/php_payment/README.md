@@ -43,7 +43,7 @@ From the sample's root directory, run:
 You can then visit `localhost:8000` in your browser to see the card form.
 
 If you're using your sandbox credentials, you can test a valid credit card
-transaction by providing the following card information in the form:
+payment by providing the following card information in the form:
 
 * Card Number `4532 7597 3454 5858`
 * Card CVV `111`
@@ -70,7 +70,7 @@ called the **SqPaymentForm**) you accept payment source information and generate
     <img src="./PaymentFormExamplePHP.png" width="300"/>
 
 2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
-**Transaction** API, you charge the payment source using the nonce.
+**Payments** API, you charge the payment source using the nonce.
 s
 The following sections describe how the PHP sample implements these steps.
 
@@ -110,12 +110,23 @@ After the buyer enters their information in the form and clicks **Pay $1 Now**, 
     This invokes the form action **process-card.php**, described in next step.
 
 ### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **process-card.php**.  This server-side component uses the Square PHP SDK library to call the Connect V2 **Transaction** API to charge the payment source using the nonce as shown in the following code fragment. 
+All the remaining actions take place in the **process-card.php**.  This server-side component uses the Square PHP SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
 ```php
-$transactions_api = new \SquareConnect\Api\TransactionsApi();
+...
+$api_config = new \SquareConnect\Configuration();
+# Set 'Host' url to switch between sandbox env and production env
+# sandbox: https://connect.squareupsandbox.com
+# production: https://connect.squareup.com
+$api_config->setHost("https://connect.squareupsandbox.com");
+$api_config->setAccessToken($access_token);
+$api_client = new \SquareConnect\ApiClient($api_config);
+
+$nonce = $_POST['nonce'];
+
+$payments_api = new \SquareConnect\Api\PaymentsApi($api_client);
 
 $request_body = array (
-  "card_nonce" => $nonce,
+  "source_id" => $nonce,
   "amount_money" => array (
     "amount" => 100,
     "currency" => "USD"
@@ -124,8 +135,10 @@ $request_body = array (
 );
 
 try {
-  $result = $transactions_api->charge($location_id, $request_body);
+  $result = $payments_api->createPayment($request_body);
+} catch (\SquareConnect\ApiException $e) {
 }
+...
 ```
 
 

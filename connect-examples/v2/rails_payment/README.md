@@ -45,7 +45,7 @@ called the **SqPaymentForm**) you accept payment source information and generate
     <img src="./PaymentFormExampleRuby.png" width="300"/>
 
 2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
-**Transaction** API, you charge the payment source using the nonce.
+**Payments** API, you charge the payment source using the nonce.
 s
 The following sections describe how the Java sample implements these steps.
 
@@ -85,12 +85,21 @@ After the buyer enters their information in the form and clicks **Pay $1.00 Now*
     This invokes the form action **/charges/charge_card**, described in next step.
 
 ### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **charges_controller.rb**.  This server-side component uses the Square Java SDK library to call the Connect V2 **Transaction** API to charge the payment source using the nonce as shown in the following code fragment. 
+All the remaining actions take place in the **charges_controller.rb**.  This server-side component uses the Square Java SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
 ```ruby
   def charge_card
-    transactions_api = SquareConnect::TransactionsApi.new
+    api_config = SquareConnect::Configuration.new()
+    # Set 'basePath' to switch between sandbox env and production env
+    # sandbox: https://connect.squareupsandbox.com
+    # production: https://connect.squareup.com
+    api_config.host = 'connect.squareupsandbox.com'
+    api_config.access_token = Rails.application.secrets.square_access_token
+    api_client = SquareConnect::ApiClient.new(api_config)
+
+    payments_api = SquareConnect::PaymentsApi.new(api_client)
+
     request_body = {
-      :card_nonce => params[:nonce],
+      :source_id => params[:nonce],
       :amount_money => {
         :amount => 100,
         :currency => 'USD'
@@ -98,12 +107,12 @@ All the remaining actions take place in the **charges_controller.rb**.  This ser
       :idempotency_key => SecureRandom.uuid
     }
 
-    location_id = Rails.application.secrets.square_location_id
     begin
-      resp = transactions_api.charge(location_id, request_body)
-      @transaction = resp.transaction
+      resp = payments_api.create_payment(request_body)
+      @payment = resp.payment
     rescue SquareConnect::ApiError => e
       @error = e.response_body
     end
   end
+    
 ```	

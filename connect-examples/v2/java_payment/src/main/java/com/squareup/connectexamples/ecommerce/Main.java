@@ -18,13 +18,11 @@ package com.squareup.connectexamples.ecommerce;
 
 import com.squareup.connect.ApiClient;
 import com.squareup.connect.ApiException;
-import com.squareup.connect.Configuration;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.api.TransactionsApi;
+import com.squareup.connect.api.PaymentsApi;
 import com.squareup.connect.auth.OAuth;
 import com.squareup.connect.models.*;
-import com.squareup.connect.models.Location.CapabilitiesEnum;
-import com.squareup.connect.models.Money.CurrencyEnum;
+
+import java.util.Currency;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.boot.SpringApplication;
@@ -49,18 +47,28 @@ public class Main {
     // This must be set in order for the application to start.
     private static final String SQUARE_LOCATION_ID_ENV_VAR = "SQUARE_LOCATION_ID";
 
-    private final ApiClient squareClient = Configuration.getDefaultApiClient();
+    // The environment variable indicate the square environment - sandbox or production.
+    // This must be set in order for the application to start.
+    private static final String SQUARE_ENV_ENV_VAR = "SQUARE_ENV";
+
+    private final ApiClient squareClient;
     private final String squareLocationId;
     private final String squareAppId;
+    private final String squareEnvironment;
 
     public Main() throws ApiException {
+        squareEnvironment = mustLoadEnvironmentVariable(SQUARE_ENV_ENV_VAR);
         squareAppId = mustLoadEnvironmentVariable(SQUARE_APP_ID_ENV_VAR);
+        squareLocationId = mustLoadEnvironmentVariable(SQUARE_LOCATION_ID_ENV_VAR);
 
+        squareClient = new ApiClient();
         // Configure OAuth2 access token for authorization: oauth2
         OAuth oauth2 = (OAuth) squareClient.getAuthentication("oauth2");
         oauth2.setAccessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR));
-
-        squareLocationId = mustLoadEnvironmentVariable(SQUARE_LOCATION_ID_ENV_VAR);
+        // Set 'basePath' to switch between sandbox env and production env
+        // sandbox: https://connect.squareupsandbox.com
+        // production: https://connect.squareup.com
+        squareClient.setBasePath(squareEnvironment.equals("sandbox") ? "https://connect.squareupsandbox.com" : "https://connect.squareup.com");
     }
 
     public static void main(String[] args) throws Exception {
@@ -79,6 +87,8 @@ public class Main {
 
     @RequestMapping("/")
     String index(Map<String, Object> model) throws ApiException {
+        model.put("paymentFormUrl", squareEnvironment.equals("sandbox") ?
+            "https://js.squareupsandbox.com/v2/paymentform" : "https://js.squareup.com/v2/paymentform");
         model.put("locationId", squareLocationId);
         model.put("appId", squareAppId);
 
@@ -87,21 +97,20 @@ public class Main {
 
     @PostMapping("/charge")
     String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException {
-        // To learn more about splitting transactions with additional recipients,
-        // see the Transactions API documentation on our [developer site]
-        // (https://docs.connect.squareup.com/payments/transactions/overview#mpt-overview).
-        ChargeRequest chargeRequest = new ChargeRequest()
+        // To learn more about splitting payments with additional recipients,
+        // see the Payments API documentation on our [developer site]
+        // (https://developer.squareup.com/docs/payments-api/overview).
+        CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest()
             .idempotencyKey(UUID.randomUUID().toString())
-            .amountMoney(new Money().amount(1_00L).currency(CurrencyEnum.USD))
-            .cardNonce(form.getNonce())
+            .amountMoney(new Money().amount(1_00L).currency("USD"))
+            .sourceId(form.getNonce())
             .note("From a Square sample Java app");
 
-        TransactionsApi transactionsApi = new TransactionsApi();
-        transactionsApi.setApiClient(squareClient);
+        PaymentsApi paymentsApi = new PaymentsApi(squareClient);
 
-        ChargeResponse response = transactionsApi.charge(squareLocationId, chargeRequest);
+        CreatePaymentResponse response = paymentsApi.createPayment(createPaymentRequest);
 
-        model.put("transaction", response.getTransaction());
+        model.put("payment", response.getPayment());
 
         return "charge";
     }

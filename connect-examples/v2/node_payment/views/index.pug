@@ -1,6 +1,6 @@
 extends layout
 block content
-  script(type="text/javascript" src="https://js.squareup.com/v2/paymentform")
+  script(type="text/javascript" src= (env === "sandbox" ? "https://js.squareupsandbox.com/v2/paymentform" : "https://js.squareup.com/v2/paymentform") )
   script(type="text/javascript").
     window.applicationId= "#{square_application_id}";
     window.locationId= "#{square_location_id}";

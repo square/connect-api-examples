@@ -6,7 +6,7 @@
     <meta content="ie=edge" http-equiv="x-ua-compatible">
     <title>Sample Payment Form</title>
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <script src="https://js.squareup.com/v2/paymentform" type="text/javascript"></script>
+    <script th:src="${paymentFormUrl}" type="text/javascript"></script>
     <script type="application/javascript">
         window.applicationId = '[[${appId}]]';
         window.locationId = '[[${locationId}]]';
@@ -39,11 +39,11 @@
         You should replace the action attribute of the form with the path of
         the URL you want to POST the nonce to (for example, "/process-card").
 
-        You need to then make a "Charge" request to Square's transaction API with
+        You need to then make a "Charge" request to Square's payments API with
         this nonce to securely charge the customer.
 
         Learn more about how to setup the server component of the payment form here:
-        https://docs.connect.squareup.com/payments/transactions/processing-payment-rest
+        https://developer.squareup.com/docs/payments-api/overview
       -->
       <form id="nonce-form" novalidate action="/charge" method="post">
         <div class="sq-field">

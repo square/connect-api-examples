@@ -45,8 +45,6 @@ namespace sqRazorSample
             app.UseStaticFiles();
 
             app.UseMvc();
-
-            Square.Connect.Client.Configuration.Default.AccessToken = this.Configuration["AppSettings:AccessToken"];
         }
     }
 }

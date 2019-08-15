@@ -1,6 +1,6 @@
 # Payment processing example: Node JS
 
-* Open `config.json` and fill in values for squareApplicationId & squareAccessToken & squareLocationId
+* Open `config.json` and fill in values for squareApplicationId & squareAccessToken
 with both your sandbox and production credentials.
 <b>WARNING</b>: never upload `config.json` with your credentials/access_token.
 
@@ -22,7 +22,7 @@ npm test
 
 * Open a browser and navigate to [localhost:3000](localhost:3000)
 
-* [Testing using the API sandbox](https://docs.connect.squareup.com/articles/using-sandbox)
+* [Testing using the API sandbox](https://developer.squareup.com/docs/testing/sandbox)
 
 ## Application Flow
 
@@ -48,18 +48,18 @@ The following sections describe how the Node JS sample implements these steps.
 
 When the page loads it renders the form defined in the **views/index.pug** file. The page also downloads and executes the following scripts defined in the file:
 
- **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform) It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
+ **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform) It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://developer.squareup.com/docs/api/paymentform#navsection-paymentform). 
 
 **sq-payment-form.js** - This code provides two things:
 
 * Initializes the **SqPaymentForm** object by initializing various 
-[configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail). For example,
+[configuration fields](https://developer.squareup.com/docs/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://developer.squareup.com/docs/api/paymentform#_callbackfunctions_detail). For example,
 
     * Maps the **SqPaymentForm.cardNumber** configuration field to corresponding form field:  
 
         ```javascript
         cardNumber: {
-            elementId: 'sq-card-number',               
+            elementId: 'sq-card-number',
             placeholder: '•••• •••• •••• ••••'
         }
         ```
@@ -80,36 +80,39 @@ After the buyer enters their information in the form and clicks **Pay $1.00 Now*
     This invokes the form action **process-payment**, described in next step.
 
 ### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **routes/index.js**.  This server-side component uses the Square Node JS SDK library to call the Connect V2 **Transaction** API to charge the payment source using the nonce as shown in the following code fragment. 
+All the remaining actions take place in the **routes/index.js**.  This server-side component uses the Square Node JS SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
 ```javascript
 ...
-router.post('/process-payment', function(req,res,next){
-	var request_params = req.body;
+router.post('/process-payment', async (req, res) => {
+  const request_params = req.body;
 
-	var idempotency_key = require('crypto').randomBytes(64).toString('hex');
+  // length of idempotency_key should be less than 46
+  const idempotency_key = crypto.randomBytes(23).toString('hex');
 
-	// Charge the customer's card
-	var transactions_api = new squareConnect.TransactionsApi();
-	var request_body = {
-		card_nonce: request_params.nonce,
-		amount_money: {
-			amount: 100, // $1.00 charge
-			currency: 'USD'
-		},
-		idempotency_key: idempotency_key
-	};
-	transactions_api.charge(config.squareLocationId, request_body).then(function(data) {
-		var json= JSON.stringify(data);
-		res.render('process-payment', {
-			'title': 'Payment Successful',
-			'result': json
-		});
-	}, function(error) {
-		res.render('process-payment', {
-			'title': 'Payment Failure',
-			'result': error.response.text
-		});
-	});
+  // Charge the customer's card
+  const payments_api = new squareConnect.PaymentsApi();
+  const request_body = {
+    source_id: request_params.nonce,
+    amount_money: {
+      amount: 100, // $1.00 charge
+      currency: 'USD'
+    },
+    idempotency_key: idempotency_key
+  };
+
+  try {
+    const respone = await payments_api.createPayment(request_body);
+    const json = JSON.stringify(respone);
+    res.render('process-payment', {
+      'title': 'Payment Successful',
+      'result': json
+    });
+  } catch (error) {
+    res.render('process-payment', {
+      'title': 'Payment Failure',
+      'result': error.response.text
+    });
+  }
 });
 ...
 ```	

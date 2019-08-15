@@ -8,6 +8,7 @@ namespace sqRazorSample.Pages
 {
     public class IndexModel : PageModel
     {
+        public string PaymentFormUrl { get; set; }
         public string ApplicationId { get; set; }
         public string LocationId { get; set; }
 
@@ -16,6 +17,8 @@ namespace sqRazorSample.Pages
         {
             this.ApplicationId = configuration["AppSettings:ApplicationId"];
             this.LocationId = configuration["AppSettings:LocationId"];
+            this.PaymentFormUrl = configuration["AppSettings:Environment"] == "sandbox" ? 
+                "https://js.squareupsandbox.com/v2/paymentform" : "https://js.squareup.com/v2/paymentform" ;
         }
     }
 }
