@@ -1,0 +1,24 @@
+{
+  "name": "order-ahead-sample-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "NODE_ENV=production node ./bin/www",
+    "test": "NODE_ENV=sandbox node ./bin/www",
+    "seed": "NODE_ENV=sandbox node ./bin/script/seed-catalog.js generate",
+    "clear": "NODE_ENV=sandbox node ./bin/script/seed-catalog.js clear",
+    "help": "NODE_ENV=sandbox node ./bin/script/seed-catalog.js --help"
+  },
+  "dependencies": {
+    "body-parser": "*",
+    "cookie-parser": "*",
+    "debug": "*",
+    "eslint": "^6.1.0",
+    "express": "*",
+    "morgan": "*",
+    "pug": "*",
+    "request": "^2.88.0",
+    "serve-favicon": "*",
+    "square-connect": "*"
+  }
+}

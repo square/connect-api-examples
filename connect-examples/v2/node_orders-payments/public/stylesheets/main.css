@@ -1,0 +1,208 @@
+/*
+Copyright 2019 Square Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+   * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    outline: none;
+}
+
+:root{
+    --business-name-color: #71767B;
+    --overlay-color: rgba(0, 0, 0, 0.5);
+    --box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.15), 0px 1px 6px rgba(0, 0, 0, 0.15);
+    --green: #0EA50E;
+    --dark-gray:#373F4A;;
+    --neutral-gray: #343B42;
+    --light-gray: #D5D9DC;
+    --placeholder-gray: #ADB1B5;
+    --background-color: #F5F6F7;
+    --white :#FFFFFF;
+    --warning: #ffdddd;
+    --success: #ddffdd;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: var(--placeholder-gray);
+}
+::-moz-placeholder { /* Firefox 19+ */
+    color:var(--placeholder-gray);
+}
+::-ms-input-placeholder { /* IE 10+ */
+    color: var(--placeholder-gray);
+}
+::-moz-placeholder { /* Firefox 18- */
+    color: var(--placeholder-gray);
+}
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+.green {
+    color:var(--green);
+}
+
+.subtext{
+    color: var(--placeholder-gray);
+}
+
+.helperText {
+    color: #8594A7;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+a {
+    color:inherit;
+    text-decoration: none;
+    -webkit-transition: all .2s ease-in-out;
+       -moz-transition: all .2s ease-in-out;
+        -ms-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
+}
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+    vertical-align: middle;
+    font-size: 10px;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    color: var(--dark-gray);
+    font-size: 16px;
+    line-height: 28px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    margin: 0;
+    padding: 0;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+button {
+    border-radius: 4px;
+    background-color:var(--green);
+    line-height: 28px;
+    padding: 14px 24px;
+    font-weight: 500;
+    font-size: 16px;
+    color: #fff;
+    text-decoration: none;
+}
+
+body.modal-open { overflow: hidden; position: relative; }
+body.modal-open #cocoon { overflow: hidden; position: relative; }
+
+h1, h2, h3, h4, h5 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    margin: 1em auto 0 auto;
+}
+
+h1 {
+    font-size: 32px;
+    line-height: 40px;
+    /* margin-bottom: 24px; */
+}
+
+h2 {
+    font-size: 24px;
+    line-height: 32px;
+    margin-bottom: 16px;
+}
+
+h3 {
+    font-size: 20px;
+    line-height: 28px;
+    margin-bottom: 8px;
+}
+
+h4 {
+    font-size: 16px;
+    line-height: 28px;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+h5 {
+    font-size: 16px;
+    line-height: 28px;
+    margin-bottom: 0px;
+}
+
+.page-title {
+    text-align: center;
+    margin: 8px auto 40px;
+    height: 32px;
+    left: 372px;
+    top: 112px;
+    font-size: 24px;
+    line-height: 32px;
+}
+
+.container {
+    width: 920px;
+    margin: 0 auto;
+}
+
+.left { float: left; }
+.right { float: right; }
+
+.tabular-figures {
+    font-variant-numeric: tabular-nums;
+    -webkit-font-feature-settings: "tnum";
+    -moz-font-feature-settings: "tnum";
+    font-feature-settings: "tnum";
+    font-size: 24px;
+}
+.tabular-figures.negative {
+    margin-right: -5px;
+}
+
+.cocoon {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+

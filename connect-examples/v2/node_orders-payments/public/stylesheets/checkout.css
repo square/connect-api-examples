@@ -1,0 +1,185 @@
+/*
+Copyright 2019 Square Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/*
+    CHECKOUT
+*/
+html, body{
+    background-color: var(--background-color);
+}
+.panel {
+    padding: 24px 32px 32px 32px;
+    background-color: var(--white);
+    border-radius: 4px;
+    box-shadow: var(--box-shadow);
+}
+
+.panel .panel-title {
+    line-height: 24px;
+    font-size: 14px;
+    color: var(--dark-gray);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 0px;
+}
+
+.panel .panel-subtitle {
+    margin-top: 0;
+    line-height: 28px;
+    font-size: 16px;
+    color:var(--neutral-gray);
+}
+
+.panel-input {
+    width: 100%;
+    height: 56px;
+    display: flex;
+    background: ;
+    border: 1px solid var(--light-gray);
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 28px;
+    padding: 14px 16px;
+}
+
+.order-summary {
+    width: 376px;
+    /* height: 278px; */
+    margin-left: 12px;
+    float: left;
+}
+
+.order-summary .panel {
+    padding: 24px 32px 32px 32px;
+    margin-bottom: 24px;
+}
+
+.line-items {
+    border-bottom: 1px solid var(--light-gray);
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.line-item {
+    margin-bottom: 24px;
+}
+
+.line-item .left { max-width: 192px; }
+
+.line-item img {
+    display: inline-block;
+    box-sizing: border-box;
+    height: 32px;
+    width: 32px;
+    border-radius: 4px;
+    margin: -2px 8px 0 0;
+}
+
+.tab-content {
+    display:flex;
+    justify-content: center;
+}
+
+.dropdown {
+    width: 100%;
+    height: 56px;
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    font-size: 16px;
+    padding: 0 20px;
+    border-radius: 4px;
+    background: var(--white);
+    border: 1px solid var(--light-gray);
+    box-sizing: border-box;
+}
+
+.form-button {
+    color: var(--white);
+    width: 100%;
+    padding: 14px 24px;
+    border-radius: 4px;
+    font-weight: 500;
+    line-height: 28px;
+}
+.pickup-details{
+    width:456px;
+    margin-right: 12px;
+}
+.panel-field {
+    position: relative;
+    margin-top: 24px;
+}
+.vertical{
+    position: absolute;
+    right: 42px;
+    bottom: 0px;
+}
+.time-options{
+    display: flex;
+    justify-content: space-between;
+}
+.time-option{
+    color: var(--neutral-gray);
+    background-color: var(--white);
+    width: 102px;
+    padding: 14px 0px;
+    border: 1px solid var(--light-gray);
+    text-align: center;
+    border-radius: 4px;
+    line-height: 28px;
+    font-weight: 500;
+    font-size: 16px;
+    text-decoration: none;
+}
+.caret-button{
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    line-height: 10px;
+    pointer-events: none;
+    border-left: 1px solid var(--light-gray);
+    padding: 22px 16px 22px 16px;
+}
+.pickup-address{
+    text-align: right;
+    justify-content: space-between;
+}
+input[type=radio]{
+    display: none;
+}
+input[type=radio]:checked + .time-option{
+    background: var(--neutral-gray);
+    color: var(--white);
+    border: none;
+}
+.card-details {
+    color: var(--placeholder-gray);
+    font-size: 16px;
+    padding-top: 8px;
+}
+.confirmation {
+    padding-bottom: 24px;
+}
+.input--validity-visible:valid {
+    background-color: var(--success);
+}
+.input--validity-visible:invalid {
+    background-color: var(--warning);
+}
