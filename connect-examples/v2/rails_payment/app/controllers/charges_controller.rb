@@ -1,16 +1,13 @@
 class ChargesController < ApplicationController
   skip_before_action :verify_authenticity_token
   def charge_card
-    api_config = SquareConnect::Configuration.new()
-    # Set 'host' to switch between sandbox env and production env
-    # sandbox: connect.squareupsandbox.com
-    # production: connect.squareup.com
-    api_config.host = ENV['IS_PRODUCTION'] == 'false' ? 'connect.squareupsandbox.com' : 'connect.squareup.com'
-    # Configure OAuth2 access token for authorization: oauth2
-    api_config.access_token = Rails.application.secrets.square_access_token
-    api_client = SquareConnect::ApiClient.new(api_config)
 
-    payments_api = SquareConnect::PaymentsApi.new(api_client)
+    # Create an instance of the API Client and initialize it with the credentials
+    # for the Square account whose assets you want to manage.
+    api_client = Square::Client.new(
+      access_token: Rails.application.secrets.square_access_token,
+      environment: ENV['IS_PRODUCTION'] == 'false' ? 'sandbox' : 'production'
+    )
 
     # To learn more about splitting payments with additional recipients,
     # see the Payments API documentation on our [developer site]
@@ -25,11 +22,11 @@ class ChargesController < ApplicationController
       :idempotency_key => SecureRandom.uuid
     }
 
-    begin
-      resp = payments_api.create_payment(request_body)
-      @payment = resp.payment
-    rescue SquareConnect::ApiError => e
-      @error = e.response_body
+    resp = api_client.payments.create_payment(body: request_body)
+    if resp.success?
+      @payment = resp.data.payment
+    else
+      @error = resp.errors
     end
   end
 end
