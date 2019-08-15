@@ -1,0 +1,44 @@
+
+# CustomerCreationSource
+
+
+* `"OTHER"`
+
+* `"APPOINTMENTS"`
+
+* `"COUPON"`
+
+* `"DELETION_RECOVERY"`
+
+* `"DIRECTORY"`
+
+* `"EGIFTING"`
+
+* `"EMAIL_COLLECTION"`
+
+* `"FEEDBACK"`
+
+* `"IMPORT"`
+
+* `"INVOICES"`
+
+* `"LOYALTY"`
+
+* `"MARKETING"`
+
+* `"MERGE"`
+
+* `"ONLINE_STORE"`
+
+* `"INSTANT_PROFILE"`
+
+* `"TERMINAL"`
+
+* `"THIRD_PARTY"`
+
+* `"THIRD_PARTY_IMPORT"`
+
+* `"UNMERGE_RECOVERY"`
+
+
+

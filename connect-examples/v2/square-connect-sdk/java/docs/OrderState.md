@@ -1,0 +1,12 @@
+
+# OrderState
+
+
+* `"OPEN"`
+
+* `"COMPLETED"`
+
+* `"CANCELED"`
+
+
+

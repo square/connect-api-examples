@@ -1,0 +1,10 @@
+
+# TaxInclusionType
+
+
+* `"ADDITIVE"`
+
+* `"INCLUSIVE"`
+
+
+

@@ -1,0 +1,10 @@
+
+# OrderFulfillmentType
+
+
+* `"PICKUP"`
+
+* `"SHIPMENT"`
+
+
+

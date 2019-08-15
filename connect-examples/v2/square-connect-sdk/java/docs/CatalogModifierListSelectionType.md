@@ -1,0 +1,10 @@
+
+# CatalogModifierListSelectionType
+
+
+* `"SINGLE"`
+
+* `"MULTIPLE"`
+
+
+
