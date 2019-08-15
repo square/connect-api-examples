@@ -85,18 +85,13 @@ After the buyer enters their information in the form and clicks **Pay $1.00 Now*
     This invokes the form action **/charges/charge_card**, described in next step.
 
 ### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **charges_controller.rb**.  This server-side component uses the Square Java SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
+All the remaining actions take place in the **charges_controller.rb**.  This server-side component uses the Square Ruby SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
 ```ruby
   def charge_card
-    api_config = SquareConnect::Configuration.new()
-    # Set 'basePath' to switch between sandbox env and production env
-    # sandbox: https://connect.squareupsandbox.com
-    # production: https://connect.squareup.com
-    api_config.host = 'connect.squareupsandbox.com'
-    api_config.access_token = Rails.application.secrets.square_access_token
-    api_client = SquareConnect::ApiClient.new(api_config)
-
-    payments_api = SquareConnect::PaymentsApi.new(api_client)
+    api_client = Square::Client.new(
+      access_token: Rails.application.secrets.square_access_token,
+      environment: ENV['IS_PRODUCTION'] == 'false' ? 'sandbox' : 'production'
+    )
 
     request_body = {
       :source_id => params[:nonce],
@@ -107,12 +102,11 @@ All the remaining actions take place in the **charges_controller.rb**.  This ser
       :idempotency_key => SecureRandom.uuid
     }
 
-    begin
-      resp = payments_api.create_payment(request_body)
-      @payment = resp.payment
-    rescue SquareConnect::ApiError => e
-      @error = e.response_body
+    resp = api_client.payments.create_payment(body: request_body)
+    if resp.success?
+      @payment = resp.data.payment
+    else
+      @error = resp.errors
     end
   end
-    
 ```	

@@ -85,7 +85,7 @@ When the page loads it renders the form defined in the **cgi-bin/index.py** file
 
         ```javascript
         cardNumber: {
-            elementId: 'sq-card-number',               
+            elementId: 'sq-card-number',
             placeholder: '•••• •••• •••• ••••'
         }
         ```
@@ -114,14 +114,10 @@ nonce = form.getvalue('nonce')
 config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
 access_token = config.get(config_type, "access_token")
 
-api_config = Configuration()
-# sandbox: https://connect.squareupsandbox.com
-# production: https://connect.squareup.com
-api_config.host = "https://connect.squareupsandbox.com"
-api_client = ApiClient(api_config)
-api_client.configuration.access_token = access_token
-
-api_instance = PaymentsApi(api_client)
+client = Client(
+    access_token=access_token,
+    environment=config.get(config_type, "environment"),
+)
 
 idempotency_key = str(uuid.uuid1())
 
@@ -129,10 +125,10 @@ amount = {'amount': 100, 'currency': 'USD'}
 
 body = {'idempotency_key': idempotency_key, 'source_id': nonce, 'amount_money': amount}
 
-try:
-  api_response = api_instance.create_payment(body)
-  res = api_response.payment
-except ApiException as e:
-  res = "Exception when calling PaymentsApi->create_payment: {}".format(e)
+api_response = client.payments.create_payment(body)
+if api_response.is_success():
+  res = api_response.body['payment']
+elif api_response.is_error():
+  res = "Exception when calling PaymentsApi->create_payment: {}".format(api_response.errors)
 ...
 ```	
