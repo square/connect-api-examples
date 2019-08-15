@@ -1,6 +1,6 @@
 # Payment processing example: Node JS
 
-* Open `config.json` and fill in values for squareApplicationId & squareAccessToken
+* Open `config.json` and fill in values for squareApplicationId & squareAccessToken & squareLocationId
 with both your sandbox and production credentials.
 <b>WARNING</b>: never upload `config.json` with your credentials/access_token.
 
