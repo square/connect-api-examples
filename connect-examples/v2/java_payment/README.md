@@ -31,7 +31,7 @@ Then open a command line terminal and run the following command:
 
 ```bash
 cd <example repo root>/connect-examples/v2/square-connect-sdk/java
-mvn install
+mvn install -DskipTests 
 cd <example repo root>/connect-examples/v2/java_payment
 # The following command sets environment variables and starts the application locally:
 SQUARE_ENV=<sandbox or production> SQUARE_APP_ID=replace_me SQUARE_ACCESS_TOKEN=replace_me SQUARE_LOCATION_ID=replace_me mvn spring-boot:run
