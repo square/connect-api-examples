@@ -19,6 +19,6 @@
     "pug": "*",
     "request": "^2.88.0",
     "serve-favicon": "*",
-    "square-connect": "^2.20180712.0"
+    "square-connect": "*"
   }
 }
