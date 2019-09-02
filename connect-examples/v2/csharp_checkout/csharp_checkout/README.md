@@ -1,18 +1,18 @@
-﻿# Payment processing example: Csharp
+﻿# Website Payment Processing Using the Square Checkout API: Csharp
 
-This sample demonstrates processing card payments with Square Connect API, using the
-Square Connect C# client library and dotnet core. There are two sections in this ReadMe.
+This is a simple example application that utilizes Square's Checkout API 
+using .NET Razor. This examples assumes you are familiar with C# development. 
+
+For more information about Checkout please visit:
+* https://docs.connect.squareup.com/payments/checkout/overview
+* https://docs.connect.squareup.com/api/connect/v2#navsection-checkout
+* https://github.com/square/connect-php-sdk/blob/master/docs/Api/CheckoutApi.md
+
+There are two sections in this ReadMe.
 * [Setup](#setup) - Provides instructions for you to download and run the app.
 * [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the ASP.NET app.
 
 ## Setup
-Square Checkout Demo
-=========================
-
-This is a simple example application that utilizes Square's Checkout API using .NET Razor. This examples does assume you are familiar with C# development.
-
-It takes a single payment, declared by the user, and creates an order to use in the Checkout API.
-
 To get it running:
 
 * Clone/download to your local computer.
@@ -28,16 +28,62 @@ dotnet run --launch-profile Sandbox
 
 This will start the server on `localhost:5000`, which you can navigate to in your favorite browser.
 
-For more information about Checkout please visit:
-* https://docs.connect.squareup.com/payments/checkout/overview
-* https://docs.connect.squareup.com/api/connect/v2#navsection-checkout
-* https://github.com/square/connect-php-sdk/blob/master/docs/Api/CheckoutApi.md
+
 
 ## Application flow
 
-This is an ASP.NET Core Razor application. The web application implements the Square's Checkout API Online payment solution to charge a payment source () (.debit, credit, or digital wallet payment cards).
+This is an ASP.NET Core Razor application (???). The web application implements the 
+Checkout API to charge a payment source (a credit card). The Checkout API is one 
+of the Square's solution for taking online payments,  
 
-Square Online payment solution is a 2-step process:
+The application works as follows:
+
+1. Application frontend takes an order from the buyer. 
+
+   In this application, we hardcode an order with couple of line items and show a **Pay now!** 
+   button. See index.cshtml. 
+
+2. After the buyer is ready to checkout, they click **Pay now!** causing the  **Checkout** 
+event handler to execute the **CheckoutMode.OnPost** in Checkout.cshtml.cs. 
+The `OnPost` method does the following:
+
+   a. Send a `CreateCheckout` request to Square as follows:
+      * Create a `CheckoutApi` client.
+      * Create an instance of `CreateOrderRequest` and packge order information to send to Square.
+      * Send a `CreateCheckout` request to Square. In the request, include the order object in 
+      body.
+      
+      ```
+              CreateCheckoutResponse response = checkoutApi.CreateCheckout(locationId, body);
+      ```
+
+   b. Square does necessary orchestration to provide a prebuilt payment form and returns 
+   a `Checkout` object that includes the `Order` to be checked out and a `CheckoutPageUrl`.
+
+   c. The application code redirects the buyer's browser to the `CheckoutPageUrl`. 
+
+      ```
+      return Redirect(response.Checkout.CheckoutPageUrl);
+
+      ```
+   
+      The buyer see  following page hosted on Square.
+
+      <img src="./checkout.png" width="300"/>
+
+      This page hosted on Square shows all the order information  and also a
+       **Payment Information** section.
+
+After the buyer provides card  information and clicks **Place Order**, Square processes the 
+payment and returns the buyer to a confirmation  page. In your `CreateCheckout` request, if you 
+included a **redirect_url** parameter, Squre  returns the buyer to that page. Otherwise, 
+Square Checkout displays an order confirmation page to the buyer on your behalf.  An example 
+screenshot is shown:
+
+<img src="./confirmation.png" width="300"/>
+
+
+**************************IGNORE THE FOLLOWING - should be removed ***********************
 
 1. Generate a nonce -  Using a Square Payment Form (a client-side JavaScript library 
 called the **SqPaymentForm**) you accept payment source information and generate a secure payment token (nonce).
