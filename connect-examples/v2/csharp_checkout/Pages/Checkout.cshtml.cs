@@ -29,17 +29,24 @@ namespace csharp_checkout.Pages
     public IActionResult OnPost()
     {
       CheckoutApi checkoutApi = new CheckoutApi(configuration: this.configuration);
-      int amount = (int)float.Parse(Request.Form["amount"]) * 100;
 
       try
       {
         // create line items for the order
+        // This example assumes the order information is retrieved and hard coded
+        // You can find different ways to retrieved order information and fill in the following lineItems object.
         List<CreateOrderRequestLineItem> lineItems = new List<CreateOrderRequestLineItem>()
           {
             new CreateOrderRequestLineItem(
-              Name: "Test Payment",
+              Name: "Test Item A",
               Quantity: "1",
               BasePriceMoney: new Money(Amount: 500,
+                                        Currency: Money.CurrencyEnum.USD)
+            ),
+            new CreateOrderRequestLineItem(
+              Name: "Test Item B",
+              Quantity: "3",
+              BasePriceMoney: new Money(Amount: 1000,
                                         Currency: Money.CurrencyEnum.USD)
             )
           };
