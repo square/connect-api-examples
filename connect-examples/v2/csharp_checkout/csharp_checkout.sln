@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharp_checkout", "csharp_checkout\csharp_checkout.csproj", "{A4F77D02-0839-44D2-AD83-41A0CC5A7A7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "csharp_checkout", "csharp_checkout.csproj", "{A4F77D02-0839-44D2-AD83-41A0CC5A7A7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
