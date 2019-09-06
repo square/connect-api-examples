@@ -22,37 +22,40 @@
   $api_client = new \SquareConnect\ApiClient($api_config);
 
   // make sure we actually are on a POST with an amount
-  if (isset($_POST["amount"]) && !empty($_POST["amount"])) {
-    try {
-      $checkout_api = new \SquareConnect\Api\CheckoutApi($api_client);
-      $request_body = new \SquareConnect\Model\CreateCheckoutRequest(
-        [
-          "idempotency_key" => uniqid(),
-          "order" => [
-            "line_items" => [
-            [
-              "name" => "Test Payment",
-              "quantity" => "1",
-              "base_price_money" => [
-                // multiply by 100 due to it being in cents
-                "amount" => intval($_POST["amount"] * 100),
-                "currency" => "USD"
-              ]
-            ]]
-          ]
+  // This example assumes the order information is retrieved and hard coded
+  // You can find different ways to retrieve order information and fill in the following lineItems object.
+  try {
+    $checkout_api = new \SquareConnect\Api\CheckoutApi($api_client);
+    $request_body = new \SquareConnect\Model\CreateCheckoutRequest(
+      [
+        "idempotency_key" => uniqid(),
+        "order" => [
+          "line_items" => [
+          [
+            "name" => "Test Item A",
+            "quantity" => "1",
+            "base_price_money" => [
+              "amount" => 500,
+              "currency" => "USD"
+            ]
+          ],[
+            "name" => "Test Item B",
+            "quantity" => "3",
+            "base_price_money" => [
+              "amount" => 1000,
+              "currency" => "USD"
+            ]
+          ]]
         ]
-      );
-      $response = $checkout_api->createCheckout($location_id, $request_body);
-    } catch (Exception $e) {
-      // if an error occurs, output the message
-      echo $e->getMessage();
-      exit();
-    }
-    // this redirects to the Square hosted checkout page
-    header("Location: ".$response->getCheckout()->getCheckoutPageUrl());
+      ]
+    );
+    $response = $checkout_api->createCheckout($location_id, $request_body);
+  } catch (Exception $e) {
+    // if an error occurs, output the message
+    echo $e->getMessage();
     exit();
-  } else {
-    // if no amount was set, just go back home.
-    header("Location: /");
   }
+  // this redirects to the Square hosted checkout page
+  header("Location: ".$response->getCheckout()->getCheckoutPageUrl());
+  exit();
 ?>

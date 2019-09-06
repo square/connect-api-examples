@@ -34,7 +34,7 @@ namespace csharp_checkout.Pages
       {
         // create line items for the order
         // This example assumes the order information is retrieved and hard coded
-        // You can find different ways to retrieved order information and fill in the following lineItems object.
+        // You can find different ways to retrieve order information and fill in the following lineItems object.
         List<CreateOrderRequestLineItem> lineItems = new List<CreateOrderRequestLineItem>()
           {
             new CreateOrderRequestLineItem(
@@ -57,13 +57,13 @@ namespace csharp_checkout.Pages
         );
 
         // create checkout request with the previously created order
-        CreateCheckoutRequest body = new CreateCheckoutRequest(
+        CreateCheckoutRequest createCheckoutRequest = new CreateCheckoutRequest(
           IdempotencyKey: Guid.NewGuid().ToString(),
           Order: order
         );
 
         // create checkout response, and redirect to checkout page if successful
-        CreateCheckoutResponse response = checkoutApi.CreateCheckout(locationId, body);
+        CreateCheckoutResponse response = checkoutApi.CreateCheckout(locationId, createCheckoutRequest);
         return Redirect(response.Checkout.CheckoutPageUrl);
       }
       catch (Square.Connect.Client.ApiException e)
