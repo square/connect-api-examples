@@ -68,7 +68,7 @@ Checkout.cshtml.cs). The event handler does the following:
       
         The buyer sees following page hosted on Square.
 
-        <img src="./checkout.png" width="500"/>
+        <img src="./checkout.png" width="650"/>
 
         This page hosted on Square shows all the order information  and also the 
         **Payment Information** section.
@@ -77,6 +77,6 @@ Checkout.cshtml.cs). The event handler does the following:
 
     1. Square processes the payment and redirects the buyer to a confirmation  page. If you provided **redirect_url** in your initial `CreateCheckoutRequest`, Squre returns the buyer to that page. Otherwise, Square redirects the buyer to Square provided confirmation page. An example screenshot is shown:
 
-        <img src="./confirmation.png" width="500"/>
+        <img src="./confirmation.png" width="650"/>
 
 
