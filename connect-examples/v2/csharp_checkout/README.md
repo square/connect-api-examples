@@ -43,41 +43,40 @@ The application works as follows:
    In this application we hardcode an order with couple of line items 
    and show a **Pay now!** button. See index.cshtml. 
 
-2. Buyer clicks **Pay now!** when ready to checkout. This submits  
+2. Buyer clicks **Pay now!** when ready to checkout. This submits
 the  **Checkout** event to the handler ( **CheckoutMode.OnPost** in 
 Checkout.cshtml.cs). The event handler does the following:
 
-   a. Send a `CreateCheckout` request to Square as follows:
-      * Create a `CheckoutApi` client.
-      * Create an instance of `CreateOrderRequest` with information about the order 
-      the buyer placed.
-      * Create an instance of `CreateCheckoutRequest` with the `CreateOrderRequest` 
-      instance.
-      * Call the `CreateCheckout` method with`CreateCheckoutRequest` object and the  `locationId` parameters.
-        ```
-        CreateCheckoutResponse response = checkoutApi.CreateCheckout(locationId, createCheckoutRequest);
-        ```
+    1. Send a `CreateCheckout` request to Square as follows:
+        * Create a `CheckoutApi` client.
+        * Create an instance of `CreateOrderRequest` with information about the order 
+        the buyer placed.
+        * Create an instance of `CreateCheckoutRequest` with the `CreateOrderRequest` 
+        instance.
+        * Call the `CreateCheckout` method with`CreateCheckoutRequest` object and the  `locationId` parameters.
+          ```csharp
+          CreateCheckoutResponse response = checkoutApi.CreateCheckout(locationId, createCheckoutRequest);
+          ```
 
-   b. Square does necessary configuration to create a prebuilt checkout page and 
-   returns a `Checkout` object with a URL (`CheckoutPageUrl`) to the checkout page and the `Order` to be checked out.
+    1. Square does necessary configuration to create a prebuilt checkout page and
+    returns a `Checkout` object with a URL (`CheckoutPageUrl`) to the checkout page and the `Order` to be checked out.
 
-   c. The application responds by redirecting the buyer's browser to the `CheckoutPageUrl`. 
-
-        ```
+    1. The application responds by redirecting the buyer's browser to the `CheckoutPageUrl`. 
+        ```csharp
         return Redirect(response.Checkout.CheckoutPageUrl);
         ```
-        
-      The buyer sees following page hosted on Square.
+      
+        The buyer sees following page hosted on Square.
 
-      <img src="./checkout.png" width="500"/>
+        <img src="./checkout.png" width="500"/>
 
-      This page hosted on Square shows all the order information  and also the 
-       **Payment Information** section.
+        This page hosted on Square shows all the order information  and also the 
+        **Payment Information** section.
        
-    d. Buyer provides card information and clicks **Place Order**. 
+    1. Buyer provides card information and clicks **Place Order**. 
 
-    e. Square processes the payment and redirects the buyer to a confirmation  page. If you provided **redirect_url** in your initial `CreateCheckoutRequest`, Squre returns the buyer to that page. Otherwise, Square redirects the buyer to Square provided confirmation page. An example screenshot is shown:
-    
-    <img src="./confirmation.png" width="500"/>
+    1. Square processes the payment and redirects the buyer to a confirmation  page. If you provided **redirect_url** in your initial `CreateCheckoutRequest`, Squre returns the buyer to that page. Otherwise, Square redirects the buyer to Square provided confirmation page. An example screenshot is shown:
+
+        <img src="./confirmation.png" width="500"/>
 
 
