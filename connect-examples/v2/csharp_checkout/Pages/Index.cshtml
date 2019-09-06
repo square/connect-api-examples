@@ -1,0 +1,31 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Check Out";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/main.css" />
+    <link rel="stylesheet" href="~/css/normalize.css" />
+}
+
+<header class="container">
+    <div id="square-logo"></div>
+    <h1 class="header">Simple Checkout</h1>
+</header>
+<div class="container">
+    <form class="form-container" method="post" action="Checkout">
+        <div class="item-line">
+            <div class="item-label">Test Item A x 1</div>
+            <div class="item-amount">$5.00</div>
+        </div>
+        <div class="item-line">
+            <div class="item-label">Test Item B x 3</div>
+            <div class="item-amount">$30.00</div>
+        </div>
+        <div class="item-line total-line">
+            <div class="item-label">Total</div>
+            <div class="item-amount">$35.00</div>
+        </div>
+        <button type="submit">Pay now!</button>
+    </form>
+</div>
