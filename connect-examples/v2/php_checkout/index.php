@@ -15,9 +15,20 @@
       <div id="square-logo"></div>
       <h1 class="header">Simple Checkout</h1>
     </header>
-    <div class="form-container">
-      <form method="post" action="checkout.php">
-        <input name="amount" type="text" value="5.00" />
+    <div class="container">
+      <form class="form-container" method="post" action="checkout.php">
+        <div class="item-line">
+          <div class="item-label">Test Item A x 1</div>
+          <div class="item-amount">$5.00</div>
+        </div>
+        <div class="item-line">
+          <div class="item-label">Test Item B x 3</div>
+          <div class="item-amount">$30.00</div>
+        </div>
+        <div class="item-line total-line">
+          <div class="item-label">Total</div>
+          <div class="item-amount">$35.00</div>
+        </div>
         <button type="submit">Pay now!</button>
       </form>
     </div>
