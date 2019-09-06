@@ -11,18 +11,48 @@
     padding-top: 25px;
 }
 
-body {
-  background-color: #ececec;
-}
-
 .header {
   text-align: center;
   margin-top: 0;
 }
 
 .form-container {
-  text-align: center;
+  margin: 0 auto;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
 }
+
+.form-container {
+  margin: 0 auto;
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-line {
+  display: flex;
+}
+
+.item-label {
+  flex-grow: 1;
+}
+
+.item-amount {
+  font-weight: bold;
+}
+
+.total-line {
+  font-weight: bold;
+  margin: 5px 0 5px 0;
+  padding-top: 5px;
+  border-top: 1px solid #c2c7cc;
+}
+
+body {
+  background-color: #ececec;
+}
+
 
 form {
   width:100%;
