@@ -72,6 +72,9 @@ var paymentForm = new SqPaymentForm({
       if (methods.masterpass === true) {
         walletBox.style.display = 'block';
         masterpassBtn.style.display = 'block';
+        masterpassBtn.style.backgroundImage = 'url('
+        + paymentForm.masterpassImageUrl()
+        + ')';
       }
       // Only show the button if Google Pay is enabled
       if (methods.googlePay === true) {
