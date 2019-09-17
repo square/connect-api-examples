@@ -91,6 +91,9 @@ var paymentForm = new SqPaymentForm({
       if (methods.masterpass === true) {
         var masterpassBtn = document.getElementById('sq-masterpass');
         masterpassBtn.style.display = 'inline-block';
+        masterpassBtn.style.backgroundImage = 'url('
+        + paymentForm.masterpassImageUrl()
+        + ')';
       }
     },
 
