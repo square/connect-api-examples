@@ -76,13 +76,10 @@ var paymentFormWallets = new SqPaymentForm( {
       if (methods.masterpass === true) {
         var masterpassBtn = document.getElementById('sq-masterpass');
         masterpassBtn.style.display = 'inline-block';
-        if (methods.masterpass === true) {
-          masterpassBtn.style.display = 'inline-block';
-          //Set button background image provided by MasterPass
-          masterpassBtn.style.backgroundImage = 'url('
-            + paymentForm.masterpassImageUrl()
-            + ')';
-        }
+        //Set button background image provided by MasterPass
+        masterpassBtn.style.backgroundImage = 'url('
+          + paymentForm.masterpassImageUrl()
+          + ')';
       }
     },
 
