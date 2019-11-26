@@ -35,23 +35,6 @@ body, html {
   text-transform: uppercase;
 }
 
-.sq-input {
-  background-color: #fff;
-  border-style: solid;
-  border-width: 1px;
-  overflow: hidden;
-  transition: border-color 0.25s ease;
-  width: 100%;
-}
-
-.sq-input--focus {
-  background-color: #fbfdff;
-}
-
-.sq-input--error {
-  background-color: #fbfdff;
-}
-
 .sq-button:active {
   color: #fff;
 }
@@ -67,19 +50,6 @@ body, html {
   font-family: "Helvetica Neue", "Helvetica", sans-serif;
   font-weight: 500;
   letter-spacing: 0.5px;
-}
-
-.sq-input {
-  border-color: #E0E2E3;
-  border-radius: 4px;
-}
-
-.sq-input--focus {
-  border-color: #4A90E2;
-}
-
-.sq-input--error {
-  border-color: #e02e2f;
 }
 
 .sq-button {

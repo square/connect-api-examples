@@ -35,7 +35,6 @@ var paymentFormWallets = new SqPaymentForm( {
         }
         document.getElementById("error").innerHTML = error_html;
         document.getElementById('sq-creditcard').disabled = false;
-
         return;
       }else{
         document.getElementById("error").innerHTML = "";
@@ -204,7 +203,7 @@ var paymentForm = new SqPaymentForm({
         cardIconColor: '#cc0000',
         color: '#cccccc',
         backgroundColor: '#1F1F1F',
-   //     boxShadow: "10px 20px 20px #800000",
+        boxShadow: "10px 20px 20px #800000",
         fontWeight: 500,
         fontFamily: 'tahoma' //font of the input field in error
       },
@@ -266,5 +265,4 @@ var paymentForm = new SqPaymentForm({
     }
   }
 });
-//paymentForm.build();
 
