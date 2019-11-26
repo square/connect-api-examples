@@ -2,3 +2,5 @@ target/
 vendor/
 composer.phar
 composer.lock
+/connect-examples/v2/csharp_payment/Properties/launchSettings.json
+/connect-examples/v2/csharp_payment/sqRazorSample.csproj.user
