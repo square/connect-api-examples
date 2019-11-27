@@ -49,18 +49,18 @@ If the credentials are not set or are invalid, the app will fail during startup.
 
 The Java web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
 
-Square Online payment solution is a 2-step process: 
+Square Online payment solution is a 2-step process:
 
-1. Generate a nonce -  Using a Square Payment Form (a client-side JavaScript library 
+1. Generate a nonce -  Using a Square Payment Form (a client-side JavaScript library
 called the **SqPaymentForm**) you accept payment source information and generate a secure payment token (nonce).
 
-    NOTE: The SqPaymentForm library renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token (nonce). For more information, see https://docs.connect.squareup.com/payments/sqpaymentform/what-it-does.
+    NOTE: The SqPaymentForm library renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token (nonce). For more information, see [Square Payment Form - What It Does](https://developer.squareup.com/docs/payment-form/what-it-does) .
 
     After embedding the Square Payment form in your web application, it will look similar to the following screenshot:
 
     <img src="./PaymentFormExampleJava.png" width="300"/>
 
-2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
+2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2
 **Payments** API, you charge the payment source using the nonce.
 s
 The following sections describe how the Java sample implements these steps.
@@ -69,39 +69,52 @@ The following sections describe how the Java sample implements these steps.
 
 When the page loads it renders the form defined in the index.html file. The page also downloads and executes the following scripts defined in the file:
 
- **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
+ **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform).
 
 **sq-payment-form.js** - This code provides two things:
 
-* Initializes the **SqPaymentForm** object by initializing various 
+* Initializes the **SqPaymentForm** object by initializing various
 [configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail). For example,
 
-    * Maps the **SqPaymentForm.cardNumber** configuration field to corresponding form field:  
+    * Maps the **SqPaymentForm.card** configuration field to corresponding form field:
 
         ```javascript
-        cardNumber: {
-            elementId: 'sq-card-number',               
-            placeholder: '•••• •••• •••• ••••'
+        card: {
+          elementId: 'sq-card',
+          inputStyle: {
+            fontSize: '14px',
+            fontWeight: 500,
+            fontFamily: 'tahoma',
+            placeholderFontWeight: 300,
+            borderRadius: '10px',
+            autoFillColor: '#FFFFFF',     //Card number & exp. date strings
+            color: '#FFFFFF',             //CVV & Zip
+            placeholderColor: '#A5A5A5',  //card field hints
+            backgroundColor: '#1F1F1F',   //Card entry background color
+            cardIconColor: '#A5A5A5',    //Card Icon color
+            boxShadow: "10px 20px 20px #3d3d5c",
+            ...
+          }
         }
         ```
-    * **SqPaymentForm.cardNonceResponseReceived** is one of the callbacks the code provides implementation for. 
+    * **SqPaymentForm.cardNonceResponseReceived** is one of the callbacks the code provides implementation for.
 
 * Provides the **onGetCardNonce** event handler code that executes after you click **Pay $1.00 Now**.
 
-After the buyer enters their information in the form and clicks **Pay $1 Now**, the application does the following: 
+After the buyer enters their information in the form and clicks **Pay $1 Now**, the application does the following:
 
 * The **onGetCardNonce** event handler executes. It first generates a nonce by calling the **SqPaymentForm.requestCardNonce** function.
 * **SqPaymentForm.requestCardNonce** invokes **SqPaymentForm.cardNonceResponseReceived** callback. This callback  assigns the nonce to a form field and posts the form to the payment processing page:
 
     ```javascript
     document.getElementById('card-nonce').value = nonce;
-    document.getElementById('nonce-form').submit();  
+    document.getElementById('nonce-form').submit();
     ```
 
     This invokes the form action **charge**, described in next step.
 
-### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **Main.java**.  This server-side component uses the Square Java SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
+### Step 2: Charge the Payment Source Using the Nonce
+All the remaining actions take place in the **Main.java**.  This server-side component uses the Square Java SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment.
 ```java
 String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException {
     CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest()
@@ -118,4 +131,4 @@ String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws 
 
     return "charge";
 }
-```	
+```
