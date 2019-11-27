@@ -85,7 +85,7 @@ The **Square Payment Form Javascript library** (https://js.squareup.com/v2/payme
 
 * Initializes a **SqPaymentForm** object (`paymentFormWallets`) for the digital wallets by initializing various
 [configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail).
-* Initializes a **SqPaymentForm** object (`paymentForm`) for the single-element payment form by initializing various
+* Initializes a **SqPaymentForm**  (beta) object (`paymentForm`) for the single-element payment form by initializing various
 [configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail). For example,
 
 

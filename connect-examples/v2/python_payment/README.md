@@ -80,7 +80,7 @@ When the page loads it renders the form defined in the **cgi-bin/index.py** file
 
 * Initializes a **SqPaymentForm** object (`paymentFormWallets`) for the digital wallets by initializing various
 [configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail).
-* Initializes a **SqPaymentForm** object (`paymentForm`) for the single-element payment form by initializing various
+* Initializes a **SqPaymentForm** (beta) object (`paymentForm`) for the single-element payment form by initializing various
 [configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail). For example,
 
     * Maps the **SqPaymentForm.card** configuration field to corresponding form field:
