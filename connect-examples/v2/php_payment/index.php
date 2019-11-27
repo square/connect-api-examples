@@ -11,7 +11,7 @@ $dotenv->load();
   <script type="text/javascript" src=
     <?php
         echo "\"";
-        echo ($_ENV["USE_PROD"] == 'true')  ?  "https://js.squareup.com/v2/paymentform"
+        echo ($_ENV["SQUARE_ENV"] != 'sandbox')  ?  "https://js.squareup.com/v2/paymentform"
                                             :  "https://js.squareupsandbox.com/v2/paymentform";
         echo "\"";
     ?>
@@ -20,15 +20,13 @@ $dotenv->load();
     window.applicationId =
       <?php
         echo "\"";
-        echo ($_ENV["USE_PROD"] == 'true')  ?  $_ENV["PROD_APP_ID"]
-                                            :  $_ENV["SANDBOX_APP_ID"];
+        echo  $_ENV["SQUARE_APP_ID"];
         echo "\"";
       ?>;
     window.locationId =
     <?php
       echo "\"";
-      echo ($_ENV["USE_PROD"] == 'true')  ?  $_ENV["PROD_LOCATION_ID"]
-                                          :  $_ENV["SANDBOX_LOCATION_ID"];
+      echo  $_ENV["SQUARE_LOCATION_ID"];
       echo "\"";
     ?>;
   </script>
@@ -48,7 +46,7 @@ $dotenv->load();
     <div id="sq-walletbox">
       <button id="sq-google-pay" class="button-google-pay"></button>
       <button id="sq-apple-pay" class="sq-apple-pay"></button>
-      <button id="sq-masterpass" class="sq-masterpass"></button>
+      <button id="sq-masterpass" class="button-masterpass"></button>
       <div class="sq-wallet-divider">
         <span class="sq-wallet-divider__text">Or</span>
       </div>
@@ -66,22 +64,7 @@ $dotenv->load();
       -->
       <form id="nonce-form" novalidate action="/process-card.php" method="post">
         <div class="sq-field">
-          <label class="sq-label">Card Number</label>
-          <div id="sq-card-number"></div>
-        </div>
-        <div class="sq-field-wrapper">
-          <div class="sq-field sq-field--in-wrapper">
-            <label class="sq-label">CVV</label>
-            <div id="sq-cvv"></div>
-          </div>
-          <div class="sq-field sq-field--in-wrapper">
-            <label class="sq-label">Expiration</label>
-            <div id="sq-expiration-date"></div>
-          </div>
-          <div class="sq-field sq-field--in-wrapper">
-            <label class="sq-label">Postal</label>
-            <div id="sq-postal-code"></div>
-          </div>
+          <div id="sq-card"></div>
         </div>
         <div class="sq-field">
           <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
@@ -93,6 +76,7 @@ $dotenv->load();
         -->
         <div id="error"></div>
         <input type="hidden" id="card-nonce" name="nonce">
+        <ul id="errors" class="error" style="display:none"></ul>
       </form>
     </div>
   </div>
