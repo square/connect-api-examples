@@ -28,24 +28,24 @@ var paymentFormWallets = new SqPaymentForm({
     // SqPaymentForm callback functions
     callbacks: {
         cardNonceResponseReceived: function (errors, nonce, cardData, billingContact, shippingContact) {
+            const errorList = document.getElementById("errors");
             if (errors) {
-                var error_html = "";
-                for (var i = 0; i < errors.length; i++) {
-                    error_html += "<li> " + errors[i].message + " </li>";
-                }
-                document.getElementById("error").innerHTML = error_html;
-                document.getElementById('sq-creditcard').disabled = false;
-                return;
-            } else {
-                document.getElementById("error").innerHTML = "";
+              let error_html = "";
+              for (var i = 0; i < errors.length; i++) {
+                error_html += "<li> " + errors[i].message + " </li>";
+              }
+              errorList.innerHTML = error_html;
+              errorList.style.display = 'inline-block';
+              return;
             }
+            errorList.style.display = 'none';
+            errorList.innerHTML = "";
 
             // Assign the nonce value to the hidden form field
             document.getElementById('card-nonce').value = nonce;
 
             // POST the nonce form to the payment processing page
             document.getElementById('nonce-form').submit();
-
         },
         /*
          * callback function: methodsSupported

@@ -28,17 +28,18 @@ var paymentFormWallets = new SqPaymentForm( {
   // SqPaymentForm callback functions
   callbacks: {
     cardNonceResponseReceived: function(errors, nonce, cardData, billingContact, shippingContact) {
-      if (errors){
-        var error_html = "";
-        for (var i =0; i < errors.length; i++){
+      const errorList = document.getElementById("errors");
+      if (errors) {
+        let error_html = "";
+        for (var i = 0; i < errors.length; i++) {
           error_html += "<li> " + errors[i].message + " </li>";
         }
-        document.getElementById("error").innerHTML = error_html;
-        document.getElementById('sq-creditcard').disabled = false;
+        errorList.innerHTML = error_html;
+        errorList.style.display = 'inline-block';
         return;
-      }else{
-        document.getElementById("error").innerHTML = "";
       }
+      errorList.style.display = 'none';
+      errorList.innerHTML = "";
 
       // Assign the nonce value to the hidden form field
       document.getElementById('card-nonce').value = nonce;
@@ -78,7 +79,7 @@ var paymentFormWallets = new SqPaymentForm( {
         masterpassBtn.style.display = 'inline-block';
         //Set button background image provided by MasterPass
         masterpassBtn.style.backgroundImage = 'url('
-          + paymentForm.masterpassImageUrl()
+          + paymentFormWallets.masterpassImageUrl()
           + ')';
       }
     },
@@ -88,7 +89,6 @@ var paymentFormWallets = new SqPaymentForm( {
      * Triggered when: a digital wallet payment button is clicked.
      */
     createPaymentRequest: function () {
-
       var paymentRequestJson = {
         requestShippingAddress: false,
         requestBillingInfo: true,
@@ -120,7 +120,6 @@ var paymentFormWallets = new SqPaymentForm( {
           }
         ]
       };
-
       return paymentRequestJson;
     },
 
@@ -135,32 +134,6 @@ var paymentFormWallets = new SqPaymentForm( {
       /* ADD CODE TO SET validationErrorObj IF ERRORS ARE FOUND */
       return validationErrorObj ;
     },
-    /*
-     * callback function: inputEventReceived
-     * Triggered when: visitors interact with SqPaymentForm iframe elements.
-     */
-    inputEventReceived: function(inputEvent) {
-      switch (inputEvent.eventType) {
-        case 'focusClassAdded':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'focusClassRemoved':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'errorClassAdded':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'errorClassRemoved':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'cardBrandChanged':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'postalCodeChanged':
-          /* HANDLE AS DESIRED */
-          break;
-      }
-    },
 
     /*
      * callback function: paymentFormLoaded
@@ -170,9 +143,7 @@ var paymentFormWallets = new SqPaymentForm( {
       /* HANDLE AS DESIRED */
     }
   }
-
-  }
-);
+});
 
 // Initializes the SqPaymentForm object by
 // initializing various configuration fields and providing implementation for callback functions.

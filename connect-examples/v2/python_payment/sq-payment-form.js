@@ -25,17 +25,18 @@ var paymentFormWallets = new SqPaymentForm( {
   // SqPaymentForm callback functions
   callbacks: {
     cardNonceResponseReceived: function(errors, nonce, cardData, billingContact, shippingContact) {
-      if (errors){
-        var error_html = "";
-        for (var i =0; i < errors.length; i++){
+      const errorList = document.getElementById("errors");
+      if (errors) {
+        let error_html = "";
+        for (var i = 0; i < errors.length; i++) {
           error_html += "<li> " + errors[i].message + " </li>";
         }
-        document.getElementById("error").innerHTML = error_html;
-        document.getElementById('sq-creditcard').disabled = false;
+        errorList.innerHTML = error_html;
+        errorList.style.display = 'inline-block';
         return;
-      }else{
-        document.getElementById("error").innerHTML = "";
       }
+      errorList.style.display = 'none';
+      errorList.innerHTML = "";
 
       // Assign the nonce value to the hidden form field
       document.getElementById('card-nonce').value = nonce;
