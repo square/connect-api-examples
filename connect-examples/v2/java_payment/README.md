@@ -71,9 +71,11 @@ When the page loads it renders the form defined in the index.html file. The page
 
  **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform).
 
-**sq-payment-form.js** - This code provides two things:
+**sq-payment-form.js** - This code provides provides the following:
 
-* Initializes the **SqPaymentForm** object by initializing various
+* Initializes a **SqPaymentForm** object (`paymentFormWallets`) for the digital wallets by initializing various
+[configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail).
+* Initializes a **SqPaymentForm** object (`paymentForm`) for the single-element payment form by initializing various
 [configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail). For example,
 
     * Maps the **SqPaymentForm.card** configuration field to corresponding form field:
