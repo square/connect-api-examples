@@ -89,7 +89,6 @@ var paymentFormWallets = new SqPaymentForm( {
      * Triggered when: a digital wallet payment button is clicked.
      */
     createPaymentRequest: function () {
-
       var paymentRequestJson = {
         requestShippingAddress: false,
         requestBillingInfo: true,
@@ -121,7 +120,6 @@ var paymentFormWallets = new SqPaymentForm( {
           }
         ]
       };
-
       return paymentRequestJson;
     },
 
@@ -131,36 +129,9 @@ var paymentFormWallets = new SqPaymentForm( {
      *                 wallet UI that supports address selection.
      */
     validateShippingContact: function (contact) {
-
       var validationErrorObj ;
       /* ADD CODE TO SET validationErrorObj IF ERRORS ARE FOUND */
       return validationErrorObj ;
-    },
-    /*
-     * callback function: inputEventReceived
-     * Triggered when: visitors interact with SqPaymentForm iframe elements.
-     */
-    inputEventReceived: function(inputEvent) {
-      switch (inputEvent.eventType) {
-        case 'focusClassAdded':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'focusClassRemoved':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'errorClassAdded':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'errorClassRemoved':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'cardBrandChanged':
-          /* HANDLE AS DESIRED */
-          break;
-        case 'postalCodeChanged':
-          /* HANDLE AS DESIRED */
-          break;
-      }
     },
 
     /*
@@ -171,9 +142,7 @@ var paymentFormWallets = new SqPaymentForm( {
       /* HANDLE AS DESIRED */
     }
   }
-
-  }
-);
+});
 
 // Initializes the SqPaymentForm object by
 // initializing various configuration fields and providing implementation for callback functions.
@@ -183,41 +152,41 @@ var paymentForm = new SqPaymentForm({
   locationId: locationId,
   autoBuild: true,
   // Initialize the credit card placeholders
-        card: {
-          elementId: 'sq-card',
-          inputStyle: {
-            fontSize: '14px',
-            fontWeight: 500,
-            fontFamily: 'tahoma',
-            placeholderFontWeight: 300,
-            borderRadius: '10px',
-            autoFillColor: '#FFFFFF',     //Card number & exp. date strings
-            color: '#FFFFFF',             //CVV & Zip
-            placeholderColor: '#A5A5A5',  //card field hints
-            backgroundColor: '#1F1F1F',   //Card entry background color
-            cardIconColor: '#A5A5A5',    //Card Icon color
-            boxShadow: "10px 20px 20px #3d3d5c",
-            error: {
-              cardIconColor: '#cc0000',
-              color: '#cccccc',
-              backgroundColor: '#1F1F1F',
-              boxShadow: "10px 20px 20px #800000",
-              fontWeight: 500,
-              fontFamily: 'tahoma' //font of the input field in error
-            },
-            details: {
-              hidden: false,    //Shows the entry field prompt string
-              color: '#A5A5A5', //Sets prompt string color
-              fontSize: '14px',
-              fontWeight: 500,
-              fontFamily: 'tahoma',
-              error: {
-                color: '#ffcccc',
-                fontSize: '14px'
-              },
-            }
-          }
+  card: {
+    elementId: 'sq-card',
+    inputStyle: {
+      fontSize: '14px',
+      fontWeight: 500,
+      fontFamily: 'tahoma',
+      placeholderFontWeight: 300,
+      borderRadius: '10px',
+      autoFillColor: '#FFFFFF',     //Card number & exp. date strings
+      color: '#FFFFFF',             //CVV & Zip
+      placeholderColor: '#A5A5A5',  //card field hints
+      backgroundColor: '#1F1F1F',   //Card entry background color
+      cardIconColor: '#A5A5A5',    //Card Icon color
+      boxShadow: "10px 20px 20px #3d3d5c",
+      error: {
+        cardIconColor: '#cc0000',
+        color: '#cccccc',
+        backgroundColor: '#1F1F1F',
+        boxShadow: "10px 20px 20px #800000",
+        fontWeight: 500,
+        fontFamily: 'tahoma' //font of the input field in error
+      },
+      details: {
+        hidden: false,    //Shows the entry field prompt string
+        color: '#A5A5A5', //Sets prompt string color
+        fontSize: '14px',
+        fontWeight: 500,
+        fontFamily: 'tahoma',
+        error: {
+          color: '#ffcccc',
+          fontSize: '14px'
         },
+      }
+    }
+  },
 
   // SqPaymentForm callback functions
   callbacks: {
@@ -243,7 +212,6 @@ var paymentForm = new SqPaymentForm({
 
       // POST the nonce form to the payment processing page
       document.getElementById('nonce-form').submit();
-
     },
 
     /*

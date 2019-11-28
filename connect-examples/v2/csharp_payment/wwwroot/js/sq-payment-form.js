@@ -131,36 +131,9 @@ var paymentFormWallets = new SqPaymentForm({
          *                 wallet UI that supports address selection.
          */
         validateShippingContact: function (contact) {
-
             var validationErrorObj;
             /* ADD CODE TO SET validationErrorObj IF ERRORS ARE FOUND */
             return validationErrorObj;
-        },
-        /*
-         * callback function: inputEventReceived
-         * Triggered when: visitors interact with SqPaymentForm iframe elements.
-         */
-        inputEventReceived: function (inputEvent) {
-            switch (inputEvent.eventType) {
-                case 'focusClassAdded':
-                    /* HANDLE AS DESIRED */
-                    break;
-                case 'focusClassRemoved':
-                    /* HANDLE AS DESIRED */
-                    break;
-                case 'errorClassAdded':
-                    /* HANDLE AS DESIRED */
-                    break;
-                case 'errorClassRemoved':
-                    /* HANDLE AS DESIRED */
-                    break;
-                case 'cardBrandChanged':
-                    /* HANDLE AS DESIRED */
-                    break;
-                case 'postalCodeChanged':
-                    /* HANDLE AS DESIRED */
-                    break;
-            }
         },
 
         /*
