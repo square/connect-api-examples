@@ -6,7 +6,7 @@ $dotenv->load();
 ?>
 <html>
 <head>
-  <title>My Payment Form</title>
+<title>Sample Payment Form - PHP</title>
   <!-- link to the SqPaymentForm library -->
   <script type="text/javascript" src=
     <?php

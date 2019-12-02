@@ -1,108 +1,105 @@
-
 body, html {
-    background-color: rgb(76, 75, 75);
-    font-size: '14px';
+    background-color: #fffafa;
+    font-size: '12px';
     font-weight: 500;
-    font-family: 'tahoma';
-}
+    font-family: 'Helvetica';
+  }
 
-.sq-field-wrapper {
+  .sq-field-wrapper {
     display: flex;
     flex-flow: row nowrap;
     margin-bottom: 16px;
-}
+  }
 
-.sq-field {
+  .sq-field {
     margin-bottom: 16px;
     width: 100%;
-}
+  }
 
-    .sq-field:first-child {
-        margin-left: 0;
-    }
+  .sq-field:first-child {
+    margin-left: 0;
+  }
 
-    .sq-field:last-child {
-        margin-right: 0;
-    }
+  .sq-field:last-child {
+    margin-right: 0;
+  }
 
-.sq-field--in-wrapper {
+  .sq-field--in-wrapper {
     flex-grow: 1;
     margin: 0 8px;
-}
+  }
 
-.sq-label {
+  .sq-label {
     margin-bottom: 8px;
     text-transform: uppercase;
-}
+  }
 
-.sq-button:active {
+  .sq-button:active {
     color: #fff;
-}
-
-.sq-payment-form {
+  }
+  .sq-payment-form {
     max-width: 100%;
     padding: 20px 20px 5px;
     width: 380px;
-}
+  }
 
-.sq-label {
+  .sq-label {
     color: #000000;
     font-size: 14px;
     font-family: "Helvetica Neue", "Helvetica", sans-serif;
     font-weight: 500;
     letter-spacing: 0.5px;
-}
+  }
 
-.sq-button {
+  .sq-button {
     color: #fff;
     padding: 16px;
     width: 100%;
-    background: #1F1F1F;
-    border-radius: 10px;
+    background: #000;
+    border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 1px;
     margin-top: 10px;
-}
+  }
 
-    .sq-button:active {
-        background: #47476b;
-    }
-
-.sq-wallet-divider {
+  .sq-button:active {
+    background: #000;
+  }
+  .sq-wallet-divider {
     margin: 24px 0;
     position: relative;
     text-align: center;
     width: 100%;
-}
+  }
 
-    .sq-wallet-divider:after, .sq-wallet-divider::after, .sq-wallet-divider:before, .sq-wallet-divider::before {
-        background: #bbb;
-        content: '';
-        display: block;
-        height: 1px;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 9px;
-    }
+  .sq-wallet-divider:after, .sq-wallet-divider::after, .sq-wallet-divider:before, .sq-wallet-divider::before {
+    background: #bbb;
+    content: '';
+    display: block;
+    height: 1px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 9px;
+  }
 
-    .sq-wallet-divider:after, .sq-wallet-divider::after {
-        right: 65%;
-    }
+  .sq-wallet-divider:after, .sq-wallet-divider::after {
+    right: 65%;
+  }
 
-    .sq-wallet-divider:before, .sq-wallet-divider::before {
-        left: 65%;
-    }
+  .sq-wallet-divider:before, .sq-wallet-divider::before {
+    left: 65%;
+  }
 
-.sq-wallet-divider__text {
+  .sq-wallet-divider__text {
     color: #bbb;
     padding: 10px;
     text-transform: uppercase;
-}
+  }
 
-/* Indicates how Google Pay button will appear */
-.button-google-pay {
+  /* Indicates how Google Pay button will appear */
+  .button-google-pay {
     width: 100%;
     min-height: 50px;
     padding: 11px 24px;
@@ -114,24 +111,24 @@ body, html {
     background-repeat: no-repeat;
     background-size: contain;
     border: 0;
-    border-radius: 10px;
+    border-radius: 8x;
     box-shadow: 0 1px 1px 0 rgba(48, 133, 145, 0.3), 0 1px 3px 1px rgba(67, 60, 66, 0.623);
     outline: 0;
     cursor: pointer;
     display: none;
-}
+  }
 
 
-.sq-apple-pay {
+  .sq-apple-pay {
     -webkit-appearance: -apple-pay-button;
     border: none;
     height: 48px;
     margin-bottom: 10px;
     width: 100%;
     display: none;
-}
-/* Indicates how Masterpass button will appear */
-.button-masterpass {
+  }
+  /* Indicates how Masterpass button will appear */
+  .button-masterpass {
     min-width: 200px;
     min-height: 40px;
     max-height: 40px;
@@ -143,24 +140,23 @@ body, html {
     background-position: 50% 50%;
     border-radius: 5px;
     border-color: rgb(255, 255, 255);
-    cursor: pointer;
+    cursor:pointer;
     display: none;
-}
+  }
 
 
-.sq-button:hover {
+  .sq-button:hover {
     cursor: pointer;
-    background-color: #47476b;
-}
+    background-color: #2e3348;
+  }
 
-.error {
+  .error {
     float: left;
     width: calc((100% - 56px));
     margin: 16px 16px 16px 0;
-    border: 1px solid #cccccc;
-    color: #ffcccc;
-    border-radius: 6px;
-    font-size: '16px';
+    border: 1px solid #bbb;
+    color: #FF3E39;
+    border-radius: 8px;
     padding: 24px;
-}
-
+    font-size: 12px;
+  }

@@ -9,7 +9,7 @@ Square Connect C# client library and dotnet core. There are two sections in this
 
 ### Requirements
 
-* Download and install [.net core 2.0](https://www.microsoft.com/net/download/macos)
+* Download and install [.net core 3.0](https://www.microsoft.com/net/download/macos)
 * Signup a Square account from [Square website](https://squareup.com/signup)
 * You have learned the basics from [Square Developer Docs](https://docs.connect.squareup.com/)
 

@@ -19,7 +19,7 @@ html = """<!DOCTYPE html>
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Sample Payment Form</title>
+    <title>Sample Payment Form - Python</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- link to the SqPaymentForm library -->

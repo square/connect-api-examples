@@ -1,9 +1,9 @@
 
 body, html {
-  background-color: rgb(76, 75, 75);
-  font-size: '14px';
+  background-color: #fffafa;
+  font-size: '12px';
   font-weight: 500;
-  font-family: 'tahoma';
+  font-family: 'Helvetica';
 }
 
 .sq-field-wrapper {
@@ -56,8 +56,8 @@ body, html {
   color: #fff;
   padding: 16px;
   width: 100%;
-  background: #1F1F1F;
-  border-radius: 10px;
+  background: #000;
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   letter-spacing: 1px;
@@ -65,7 +65,7 @@ body, html {
 }
 
 .sq-button:active {
-  background: #47476b;
+  background: #000;
 }
 .sq-wallet-divider {
   margin: 24px 0;
@@ -112,7 +112,7 @@ body, html {
   background-repeat: no-repeat;
   background-size: contain;
   border: 0;
-  border-radius: 10px;
+  border-radius: 8x;
   box-shadow: 0 1px 1px 0 rgba(48, 133, 145, 0.3), 0 1px 3px 1px rgba(67, 60, 66, 0.623);
   outline: 0;
   cursor: pointer;
@@ -148,17 +148,17 @@ body, html {
 
 .sq-button:hover {
   cursor: pointer;
-  background-color: #47476b;
+  background-color: #2e3348;
 }
 
 .error {
   float: left;
   width: calc((100% - 56px));
   margin: 16px 16px 16px 0;
-  border: 1px solid #cccccc;
-  color: #ffcccc;
-  border-radius: 6px;
-  font-size: '16px';
+  border: 1px solid #bbb;
+  color: #FF3E39;
+  border-radius: 8px;
   padding: 24px;
+  font-size: 12px;
 }
 
