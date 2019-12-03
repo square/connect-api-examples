@@ -1,7 +1,4 @@
-/**
- * Define callback function for "sq-button"
- * @param {*} event
- */
+
 function onGetCardNonce(event) {
 
   // Don't submit the form until SqPaymentForm returns with a nonce
@@ -21,7 +18,7 @@ var paymentFormWallets = new SqPaymentForm( {
   },
   applePay: {
     elementId: 'sq-apple-pay'
-  },
+  },qq
   masterpass: {
     elementId: 'sq-masterpass'
   },
@@ -46,7 +43,6 @@ var paymentFormWallets = new SqPaymentForm( {
 
       // POST the nonce form to the payment processing page
       document.getElementById('nonce-form').submit();
-
     },
     /*
      * callback function: methodsSupported
@@ -82,7 +78,7 @@ var paymentFormWallets = new SqPaymentForm( {
         masterpassBtn.style.display = 'inline-block';
         //Set button background image provided by MasterPass
         masterpassBtn.style.backgroundImage = 'url('
-          + paymentFormWallets.masterpassImageUrl()
+          + paymentForm.masterpassImageUrl()
           + ')';
       }
     },
@@ -132,7 +128,6 @@ var paymentFormWallets = new SqPaymentForm( {
      *                 wallet UI that supports address selection.
      */
     validateShippingContact: function (contact) {
-
       var validationErrorObj ;
       /* ADD CODE TO SET validationErrorObj IF ERRORS ARE FOUND */
       return validationErrorObj ;
@@ -174,7 +169,7 @@ var paymentForm = new SqPaymentForm({
         cardIconColor: 'linear-gradient(180deg, #29ACFF 0%, #0097F6 233.38%)',
         color: '#FF3E39',
         backgroundColor: '#FFFFFF',
-        boxShadow: "0px 2px 6px rgba(0,0,0,.02), 0px 4px 8px rgba(0,0,0, 0.04), 0px 8px 30px rgba(0,0,0, 0.04), 0px 1px 2px rgba(0,0,0, 0.08)",
+        boxShadow: "0px 2px 6px rgba(228,99,90,.02), 0px 4px 8px rgba(228,99,90, 0.04), 0px 8px 30px rgba(228,99,90, 0.04), 0px 1px 2px rgba(228,99,90, 0.08)",
         fontWeight: 500,
         fontFamily: 'Helvetica' //font of the input field in error
       },
