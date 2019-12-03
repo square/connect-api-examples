@@ -167,7 +167,7 @@ var paymentForm = new SqPaymentForm({
         cardIconColor: 'linear-gradient(180deg, #29ACFF 0%, #0097F6 233.38%)',
         color: '#FF3E39',
         backgroundColor: '#FFFFFF',
-        boxShadow: "0px 2px 6px rgba(0,0,0,.02), 0px 4px 8px rgba(0,0,0, 0.04), 0px 8px 30px rgba(0,0,0, 0.04), 0px 1px 2px rgba(0,0,0, 0.08)",
+        boxShadow: "0px 2px 6px rgba(228,99,90,.02), 0px 4px 8px rgba(228,99,90, 0.04), 0px 8px 30px rgba(228,99,90, 0.04), 0px 1px 2px rgba(228,99,90, 0.08)",
         fontWeight: 500,
         fontFamily: 'Helvetica' //font of the input field in error
       },

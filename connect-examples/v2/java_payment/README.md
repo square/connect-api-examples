@@ -44,6 +44,7 @@ The default port used is `5000`, but this can be configured in the `application.
 
 If the credentials are not set or are invalid, the app will fail during startup.
 
+If you need to stop the server process, type `lsof -i :5000` on the command line and then find the PID of the java command. Type `kill -9 SOME_PID` to stop the process.
 
 ## Application Flow
 

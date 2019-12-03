@@ -49,16 +49,6 @@ var paymentFormWallets = new SqPaymentForm( {
      * Triggered when: the page is loaded.
      */
     methodsSupported: function (methods, unsupportedReason) {
-      const errorList = document.getElementById("errors");
-
-      if (unsupportedReason ) {
-          let error_html = "";
-          error_html += "<li> " + unsupportedReason.message + " </li>";
-          errorList.innerHTML = error_html;
-          errorList.style.display = 'inline-block';
-          return;
-
-      }
       if (!methods.masterpass && !methods.applePay && !methods.googlePay) {
         var walletBox = document.getElementById('sq-walletbox');
         walletBox.style.display = 'none';
