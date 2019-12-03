@@ -13,13 +13,12 @@ $dotenv->load();
 
 # The access token to use in all Connect API requests. Use your *sandbox* access
 # token if you're just testing things out.
-$access_token = ($_ENV["USE_PROD"] == 'true')  ?  $_ENV["PROD_ACCESS_TOKEN"]
-                                               :  $_ENV["SANDBOX_ACCESS_TOKEN"];
+$access_token = $_ENV["SQUARE_ACCESS_TOKEN"];
 
 # Set 'Host' url to switch between sandbox env and production env
 # sandbox: https://connect.squareupsandbox.com
 # production: https://connect.squareup.com
-$host_url = ($_ENV["USE_PROD"] == 'true')  ?  "https://connect.squareup.com"
+$host_url = ($_ENV["SQUARE_ENV"] != 'sandbox')  ?  "https://connect.squareup.com"
                                            :  "https://connect.squareupsandbox.com";
 
 $api_config = new \SquareConnect\Configuration();

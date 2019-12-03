@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="ie=edge" http-equiv="x-ua-compatible">
-    <title>Sample Payment Form</title>
+    <title>Sample Payment Form - Java</title>
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <script th:src="${paymentFormUrl}" type="text/javascript"></script>
     <script type="application/javascript">
@@ -47,14 +47,13 @@
       -->
       <form id="nonce-form" novalidate action="/charge" method="post">
         <div id="sq-card"></div>
-          <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
-            Pay $1.00 Now
-          </button>
+        <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
+          Pay $1.00 Now
+        </button>
         <!--
           After a nonce is generated it will be assigned to this hidden input field.
         -->
         <ul id="errors" class="error" style="display:none"></ul>
-
         <input type="hidden" id="card-nonce" name="nonce">
       </form>
     </div>

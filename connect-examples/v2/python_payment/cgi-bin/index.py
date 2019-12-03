@@ -19,7 +19,7 @@ html = """<!DOCTYPE html>
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Sample Payment Form</title>
+    <title>Sample Payment Form - Python</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- link to the SqPaymentForm library -->
@@ -47,7 +47,7 @@ html = """<!DOCTYPE html>
       <div id="sq-walletbox">
         <button id="sq-google-pay" class="button-google-pay"></button>
         <button id="sq-apple-pay" class="sq-apple-pay"></button>
-        <button id="sq-masterpass" class="sq-masterpass"></button>
+        <button id="sq-masterpass" class="button-masterpass"></button>
         <div class="sq-wallet-divider">
           <span class="sq-wallet-divider__text">Or</span>
         </div>
@@ -65,22 +65,7 @@ html = """<!DOCTYPE html>
         -->
         <form id="nonce-form" novalidate action="process_card.py">
           <div class="sq-field">
-            <label class="sq-label">Card Number</label>
-            <div id="sq-card-number"></div>
-          </div>
-          <div class="sq-field-wrapper">
-            <div class="sq-field sq-field--in-wrapper">
-              <label class="sq-label">CVV</label>
-              <div id="sq-cvv"></div>
-            </div>
-            <div class="sq-field sq-field--in-wrapper">
-              <label class="sq-label">Expiration</label>
-              <div id="sq-expiration-date"></div>
-            </div>
-            <div class="sq-field sq-field--in-wrapper">
-              <label class="sq-label">Postal</label>
-              <div id="sq-postal-code"></div>
-            </div>
+            <div id="sq-card"></div>
           </div>
           <div class="sq-field">
             <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
@@ -92,6 +77,7 @@ html = """<!DOCTYPE html>
           -->
           <div id="error"></div>
           <input type="hidden" id="card-nonce" name="nonce">
+          <ul id="errors" class="error" style="display:none"></ul>
         </form>
       </div>
     </div>
