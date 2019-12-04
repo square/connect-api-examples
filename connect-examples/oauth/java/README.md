@@ -16,9 +16,9 @@ If you want to run this sample against the Square Sandbox environment:
 the following steps.
 1. Add a new **Sandbox Test Account**:
 
-   a. Click **New Account** on the dashboard home page.
-   b. Give the account a name and pick a country.
-   c. Uncheck **Automatically create authorizations for all my current apps**. 
+   a. Click **New Account** on the dashboard home page.<br>
+   b. Give the account a name and pick a country. <br>
+   c. Uncheck **Automatically create authorizations for all my current apps**.<br>
 
 1. Click **Launch** on the new test account to open the sandbox seller dashboard
 for the account. The OAuth flow will create an authorization for this account.
