@@ -1,11 +1,19 @@
-The Square Connect v2 API requires OAuth scopes with every call to a Connect endpoint. The following tables provided the needed permissions (scopes) for each endpoint in a Connect v2 service.
+# Square Connect v2 API OAuth Scopes
 
-## CheckoutService
+The Square Connect v2 API requires OAuth scopes with every call to a Connect
+endpoint. The following tables provided the needed permissions (scopes) for each
+endpoint in a Connect v2 service.
+
+A Connect v2 endpoint URL is formed by appending a service name and endpoint to
+`https://connect.squareup.com/v2/`.  For example, the **CreateCheckout** endpoint
+URL is `https://connect.squareup.com/v2/checkout/createcheckout`
+
+## Checkout Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |CreateCheckout|ORDERS_WRITE, PAYMENTS_WRITE|
 
-## CustomersService
+## Customers Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |CreateCustomer|CUSTOMERS_WRITE|
@@ -17,13 +25,13 @@ The Square Connect v2 API requires OAuth scopes with every call to a Connect end
 |CreateCustomerCard|CUSTOMERS_WRITE|
 |DeleteCustomerCard|CUSTOMERS_WRITE|
 
-## EmployeesService
+## Employees Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |RetrieveEmployee|EMPLOYEES_READ|
 |ListEmployees|EMPLOYEES_READ|
 
-## LaborService
+## Labor Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |CreateBreakType|TIMECARDS_SETTINGS_WRITE|
@@ -41,7 +49,7 @@ The Square Connect v2 API requires OAuth scopes with every call to a Connect end
 |UpdateWorkweekConfig|TIMECARDS_SETTINGS_READ, TIMECARDS_SETTINGS_WRITE|
 |ListWorkweekConfigs|TIMECARDS_SETTINGS_READ|
 
-## LocationsService
+## Locations Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |ListLocations|MERCHANT_PROFILE_READ|
@@ -49,18 +57,18 @@ The Square Connect v2 API requires OAuth scopes with every call to a Connect end
 |UpdateLocation|MERCHANT_PROFILE_WRITE|
 |CreateLocation|MERCHANT_PROFILE_WRITE|
 
-## MerchantsService
+## Merchants Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |ListMerchants|MERCHANT_PROFILE_READ|
 |RetrieveMerchant|MERCHANT_PROFILE_READ|
 
-## MobileAuthorizationService
+## MobileAuthorization Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |CreateMobileAuthorizationCode|PAYMENTS_WRITE_IN_PERSON|
 
-## OrderService
+## Order Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |SearchOrders|ORDERS_READ|
@@ -69,7 +77,7 @@ The Square Connect v2 API requires OAuth scopes with every call to a Connect end
 |BatchRetrieveOrders|ORDERS_READ|
 |PayOrder|ORDERS_WRITE, PAYMENTS_WRITE|
 
-## PaymentsService
+## Payments Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |CreatePayment|PAYMENTS_WRITE|
@@ -79,7 +87,7 @@ The Square Connect v2 API requires OAuth scopes with every call to a Connect end
 |CompletePayment|PAYMENTS_WRITE|
 |ListPayments|PAYMENTS_READ|
 
-## RefundsService
+## Refunds Service
 |Endpoint|Permissions|
 |:-------------|:-------------------------------------------------------------|
 |RefundPayment|PAYMENTS_WRITE|
