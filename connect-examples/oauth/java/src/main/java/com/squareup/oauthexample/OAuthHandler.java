@@ -49,11 +49,11 @@ public class OAuthHandler {
   // ID and secret. You MUST also set the CONNECT_HOST to "https://connect.squareupsandbox.com"
 
   // Your application's ID and secret, available from your application dashboard.
-  private static final String APPLICATION_ID =  "APPLICATION_ID";
-  private static final String APPLICATION_SECRET =  "APPLICATION_SECRET";
+  private static final String APPLICATION_ID =  "REPLACE_ME";
+  private static final String APPLICATION_SECRET =  "REPLACE_ME";
   // The base URL for every Connect API request
   private static final String CONNECT_HOST = "https://connect.squareup.com";
-  private static final String SCOPES = "MERCHANT_PROFILE_READ PAYMENTS_READ SETTLEMENTS_READ BANK_ACCOUNTS_READ";
+  private static final String SCOPES = "REPLACE_ME";
   // Serves the authorize link
   static class AuthorizeHandler implements HttpHandler {
 

@@ -15,15 +15,17 @@ If you want to run this sample against the Square Sandbox environment:
 1. Set your application dashboard to **Sandbox Settings** mode before completing
 the following steps.
 1. Add a new **Sandbox Test Account**:
+
    a. Click **New Account** on the dashboard home page.
    b. Give the account a name and pick a country.
    c. Uncheck **Automatically create authorizations for all my current apps**.
+
 1. Click **Launch** on the new test account to open the sandbox seller dashboard
 for the account. The OAuth flow will create an authorization for this account.
 
 ### Set your application's Redirect URL
 
-On your application dashboard, set your application's Sandbox Redirect URL to
+On your application dashboard, set your application's Redirect URL to
 `http://localhost:8000/callback`.
 
 Note that applications that don't use a `localhost` URL must use HTTPS. HTTP is
@@ -31,7 +33,7 @@ allowed for `localhost` URLs to simplify the development process.
 
 ### Specify your application credentials
 
-In order for the sample to work, you must specify two fields in `OAuthHandler.java`:
+In order for the sample to work, you must specify the following fields in `OAuthHandler.java`:
 
 * Replace the value of `APPLICATION_ID` with your application's ID, available on your
 [application dashboard](https://connect.squareup.com/apps).
@@ -39,8 +41,9 @@ In order for the sample to work, you must specify two fields in `OAuthHandler.ja
 * Replace the value of `APPLICATION_SECRET` with your application's secret, also
 available on your application dashboard.
 
-* Set the value of `SCOPES` to the [permission set](../OAuthPermissions.md) you
-want to authorize the account to get authorization for.
+* (OPTIONAL) Set the value of `SCOPES` to the [permission set](../OAuthPermissions.md) you
+want to authorize the account to get authorization for. If you do not set this value,
+`MERCHANT_PROFILE_READ PAYMENTS_READ SETTLEMENTS_READ BANK_ACCOUNTS_READ` are applied.
 * For sandbox testing, set the value of `CONNECT_HOST` to `https://connect.squareupsandbox.com`.
 Otherwise, use `https://connect.squareup.com`
 
@@ -50,6 +53,8 @@ From this directory, run `mvn install` to compile the application.
 
 ## Running the example
 
+If you are testing in the sandbox, be sure that your test account seller dashboard
+is still open in another browser tab.
 
 To run the example, execute the following from this directory:
 
