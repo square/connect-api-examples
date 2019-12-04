@@ -58,7 +58,7 @@ is still open in another browser tab.
 
 To run the example, execute the following from this directory:
 
-    java -cp target/shaded-oauthexample-1.0-SNAPSHOT.jar com.squareup.oauthexample.OAuthHandler
+    java -cp target/shaded-oauthexample-1.5-SNAPSHOT.jar com.squareup.oauthexample.OAuthHandler
 
 You can then proceed through the OAuth flow by going to `http://localhost:8000`
 in your web browser.
