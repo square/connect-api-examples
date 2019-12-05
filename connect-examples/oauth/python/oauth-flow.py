@@ -12,22 +12,36 @@
 #    to the Connect API.
 
 from bottle import get, request, static_file, run, response
-import squareconnect
-from squareconnect.apis.o_auth_api import OAuthApi
-from squareconnect.models.obtain_token_request import ObtainTokenRequest
+
+from square.client import Client
 
 # Your application's ID and secret, available from your application dashboard.
+# If you are testing this sample in the sandbox, use the sandbox app id and secret
+# from your application dashboard in "Sandbox Settings" mode.
 application_id = 'REPLACE_ME'
 application_secret = 'REPLACE_ME'
+sandboxURL = 'https://connect.squareupsandbox.com'
+productionURL = 'https://connect.squareup.com'
+scopes = 'MERCHANT_PROFILE_READ PAYMENTS_READ SETTLEMENTS_READ BANK_ACCOUNTS_READ'
+
+# For Sandbox testing: Set the base URL to the Square sandbox domain
+# Default environment is production
+client = Client(
+    environment='sandbox'
+)
+
+o_auth_api = client.o_auth
 
 # OAuth API instance
-oauth_api = OAuthApi()
+# oauth_api = OAuthApi()
 
 # Serves the link that merchants click to authorize your application
+# If you have set the client environment to 'sandbox', you must format
+# this authorization URL with the sandboxURL.  Otherwise, use the productionURL
 @get('/')
 def authorize():
-  return '''<a href="https://connect.squareup.com/oauth2/authorize?client_id={0}">Click here</a>
-            to authorize the application.'''.format(application_id)
+  return '''<a href="{0}/oauth2/authorize?client_id={1}&scope={2}">Click here</a>
+            to authorize the application.'''.format(sandboxURL, application_id, scopes)
 
 # Serves requsts from Square to your application's redirect URL
 # Note that you need to set your application's Redirect URL to
@@ -40,24 +54,23 @@ def callback():
   if authorization_code:
 
     # Provide the code in a request to the Obtain Token endpoint
-    oauth_request_body = ObtainTokenRequest()
-    oauth_request_body.client_id = application_id
-    oauth_request_body.client_secret = application_secret
-    oauth_request_body.code = authorization_code
-    oauth_request_body.grant_type = 'authorization_code'
 
-    response = oauth_api.obtain_token(oauth_request_body)
+    body = {}
+    body['client_id'] = application_id
+    body['client_secret'] = application_secret
+    body['code'] = authorization_code
+    body['grant_type'] = 'authorization_code'
 
-    if response.access_token:
+    result = o_auth_api.obtain_token(body)
 
+    if result.is_success():
       # Here, instead of printing the access token, your application server should store it securely
       # and use it in subsequent requests to the Connect API on behalf of the merchant.
-      print ('Access token: ' + response.access_token)
+      print ('Access token: ' + result.body['access_token'])
       return 'Authorization succeeded!'
+    elif result.is_error():
+        return 'Code exchange failed!'
 
-    # The response from the Obtain Token endpoint did not include an access token. Something went wrong.
-    else:
-      return 'Code exchange failed!'
 
   # The request to the Redirect URL did not include an authorization code. Something went wrong.
   else:
