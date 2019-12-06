@@ -19,7 +19,10 @@ require 'vendor/autoload.php';
 $applicationId = 'REPLACE_ME';
 $applicationSecret = 'REPLACE_ME';
 
-$oauth_api = new SquareConnect\Api\OAuthApi();
+$api_config = new \SquareConnect\Configuration();
+$api_config->setHost("https://connect.squareupsandbox.com");
+$api_client = new \SquareConnect\ApiClient($api_config);
+$oauth_api = new SquareConnect\Api\OAuthApi($api_client);
 
 # Serves requests from Square to your application's redirect URL
 # Note that you need to set your application's Redirect URL to
