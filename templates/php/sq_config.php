@@ -50,6 +50,14 @@ if (!defined(_SQ_DOMAIN)) {
     define('_SQ_DOMAIN', "connect.squareup.com") ;
 }
 
+/**
+* Square sandbox domain for REST API calls
+*/
+if (!defined(_SQ_SANDBOX_DOMAIN)) {
+  define('_SQ_SANDBOX_DOMAIN', "connect.squareupsandbox.com") ;
+}
+
+
 // }}}
 
 // {{{ functions
