@@ -32,8 +32,6 @@ client = Client(
 
 o_auth_api = client.o_auth
 
-# OAuth API instance
-# oauth_api = OAuthApi()
 
 # Serves the link that merchants click to authorize your application
 # If you have set the client environment to 'sandbox', you must format
