@@ -15,12 +15,26 @@
 
 require 'vendor/autoload.php';
 
+  /**
+  * Square domain for REST API calls
+  */
+  if (!defined(_SQ_DOMAIN)) {
+    define('_SQ_DOMAIN', "https://connect.squareup.com") ;
+  }
+
+  /**
+  * Square sandbox domain for REST API calls
+  */
+  if (!defined(_SQ_SANDBOX_DOMAIN)) {
+  define('_SQ_SANDBOX_DOMAIN', "https://connect.squareupsandbox.com") ;
+  }
+
 # Your application's ID and secret, available from your application dashboard
 $applicationId = 'REPLACE_ME';
 $applicationSecret = 'REPLACE_ME';
 
 $api_config = new \SquareConnect\Configuration();
-$api_config->setHost("https://connect.squareupsandbox.com");
+$api_config->setHost(_SQ_SANDBOX_DOMAIN);
 $api_client = new \SquareConnect\ApiClient($api_config);
 $oauth_api = new SquareConnect\Api\OAuthApi($api_client);
 
