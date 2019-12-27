@@ -27,9 +27,8 @@
   <dependencies>
     <dependency>
       <groupId>com.squareup</groupId>
-      <artifactId>connect</artifactId>
-      <version>2.20190814.2</version>
-      <scope>compile</scope>
+      <artifactId>square</artifactId>
+      <version>4.0.0.20191217</version>
     </dependency>
 
     <dependency>

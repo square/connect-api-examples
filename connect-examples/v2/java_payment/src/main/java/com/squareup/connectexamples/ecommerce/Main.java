@@ -16,13 +16,13 @@
 
 package com.squareup.connectexamples.ecommerce;
 
-import com.squareup.connect.ApiClient;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.PaymentsApi;
-import com.squareup.connect.auth.OAuth;
-import com.squareup.connect.models.*;
+import com.squareup.square.Environment;
+import com.squareup.square.api.PaymentsApi;
+import com.squareup.square.models.*;
+import com.squareup.square.SquareClient;
+import com.squareup.square.exceptions.ApiException;
 
-import java.util.Currency;
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import org.springframework.boot.SpringApplication;
@@ -47,11 +47,12 @@ public class Main {
     // This must be set in order for the application to start.
     private static final String SQUARE_LOCATION_ID_ENV_VAR = "SQUARE_LOCATION_ID";
 
-    // The environment variable indicate the square environment - sandbox or production.
+    // The environment variable indicate the square environment - sandbox or
+    // production.
     // This must be set in order for the application to start.
     private static final String SQUARE_ENV_ENV_VAR = "SQUARE_ENV";
 
-    private final ApiClient squareClient;
+    private final SquareClient squareClient;
     private final String squareLocationId;
     private final String squareAppId;
     private final String squareEnvironment;
@@ -61,14 +62,9 @@ public class Main {
         squareAppId = mustLoadEnvironmentVariable(SQUARE_APP_ID_ENV_VAR);
         squareLocationId = mustLoadEnvironmentVariable(SQUARE_LOCATION_ID_ENV_VAR);
 
-        squareClient = new ApiClient();
-        // Configure OAuth2 access token for authorization: oauth2
-        OAuth oauth2 = (OAuth) squareClient.getAuthentication("oauth2");
-        oauth2.setAccessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR));
-        // Set 'basePath' to switch between sandbox env and production env
-        // sandbox: https://connect.squareupsandbox.com
-        // production: https://connect.squareup.com
-        squareClient.setBasePath(squareEnvironment.equals("sandbox") ? "https://connect.squareupsandbox.com" : "https://connect.squareup.com");
+        squareClient = new SquareClient.Builder()
+            .environment(Environment.fromString(squareEnvironment))
+            .accessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR)).build();
     }
 
     public static void main(String[] args) throws Exception {
@@ -78,8 +74,7 @@ public class Main {
     private String mustLoadEnvironmentVariable(String name) {
         String value = System.getenv(name);
         if (value == null || value.length() == 0) {
-            throw new IllegalStateException(
-                String.format("The %s environment variable must be set", name));
+            throw new IllegalStateException(String.format("The %s environment variable must be set", name));
         }
 
         return value;
@@ -87,8 +82,9 @@ public class Main {
 
     @RequestMapping("/")
     String index(Map<String, Object> model) throws ApiException {
-        model.put("paymentFormUrl", squareEnvironment.equals("sandbox") ?
-            "https://js.squareupsandbox.com/v2/paymentform" : "https://js.squareup.com/v2/paymentform");
+        model.put("paymentFormUrl",
+                squareEnvironment.equals("sandbox") ? "https://js.squareupsandbox.com/v2/paymentform"
+                        : "https://js.squareup.com/v2/paymentform");
         model.put("locationId", squareLocationId);
         model.put("appId", squareAppId);
 
@@ -96,17 +92,23 @@ public class Main {
     }
 
     @PostMapping("/charge")
-    String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException {
+    String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException, IOException {
         // To learn more about splitting payments with additional recipients,
         // see the Payments API documentation on our [developer site]
         // (https://developer.squareup.com/docs/payments-api/overview).
-        CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest()
-            .idempotencyKey(UUID.randomUUID().toString())
-            .amountMoney(new Money().amount(1_00L).currency("USD"))
-            .sourceId(form.getNonce())
-            .note("From a Square sample Java app");
+        Money bodyAmountMoney = new Money.Builder()
+            .amount(100L)
+            .currency("USD")
+            .build();
+        CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
+                form.getNonce(),
+                UUID.randomUUID().toString(),
+                bodyAmountMoney)
+            .autocomplete(true)
+            .note("From a Square sample Java app")
+            .build();
 
-        PaymentsApi paymentsApi = new PaymentsApi(squareClient);
+        PaymentsApi paymentsApi = squareClient.getPaymentsApi();
 
         CreatePaymentResponse response = paymentsApi.createPayment(createPaymentRequest);
 
