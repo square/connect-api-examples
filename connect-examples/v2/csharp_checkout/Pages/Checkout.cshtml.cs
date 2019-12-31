@@ -13,7 +13,6 @@ namespace csharp_checkout.Pages
   {
     private SquareClient client;
     private readonly string locationId;
-    // private readonly Configuration configuration;
 
     public CheckoutModel( Microsoft.Extensions.Configuration.IConfiguration configuration)
     {
