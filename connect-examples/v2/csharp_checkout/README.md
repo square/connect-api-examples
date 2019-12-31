@@ -75,7 +75,7 @@ Checkout.cshtml.cs). The event handler does the following:
        
     1. Buyer provides card information and clicks **Place Order**. 
 
-    1. Square processes the payment and redirects the buyer to a confirmation  page. If you provided **redirect_url** in your initial `CreateCheckoutRequest`, Squre returns the buyer to that page. Otherwise, Square redirects the buyer to Square provided confirmation page. An example screenshot is shown:
+    1. Square processes the payment and redirects the buyer to a confirmation  page. If you provided **redirect_url** in your initial `CreateCheckoutRequest`, Square returns the buyer to that page. Otherwise, Square redirects the buyer to Square provided confirmation page. An example screenshot is shown:
 
         <img src="./confirmation.png" width="650"/>
 
