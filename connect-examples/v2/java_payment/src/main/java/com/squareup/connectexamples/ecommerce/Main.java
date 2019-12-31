@@ -110,10 +110,15 @@ public class Main {
 
         PaymentsApi paymentsApi = squareClient.getPaymentsApi();
 
-        CreatePaymentResponse response = paymentsApi.createPayment(createPaymentRequest);
+        try{
+            CreatePaymentResponse response = paymentsApi.createPayment(createPaymentRequest);
+            model.put("payment", response.getPayment());
 
-        model.put("payment", response.getPayment());
+            return "charge";
+        } catch (ApiException except) {
+            model.put("error", except.getErrors().get(0));
 
-        return "charge";
+            return "error";
+        }
     }
 }
