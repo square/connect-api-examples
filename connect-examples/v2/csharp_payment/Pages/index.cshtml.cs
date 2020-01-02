@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
-using Square.Connect.Api;
-using Square.Connect.Model;
 
 namespace sqRazorSample.Pages
 {
