@@ -14,7 +14,7 @@
 * Used to make test calls against the Square sandbox
 * REPLACE_ME = a sandbox access token from the application Credentials tab
 */
-if (!defined(_SQ_SANDBOX_TOKEN)) {
+if (!defined('_SQ_SANDBOX_TOKEN')) {
     define('_SQ_SANDBOX_TOKEN', "REPLACE_ME") ;
 }
 
@@ -23,7 +23,7 @@ if (!defined(_SQ_SANDBOX_TOKEN)) {
 * Used to make test calls against the Square sandbox
 * REPLACE_ME = a sandbox application ID from the application Credentials tab
 */
-if (!defined(_SQ_SANDBOX_APP_ID)) {
+if (!defined('_SQ_SANDBOX_APP_ID')) {
     define('_SQ_SANDBOX_APP_ID', "REPLACE_ME") ;
 }
 
@@ -31,7 +31,7 @@ if (!defined(_SQ_SANDBOX_APP_ID)) {
 * Your Square application ID
 * REPLACE_ME = an application ID from the application Credentials tab
 */
-if (!defined(_SQ_APP_ID)) {
+if (!defined('_SQ_APP_ID')) {
     define('_SQ_APP_ID', "REPLACE_ME") ;
 }
 
@@ -39,21 +39,21 @@ if (!defined(_SQ_APP_ID)) {
 * Your Square application secret
 * REPLACE_ME = an application secrete from the application OAuth tab
 */
-if (!defined(_SQ_APP_SECRET)) {
+if (!defined('_SQ_APP_SECRET')) {
     define('_SQ_APP_SECRET', "REPLACE_ME") ;
 }
 
 /**
 * Square domain for REST API calls
 */
-if (!defined(_SQ_DOMAIN)) {
+if (!defined('_SQ_DOMAIN')) {
     define('_SQ_DOMAIN', "connect.squareup.com") ;
 }
 
 /**
 * Square sandbox domain for REST API calls
 */
-if (!defined(_SQ_SANDBOX_DOMAIN)) {
+if (!defined('_SQ_SANDBOX_DOMAIN')) {
   define('_SQ_SANDBOX_DOMAIN', "connect.squareupsandbox.com") ;
 }
 
