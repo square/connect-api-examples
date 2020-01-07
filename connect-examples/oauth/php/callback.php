@@ -14,12 +14,23 @@
 #
 
 require 'vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::create(__DIR__);
+$dotenv->load();
 
 # Your application's ID and secret, available from your application dashboard
-$applicationId = 'REPLACE_ME';
-$applicationSecret = 'REPLACE_ME';
+$applicationId = ($_ENV["USE_PROD"] == 'true') ? $_ENV["PROD_APP_ID"]
+                                               : $_ENV["SANDBOX_APP_ID"];
+$applicationSecret = ($_ENV["USE_PROD"] == 'true') ? $_ENV["PROD_APP_SECRET"]
+                                                   : $_ENV["SANDBOX_APP_SECRET"];
 
-$oauth_api = new SquareConnect\Api\OAuthApi();
+
+$api_config = new \SquareConnect\Configuration();
+$api_config->setHost( ($_ENV["USE_PROD"] == 'true') ? "https://connect.squareup.com"
+                                                    : "https://connect.squareupsandbox.com");
+
+$api_client = new \SquareConnect\ApiClient($api_config);
+
+$oauth_api = new SquareConnect\Api\OAuthApi($api_client);
 
 # Serves requests from Square to your application's redirect URL
 # Note that you need to set your application's Redirect URL to
@@ -47,20 +58,21 @@ function callback() {
 
         # Here, instead of printing the access token, your application server should store it securely
         # and use it in subsequent requests to the Connect API on behalf of the merchant.
-        error_log('Access token: ' . $accessToken);
-        error_log('Authorization succeeded!');
+        echo nl2br('Access token: ' . $accessToken);
+        echo "<br>";
+        echo 'Authorization succeeded!';
 
         # The response from the Obtain Token endpoint did not include an access token. Something went wrong.
       } else {
-        error_log('Code exchange failed!');
+        echo 'Code exchange failed!';
       }
     } catch (SquareConnect\ApiException $e) {
-      error_log($e->getMessage());
+      echo $e->getMessage();
     }
 
     # The request to the Redirect URL did not include an authorization code. Something went wrong.
   } else {
-    error_log('Authorization failed!');
+    echo 'Authorization failed!';
   }
 }
 
