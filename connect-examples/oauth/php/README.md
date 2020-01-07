@@ -11,10 +11,10 @@ For more information, see [OAuth Overview](https://docs.connect.squareup.com/api
 
 ### Download Composer and dependencies
 
-This application requires the Unirest HTTP library for PHP, which you install via
+This application requires the PHP Square SDK as well as DotEnv for reading environment variables, which you install via
 Composer.
 
-First, download Square in this directory with the instructions on
+First, download Composer in this directory with the instructions on
 [this page](https://getcomposer.org/download/).
 
 After you've downloaded Composer, install the dependencies with the following
