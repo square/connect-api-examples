@@ -56,7 +56,7 @@ called the **SqPaymentForm**) you accept payment source information and generate
 2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
 **Payments** API, you charge the payment source using the nonce.
 s
-The following sections describe how the Java sample implements these steps.
+The following sections describe how the Ruby sample implements these steps.
 
 ### Step 1: Generate a Nonce
 
