@@ -9,28 +9,25 @@ For more information, see [OAuth Overview](https://docs.connect.squareup.com/api
 
 ## Setup
 
-### Download Composer and Unirest
+### Download Composer and dependencies
 
-This application requires the Unirest HTTP library for PHP, which you install via
+This application requires the PHP Square SDK as well as DotEnv for reading environment variables, which you install via
 Composer.
 
 First, download Composer in this directory with the instructions on
 [this page](https://getcomposer.org/download/).
 
-After you've downloaded Composer, install the Unirest dependency with the following
+After you've downloaded Composer, install the dependencies with the following
 command from this directory:
 
     php composer.phar install
 
 ### Specify your application credentials
 
-In order for the sample to work, you must specify fields in `callback.php` and `index.php`:
+In order for the sample to work, you must create a file called `.env`:
 
-* In both files, replace the value of `$application_id` with your application's ID,
-available on your [application dashboard](https://connect.squareup.com/apps).
-
-* In `callback.php`, replace the value of `$applicationSecret` with your
-application's secret, also available on your application dashboard.
+* In this file, supply either production, sandbox, or both credentials.
+* Be sure to put `true` or `false` for `USE_PROD` as it will change the domain being used.
 
 ### Set your application's Redirect URL
 
