@@ -35,6 +35,15 @@ if (!defined('_SQ_SANDBOX_APP_ID')) {
 }
 
 /**
+* Your Square SANDBOX environment application secret
+* REPLACE_ME = an application secret from the SANDBOX environment application
+* OAuth tab
+*/
+if (!defined('_SQ_SANDBOX_APP_SECRET')) {
+  define('_SQ_SANDBOX_APP_SECRET', "REPLACE_ME") ;
+}
+
+/**
 * Your Square application ID
 * REPLACE_ME = an application ID from the application Credentials tab
 */
