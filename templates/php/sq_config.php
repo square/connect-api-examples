@@ -7,6 +7,13 @@
  * use these templates at [docs.connect.squareup.com]
  */
 
+/**
+ * Include the Square Connect SDK loader
+ * Update the line below to reference the install path of the Connect SDK
+ */
+require_once 'local/path/to/autoload.php';
+
+
 // {{{ constants
 
 /**
@@ -114,10 +121,4 @@ function getLocationId() {
 
 // }}}
 
-/**
- * Include the Square Connect SDK loader
- * Uncomment the line below if you are installing the SDK manually instead of
- * using a package manager to install the Connect SDK
- */
-//require_once 'local/path/to/autoload.php';
 ?>
