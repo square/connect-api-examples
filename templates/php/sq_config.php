@@ -17,6 +17,15 @@ require_once 'local/path/to/autoload.php';
 // {{{ constants
 
 /**
+* Your Square sandbox location ID
+* Used to make test calls against the Square sandbox
+* REPLACE_ME = a sandbox location ID from the application Locations tab
+*/
+if (!defined('_SQ_SANDBOX_LOCATION_ID')) {
+  define('_SQ_SANDBOX_LOCATION_ID', "REPLACE_ME") ;
+}
+
+/**
 * Your Square sandbox token
 * Used to make test calls against the Square sandbox
 * REPLACE_ME = a sandbox access token from the application Credentials tab
@@ -44,6 +53,23 @@ if (!defined('_SQ_SANDBOX_APP_SECRET')) {
 }
 
 /**
+* Square sandbox domain for REST API calls
+*/
+if (!defined('_SQ_SANDBOX_DOMAIN')) {
+  define('_SQ_SANDBOX_DOMAIN', "connect.squareupsandbox.com") ;
+}
+
+
+/**
+* Your Square production location ID
+* Used to make test calls against the Square production environment
+* REPLACE_ME = a location ID from the application Locations tab
+*/
+if (!defined('_SQ_LOCATION_ID')) {
+  define('_SQ_LOCATION_ID', "REPLACE_ME") ;
+}
+
+/**
 * Your Square application ID
 * REPLACE_ME = an application ID from the application Credentials tab
 */
@@ -60,17 +86,19 @@ if (!defined('_SQ_APP_SECRET')) {
 }
 
 /**
+* Your Square production token
+* Used to make test calls against the Square production environment
+* REPLACE_ME = a production access token from the application Credentials tab
+*/
+if (!defined('_SQ_TOKEN')) {
+  define('_SQ_TOKEN', "REPLACE_ME") ;
+}
+
+/**
 * Square domain for REST API calls
 */
 if (!defined('_SQ_DOMAIN')) {
     define('_SQ_DOMAIN', "connect.squareup.com") ;
-}
-
-/**
-* Square sandbox domain for REST API calls
-*/
-if (!defined('_SQ_SANDBOX_DOMAIN')) {
-  define('_SQ_SANDBOX_DOMAIN', "connect.squareupsandbox.com") ;
 }
 
 
@@ -88,12 +116,31 @@ if (!defined('_SQ_SANDBOX_DOMAIN')) {
  *
  * @return string a valid access token
  */
-function getAccessToken() {
-
-  $accessToken = _SQ_SANDBOX_TOKEN;
-
-  return $accessToken;
+function getAccessToken(bool $requestSandboxToken = TRUE) {
+  if ($requestSandboxToken) {
+    return _SQ_SANDBOX_TOKEN;
+  } else {
+    return _SQ_TOKEN;
+  }
 }
+
+/**
+ * Returns an OAuth app secret for Square API calls
+ *
+ * By default, the function below returns sandbox credentials for testing and
+ * development. For production, return the application secret assigned in the
+ * OAuth page of your app registration with the dashboard set to Production Settings.
+ *
+ * @return string a valid app secret
+ */
+function getAppSecret(bool $requestSandboxSecret = TRUE) {
+  if ($requestSandboxSecret) {
+    return _SQ_SANDBOX_APP_SECRET;
+  } else {
+    return _SQ_APP_SECRET;
+  }
+}
+
 
 /**
  * Returns an application Id for Square API calls
@@ -104,28 +151,33 @@ function getAccessToken() {
  *
  * @return string a valid application ID token
  */
-function getApplicationId() {
-
-  $accessToken = _SQ_SANDBOX_APP_ID;
-
-  return $accessToken;
+function getApplicationId(bool $requestSandboxAppId = TRUE) {
+  if ($requestSandboxAppId) {
+    return _SQ_SANDBOX_APP_ID;
+  } else {
+    return _SQ_APP_ID;
+  }
 }
 
 
 /**
  * Returns a location ID for Square API calls
  *
- * By default, the function below returns a hardcoded location ID from the
+ * By default, the function below returns a hardcoded sandbox location ID from the
  * Application Dashboard. For production, update the function implementation
  * to fetch a valid location ID programmtically.
  *
  * @return string a valid location ID
  */
-function getLocationId() {
+function getLocationId(bool $requestSandboxLocation = TRUE) {
 
-  // Replace the string with a sandbox location ID from the Application Dashboard
-  return "REPLACE_ME" ;
-
+  if ($requestSandboxLocation) {
+    // Replace the string with a sandbox location ID from the Application Dashboard
+    return _SQ_SANDBOX_LOCATION_ID ;
+  } else {
+    // Replace the string with a production location ID from the Application Dashboard
+    return _SQ_LOCATION_ID ;
+  }
 }
 
 // }}}
