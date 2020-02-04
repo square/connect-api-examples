@@ -101,85 +101,142 @@ if (!defined('_SQ_DOMAIN')) {
     define('_SQ_DOMAIN', "connect.squareup.com") ;
 }
 
+if (!defined('_SQ_AUTHZ_URL')) {
+  define('_SQ_AUTHZ_URL', "/oauth2/authorize") ;
+}
 
 // }}}
 
-// {{{ functions
+// {{{ credentials helper class
 
-/**
- * Returns an access token for Square API calls
- *
- * By default, the function below returns sandbox credentials for testing and
- * development.For production, replace the function implementation with a valid
- * OAuth flow to generate OAuth credentials. See the OAuth Setup Guide for more
- * information on implementing OAuth.
- *
- * @return string a valid access token
- */
-function getAccessToken(bool $requestSandboxToken = TRUE) {
-  if ($requestSandboxToken) {
-    return _SQ_SANDBOX_TOKEN;
-  } else {
-    return _SQ_TOKEN;
+class CredentialManager {
+  protected $defaultConnectClient = NULL;
+  protected $defaultConnectSandboxClient = NULL;
+
+  /**
+   * Returns a Connect API client configured to hit the sandbox or production
+   * environments.
+   *
+   * By default, the function below returns a sandbox Connect client for testing and
+   * development.
+   *
+   * The first time this function is called, a new instance of either the sandbox
+   * or production client is returned. On 2nd call with the same argument value, the
+   * "singleton" instance of the client is returned.
+   *
+   * If the function is called with a different argument value (FALSE vs. TRUE),
+   * a singleton production client is created and returned.
+   *
+   * @return string a valid Connect v2 client
+   */
+  public function getConnectClient(bool $sandboxHostRequested = TRUE) {
+
+    if (is_null($defaultConnectSandboxClient) And $sandboxHostRequested) {
+      //...
+      // Create and configure a new API client object
+      $defaultApiConfig = new \SquareConnect\Configuration();
+      //Set Connect Endpoint to Sandbox environment
+      // comment this setHost call out if you want to use the production environment
+      $defaultApiConfig->setHost("https://" . _SQ_SANDBOX_DOMAIN);
+      $defaultApiConfig->setAccessToken(getAccessToken($sandboxHostRequested));
+      $defaultConnectSandboxClient =  new \SquareConnect\ApiClient($defaultApiConfig);
+    }
+    if (is_null($defaultConnectClient) And $sandboxHostRequested == FALSE) {
+      //...
+      // Create and configure a new API client object
+      $defaultApiConfig = new \SquareConnect\Configuration();
+
+      //Set Connect Endpoint to production environment
+      $defaultApiConfig->setHost("https://" . _SQ_DOMAIN);
+      $defaultApiConfig->setAccessToken(getAccessToken($sandboxHostRequested));
+      $defaultConnectClient =  new \SquareConnect\ApiClient($defaultApiConfig);
+    }
+
+
+    if ($sandboxHostRequested) {
+      return $defaultConnectSandboxClient;
+    } else {
+      return $defaultConnectClient;
+    }
+  }
+
+
+
+
+  /**
+   * Returns an access token for Square API calls
+   *
+   * By default, the function below returns sandbox credentials for testing and
+   * development.For production, replace the function implementation with a valid
+   * OAuth flow to generate OAuth credentials. See the OAuth Setup Guide for more
+   * information on implementing OAuth.
+   *
+   * @return string a valid access token
+   */
+  public function getAccessToken(bool $requestSandboxToken = TRUE) {
+    if ($requestSandboxToken) {
+      return _SQ_SANDBOX_TOKEN;
+    } else {
+      return _SQ_TOKEN;
+    }
+  }
+
+  /**
+   * Returns an OAuth app secret for Square API calls
+   *
+   * By default, the function below returns sandbox credentials for testing and
+   * development. For production, return the application secret assigned in the
+   * OAuth page of your app registration with the dashboard set to Production Settings.
+   *
+   * @return string a valid app secret
+   */
+  public function getAppSecret(bool $requestSandboxSecret = TRUE) {
+    if ($requestSandboxSecret) {
+      return _SQ_SANDBOX_APP_SECRET;
+    } else {
+      return _SQ_APP_SECRET;
+    }
+  }
+
+
+  /**
+   * Returns an application Id for Square API calls
+   *
+   * By default, the function below returns a sandbox application ID for testing
+   * and development. For production, replace the function implementation with a
+   * valid production credential.
+   *
+   * @return string a valid application ID token
+   */
+  public function getApplicationId(bool $requestSandboxAppId = TRUE) {
+    if ($requestSandboxAppId) {
+      return _SQ_SANDBOX_APP_ID;
+    } else {
+      return _SQ_APP_ID;
+    }
+  }
+
+
+  /**
+   * Returns a location ID for Square API calls
+   *
+   * By default, the function below returns a hardcoded sandbox location ID from the
+   * Application Dashboard. For production, update the function implementation
+   * to fetch a valid location ID programmtically.
+   *
+   * @return string a valid location ID
+   */
+  public function getLocationId(bool $requestSandboxLocation = TRUE) {
+
+    if ($requestSandboxLocation) {
+      // Replace the string with a sandbox location ID from the Application Dashboard
+      return _SQ_SANDBOX_LOCATION_ID ;
+    } else {
+      // Replace the string with a production location ID from the Application Dashboard
+      return _SQ_LOCATION_ID ;
+    }
   }
 }
-
-/**
- * Returns an OAuth app secret for Square API calls
- *
- * By default, the function below returns sandbox credentials for testing and
- * development. For production, return the application secret assigned in the
- * OAuth page of your app registration with the dashboard set to Production Settings.
- *
- * @return string a valid app secret
- */
-function getAppSecret(bool $requestSandboxSecret = TRUE) {
-  if ($requestSandboxSecret) {
-    return _SQ_SANDBOX_APP_SECRET;
-  } else {
-    return _SQ_APP_SECRET;
-  }
-}
-
-
-/**
- * Returns an application Id for Square API calls
- *
- * By default, the function below returns a sandbox application ID for testing
- * and development. For production, replace the function implementation with a
- * valid production credential.
- *
- * @return string a valid application ID token
- */
-function getApplicationId(bool $requestSandboxAppId = TRUE) {
-  if ($requestSandboxAppId) {
-    return _SQ_SANDBOX_APP_ID;
-  } else {
-    return _SQ_APP_ID;
-  }
-}
-
-
-/**
- * Returns a location ID for Square API calls
- *
- * By default, the function below returns a hardcoded sandbox location ID from the
- * Application Dashboard. For production, update the function implementation
- * to fetch a valid location ID programmtically.
- *
- * @return string a valid location ID
- */
-function getLocationId(bool $requestSandboxLocation = TRUE) {
-
-  if ($requestSandboxLocation) {
-    // Replace the string with a sandbox location ID from the Application Dashboard
-    return _SQ_SANDBOX_LOCATION_ID ;
-  } else {
-    // Replace the string with a production location ID from the Application Dashboard
-    return _SQ_LOCATION_ID ;
-  }
-}
-
 // }}}
 
 ?>
