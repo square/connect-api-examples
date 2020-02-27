@@ -25,7 +25,7 @@ $appId = ($_ENV["USE_PROD"] == 'true') ? $_ENV["PROD_APP_ID"]
 // Use _SQ_DOMAIN if you want to authorize in the production environment
 $connectV2Client = $credentialManager->getConnectClient($useSandbox);
 $appId = $credentialManager->getApplicationId($useSandbox);
-phpinfo();
+// phpinfo();
 echo ($useSandbox == FALSE) ? "<a href=\"https://"._SQ_DOMAIN._SQ_AUTHZ_URL
 ."?client_id=$appId&scope=$permissions\">Click here</a> to authorize the application."
 : "<a href=\"https://"._SQ_SANDBOX_DOMAIN._SQ_AUTHZ_URL
