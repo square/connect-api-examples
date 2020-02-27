@@ -131,7 +131,7 @@ class CredentialManager {
    */
   public function getConnectClient(bool $sandboxHostRequested = TRUE) {
 
-    if (is_null($defaultConnectSandboxClient) And $sandboxHostRequested) {
+    if (is_null($this->$defaultConnectSandboxClient) And $this->$sandboxHostRequested) {
       //...
       // Create and configure a new API client object
       $defaultApiConfig = new \SquareConnect\Configuration();
@@ -139,9 +139,9 @@ class CredentialManager {
       // comment this setHost call out if you want to use the production environment
       $defaultApiConfig->setHost("https://" . _SQ_SANDBOX_DOMAIN);
       $defaultApiConfig->setAccessToken(getAccessToken($sandboxHostRequested));
-      $defaultConnectSandboxClient =  new \SquareConnect\ApiClient($defaultApiConfig);
+      $this->$defaultConnectSandboxClient =  new \SquareConnect\ApiClient($defaultApiConfig);
     }
-    if (is_null($defaultConnectClient) And $sandboxHostRequested == FALSE) {
+    if (is_null($this->$defaultConnectClient) And $sandboxHostRequested == FALSE) {
       //...
       // Create and configure a new API client object
       $defaultApiConfig = new \SquareConnect\Configuration();
@@ -149,14 +149,14 @@ class CredentialManager {
       //Set Connect Endpoint to production environment
       $defaultApiConfig->setHost("https://" . _SQ_DOMAIN);
       $defaultApiConfig->setAccessToken(getAccessToken($sandboxHostRequested));
-      $defaultConnectClient =  new \SquareConnect\ApiClient($defaultApiConfig);
+      $this->$defaultConnectClient =  new \SquareConnect\ApiClient($defaultApiConfig);
     }
 
 
     if ($sandboxHostRequested) {
-      return $defaultConnectSandboxClient;
+      return $this->$defaultConnectSandboxClient;
     } else {
-      return $defaultConnectClient;
+      return $this->$defaultConnectClient;
     }
   }
 

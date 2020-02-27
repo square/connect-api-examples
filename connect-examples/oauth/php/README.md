@@ -31,7 +31,7 @@ In order for the sample to work, you must create a file called `.env`:
 
 ### Set your application's Redirect URL
 
-On your application dashboard, set your application's Redirect URL to `http://localhost:8000/callback.php`.
+On your application dashboard, set your application's Redirect URL to `https://localhost:8000/callback.php`.
 
 Note that applications that don't use a `localhost` URL must use HTTPS. HTTP is
 allowed for `localhost` URLs to simplify the development process.
