@@ -7,6 +7,9 @@ Redirect URL (specified on the application dashboard).
 
 For more information, see [OAuth Overview](https://docs.connect.squareup.com/api/oauth#oauth-overview), along with the comments included in `callback.php`.
 
+The Square open source code [LICENSE](LICENSE) details any restrictions
+and warranties for this example project.
+
 ## Setup
 
 ### Download Composer and dependencies

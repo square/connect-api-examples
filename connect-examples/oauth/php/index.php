@@ -1,4 +1,6 @@
 <?php
+# Please review the Square LICENSE (/connect-examples/oauth/php/LICENSE) before using this code.
+
 # This file simply serves the link that merchants click to authorize your application.
 # When authorization completes, a notification is sent to your redirect URL, which should
 # be handled in callback.php.
