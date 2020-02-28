@@ -24,7 +24,7 @@ require_once 'vendor/autoload.php';
 * REPLACE_ME = a sandbox location ID from the application Locations tab
 */
 if (!defined('_SQ_SANDBOX_LOCATION_ID')) {
-  define('_SQ_SANDBOX_LOCATION_ID', "VJN4XSBFTVPK9") ;
+  define('_SQ_SANDBOX_LOCATION_ID', "REPLACE_ME") ;
 }
 
 /**
@@ -33,7 +33,7 @@ if (!defined('_SQ_SANDBOX_LOCATION_ID')) {
 * REPLACE_ME = a sandbox access token from the application Credentials tab
 */
 if (!defined('_SQ_SANDBOX_TOKEN')) {
-    define('_SQ_SANDBOX_TOKEN', "EAAAECvGIixcCMgHFxYR_hJlY6Oyzy-9UeE4zFIbI91tOvru7o_tugkSoPsj_PXw") ;
+    define('_SQ_SANDBOX_TOKEN', "REPLACE_ME") ;
 }
 
 /**
@@ -42,7 +42,7 @@ if (!defined('_SQ_SANDBOX_TOKEN')) {
 * REPLACE_ME = a sandbox application ID from the application Credentials tab
 */
 if (!defined('_SQ_SANDBOX_APP_ID')) {
-    define('_SQ_SANDBOX_APP_ID', "sandbox-sq0idb-ZJBwQ8CdcxuKAf1QtiKiFg") ;
+    define('_SQ_SANDBOX_APP_ID', "REPLACE_ME") ;
 }
 
 /**
@@ -51,7 +51,7 @@ if (!defined('_SQ_SANDBOX_APP_ID')) {
 * OAuth tab
 */
 if (!defined('_SQ_SANDBOX_APP_SECRET')) {
-  define('_SQ_SANDBOX_APP_SECRET', "sandbox-sq0csb-4ewe086vcNSd_c-zYgLJGV8VpHLlfYbTGrLSA0OYlrA") ;
+  define('_SQ_SANDBOX_APP_SECRET', "REPLACE_ME") ;
 }
 
 /**
@@ -114,7 +114,12 @@ if (!defined('_SQ_AUTHZ_URL')) {
 class CredentialManager {
   protected $defaultConnectClient = NULL;
   protected $defaultConnectSandboxClient = NULL;
+  protected $useSandbox = TRUE;
 
+
+public function setUseSandbox(bool $requestSandboxToken = TRUE) {
+  $this->useSandbox = $requestSandboxToken;
+}
   /**
    * Returns a Connect API client configured to hit the sandbox or production
    * environments.
@@ -131,34 +136,31 @@ class CredentialManager {
    *
    * @return string a valid Connect v2 client
    */
-  public function getConnectClient(bool $sandboxHostRequested = TRUE) {
+  public function getConnectClient() {
 
-    if (is_null($this->$defaultConnectSandboxClient) And $this->$sandboxHostRequested) {
-      //...
+    if (is_null($this->defaultConnectSandboxClient) And $this->useSandbox) {
       // Create and configure a new API client object
       $defaultApiConfig = new \SquareConnect\Configuration();
       //Set Connect Endpoint to Sandbox environment
       // comment this setHost call out if you want to use the production environment
       $defaultApiConfig->setHost("https://" . _SQ_SANDBOX_DOMAIN);
-      $defaultApiConfig->setAccessToken(getAccessToken($sandboxHostRequested));
-      $this->$defaultConnectSandboxClient =  new \SquareConnect\ApiClient($defaultApiConfig);
+      $defaultApiConfig->setAccessToken($this->getAccessToken($this->useSandbox));
+      $this->defaultConnectSandboxClient =  new \SquareConnect\ApiClient($defaultApiConfig);
     }
-    if (is_null($this->$defaultConnectClient) And $sandboxHostRequested == FALSE) {
-      //...
+    if (is_null($this->defaultConnectClient) And $this->useSandbox == FALSE) {
       // Create and configure a new API client object
       $defaultApiConfig = new \SquareConnect\Configuration();
 
       //Set Connect Endpoint to production environment
       $defaultApiConfig->setHost("https://" . _SQ_DOMAIN);
-      $defaultApiConfig->setAccessToken(getAccessToken($sandboxHostRequested));
-      $this->$defaultConnectClient =  new \SquareConnect\ApiClient($defaultApiConfig);
+      $defaultApiConfig->setAccessToken($this->getAccessToken($this->useSandbox));
+      $this->defaultConnectClient =  new \SquareConnect\ApiClient($defaultApiConfig);
     }
 
-
-    if ($sandboxHostRequested) {
-      return $this->$defaultConnectSandboxClient;
+    if ($this->useSandbox) {
+      return $this->defaultConnectSandboxClient;
     } else {
-      return $this->$defaultConnectClient;
+      return $this->defaultConnectClient;
     }
   }
 
@@ -175,8 +177,8 @@ class CredentialManager {
    *
    * @return string a valid access token
    */
-  public function getAccessToken(bool $requestSandboxToken = TRUE) {
-    if ($requestSandboxToken) {
+  public function getAccessToken() {
+    if ($this->useSandbox == TRUE) {
       return _SQ_SANDBOX_TOKEN;
     } else {
       return _SQ_TOKEN;
@@ -192,8 +194,8 @@ class CredentialManager {
    *
    * @return string a valid app secret
    */
-  public function getAppSecret(bool $requestSandboxSecret = TRUE) {
-    if ($requestSandboxSecret) {
+  public function getAppSecret() {
+    if ($this->useSandbox == TRUE) {
       return _SQ_SANDBOX_APP_SECRET;
     } else {
       return _SQ_APP_SECRET;
@@ -210,8 +212,8 @@ class CredentialManager {
    *
    * @return string a valid application ID token
    */
-  public function getApplicationId(bool $requestSandboxAppId = TRUE) {
-    if ($requestSandboxAppId) {
+  public function getApplicationId() {
+    if ($this->useSandbox == TRUE) {
       return _SQ_SANDBOX_APP_ID;
     } else {
       return _SQ_APP_ID;
@@ -228,9 +230,9 @@ class CredentialManager {
    *
    * @return string a valid location ID
    */
-  public function getLocationId(bool $requestSandboxLocation = TRUE) {
+  public function getLocationId() {
 
-    if ($requestSandboxLocation) {
+    if ($this->useSandbox == TRUE) {
       // Replace the string with a sandbox location ID from the Application Dashboard
       return _SQ_SANDBOX_LOCATION_ID ;
     } else {
