@@ -9,8 +9,8 @@
       (which should be set to http://localhost:8000/callback on your application dashboard)
    4. The server extracts the authorization code provided in Square's request and passes it
       along to the Obtain Token endpoint.
-   5. The Obtain Token endpoint returns an access token your application can use in subsequent requests
-      to the Connect API.
+   5. The Obtain Token endpoint returns an access token and refresh token your
+      application can use in subsequent requests to the Connect API.
 
    This sample requires the Unirest Java library. Download instructions are here:
    http://unirest.io/java.html
@@ -21,7 +21,9 @@
 package com.squareup.oauthexample;
 
 import com.squareup.connect.ApiException;
+import com.squareup.connect.Configuration;
 import com.squareup.connect.api.OAuthApi;
+import com.squareup.connect.ApiClient;
 import com.squareup.connect.models.ObtainTokenRequest;
 import com.squareup.connect.models.ObtainTokenResponse;
 
@@ -41,13 +43,17 @@ import org.json.JSONObject;
 
 public class OAuthHandler {
 
+
+  // FOR SANDBOX TESTING:
+  // If you are testing the OAuth flow in the sandbox, use your sandbox application
+  // ID and secret. You MUST also set the CONNECT_HOST to "https://connect.squareupsandbox.com"
+
   // Your application's ID and secret, available from your application dashboard.
-  private static final String _applicationId = "REPLACE_ME";
-  private static final String _applicationSecret = "REPLACE_ME";
-
+  private static final String APPLICATION_ID =  "REPLACE_ME";
+  private static final String APPLICATION_SECRET =  "REPLACE_ME";
   // The base URL for every Connect API request
-  private static final String _connectHost = "https://connect.squareup.com";
-
+  private static final String CONNECT_HOST = "https://connect.squareup.com";
+  private static final String SCOPES = "REPLACE_ME";
   // Serves the authorize link
   static class AuthorizeHandler implements HttpHandler {
 
@@ -59,8 +65,17 @@ public class OAuthHandler {
         t.getResponseBody().close();
       }
 
-      final byte[] out = (String.format("<a href=\"https://connect.squareup.com/oauth2/authorize?client_id=%s\">Click here</a> ", _applicationId)
-          + "to authorize the application.").getBytes("UTF-8");
+
+      String authorizeURL = String.format(
+        "<a href=\"%s/oauth2/authorize?client_id=%s&scope=%s\">Click here</a> ",
+        CONNECT_HOST,
+        APPLICATION_ID,
+        SCOPES)
+        + "to authorize the application.";
+
+      System.out.println(authorizeURL);
+
+      final byte[] out = (authorizeURL).getBytes("UTF-8");
       t.sendResponseHeaders(200, out.length);
       t.getResponseBody().write(out);
       t.getResponseBody().close();
@@ -103,10 +118,16 @@ public class OAuthHandler {
       }
 
       ObtainTokenRequest body = new ObtainTokenRequest();
-      body.setClientId(_applicationId);
-      body.setClientSecret(_applicationSecret);
+      body.setClientId(APPLICATION_ID);
+      body.setClientSecret(APPLICATION_SECRET);
       body.setCode(authorizationCode);
       body.setGrantType("authorization_code");
+
+      //The default base path is 'https://connect.squareup.com'
+      //When you are testing OAuth in the Square Sandbox, this resets
+      //the base path to the Square Sandbox domain
+      ApiClient apiClient = Configuration.getDefaultApiClient();
+      apiClient.setBasePath(CONNECT_HOST);
 
       OAuthApi oAuthApi = new OAuthApi();
       ObtainTokenResponse response = null;
@@ -121,6 +142,7 @@ public class OAuthHandler {
 
       if (response != null) {
         System.out.println("Access token: " + response.getAccessToken());
+        System.out.println("Refresh token: " + response.getRefreshToken());
         System.out.println("Authorization succeeded!");
         t.sendResponseHeaders(200, 0);
         t.getResponseBody().close();
