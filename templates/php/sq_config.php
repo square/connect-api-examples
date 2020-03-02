@@ -5,8 +5,6 @@
  * This template provides useful constants and skeleton functions that can make
  * working with Connect SDKs easier. You can find more information on how to
  * use these templates at [docs.connect.squareup.com]
- *
- * Please review the Square LICENSE (/connect-examples/oauth/php/LICENSE) before using this code.
  */
 
 /**
