@@ -11,7 +11,7 @@
  * Include the Square Connect SDK loader
  * Update the line below to reference the install path of the Connect SDK
  */
-require_once 'local/path/to/autoload.php';
+require_once 'vendor/autoload.php';
 
 
 // {{{ constants
@@ -112,7 +112,12 @@ if (!defined('_SQ_AUTHZ_URL')) {
 class CredentialManager {
   protected $defaultConnectClient = NULL;
   protected $defaultConnectSandboxClient = NULL;
+  protected $useSandbox = TRUE;
 
+
+public function setUseSandbox(bool $requestSandboxToken = TRUE) {
+  $this->useSandbox = $requestSandboxToken;
+}
   /**
    * Returns a Connect API client configured to hit the sandbox or production
    * environments.
@@ -129,34 +134,31 @@ class CredentialManager {
    *
    * @return string a valid Connect v2 client
    */
-  public function getConnectClient(bool $sandboxHostRequested = TRUE) {
+  public function getConnectClient() {
 
-    if (is_null($defaultConnectSandboxClient) And $sandboxHostRequested) {
-      //...
+    if (is_null($this->defaultConnectSandboxClient) And $this->useSandbox) {
       // Create and configure a new API client object
       $defaultApiConfig = new \SquareConnect\Configuration();
       //Set Connect Endpoint to Sandbox environment
       // comment this setHost call out if you want to use the production environment
       $defaultApiConfig->setHost("https://" . _SQ_SANDBOX_DOMAIN);
-      $defaultApiConfig->setAccessToken(getAccessToken($sandboxHostRequested));
-      $defaultConnectSandboxClient =  new \SquareConnect\ApiClient($defaultApiConfig);
+      $defaultApiConfig->setAccessToken($this->getAccessToken($this->useSandbox));
+      $this->defaultConnectSandboxClient =  new \SquareConnect\ApiClient($defaultApiConfig);
     }
-    if (is_null($defaultConnectClient) And $sandboxHostRequested == FALSE) {
-      //...
+    if (is_null($this->defaultConnectClient) And $this->useSandbox == FALSE) {
       // Create and configure a new API client object
       $defaultApiConfig = new \SquareConnect\Configuration();
 
       //Set Connect Endpoint to production environment
       $defaultApiConfig->setHost("https://" . _SQ_DOMAIN);
-      $defaultApiConfig->setAccessToken(getAccessToken($sandboxHostRequested));
-      $defaultConnectClient =  new \SquareConnect\ApiClient($defaultApiConfig);
+      $defaultApiConfig->setAccessToken($this->getAccessToken($this->useSandbox));
+      $this->defaultConnectClient =  new \SquareConnect\ApiClient($defaultApiConfig);
     }
 
-
-    if ($sandboxHostRequested) {
-      return $defaultConnectSandboxClient;
+    if ($this->useSandbox) {
+      return $this->defaultConnectSandboxClient;
     } else {
-      return $defaultConnectClient;
+      return $this->defaultConnectClient;
     }
   }
 
@@ -173,8 +175,8 @@ class CredentialManager {
    *
    * @return string a valid access token
    */
-  public function getAccessToken(bool $requestSandboxToken = TRUE) {
-    if ($requestSandboxToken) {
+  public function getAccessToken() {
+    if ($this->useSandbox == TRUE) {
       return _SQ_SANDBOX_TOKEN;
     } else {
       return _SQ_TOKEN;
@@ -190,8 +192,8 @@ class CredentialManager {
    *
    * @return string a valid app secret
    */
-  public function getAppSecret(bool $requestSandboxSecret = TRUE) {
-    if ($requestSandboxSecret) {
+  public function getAppSecret() {
+    if ($this->useSandbox == TRUE) {
       return _SQ_SANDBOX_APP_SECRET;
     } else {
       return _SQ_APP_SECRET;
@@ -208,8 +210,8 @@ class CredentialManager {
    *
    * @return string a valid application ID token
    */
-  public function getApplicationId(bool $requestSandboxAppId = TRUE) {
-    if ($requestSandboxAppId) {
+  public function getApplicationId() {
+    if ($this->useSandbox == TRUE) {
       return _SQ_SANDBOX_APP_ID;
     } else {
       return _SQ_APP_ID;
@@ -226,9 +228,9 @@ class CredentialManager {
    *
    * @return string a valid location ID
    */
-  public function getLocationId(bool $requestSandboxLocation = TRUE) {
+  public function getLocationId() {
 
-    if ($requestSandboxLocation) {
+    if ($this->useSandbox == TRUE) {
       // Replace the string with a sandbox location ID from the Application Dashboard
       return _SQ_SANDBOX_LOCATION_ID ;
     } else {
