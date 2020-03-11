@@ -142,7 +142,7 @@ public function setUseSandbox(bool $requestSandboxToken = TRUE) {
       //Set Connect Endpoint to Sandbox environment
       // comment this setHost call out if you want to use the production environment
       $defaultApiConfig->setHost("https://" . _SQ_SANDBOX_DOMAIN);
-      $defaultApiConfig->setAccessToken($this->getAccessToken($this->useSandbox));
+      $defaultApiConfig->setAccessToken($this->getAccessToken());
       $this->defaultConnectSandboxClient =  new \SquareConnect\ApiClient($defaultApiConfig);
     }
     if (is_null($this->defaultConnectClient) And $this->useSandbox == FALSE) {
@@ -151,7 +151,7 @@ public function setUseSandbox(bool $requestSandboxToken = TRUE) {
 
       //Set Connect Endpoint to production environment
       $defaultApiConfig->setHost("https://" . _SQ_DOMAIN);
-      $defaultApiConfig->setAccessToken($this->getAccessToken($this->useSandbox));
+      $defaultApiConfig->setAccessToken($this->getAccessToken());
       $this->defaultConnectClient =  new \SquareConnect\ApiClient($defaultApiConfig);
     }
 
