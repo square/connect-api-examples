@@ -30,22 +30,25 @@
       [
         "idempotency_key" => uniqid(),
         "order" => [
-          "line_items" => [
-          [
-            "name" => "Test Item A",
-            "quantity" => "1",
-            "base_price_money" => [
-              "amount" => 500,
-              "currency" => "USD"
-            ]
-          ],[
-            "name" => "Test Item B",
-            "quantity" => "3",
-            "base_price_money" => [
-              "amount" => 1000,
-              "currency" => "USD"
-            ]
-          ]]
+          "order" => [
+            "location_id" => $location_id,
+            "line_items" => [
+            [
+              "name" => "Test Item A",
+              "quantity" => "1",
+              "base_price_money" => [
+                "amount" => 500,
+                "currency" => "USD"
+              ]
+            ],[
+              "name" => "Test Item B",
+              "quantity" => "3",
+              "base_price_money" => [
+                "amount" => 1000,
+                "currency" => "USD"
+              ]
+            ]]
+          ]
         ]
       ]
     );
