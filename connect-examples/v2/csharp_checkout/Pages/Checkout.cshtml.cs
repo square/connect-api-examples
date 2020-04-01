@@ -38,14 +38,14 @@ namespace csharp_checkout.Pages
         // create line items for the order
         // This example assumes the order information is retrieved and hard coded
         // You can find different ways to retrieve order information and fill in the following lineItems object.
-        List<CreateOrderRequestLineItem> lineItems = new List<CreateOrderRequestLineItem>();
+        List<OrderLineItem> lineItems = new List<OrderLineItem>();
 
         Money firstLineItemBasePriceMoney = new Money.Builder()
           .Amount(500L)
           .Currency("USD")
           .Build();
 
-        CreateOrderRequestLineItem firstLineItem = new CreateOrderRequestLineItem.Builder("1")
+        OrderLineItem firstLineItem = new OrderLineItem.Builder("1")
           .Name("Test Item A")
           .BasePriceMoney(firstLineItemBasePriceMoney)
           .Build();
@@ -57,22 +57,27 @@ namespace csharp_checkout.Pages
           .Currency("USD")
           .Build();
 
-        CreateOrderRequestLineItem secondLineItem = new CreateOrderRequestLineItem.Builder("3")
+        OrderLineItem secondLineItem = new OrderLineItem.Builder("3")
           .Name("Test Item B")
           .BasePriceMoney(secondLineItemBasePriceMoney)
           .Build();
 
         lineItems.Add(secondLineItem);
 
-        // create order with the line items
-        CreateOrderRequest order = new CreateOrderRequest.Builder()
+        // create Order object with line items
+        Order order = new Order.Builder(locationId)
           .LineItems(lineItems)
+          .Build();
+
+        // create order request with order
+        CreateOrderRequest orderRequest = new CreateOrderRequest.Builder()
+          .Order(order)
           .Build();
 
         // create checkout request with the previously created order
         CreateCheckoutRequest createCheckoutRequest = new CreateCheckoutRequest.Builder(
             Guid.NewGuid().ToString(),
-            order)
+            orderRequest)
           .Build();
 
         // create checkout response, and redirect to checkout page if successful
