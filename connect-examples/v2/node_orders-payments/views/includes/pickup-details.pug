@@ -18,9 +18,9 @@ div(class="panel")
         div(class="line-item clearfix pickup-address")
             div(class="left") Location
             div(class="right")
-                div #{location.storeName}
-                div #{location.addressLine}
-                div #{location.cityStateZip}
+                div #{location_info.storeName}
+                div #{location_info.addressLine}
+                div #{location_info.cityStateZip}
     div(class="clearfix")
         div(class="left") Time
-        div(id="pickup-date",class="right") #{pickUpTimes.options[0].date}
+        div(id="pickup-date",class="right") #{order_info.pickupTime}

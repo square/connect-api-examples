@@ -15,26 +15,23 @@ limitations under the License.
 */
 
 const CatalogItemVariation = require("./catalog-item-variation");
-const LocationInfo = require("./location-info");
 
 /**
  * Description:
- *  An instance of this IndexPageData  provides the information necessary to render
+ *  An instance of this CatalogList provides the catalog list data to render
  *  views/index.pug
  *
  * Parameters:
  *  catalogList:  Array of Catalog objects returned from ListCatalog api
- *  locationObj:  First location in returned from ListLocations api
  *
- * Learn more about the ListCatalog api here: https://developer.squareup.com/docs/api/connect/v2#endpoint-catalog-listcatalog
+ * Learn more about the ListCatalog api here: https://developer.squareup.com/reference/square/catalog-api/list-catalog
  *
  */
-class IndexPageData {
-  constructor(catalogList, locationObj){
+class CatalogList {
+  constructor(catalogList){
     // Array of items, we are using the default variation as our only choice for the item
     this.items = [];
     this.populateItems(catalogList);
-    this.location = new LocationInfo(locationObj);
   }
 
   populateItems(catalogList){
@@ -61,4 +58,4 @@ class IndexPageData {
 
 
 
-module.exports = IndexPageData;
+module.exports = CatalogList;

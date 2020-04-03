@@ -15,19 +15,22 @@ limitations under the License.
 */
 
 const express = require("express");
+const { randomBytes } = require("crypto");
+const { catalogInstance, locationInstance, orderInstance } = require("../util/square-connect-client");
+
 const router = express.Router();
-const { catalogInstance, locationInstance } = require("../util/square-connect-client");
-const IndexPageData = require("../models/index-page-data");
+const CatalogList = require("../models/catalog-list");
+const LocationInfo = require("../models/location-info");
 
 /**
- * Matches: /checkout or /process-payment, respectively.
+ * Matches: /checkout or /order-status, respectively.
  *
  * Description:
  *  If the rquest url matches one of the router.use calls, then the routes used are in the
  *  required file.
  */
 router.use("/checkout", require("./checkout"));
-router.use("/process-payment", require("./process-payment"));
+router.use("/order-confirmation", require("./order-confirmation"));
 
 /**
  * Matches: GET /
@@ -47,11 +50,50 @@ router.get("/", async (req, res, next) => {
     const { locations } = await locationInstance.listLocations();
     // Get CatalogItem and CatalogImage object
     const catalogList = await catalogInstance.listCatalog(opt);
-    // Organizes Catalog List into class IndexPageData
-    const viewData = new IndexPageData(catalogList, locations[0]); // One location for the sake of simplicity.
-    // Renders index view, with catalog information
-    res.render("index", viewData);
+    // Renders index view, with catalog and location information
+    res.render("index", {
+      items: (new CatalogList(catalogList)).items,
+      location_info: new LocationInfo(locations[0]) // take the first location for the sake of simplicity.
+    });
   } catch (error){
+    next(error);
+  }
+});
+
+/**
+ * Matches: POST /create-order
+ *
+ * Description:
+ *  Creates an order for a single item variation, this method kicks off the checkout workflow.
+ *  Learn more about Orders here: https://developer.squareup.com/docs/orders-api/what-it-does
+ *
+ *  This method currently only takes one item to checkout, you can potentially pass multiple
+ *  items to create an order and then proceed with the checkout process.
+ *
+ * Request Body:
+ *  item_var_id: Id of the CatalogItemVariation which will be purchased
+ *  item_quantity: Quantility of the item
+ *  location_id: The Id of the location
+ */
+router.post("/create-order", async (req, res, next) => {
+  const { item_var_id, item_quantity, location_id } = req.body;
+  try {
+    const { order } = await orderInstance.createOrder(
+      location_id,
+      {
+        idempotency_key: randomBytes(45).toString("hex"), // Unique identifier for request
+        order: {
+          line_items: [
+            {
+              quantity: item_quantity,
+              catalog_object_id: item_var_id // Id for CatalogItemVariation object
+            }
+          ]
+        }
+      });
+    res.redirect(`/checkout/choose-delivery-pickup?order_id=${order.id}&location_id=${location_id}`);
+  }
+  catch (error) {
     next(error);
   }
 });

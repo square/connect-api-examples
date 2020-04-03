@@ -29,14 +29,10 @@ class CatalogItemVariation {
     this.catalogItemObj = catalogItemObj;
     this.catalogImageObj = catalogImageObj;
   }
-  // Returns CatalogItemObject id
-  get objectId() {
-    return this.catalogItemObj.id;
-  }
   // Returns CatalogItemVariationObject id, which is what is actually sold
   // If no variation exists it defaults to the CatalogItemObject id
   get variationId(){
-    return this.hasVariation() ? this.defaultVariation().id: this.objectId;
+    return this.hasVariation() ? this.defaultVariation().id: this.catalogItemObj.id;
   }
   // Returns  name of CatalogItemObject
   get name(){

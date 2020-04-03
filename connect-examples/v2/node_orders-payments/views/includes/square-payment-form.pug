@@ -14,12 +14,6 @@
 
 div(class="panel pickup-details" , style="height: fit-content;")
   h4(class="panel-title") Payment Details
-  div(class="panel-field")
-    label(class="sq-label") Name on Card
-  input(class="panel-input full", type="text", name="card_name",id="name",placeholder="Full name",onchange="handleChange(this)", autocomplete="cc-name")
-  div(class="panel-field")
-    label(class="sq-label") Email Address
-    input(class="panel-input full",type="email",name="card_email",id="email",placeholder="Email address",onchange="handleChange(this)",autocomplete="email")
   div(id="sq-ccbox")
     div(class="sq-field")
       label(class="sq-label") Card Number
@@ -35,6 +29,3 @@ div(class="panel pickup-details" , style="height: fit-content;")
         label(class="sq-label") Zip Code
         div(id="sq-postal-code")
     div(id="error")
-    input(type="hidden" id="item-data" name="item_var_id" value=item ? item.variationId : "")
-    input(type="hidden" id="item-data-object" name="item_obj_id" value=item ? item.objectId : "")
-    input(type="hidden" id="card-nonce" name="nonce")

@@ -49,29 +49,15 @@ app.use(function(req, res, next) {
 });
 
 // error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get("env") === "development") {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render("error", {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
+// For simplicity, we print all error information
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render("error", {
+    status: err.status,
     message: err.message,
     // If it is a response error then format the JSON string, if not output the error
     error: err.response ? JSON.stringify(JSON.parse(err.response.res.text), null, 4) : err.stack
   });
 });
-
 
 module.exports = app;

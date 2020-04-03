@@ -22,7 +22,7 @@ limitations under the License.
  *  is limited to one for the sake of simplicity.
  *
  *  Learn more about Location objects and the ListLocation api here:
- *  https://developer.squareup.com/docs/api/connect/v2#endpoint-locations-listlocations
+ *  https://developer.squareup.com/reference/square/locations-api/list-locations
  */
 
 class LocationInfo{
@@ -30,18 +30,14 @@ class LocationInfo{
     this.locationObj = locationObj;
   }
 
+  // Returns the id of the location
   get id(){
     return this.locationObj.id;
   }
 
-  get nameAddress(){
-    const { name } = this.locationObj;
-    return `${name} ${this.addressLine}`;
-  }
-
   // Returns the store name stored in the locationObj
   get storeName(){
-    return this.locationObj.name;
+    return this.locationObj.business_name;
   }
 
   // Returns Address Line 1
@@ -54,8 +50,7 @@ class LocationInfo{
   get cityStateZip(){
     if (this.locationObj.address){
       const { locality, administrative_district_level_1, postal_code } = this.locationObj.address;
-      const capitalCaseLocality = locality.charAt(0).toUpperCase() + locality.slice(1).toLowerCase();
-      return `${capitalCaseLocality}, ${administrative_district_level_1}, ${postal_code}`;
+      return `${locality}, ${administrative_district_level_1}, ${postal_code}`;
     } else {
       return "";
     }

@@ -23,45 +23,51 @@ limitations under the License.
  */
 class OrderInfo {
   constructor(order){
-    this.orderInfo = order;
-    this.dateFormat = { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" };
+    this.order = order;
+    this.date_format = { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" };
+    // populate line Items
+    this.line_items = order.line_items.map(line_item => ({
+      name: line_item.name,
+      quantity: line_item.quantity,
+      total_money: (line_item.total_money.amount / 100).toFixed(2),
+    }));
   }
   // Returns order ID
   get orderId() {
-    return this.orderInfo.id;
-  }
-  // Returns the source of the order
-  get source(){
-    return this.orderInfo.source.name;
+    return this.order.id;
   }
   // Returns the recipient's name
   get recipientName(){
-    return this.orderInfo.fulfillments[0].pickup_details.recipient.display_name;
+    return this.order.fulfillments[0].pickup_details.recipient.display_name;
   }
   // Returns the pickup time of the order.
   get pickupTime(){
-    const pickupDate = new Date(this.orderInfo.fulfillments[0].pickup_details.pickup_at).toLocaleDateString("en-US", this.dateFormat);
+    const pickupDate = new Date(this.order.fulfillments[0].pickup_details.pickup_at).toLocaleDateString("en-US", this.date_format);
     return pickupDate;
   }
-  // Returns fulfillment type of the order
-  get fulfillmentType(){
-    return this.orderInfo.fulfillments.type;
+  // Returns true if fulfillments info exist
+  get hasFulfillments() {
+    return !!this.order.fulfillments;
   }
   // Returns the line items ordered in the order
   get lineItems(){
-    return this.orderInfo.line_items;
+    return this.line_items;
   }
   // Returns location Id
   get locationId(){
-    return this.orderInfo.location_id;
+    return this.order.location_id;
   }
   // Returns creation date
   get createdAt(){
-    return this.orderInfo.created_at;
+    return this.order.created_at;
   }
   // Returns money spent in order
   get totalMoney(){
-    return this.orderInfo.total_money;
+    return (this.order.total_money.amount / 100).toFixed(2);
+  }
+  // Returns fulfillment status
+  get fulfillmentState() {
+    return this.order.fulfillments[0].state;
   }
 }
 

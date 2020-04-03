@@ -13,23 +13,26 @@
 //- limitations under the License. 
 
 div(class="panel pickup-details" , style="height: fit-content;")
-  //- p #{result}
   h4(class="panel-title") Pickup Details
   div(class="line-item line-items clearfix pickup-address confirmation")
     div(class="left") Order Id
     div(class="right")
-      div #{order.orderId}
+      div #{order_info.orderId}
+  div(class="line-item line-items clearfix pickup-address confirmation")
+    div(class="left") Order Status
+    div(class="right")
+      div #{order_info.fulfillmentState}
   div(class="line-item line-items clearfix pickup-address confirmation")
     div(class="left") Pickup Name
     div(class="right")
-      div #{order.recipientName}  
+      div #{order_info.recipientName}  
   div(class="line-item line-items clearfix pickup-address confirmation")
-    div(class="left") Time
+    div(class="left") Pickup Time
     div(class="right", id="pickup-date") 
-      div #{order.pickupTime}
+      div #{order_info.pickupTime}
   div(class="clearfix pickup-address")
-    div(class="left") Location
+    div(class="left") Pickup Location
     div(class="right")
-      div #{location.storeName}
-      div #{location.addressLine}
-      div #{location.cityStateZip}
+      div #{location_info.storeName}
+      div #{location_info.addressLine}
+      div #{location_info.cityStateZip}

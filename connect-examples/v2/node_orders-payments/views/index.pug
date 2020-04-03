@@ -34,8 +34,10 @@ block content
             div(class='product-meta')
               h2(class='productCost')
                 span(class=item.hasVariation() ? "green":"") $#{item.price}
-              form(action='./checkout', method='post')
-                input(name='object_id',type='hidden',value=item.objectId,style='display: none')
+              form(action='create-order', method='post')
+                input(name='item_var_id',type='hidden',value=item.variationId,style='display: none')
+                input(name='location_id',type='hidden',value=location_info.id,,style='display: none')
+                input(name='item_quantity',type='hidden',value=1,,style='display: none')
                 if item.hasVariation()
                   button(type='submit',class="product-purchase") Buy This
                 else

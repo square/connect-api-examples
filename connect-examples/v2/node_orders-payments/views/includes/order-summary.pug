@@ -15,18 +15,16 @@
 div(class="panel clearfix")
     h4(class="panel-title") Order Summary
     div(class="line-items")
-        div(class="line-item clearfix")
-            div(class="left")
-                if item.imageUrl
-                    img(alt="item" src=item.imageUrl)
-            div(class="left") 1 × #{item.name}
-            div(class="right")
-                strong $#{item.price}
+        each item in order_info.lineItems
+            div(class="line-item clearfix")
+                div(class="left") #{item.quantity} × #{item.name}
+                div(class="right")
+                    strong $#{item.total_money}
     div(class="clearfix")
         div(class="left")
             strong Total
         div(class="right tabular-figures")
-            strong $#{item.price}
+            strong $#{order_info.totalMoney}
     if payment
         div(class="card-details") #{payment.cardBrand} #{payment.last4Digits}
 

@@ -14,12 +14,10 @@
 
 extends layout
 block append styles  
-  link(rel='stylesheet', href='/stylesheets/confirmation.css')
   link(rel='stylesheet', href='/stylesheets/checkout.css')
-  link(rel='stylesheet', href='/stylesheets/helper.css')
 block content
   div(class="tab") 
-    h1(class="page-title") Order Confirmation
+    h1(class="page-title") Order Status
     div(class="tab-content")
       include includes/confirmation.pug
       div(class="order-summary")

@@ -12,6 +12,8 @@
 //- See the License for the specific language governing permissions and
 //- limitations under the License. 
 
+block append styles
+  link(rel='stylesheet', href='/stylesheets/header.css')
 header
     div
-        a(href="/") #{location ? location.storeName : "BusinessName"}
+        a(href="/") #{location_info.storeName.toUpperCase()}

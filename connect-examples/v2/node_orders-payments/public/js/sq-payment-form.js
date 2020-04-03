@@ -39,6 +39,7 @@ const paymentForm = new SqPaymentForm({
   applicationId: applicationId,
   locationId: locationId,
   inputClass: "sq-input",
+  autoBuild: false,
 
   // Customize the CSS for SqPaymentForm iframe elements
   inputStyles: [{
@@ -125,8 +126,7 @@ const paymentForm = new SqPaymentForm({
       document.getElementById("card-nonce").value = nonce;
 
       // POST the nonce form to the payment processing page
-      document.getElementById("nonce-form").submit();
-
+      document.getElementById("payment-form").submit();
     },
 
     /*
@@ -173,3 +173,8 @@ const paymentForm = new SqPaymentForm({
     }
   }
 });
+
+window.onload = function(){
+  paymentForm.build();
+};
+
