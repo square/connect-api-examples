@@ -24,9 +24,6 @@ block append scripts
     script(type="text/javascript").
         window.applicationId= "#{application_id}";
         window.locationId= "#{location_info.id}";
-        function handleChange(element){
-            document.getElementById("customer-" + element.id).value = element.value
-        }
     script(type="text/javascript" src="/js/sq-payment-form.js")
 block content
         h1(class="page-title") Review &amp; Complete Your Order
@@ -38,5 +35,8 @@ block content
                 input(name="nonce" type="hidden" id="card-nonce")
             div(class="order-summary")
                 include ../includes/order-summary.pug
-                include ../includes/pickup-details.pug
+                if order_info.isPickup
+                    include ../includes/pickup-details.pug
+                else
+                    include ../includes/delivery-details.pug
                 button(id="sq-creditcard" class="form-button" type="button" onclick="onGetCardNonce(event)") Pay with Card

@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 /**
- * Class PickupTimes
+ * Class DeliveryPickUpTimes
  *
  * Description:
  *  The constructor creates a javascript Date object saving the time when the constrictor is run, as this.now.
@@ -23,12 +23,12 @@ limitations under the License.
  *
  * Methods:
  *  GETTER options:
- *    Returns array of objects, where each object has information for a pickup time. The three pieces of infor are
- *    "value" an ISO string later used to create a Square order, "date" a long form of the pickup time and lastly
- *    "time" a short 12 hour format for the pickup time.
+ *    Returns array of objects, where each object has information for a pickup or delivery time. The three pieces of infor are
+ *    "value" an ISO string later used to create a Square order, "date" a long form of the pickup or delivery time
+ *    and lastly "time" a short 12 hour format for the pickup or delivery time.
  */
 
-class PickUpTimes{
+class DeliveryPickUpTimes{
   constructor(){
     this.dateFormat = { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" };
     this.timeFormat = { hour: "numeric", minute: "2-digit" };
@@ -55,4 +55,4 @@ class PickUpTimes{
   }
 }
 
-module.exports = PickUpTimes;
+module.exports = DeliveryPickUpTimes;

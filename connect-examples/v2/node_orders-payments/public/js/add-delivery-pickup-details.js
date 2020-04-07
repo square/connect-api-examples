@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-function validateAndSubmitDeliveryPickupDetails() {
+function validateAndSubmit() {
   if (document.forms["delivery-pickup-form"].reportValidity()){
     document.forms["delivery-pickup-form"].submit();
   } else {

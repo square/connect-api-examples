@@ -18,9 +18,9 @@ Defines a class that abstracts the data for a single [Location](https://develope
 
 Defines a class that abstracts the data for a single Square [Order](https://developer.squareup.com/docs/api/connect/v2#type-order) object.
 
-## pickup-times.js
+## delivery-pickup-times.js
 
-Defines a class that abstracts the pickup time info. All pick up times are relative to an instance of the javascript Date object which records the current time.
+Defines a class that abstracts the pickup or delivery time info. All times are relative to an instance of the javascript Date object which records the current time.
 
 
 

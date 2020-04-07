@@ -36,14 +36,25 @@ class OrderInfo {
   get orderId() {
     return this.order.id;
   }
+  // Returns if the order is a pickup order
+  get isPickup() {
+    return this.order.fulfillments[0].type === "PICKUP";
+  }
   // Returns the recipient's name
   get recipientName(){
-    return this.order.fulfillments[0].pickup_details.recipient.display_name;
+    return this.isPickup ?
+      this.order.fulfillments[0].pickup_details.recipient.display_name :
+      this.order.fulfillments[0].shipment_details.recipient.display_name;
   }
-  // Returns the pickup time of the order.
+  // Returns the expected pickup time of the order.
   get pickupTime(){
     const pickupDate = new Date(this.order.fulfillments[0].pickup_details.pickup_at).toLocaleDateString("en-US", this.date_format);
     return pickupDate;
+  }
+  // Returns the expected delivery time of the order.
+  get deliveryTime(){
+    const deliveryTime = new Date(this.order.fulfillments[0].shipment_details.expected_shipped_at).toLocaleDateString("en-US", this.date_format);
+    return deliveryTime;
   }
   // Returns true if fulfillments info exist
   get hasFulfillments() {
@@ -68,6 +79,15 @@ class OrderInfo {
   // Returns fulfillment status
   get fulfillmentState() {
     return this.order.fulfillments[0].state;
+  }
+  // Returns delivery street address
+  get deliveryAddress() {
+    return this.order.fulfillments[0].shipment_details.recipient.address.address_line_1;
+  }
+  // Returns delivery city, state, postal code as one line string
+  get deliveryCityAndPostalCode() {
+    const address = this.order.fulfillments[0].shipment_details.recipient.address;
+    return `${address.locality}, ${address.administrative_district_level_1}, ${address.postal_code}`;
   }
 }
 

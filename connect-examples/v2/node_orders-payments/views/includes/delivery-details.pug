@@ -12,16 +12,15 @@
 //- See the License for the specific language governing permissions and
 //- limitations under the License. 
 
-extends layout
-block append styles  
-  link(rel='stylesheet', href='/stylesheets/checkout.css')
-block content
-  div(class="tab") 
-    h1(class="page-title") Order Status
-    div(class="tab-content")
-      if order_info.isPickup
-        include includes/pickup-confirmation.pug
-      else
-        include includes/delivery-confirmation.pug
-      div(class="order-summary")
-        include includes/order-summary.pug
+div(class="panel")
+    h4(class="panel-title") Delivery Details
+    div(class="line-items")
+        div(class="line-item clearfix address")
+            div(class="left") Deliver To
+            div(class="right")
+                div #{order_info.recipientName}
+                div #{order_info.deliveryAddress}
+                div #{order_info.deliveryCityAndPostalCode}
+    div(class="clearfix")
+        div(class="left") Expected Delivery Time
+        div(class="right") #{order_info.deliveryTime}

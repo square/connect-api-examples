@@ -175,6 +175,7 @@ const paymentForm = new SqPaymentForm({
 });
 
 window.onload = function(){
+  // build the Square Payment Form only when dom is loaded.
   paymentForm.build();
 };
 

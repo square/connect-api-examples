@@ -1,0 +1,43 @@
+//- Copyright 2019 Square Inc.
+ 
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+ 
+//-     http://www.apache.org/licenses/LICENSE-2.0
+ 
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License. 
+
+div(class="panel panel-left")
+    h4(class="panel-title") Order Details
+    div(class="panel-field")
+        label(class="sq-label") Expected Delivery Time
+        div(class="time-options")
+            each timeOption, index in expected_delivery_times.options
+                input(id=timeOption.time,type="radio",name="delivery_time", value=timeOption.value, checked = index === 0) 
+                label(class="time-option",for=timeOption.time) #{timeOption.time}
+    div(class="panel-field")
+        label(class="sq-label") Recipient Name
+        input(class="panel-input", name="delivery_name",type="text", placeholder="Recipient Name", autocomplete="name", required)
+    div(class="panel-field")
+        label(class="sq-label") Recipient Phone Number
+        input(class="panel-input", name="delivery_number",type="tel", placeholder="Recipient Number", autocomplete="tel", required)
+    div(class="panel-field")
+        label(class="sq-label") Recipient Email
+        input(class="panel-input", name="delivery_email",type="email", placeholder="Recipient Email", autocomplete="email", required)
+    div(class="panel-field")
+        label(class="sq-label") Delivery Address
+        input(class="panel-input", name="delivery_address",type="text", placeholder="Street Address", autocomplete="address-line1", required)
+    div(class="panel-field")
+        label(class="sq-label") City
+        input(class="panel-input", name="delivery_city",type="text", placeholder="City", autocomplete="address-level2", required)
+    div(class="panel-field")
+        label(class="sq-label") State
+        input(class="panel-input", name="delivery_state",type="text", placeholder="State", autocomplete="address-level1", required)
+    div(class="panel-field")
+        label(class="sq-label") Postal Code
+        input(class="panel-input", name="delivery_postal",type="text", placeholder="Postal Code", autocomplete="postal-code", required)

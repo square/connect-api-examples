@@ -20,6 +20,7 @@ limitations under the License.
 html, body{
     background-color: var(--background-color);
 }
+
 .panel {
     padding: 24px 32px 32px 32px;
     background-color: var(--white);
@@ -43,6 +44,11 @@ html, body{
     color:var(--neutral-gray);
 }
 
+.panel-field {
+    position: relative;
+    margin-top: 24px;
+}
+
 .panel-input {
     width: 100%;
     height: 56px;
@@ -54,6 +60,11 @@ html, body{
     font-size: 16px;
     line-height: 28px;
     padding: 14px 16px;
+}
+
+.panel-left {
+    width:456px;
+    margin-right: 12px;
 }
 
 .order-summary {
@@ -116,24 +127,13 @@ html, body{
     font-weight: 500;
     line-height: 28px;
 }
-.pickup-details{
-    width:456px;
-    margin-right: 12px;
-}
-.panel-field {
-    position: relative;
-    margin-top: 24px;
-}
-.vertical{
-    position: absolute;
-    right: 42px;
-    bottom: 0px;
-}
-.time-options{
+
+.time-options {
     display: flex;
     justify-content: space-between;
 }
-.time-option{
+
+.time-option {
     color: var(--neutral-gray);
     background-color: var(--white);
     width: 102px;
@@ -146,7 +146,8 @@ html, body{
     font-size: 16px;
     text-decoration: none;
 }
-.caret-button{
+
+.caret-button {
     width: 10px;
     height: 10px;
     position: absolute;
@@ -157,7 +158,7 @@ html, body{
     border-left: 1px solid var(--light-gray);
     padding: 22px 16px 22px 16px;
 }
-.pickup-address{
+.address{
     text-align: right;
     justify-content: space-between;
 }
