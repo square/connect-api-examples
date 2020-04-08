@@ -16,7 +16,11 @@ limitations under the License.
 
 const express = require("express");
 const { randomBytes } = require("crypto");
-const { catalogInstance, locationInstance, orderInstance } = require("../util/square-connect-client");
+const {
+  catalogInstance,
+  locationInstance,
+  orderInstance,
+} = require("../util/square-connect-client");
 
 const router = express.Router();
 const CatalogList = require("../models/catalog-list");
@@ -42,7 +46,7 @@ router.use("/order-confirmation", require("./order-confirmation"));
 router.get("/", async (req, res, next) => {
   // Set to retrieve ITEM and IMAGE CatalogObjects
   const opt = {
-    types: "ITEM,IMAGE" // To retrieve TAX or CATEGORY objects add them to types
+    types: "ITEM,IMAGE", // To retrieve TAX or CATEGORY objects add them to types
   };
 
   try {
@@ -52,10 +56,10 @@ router.get("/", async (req, res, next) => {
     const catalogList = await catalogInstance.listCatalog(opt);
     // Renders index view, with catalog and location information
     res.render("index", {
-      items: (new CatalogList(catalogList)).items,
-      location_info: new LocationInfo(locations[0]) // take the first location for the sake of simplicity.
+      items: new CatalogList(catalogList).items,
+      location_info: new LocationInfo(locations[0]), // take the first location for the sake of simplicity.
     });
-  } catch (error){
+  } catch (error) {
     next(error);
   }
 });
@@ -78,22 +82,21 @@ router.get("/", async (req, res, next) => {
 router.post("/create-order", async (req, res, next) => {
   const { item_var_id, item_quantity, location_id } = req.body;
   try {
-    const { order } = await orderInstance.createOrder(
-      location_id,
-      {
-        idempotency_key: randomBytes(45).toString("hex"), // Unique identifier for request
-        order: {
-          line_items: [
-            {
-              quantity: item_quantity,
-              catalog_object_id: item_var_id // Id for CatalogItemVariation object
-            }
-          ]
-        }
-      });
-    res.redirect(`/checkout/choose-delivery-pickup?order_id=${order.id}&location_id=${location_id}`);
-  }
-  catch (error) {
+    const { order } = await orderInstance.createOrder(location_id, {
+      idempotency_key: randomBytes(45).toString("hex"), // Unique identifier for request
+      order: {
+        line_items: [
+          {
+            quantity: item_quantity,
+            catalog_object_id: item_var_id, // Id for CatalogItemVariation object
+          },
+        ],
+      },
+    });
+    res.redirect(
+      `/checkout/choose-delivery-pickup?order_id=${order.id}&location_id=${location_id}`
+    );
+  } catch (error) {
     next(error);
   }
 });

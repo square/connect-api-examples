@@ -16,7 +16,12 @@ limitations under the License.
 
 const express = require("express");
 const { randomBytes } = require("crypto");
-const { config, retrieveOrderAndLocation, orderInstance, paymentInstance } = require("../util/square-connect-client");
+const {
+  config,
+  retrieveOrderAndLocation,
+  orderInstance,
+  paymentInstance,
+} = require("../util/square-connect-client");
 const DeliveryPickUpTimes = require("../models/delivery-pickup-times");
 
 const router = express.Router();
@@ -35,13 +40,15 @@ const router = express.Router();
 router.get("/choose-delivery-pickup", async (req, res, next) => {
   const { order_id, location_id } = req.query;
   try {
-    const { order_info, location_info } = await retrieveOrderAndLocation(order_id, location_id);
+    const { order_info, location_info } = await retrieveOrderAndLocation(
+      order_id,
+      location_id
+    );
     res.render("checkout/choose-delivery-pickup", {
       location_info,
-      order_info
+      order_info,
     });
-  }
-  catch (error) {
+  } catch (error) {
     next(error);
   }
 });
@@ -61,10 +68,14 @@ router.get("/choose-delivery-pickup", async (req, res, next) => {
 router.post("/choose-delivery-pickup", async (req, res, next) => {
   const { order_id, location_id, fulfillment_type } = req.body;
   if (fulfillment_type === "PICKUP") {
-    res.redirect(`/checkout/add-pickup-details?order_id=${order_id}&location_id=${location_id}`);
+    res.redirect(
+      `/checkout/add-pickup-details?order_id=${order_id}&location_id=${location_id}`
+    );
   } else {
     // if (fulfillment_type === "SHIPMENT")
-    res.redirect(`/checkout/add-delivery-details?order_id=${order_id}&location_id=${location_id}`);
+    res.redirect(
+      `/checkout/add-delivery-details?order_id=${order_id}&location_id=${location_id}`
+    );
   }
 });
 
@@ -82,14 +93,16 @@ router.post("/choose-delivery-pickup", async (req, res, next) => {
 router.get("/add-pickup-details", async (req, res, next) => {
   const { order_id, location_id } = req.query;
   try {
-    const { order_info, location_info } = await retrieveOrderAndLocation(order_id, location_id);
+    const { order_info, location_info } = await retrieveOrderAndLocation(
+      order_id,
+      location_id
+    );
     res.render("checkout/add-pickup-details", {
       location_info,
       expected_pick_up_times: new DeliveryPickUpTimes(),
-      order_info
+      order_info,
     });
-  }
-  catch (error) {
+  } catch (error) {
     next(error);
   }
 });
@@ -118,35 +131,48 @@ router.get("/add-pickup-details", async (req, res, next) => {
  *  pickup_time: Expected pickup time
  */
 router.post("/add-pickup-details", async (req, res, next) => {
-  const { order_id, location_id, pickup_name, pickup_email, pickup_number, pickup_time } = req.body;
+  const {
+    order_id,
+    location_id,
+    pickup_name,
+    pickup_email,
+    pickup_number,
+    pickup_time,
+  } = req.body;
   try {
-    const { orders } = await orderInstance.batchRetrieveOrders(location_id, { order_ids: [order_id] });
+    const { orders } = await orderInstance.batchRetrieveOrders(location_id, {
+      order_ids: [order_id],
+    });
     const order = orders[0];
     await orderInstance.updateOrder(order.location_id, order.id, {
       order: {
         fulfillments: [
           {
             // replace fulfillment if the order is updated again, otherwise add a new fulfillment details.
-            uid: order.fulfillments && order.fulfillments[0] ? order.fulfillments[0].uid : undefined,
+            uid:
+              order.fulfillments && order.fulfillments[0]
+                ? order.fulfillments[0].uid
+                : undefined,
             type: "PICKUP", // pickup type is determined by the endpoint
             state: "PROPOSED",
             pickup_details: {
               recipient: {
                 display_name: pickup_name,
                 phone_number: pickup_number,
-                email: pickup_email
+                email: pickup_email,
               },
-              pickup_at: pickup_time
-            }
-          }
+              pickup_at: pickup_time,
+            },
+          },
         ],
         version: order.version,
-        idempotency_key: randomBytes(45).toString("hex")
-      }
+        idempotency_key: randomBytes(45).toString("hex"),
+      },
     });
-    res.redirect(`/checkout/payment?order_id=${order.id}&location_id=${order.location_id}`);
-  }
-  catch (error) {
+    res.redirect(
+      `/checkout/payment?order_id=${order.id}&location_id=${order.location_id}`
+    );
+  } catch (error) {
     next(error);
   }
 });
@@ -165,14 +191,16 @@ router.post("/add-pickup-details", async (req, res, next) => {
 router.get("/add-delivery-details", async (req, res, next) => {
   const { order_id, location_id } = req.query;
   try {
-    const { order_info, location_info } = await retrieveOrderAndLocation(order_id, location_id);
+    const { order_info, location_info } = await retrieveOrderAndLocation(
+      order_id,
+      location_id
+    );
     res.render("checkout/add-delivery-details", {
       location_info,
       expected_delivery_times: new DeliveryPickUpTimes(),
-      order_info
+      order_info,
     });
-  }
-  catch (error) {
+  } catch (error) {
     next(error);
   }
 });
@@ -205,16 +233,32 @@ router.get("/add-delivery-details", async (req, res, next) => {
  *  delivery_postal: Postal code of the recipient
  */
 router.post("/add-delivery-details", async (req, res, next) => {
-  const { order_id, location_id, delivery_name, delivery_email, delivery_number, delivery_time, delivery_address, delivery_city, delivery_state, delivery_postal } = req.body;
+  const {
+    order_id,
+    location_id,
+    delivery_name,
+    delivery_email,
+    delivery_number,
+    delivery_time,
+    delivery_address,
+    delivery_city,
+    delivery_state,
+    delivery_postal,
+  } = req.body;
   try {
-    const { orders } = await orderInstance.batchRetrieveOrders(location_id, { order_ids: [order_id] });
+    const { orders } = await orderInstance.batchRetrieveOrders(location_id, {
+      order_ids: [order_id],
+    });
     const order = orders[0];
     await orderInstance.updateOrder(order.location_id, order.id, {
       order: {
         fulfillments: [
           {
             // replace fulfillment if the order is updated again, otherwise add a new fulfillment details.
-            uid: order.fulfillments && order.fulfillments[0] ? order.fulfillments[0].uid : undefined,
+            uid:
+              order.fulfillments && order.fulfillments[0]
+                ? order.fulfillments[0].uid
+                : undefined,
             type: "SHIPMENT", // SHIPMENT type is determined by the endpoint
             state: "PROPOSED",
             shipment_details: {
@@ -226,20 +270,21 @@ router.post("/add-delivery-details", async (req, res, next) => {
                   address_line_1: delivery_address,
                   administrative_district_level_1: delivery_state,
                   locality: delivery_city,
-                  postal_code: delivery_postal
-                }
+                  postal_code: delivery_postal,
+                },
               },
-              expected_shipped_at: delivery_time
-            }
-          }
+              expected_shipped_at: delivery_time,
+            },
+          },
         ],
         version: order.version,
-        idempotency_key: randomBytes(45).toString("hex")
-      }
+        idempotency_key: randomBytes(45).toString("hex"),
+      },
     });
-    res.redirect(`/checkout/payment?order_id=${order.id}&location_id=${order.location_id}`);
-  }
-  catch (error) {
+    res.redirect(
+      `/checkout/payment?order_id=${order.id}&location_id=${order.location_id}`
+    );
+  } catch (error) {
     next(error);
   }
 });
@@ -261,19 +306,23 @@ router.post("/add-delivery-details", async (req, res, next) => {
 router.get("/payment", async (req, res, next) => {
   const { order_id, location_id } = req.query;
   try {
-    const { order_info, location_info } = await retrieveOrderAndLocation(order_id, location_id);
+    const { order_info, location_info } = await retrieveOrderAndLocation(
+      order_id,
+      location_id
+    );
     if (!order_info.hasFulfillments) {
       // if the order doesn't have any fulfillment informaiton, fallback to previous step to collect fulfillment information
-      res.redirect(`/checkout/choose-delivery-pickup?order_id=${order_id}&location_id=${location_id}`);
+      res.redirect(
+        `/checkout/choose-delivery-pickup?order_id=${order_id}&location_id=${location_id}`
+      );
     }
 
     res.render("checkout/payment", {
       application_id: config.squareApplicationId,
       order_info,
-      location_info
+      location_info,
     });
-  }
-  catch (error) {
+  } catch (error) {
     next(error);
   }
 });
@@ -297,20 +346,22 @@ router.post("/payment", async (req, res, next) => {
   const { order_id, location_id, nonce } = req.body;
   try {
     // get the latest order information in case the price is changed from a different session
-    const { orders } = await orderInstance.batchRetrieveOrders(location_id, { order_ids: [order_id] });
+    const { orders } = await orderInstance.batchRetrieveOrders(location_id, {
+      order_ids: [order_id],
+    });
     const order = orders[0];
-    await paymentInstance.createPayment(
-      {
-        source_id: nonce, // Card nonce created by the payment form
-        idempotency_key: randomBytes(45).toString("hex").slice(0, 45), // Unique identifier for request that is under 46 characters
-        amount_money: order.total_money, // Provides total amount of money and currency to charge for the order.
-        order_id: order.id // Order that is associated with the payment
-      });
+    await paymentInstance.createPayment({
+      source_id: nonce, // Card nonce created by the payment form
+      idempotency_key: randomBytes(45).toString("hex").slice(0, 45), // Unique identifier for request that is under 46 characters
+      amount_money: order.total_money, // Provides total amount of money and currency to charge for the order.
+      order_id: order.id, // Order that is associated with the payment
+    });
 
     // redirect to order confirmation page once the order is paid
-    res.redirect(`/order-confirmation?order_id=${order.id}&location_id=${order.location_id}`);
-  }
-  catch (error) {
+    res.redirect(
+      `/order-confirmation?order_id=${order.id}&location_id=${order.location_id}`
+    );
+  } catch (error) {
     next(error);
   }
 });

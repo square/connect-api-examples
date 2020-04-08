@@ -15,12 +15,12 @@ limitations under the License.
 */
 
 function validateAndSubmit() {
-  if (document.forms["delivery-pickup-form"].reportValidity()){
+  if (document.forms["delivery-pickup-form"].reportValidity()) {
     document.forms["delivery-pickup-form"].submit();
   } else {
     const inputs = document.querySelectorAll(".panel-input");
     // Marks the required fields with a red border
-    inputs.forEach( input => {
+    inputs.forEach((input) => {
       input.classList.add("input--validity-visible");
     });
   }

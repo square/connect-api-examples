@@ -22,11 +22,17 @@ limitations under the License.
  *  its information using getters.
  */
 class OrderInfo {
-  constructor(order){
+  constructor(order) {
     this.order = order;
-    this.date_format = { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" };
+    this.date_format = {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    };
     // populate line Items
-    this.line_items = order.line_items.map(line_item => ({
+    this.line_items = order.line_items.map((line_item) => ({
       name: line_item.name,
       quantity: line_item.quantity,
       total_money: (line_item.total_money.amount / 100).toFixed(2),
@@ -41,19 +47,23 @@ class OrderInfo {
     return this.order.fulfillments[0].type === "PICKUP";
   }
   // Returns the recipient's name
-  get recipientName(){
-    return this.isPickup ?
-      this.order.fulfillments[0].pickup_details.recipient.display_name :
-      this.order.fulfillments[0].shipment_details.recipient.display_name;
+  get recipientName() {
+    return this.isPickup
+      ? this.order.fulfillments[0].pickup_details.recipient.display_name
+      : this.order.fulfillments[0].shipment_details.recipient.display_name;
   }
   // Returns the expected pickup time of the order.
-  get pickupTime(){
-    const pickupDate = new Date(this.order.fulfillments[0].pickup_details.pickup_at).toLocaleDateString("en-US", this.date_format);
+  get pickupTime() {
+    const pickupDate = new Date(
+      this.order.fulfillments[0].pickup_details.pickup_at
+    ).toLocaleDateString("en-US", this.date_format);
     return pickupDate;
   }
   // Returns the expected delivery time of the order.
-  get deliveryTime(){
-    const deliveryTime = new Date(this.order.fulfillments[0].shipment_details.expected_shipped_at).toLocaleDateString("en-US", this.date_format);
+  get deliveryTime() {
+    const deliveryTime = new Date(
+      this.order.fulfillments[0].shipment_details.expected_shipped_at
+    ).toLocaleDateString("en-US", this.date_format);
     return deliveryTime;
   }
   // Returns true if fulfillments info exist
@@ -61,19 +71,19 @@ class OrderInfo {
     return !!this.order.fulfillments;
   }
   // Returns the line items ordered in the order
-  get lineItems(){
+  get lineItems() {
     return this.line_items;
   }
   // Returns location Id
-  get locationId(){
+  get locationId() {
     return this.order.location_id;
   }
   // Returns creation date
-  get createdAt(){
+  get createdAt() {
     return this.order.created_at;
   }
   // Returns money spent in order
-  get totalMoney(){
+  get totalMoney() {
     return (this.order.total_money.amount / 100).toFixed(2);
   }
   // Returns fulfillment status
@@ -82,11 +92,13 @@ class OrderInfo {
   }
   // Returns delivery street address
   get deliveryAddress() {
-    return this.order.fulfillments[0].shipment_details.recipient.address.address_line_1;
+    return this.order.fulfillments[0].shipment_details.recipient.address
+      .address_line_1;
   }
   // Returns delivery city, state, postal code as one line string
   get deliveryCityAndPostalCode() {
-    const address = this.order.fulfillments[0].shipment_details.recipient.address;
+    const address = this.order.fulfillments[0].shipment_details.recipient
+      .address;
     return `${address.locality}, ${address.administrative_district_level_1}, ${address.postal_code}`;
   }
 }

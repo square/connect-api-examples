@@ -28,34 +28,39 @@ const CatalogItemVariation = require("./catalog-item-variation");
  *
  */
 class CatalogList {
-  constructor(catalogList){
+  constructor(catalogList) {
     // Array of items, we are using the default variation as our only choice for the item
     this.items = [];
     this.populateItems(catalogList);
   }
 
-  populateItems(catalogList){
-    if (catalogList.objects){
+  populateItems(catalogList) {
+    if (catalogList.objects) {
       // Separate out the CatalogImages and the CatalogItems
-      const catalogItemObjects = catalogList.objects.filter( obj => obj.type === "ITEM");
-      const catalogImageObjects = catalogList.objects.filter( obj => obj.type === "IMAGE");
+      const catalogItemObjects = catalogList.objects.filter(
+        (obj) => obj.type === "ITEM"
+      );
+      const catalogImageObjects = catalogList.objects.filter(
+        (obj) => obj.type === "IMAGE"
+      );
 
       // For a shorter look time, we will convert the array of CatalogImageObjects, into a map
       // where the keys are the CatalogImageObjects ids and the value are the CatalogImageObjects
-      const catalogImageObjectsMap = catalogImageObjects.reduce((map, imageObject)=>{
-        map[imageObject.id] = imageObject;
-        return map;
-      }, {});
+      const catalogImageObjectsMap = catalogImageObjects.reduce(
+        (map, imageObject) => {
+          map[imageObject.id] = imageObject;
+          return map;
+        },
+        {}
+      );
 
       // Reassigns this.items to be an array of CatalogItemVariation instances
-      this.items = catalogItemObjects.map( item => {
+      this.items = catalogItemObjects.map((item) => {
         const imageObject = catalogImageObjectsMap[item.image_id];
         return new CatalogItemVariation(item, imageObject);
       });
     }
   }
 }
-
-
 
 module.exports = CatalogList;
