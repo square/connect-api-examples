@@ -27,7 +27,6 @@ defaultClient.basePath = config.path;
 const oauth2 = defaultClient.authentications["oauth2"];
 oauth2.accessToken = config.squareAccessToken;
 
-
 // Instances of Api that are used
 // You can add additional APIs here if you so choose
 const catalogInstance = new SquareConnect.CatalogApi();
@@ -43,9 +42,11 @@ const paymentInstance = new SquareConnect.PaymentsApi();
  * @param {*} location_id The id of the location where the order belongs to
  */
 async function retrieveOrderAndLocation(order_id, location_id) {
-  const { orders } = await orderInstance.batchRetrieveOrders(location_id, { order_ids: [order_id] });
+  const { orders } = await orderInstance.batchRetrieveOrders(location_id, {
+    order_ids: [order_id],
+  });
   const { location } = await locationInstance.retrieveLocation(location_id);
-  if ( !orders || orders.length == 0 || !location) {
+  if (!orders || orders.length == 0 || !location) {
     const error = new Error("Cannot find order");
     error.status = 404;
     throw error;
@@ -53,7 +54,7 @@ async function retrieveOrderAndLocation(order_id, location_id) {
 
   return {
     order_info: new OrderInfo(orders[0]),
-    location_info: new LocationInfo(location)
+    location_info: new LocationInfo(location),
   };
 }
 
@@ -67,4 +68,3 @@ module.exports = {
   orderInstance,
   retrieveOrderAndLocation,
 };
-

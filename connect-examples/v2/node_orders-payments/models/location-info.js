@@ -25,31 +25,35 @@ limitations under the License.
  *  https://developer.squareup.com/reference/square/locations-api/list-locations
  */
 
-class LocationInfo{
-  constructor(locationObj){
+class LocationInfo {
+  constructor(locationObj) {
     this.locationObj = locationObj;
   }
 
   // Returns the id of the location
-  get id(){
+  get id() {
     return this.locationObj.id;
   }
 
   // Returns the store name stored in the locationObj
-  get storeName(){
+  get storeName() {
     return this.locationObj.business_name || this.locationObj.name;
   }
 
   // Returns Address Line 1
   get addressLine() {
     const { address } = this.locationObj;
-    return address ? address.address_line_1:"";
+    return address ? address.address_line_1 : "";
   }
 
   // Returns formatted city, state, and zip code as one string
-  get cityStateZip(){
-    if (this.locationObj.address){
-      const { locality, administrative_district_level_1, postal_code } = this.locationObj.address;
+  get cityStateZip() {
+    if (this.locationObj.address) {
+      const {
+        locality,
+        administrative_district_level_1,
+        postal_code,
+      } = this.locationObj.address;
       return `${locality}, ${administrative_district_level_1}, ${postal_code}`;
     } else {
       return "";

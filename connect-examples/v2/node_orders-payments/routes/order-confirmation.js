@@ -35,18 +35,20 @@ router.get("/", async (req, res, next) => {
   // Post request body contains id of item that is going to be purchased
   const { order_id, location_id } = req.query;
   try {
-    const { order_info, location_info } = await retrieveOrderAndLocation(order_id, location_id);
-    if (!order_info.order.tenders || order_info.order.tenders.length == 0 ) {
+    const { order_info, location_info } = await retrieveOrderAndLocation(
+      order_id,
+      location_id
+    );
+    if (!order_info.order.tenders || order_info.order.tenders.length == 0) {
       // For simplicity, we throw error. You can handle this more gracefully
       throw new Error("order not paid");
     }
 
     res.render("order-confirmation", {
       location_info,
-      order_info
+      order_info,
     });
-  }
-  catch (error){
+  } catch (error) {
     next(error);
   }
 });
