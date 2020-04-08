@@ -17,7 +17,7 @@ limitations under the License.
 /* eslint no-console: 0 */
 
 const SquareConnect = require("square-connect");
-const config = require("../../config.json")["sandbox"];
+const config = require("../../config.json")[process.env.NODE_ENV];
 const sample_data = require("./sample-seed-data.json");
 const request = require("request");
 const fs = require("fs");
@@ -76,7 +76,7 @@ async function addImages(image, catalogObjectId, success) {
   // Make the request to createCatalogImage API.
   request.post({
     headers: headers,
-    url: "https://connect.squareupsandbox.com/v2/catalog/images",
+    url: `${config.path}/v2/catalog/images`,
     formData: formData
   },
   function result(err, httpResponse, body) {

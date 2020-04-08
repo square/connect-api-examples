@@ -37,7 +37,7 @@ class LocationInfo{
 
   // Returns the store name stored in the locationObj
   get storeName(){
-    return this.locationObj.business_name;
+    return this.locationObj.business_name || this.locationObj.name;
   }
 
   // Returns Address Line 1
