@@ -108,8 +108,8 @@ router.post('/process-payment', async (req, res) => {
   };
 
   try {
-    const respone = await payments_api.createPayment(request_body);
-    const json = JSON.stringify(respone);
+    const response = await payments_api.createPayment(request_body);
+    const json = JSON.stringify(response);
     res.render('process-payment', {
       'title': 'Payment Successful',
       'result': json
