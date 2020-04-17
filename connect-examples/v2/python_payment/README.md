@@ -34,7 +34,7 @@ for more information on the API sandbox.
 
 From the sample's root directory, run:
 
-    python -m CGIHTTPServer
+    python -m http.server --cgi 8000
 
 You can then visit `localhost:8000/cgi-bin/index.py` in your browser to see the card form.
 
