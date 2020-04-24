@@ -17,7 +17,7 @@ limitations under the License.
 /* eslint no-console: 0 */
 
 const SquareConnect = require("square-connect");
-const config = require("../../config.json")[process.env.NODE_ENV];
+const config = require("../../config.json")["sandbox"]; // We don't recommend to run this script in production environment
 const sample_data = require("./sample-seed-data.json");
 const request = require("request");
 const fs = require("fs");

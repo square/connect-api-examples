@@ -51,7 +51,9 @@ router.get("/", async (req, res, next) => {
 
   try {
     // Retrieves locations and in order to display the store name
-    const { locations } = await locationInstance.listLocations();
+    const {
+      locations
+    } = await locationInstance.listLocations();
     // Get CatalogItem and CatalogImage object
     const catalogList = await catalogInstance.listCatalog(opt);
     // Renders index view, with catalog and location information
@@ -80,7 +82,11 @@ router.get("/", async (req, res, next) => {
  *  location_id: The Id of the location
  */
 router.post("/create-order", async (req, res, next) => {
-  const { item_var_id, item_quantity, location_id } = req.body;
+  const {
+    item_var_id,
+    item_quantity,
+    location_id
+  } = req.body;
   try {
     const { order } = await orderInstance.createOrder(location_id, {
       idempotency_key: randomBytes(45).toString("hex"), // Unique identifier for request

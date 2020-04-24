@@ -48,9 +48,9 @@ class OrderInfo {
   }
   // Returns the recipient's name
   get recipientName() {
-    return this.isPickup
-      ? this.order.fulfillments[0].pickup_details.recipient.display_name
-      : this.order.fulfillments[0].shipment_details.recipient.display_name;
+    return this.isPickup ?
+      this.order.fulfillments[0].pickup_details.recipient.display_name :
+      this.order.fulfillments[0].shipment_details.recipient.display_name;
   }
   // Returns the expected pickup time of the order.
   get pickupTime() {
