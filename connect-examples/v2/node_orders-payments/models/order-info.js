@@ -35,7 +35,7 @@ class OrderInfo {
     this.line_items = order.line_items.map((line_item) => ({
       name: line_item.name,
       quantity: line_item.quantity,
-      total_money: (line_item.total_money.amount / 100).toFixed(2),
+      gross_sales_money: (line_item.gross_sales_money.amount / 100).toFixed(2),
     }));
   }
   // Returns order ID
@@ -81,6 +81,22 @@ class OrderInfo {
   // Returns creation date
   get createdAt() {
     return this.order.created_at;
+  }
+  // Returns discount in order
+  get totalDiscountMoney() {
+    return (this.order.total_discount_money.amount / 100).toFixed(2);
+  }
+  // Returns service fee in order
+  get totalServiceChargeMoney() {
+    return (this.order.total_service_charge_money.amount / 100).toFixed(2);
+  }
+  // Returns tax in order
+  get totalTaxMoney() {
+    return (this.order.total_tax_money.amount / 100).toFixed(2);
+  }
+  // The subtotal money before tax applied
+  get preTaxTotalMoney() {
+    return (this.totalMoney - this.totalTaxMoney).toFixed(2);
   }
   // Returns money spent in order
   get totalMoney() {

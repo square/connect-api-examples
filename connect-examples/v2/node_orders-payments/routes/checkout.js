@@ -165,6 +165,14 @@ router.post("/add-pickup-details", async (req, res, next) => {
             },
           },
         ],
+        // Add an 10% Curbside Pickup promotion discount to the order
+        discounts: [
+          {
+            name: "Curbside Pickup Promotion",
+            percentage: "10",
+            scope: "ORDER"
+          }
+        ],
         version: order.version,
         idempotency_key: randomBytes(45).toString("hex"),
       },
@@ -276,6 +284,18 @@ router.post("/add-delivery-details", async (req, res, next) => {
               expected_shipped_at: delivery_time,
             },
           },
+        ],
+        // Add an arbitratry $2.00 taxable delivery fee to the order
+        service_charges: [
+          {
+            name: "delivery fee",
+            amount_money: {
+              amount: 200,
+              currency: "USD"
+            },
+            taxable: true,
+            calculation_phase: "SUBTOTAL_PHASE",
+          }
         ],
         version: order.version,
         idempotency_key: randomBytes(45).toString("hex"),

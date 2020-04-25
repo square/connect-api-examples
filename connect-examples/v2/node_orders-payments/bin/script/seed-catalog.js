@@ -121,14 +121,14 @@ async function addItems() {
 
     // The new catalog objects will be returned with a corresponding Square Object ID.
     // Using the new Square Object ID, we map each object with their image and upload their image.
-    newCatalogObjects.id_mappings.forEach(function (id_mapping, index) {
+    newCatalogObjects.id_mappings.forEach(function (id_mapping) {
       const client_object_id = id_mapping.client_object_id;
       const object_id = id_mapping.object_id;
 
-      if (sample_data[client_object_id]) {
+      if (sample_data[client_object_id] && sample_data[client_object_id].image) {
         const image = sample_data[client_object_id].image;
         addImages(image, object_id, () => {
-          console.log("Successfully uploaded item:", client_object_id);
+          console.log("Successfully uploaded image for item:", client_object_id);
         });
       }
     });
@@ -180,17 +180,13 @@ if (args[0] == "clear") {
     input: process.stdin,
     output: process.stdout,
   });
-  rl.question(
-    "Are you sure you want to clear everything in your sandbox catalog? (Y/N) ",
-    (ans) => {
-      if (ans.toUpperCase() === "Y") {
-        clearCatalog();
-      } else if (ans.toUpperCase() === "N") {
-        console.log("Aborting clear.");
-      }
-      rl.close();
+  rl.question("Are you sure you want to clear everything in your sandbox catalog? (y/N) ", (ans) => {
+    if (ans.toUpperCase() === "Y") {
+      clearCatalog();
+    } else if (ans.toUpperCase() === "N") {
+      console.log("Aborting clear.");
     }
-  );
+  });
 } else if (args[0] == "generate") {
   addItems();
 } else if (args[0] == "-h" || args[0] == "--help") {

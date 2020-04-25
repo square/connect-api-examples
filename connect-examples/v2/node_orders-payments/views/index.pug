@@ -20,12 +20,12 @@ block append scripts
 block content
   div(class="products")
     each item in items
-      div(id=item.variationId ,class='product',data-toggle="modal",data-target="#modal"+item.variationId)
+      div(id=item.itemObjectId ,class='product',data-toggle="modal",data-target="#modal"+item.itemObjectId)
         div(class='image-container',onclick="openModal(this)")
           img(class='product-image',src=item.imageUrl)
           div(class='image-overlay')
             button View Details
-        div(id="modal-"+item.variationId, class="modal clearfix")
+        div(id="modal-"+item.itemObjectId, class="modal clearfix")
           button(class='close', onclick="onCloseModalClick()") Close
           img(class='modal-image',src=item.imageUrl)
           div(class='product-info')
@@ -33,14 +33,12 @@ block content
             p(class='product-description') #{item.description}
             div(class='product-meta')
               h2(class='productCost')
-                span(class=item.hasVariation() ? "green":"") $#{item.price}
+                span(class="green") $#{item.price}
               form(action='create-order', method='post')
-                input(name='item_var_id',type='hidden',value=item.variationId,style='display: none')
+                input(name='item_var_id',type='hidden',value=item.defaultVariationId,style='display: none')
+                input(name='item_id',type='hidden',value=item.itemObjectId,style='display: none')
                 input(name='location_id',type='hidden',value=location_info.id,,style='display: none')
                 input(name='item_quantity',type='hidden',value=1,,style='display: none')
-                if item.hasVariation()
-                  button(type='submit',class="product-purchase") Buy This
-                else
-                  button(type='submit',class="product-purchase unavailable", disabled) Unavailable
+                button(type='submit',class="product-purchase") Buy This
 
   div(id="veil" class="veil")

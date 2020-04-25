@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const CatalogItemVariation = require("./catalog-item-variation");
+const CatalogItem = require("./catalog-item");
 
 /**
  * Description:
@@ -38,26 +38,21 @@ class CatalogList {
     if (catalogList.objects) {
       // Separate out the CatalogImages and the CatalogItems
       const catalogItemObjects = catalogList.objects.filter(
-        (obj) => obj.type === "ITEM"
-      );
-      const catalogImageObjects = catalogList.objects.filter(
-        (obj) => obj.type === "IMAGE"
-      );
+        // In this example, we assume no item has more than one variation and we don't display any item that has no variation
+        obj => obj.type === "ITEM" && obj.item_data.variations && obj.item_data.variations.length > 0);
+      const catalogImageObjects = catalogList.objects.filter(obj => obj.type === "IMAGE");
 
       // For a shorter look time, we will convert the array of CatalogImageObjects, into a map
       // where the keys are the CatalogImageObjects ids and the value are the CatalogImageObjects
-      const catalogImageObjectsMap = catalogImageObjects.reduce(
-        (map, imageObject) => {
-          map[imageObject.id] = imageObject;
-          return map;
-        },
-        {}
-      );
+      const catalogImageObjectsMap = catalogImageObjects.reduce((map, imageObject) => {
+        map[imageObject.id] = imageObject;
+        return map;
+      }, {});
 
-      // Reassigns this.items to be an array of CatalogItemVariation instances
-      this.items = catalogItemObjects.map((item) => {
+      // Reassigns this.items to be an array of CatalogItem instances
+      this.items = catalogItemObjects.map(item => {
         const imageObject = catalogImageObjectsMap[item.image_id];
-        return new CatalogItemVariation(item, imageObject);
+        return new CatalogItem(item, imageObject);
       });
     }
   }

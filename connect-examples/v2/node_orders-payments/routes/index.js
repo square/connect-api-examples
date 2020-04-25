@@ -50,7 +50,7 @@ router.get("/", async (req, res, next) => {
   };
 
   try {
-    // Retrieves locations and in order to display the store name
+    // Retrieves locations in order to display the store name
     const {
       locations
     } = await locationInstance.listLocations();
@@ -77,31 +77,44 @@ router.get("/", async (req, res, next) => {
  *  items to create an order and then proceed with the checkout process.
  *
  * Request Body:
- *  item_var_id: Id of the CatalogItemVariation which will be purchased
+ *  item_var_id: Id of the CatalogItem which will be purchased
  *  item_quantity: Quantility of the item
  *  location_id: The Id of the location
  */
 router.post("/create-order", async (req, res, next) => {
   const {
     item_var_id,
+    item_id,
     item_quantity,
     location_id
   } = req.body;
   try {
-    const { order } = await orderInstance.createOrder(location_id, {
+    const orderRequestBody = {
       idempotency_key: randomBytes(45).toString("hex"), // Unique identifier for request
       order: {
-        line_items: [
-          {
-            quantity: item_quantity,
-            catalog_object_id: item_var_id, // Id for CatalogItemVariation object
-          },
-        ],
-      },
-    });
-    res.redirect(
-      `/checkout/choose-delivery-pickup?order_id=${order.id}&location_id=${location_id}`
-    );
+        line_items: [{
+          quantity: item_quantity,
+          catalog_object_id: item_var_id // Id for CatalogItem object
+        }]
+      }
+    };
+    // Apply the taxes that's related to this catalog item.
+    // Order API doesn't calulate the tax automatically even if you have apply the tax to the catalog item
+    // You must add the tax yourself when create order.
+    const catalogItem = await catalogInstance.retrieveCatalogObject(item_id);
+    if (!!catalogItem.object.item_data.tax_ids && catalogItem.object.item_data.tax_ids.length > 0) {
+      orderRequestBody.order.taxes = [];
+      for (let i = 0; i < catalogItem.object.item_data.tax_ids.length; i++) {
+        orderRequestBody.order.taxes.push({
+          catalog_object_id: catalogItem.object.item_data.tax_ids[i],
+          scope: "ORDER",
+        });
+      }
+    }
+    const {
+      order
+    } = await orderInstance.createOrder(location_id, orderRequestBody);
+    res.redirect(`/checkout/choose-delivery-pickup?order_id=${order.id}&location_id=${location_id}`);
   } catch (error) {
     next(error);
   }

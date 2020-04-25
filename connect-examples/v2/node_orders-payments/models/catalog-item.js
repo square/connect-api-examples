@@ -24,17 +24,19 @@ limitations under the License.
  *  Learn more about CatalogItem objects here:  https://developer.squareup.com/docs/api/connect/v2#type-catalogitem
  *  Learn more about CatalogImage objects here: https://developer.squareup.com/docs/api/connect/v2#type-catalogimage
  */
-class CatalogItemVariation {
+class CatalogItem {
   constructor(catalogItemObj, catalogImageObj) {
     this.catalogItemObj = catalogItemObj;
     this.catalogImageObj = catalogImageObj;
   }
-  // Returns CatalogItemVariationObject id, which is what is actually sold
+  // Returns CatalogItemObject id, which is what is actually sold
   // If no variation exists it defaults to the CatalogItemObject id
-  get variationId() {
-    return this.hasVariation()
-      ? this.defaultVariation().id
-      : this.catalogItemObj.id;
+  get defaultVariationId() {
+    return this.defaultVariation.id;
+  }
+  // Return the catalog item object Id
+  get itemObjectId() {
+    return this.catalogItemObj.id;
   }
   // Returns  name of CatalogItemObject
   get name() {
@@ -46,44 +48,20 @@ class CatalogItemVariation {
   }
   // Returns associated image url for CatalogObject
   get imageUrl() {
-    return (
-      this.catalogImageObj &&
-      this.catalogImageObj.image_data &&
-      this.catalogImageObj.image_data.url
-    );
-  }
-  // Returns associated CatalogImageObject id
-  get imageId() {
-    return (
-      this.catalogImageObj &&
-      this.catalogImageObj.image_data &&
-      this.catalogImageObj.id
-    );
+    return this.catalogImageObj && this.catalogImageObj.image_data && this.catalogImageObj.image_data.url;
   }
   // Returns price in dollars
   get price() {
-    return this.hasVariation() ? this.dollarAmount() : "N/A";
-  }
-  // Returns formatted price with currency
-  dollarAmount() {
-    const { price_money } = this.defaultVariation().item_variation_data;
-    return `${(price_money.amount / 100).toFixed(2)}`;
+    const {
+      price_money
+    } = this.defaultVariation.item_variation_data;
+    return `${(price_money.amount/100).toFixed(2)}`;
   }
   // Returns the first variation in the variations array, our example we are selling one version of the item
-  defaultVariation() {
-    return (
-      this.catalogItemObj.item_data &&
-      this.catalogItemObj.item_data.variations &&
-      this.catalogItemObj.item_data.variations[0]
-    );
-  }
-  // Returns a booleans whether or no  the CatalogItemObject has a variation and that variation has a set price.
-  hasVariation() {
-    return (
-      !!this.defaultVariation() &&
-      this.defaultVariation().item_variation_data.price_money
-    );
+  get defaultVariation() {
+    // We don't have to check invalid item_data because we've filtered them out when initialize.
+    return this.catalogItemObj.item_data.variations[0];
   }
 }
 
-module.exports = CatalogItemVariation;
+module.exports = CatalogItem;
