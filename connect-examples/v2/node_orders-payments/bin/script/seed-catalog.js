@@ -62,7 +62,7 @@ async function addImages(image, catalogObjectId, success) {
     Authorization: "Bearer " + oauth2.accessToken,
     "Cache-Control": "no-cache",
     "Square-Version": "2019-06-12",
-    "Content-Disposition": 'form-data; name="name"; filename="name.jpg"',
+    "Content-Disposition": "form-data; name=\"name\"; filename=\"name.jpg\"",
     "Content-Type": "multipart/form-data",
   };
 
@@ -74,19 +74,18 @@ async function addImages(image, catalogObjectId, success) {
   };
 
   // Make the request to createCatalogImage API.
-  request.post(
-    {
-      headers: headers,
-      url: `${config.path}/v2/catalog/images`,
-      formData: formData,
-    },
-    function result(err, httpResponse, body) {
-      if (err) {
-        console.error("Image upload failed with error: ", err);
-      } else {
-        success();
-      }
+  request.post({
+    headers: headers,
+    url: `${config.path}/v2/catalog/images`,
+    formData: formData,
+  },
+  function result(err, httpResponse, body) {
+    if (err) {
+      console.error("Image upload failed with error: ", err);
+    } else {
+      success();
     }
+  }
   );
 }
 
@@ -98,7 +97,9 @@ async function addImages(image, catalogObjectId, success) {
  * https://developer.squareup.com/docs/api/connect/v2#endpoint-catalog-batchupsertcatalogobjects
  */
 async function addItems() {
-  const batches = [{ objects: [] }];
+  const batches = [{
+    objects: []
+  }];
   const batchUpsertCatalogRequest = {
     // Each request needs a unique idempotency key.
     idempotency_key: require("crypto").randomBytes(64).toString("hex"),
@@ -143,8 +144,10 @@ async function addItems() {
  * @returns Object with an array of Object Ids
  */
 function getCatalogObjectIds(catalogObjects) {
-  const catalogObjectIds = { object_ids: [] };
-  for (let key in catalogObjects.objects) {
+  const catalogObjectIds = {
+    object_ids: []
+  };
+  for (const key in catalogObjects.objects) {
     catalogObjectIds["object_ids"].push(catalogObjects.objects[key].id);
   }
   return catalogObjectIds;
@@ -157,7 +160,7 @@ function getCatalogObjectIds(catalogObjects) {
 async function clearCatalog() {
   try {
     const catalogObjects = await catalogInstance.listCatalog();
-    if (catalogObjects.objects.length > 0) {
+    if (catalogObjects.objects && catalogObjects.objects.length > 0) {
       const catalogObjectIds = getCatalogObjectIds(catalogObjects);
       const result = await catalogInstance.batchDeleteCatalogObjects(
         catalogObjectIds
@@ -186,6 +189,7 @@ if (args[0] == "clear") {
     } else if (ans.toUpperCase() === "N") {
       console.log("Aborting clear.");
     }
+    rl.close();
   });
 } else if (args[0] == "generate") {
   addItems();
