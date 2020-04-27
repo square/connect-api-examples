@@ -22,40 +22,39 @@ limitations under the License.
  *  is limited to one for the sake of simplicity.
  *
  *  Learn more about Location objects and the ListLocation api here:
- *  https://developer.squareup.com/docs/api/connect/v2#endpoint-locations-listlocations
+ *  https://developer.squareup.com/reference/square/locations-api/list-locations
  */
 
-class LocationInfo{
-  constructor(locationObj){
+class LocationInfo {
+  constructor(locationObj) {
     this.locationObj = locationObj;
   }
 
-  get id(){
+  // Returns the id of the location
+  get id() {
     return this.locationObj.id;
   }
 
-  get nameAddress(){
-    const { name } = this.locationObj;
-    return `${name} ${this.addressLine}`;
-  }
-
   // Returns the store name stored in the locationObj
-  get storeName(){
-    return this.locationObj.name;
+  get storeName() {
+    return this.locationObj.business_name || this.locationObj.name;
   }
 
   // Returns Address Line 1
   get addressLine() {
     const { address } = this.locationObj;
-    return address ? address.address_line_1:"";
+    return address ? address.address_line_1 : "";
   }
 
   // Returns formatted city, state, and zip code as one string
-  get cityStateZip(){
-    if (this.locationObj.address){
-      const { locality, administrative_district_level_1, postal_code } = this.locationObj.address;
-      const capitalCaseLocality = locality.charAt(0).toUpperCase() + locality.slice(1).toLowerCase();
-      return `${capitalCaseLocality}, ${administrative_district_level_1}, ${postal_code}`;
+  get cityStateZip() {
+    if (this.locationObj.address) {
+      const {
+        locality,
+        administrative_district_level_1,
+        postal_code,
+      } = this.locationObj.address;
+      return `${locality}, ${administrative_district_level_1}, ${postal_code}`;
     } else {
       return "";
     }

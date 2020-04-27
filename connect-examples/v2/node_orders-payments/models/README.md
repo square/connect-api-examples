@@ -2,38 +2,25 @@
 
 This directory contains classes that abstracts the data for the templates found in the [Views](../views/README.md) directory
 
-## Index-page-data.js
+## catalog-item.js
 
-Defines a class which provides the list of CatalogItems and location information for [index template](../views/index.pug)
+Defines a class that abstracts the data for both a CatalogItem and its associated [CatalogItem](https://developer.squareup.com/reference/square/objects/CatalogItem). 
 
-## Checkout-page-data.js
+## catalog-list.js
 
-Defines a class which provides data on a single CatalogItem, available pickup times for an order and location information for [checkout template](../views/checkout.pug)
+Defines a class that abstracts the data for both a CatalogList and its associated [CatalogImage](https://developer.squareup.com/reference/square/objects/CatalogImage). 
 
+## location-info.js
 
-## Confirmation-page-data.js
+Defines a class that abstracts the data for a single [Location](https://developer.squareup.com/reference/square/objects/Location) object
 
-Defines a class provides data on a single CatalogItem, a payment that was posted and its associated order and lastly location information for [process-payment](../views/process-payment.pug)
+## order-info.js
 
-## Catalog-item-variation.js
+Defines a class that abstracts the data for a single Square [Order](https://developer.squareup.com/reference/square/objects/Order) object.
 
-Defines a class that abstracts the data for both a CatalogItem and its associated [CatalogImage](https://developer.squareup.com/docs/api/connect/v2#type-catalogimage). 
+## delivery-pickup-times.js
 
-## Location-info.js
-
-Defines a class that abstracts the data for a single [Location](https://developer.squareup.com/docs/api/connect/v2#type-location) object
-
-## Order-info.js
-
-Defines a class that abstracts the data for a single Square [Order](https://developer.squareup.com/docs/api/connect/v2#type-order) object.
-
-## Payment-info.js
-
-Defines a class that abstracts the data for a single Square Payment object returned after creating a payment.
-
-## Pickup-times.js
-
-Defines a class that abstracts the pickup time info. All pick up times are relative to an instance of the javascript Date object which records the current time.
+Defines a class that abstracts the pickup or delivery time info. All times are relative to an instance of the javascript Date object which records the current time.
 
 
 

@@ -14,26 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/*
-    CONFIRMATION
-*/
-
-.order-confirmation {
-    width: 520px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.order-confirmation .panel {
-    width: 520px;
-    padding: 32px;
-    margin-bottom: 40px;
-}
-
-.order-image {
-    box-sizing: border-box;
-    width: 80px;
-    height: 80px;
-    border-radius: 4px;
-    border: 1px solid #E0E2E3;
+function validateAndSubmit() {
+  if (document.forms["delivery-pickup-form"].reportValidity()) {
+    document.forms["delivery-pickup-form"].submit();
+  } else {
+    const inputs = document.querySelectorAll(".panel-input");
+    // Marks the required fields with a red border
+    inputs.forEach((input) => {
+      input.classList.add("input--validity-visible");
+    });
+  }
 }

@@ -1,0 +1,42 @@
+//- Copyright 2019 Square Inc.
+ 
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+ 
+//-     http://www.apache.org/licenses/LICENSE-2.0
+ 
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License. 
+
+extends ../layout
+block append styles
+    link(rel='stylesheet', href='../stylesheets/checkout.css')
+    link(rel='stylesheet', href='/stylesheets/sq-payment-form.css')
+block append scripts
+    - let productionUrl = "https://js.squareup.com/v2/paymentform";
+    - let sandBoxUrl = "https://js.squareupsandbox.com/v2/paymentform";
+    - let paymentFormSrc = process.env.NODE_ENV === "sandbox" ? sandBoxUrl :productionUrl;
+    script(type="text/javascript" src=paymentFormSrc)
+    script(type="text/javascript").
+        window.applicationId= "#{application_id}";
+        window.locationId= "#{location_info.id}";
+    script(type="text/javascript" src="/js/sq-payment-form.js")
+block content
+        h1(class="page-title") Review &amp; Complete Your Order
+        div(class="tab-content")
+            form(id="payment-form" action='/checkout/payment', method='post')
+                include ../includes/square-payment-form.pug
+                input(name='order_id', type='hidden', value=order_info.orderId)
+                input(name='location_id', type='hidden', value=order_info.locationId)
+                input(name="nonce" type="hidden" id="card-nonce")
+            div(class="order-summary")
+                include ../includes/order-summary.pug
+                if order_info.isPickup
+                    include ../includes/pickup-details.pug
+                else
+                    include ../includes/delivery-details.pug
+                button(id="sq-creditcard" class="form-button" type="button" onclick="onGetCardNonce(event)") Pay with Card

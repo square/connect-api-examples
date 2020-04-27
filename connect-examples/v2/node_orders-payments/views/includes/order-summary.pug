@@ -15,18 +15,35 @@
 div(class="panel clearfix")
     h4(class="panel-title") Order Summary
     div(class="line-items")
+        each item in order_info.lineItems
+            div(class="line-item clearfix")
+                div(class="left") #{item.quantity} × #{item.name}
+                div(class="right")
+                    strong $#{item.gross_sales_money}
+        if order_info.totalServiceChargeMoney > 0
+            div(class="clearfix")
+                div(class="left") Service Fee
+                div(class="right")
+                    strong $#{order_info.totalServiceChargeMoney}
+        if order_info.totalDiscountMoney > 0
+            div(class="clearfix")
+                div(class="left") Total Discount
+                div(class="right green")
+                    strong -$#{order_info.totalDiscountMoney}
+    div(class="line-items")
+        div(class="clearfix")
+                div(class="left") Subtotal pre tax 
+                div(class="right")
+                    strong $#{order_info.preTaxTotalMoney}
+        div(class="clearfix")
+            div(class="left") Tax
+            div(class="right")
+                strong $#{order_info.totalTaxMoney}
         div(class="line-item clearfix")
             div(class="left")
-                if item.imageUrl
-                    img(alt="item" src=item.imageUrl)
-            div(class="left") 1 × #{item.name}
-            div(class="right")
-                strong $#{item.price}
-    div(class="clearfix")
-        div(class="left")
-            strong Total
-        div(class="right tabular-figures")
-            strong $#{item.price}
+                strong Total
+            div(class="right tabular-figures")
+                strong $#{order_info.totalMoney}
     if payment
         div(class="card-details") #{payment.cardBrand} #{payment.last4Digits}
 

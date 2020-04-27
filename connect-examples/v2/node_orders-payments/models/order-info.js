@@ -22,46 +22,100 @@ limitations under the License.
  *  its information using getters.
  */
 class OrderInfo {
-  constructor(order){
-    this.orderInfo = order;
-    this.dateFormat = { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" };
+  constructor(order) {
+    this.order = order;
+    this.date_format = {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    };
+    // populate line Items
+    this.line_items = order.line_items.map((line_item) => ({
+      name: line_item.name,
+      quantity: line_item.quantity,
+      gross_sales_money: (line_item.gross_sales_money.amount / 100).toFixed(2),
+    }));
   }
   // Returns order ID
   get orderId() {
-    return this.orderInfo.id;
+    return this.order.id;
   }
-  // Returns the source of the order
-  get source(){
-    return this.orderInfo.source.name;
+  // Returns if the order is a pickup order
+  get isPickup() {
+    return this.order.fulfillments[0].type === "PICKUP";
   }
   // Returns the recipient's name
-  get recipientName(){
-    return this.orderInfo.fulfillments[0].pickup_details.recipient.display_name;
+  get recipientName() {
+    return this.isPickup ?
+      this.order.fulfillments[0].pickup_details.recipient.display_name :
+      this.order.fulfillments[0].shipment_details.recipient.display_name;
   }
-  // Returns the pickup time of the order.
-  get pickupTime(){
-    const pickupDate = new Date(this.orderInfo.fulfillments[0].pickup_details.pickup_at).toLocaleDateString("en-US", this.dateFormat);
+  // Returns the expected pickup time of the order.
+  get pickupTime() {
+    const pickupDate = new Date(
+      this.order.fulfillments[0].pickup_details.pickup_at
+    ).toLocaleDateString("en-US", this.date_format);
     return pickupDate;
   }
-  // Returns fulfillment type of the order
-  get fulfillmentType(){
-    return this.orderInfo.fulfillments.type;
+  // Returns the expected delivery time of the order.
+  get deliveryTime() {
+    const deliveryTime = new Date(
+      this.order.fulfillments[0].shipment_details.expected_shipped_at
+    ).toLocaleDateString("en-US", this.date_format);
+    return deliveryTime;
+  }
+  // Returns true if fulfillments info exist
+  get hasFulfillments() {
+    return !!this.order.fulfillments;
   }
   // Returns the line items ordered in the order
-  get lineItems(){
-    return this.orderInfo.line_items;
+  get lineItems() {
+    return this.line_items;
   }
   // Returns location Id
-  get locationId(){
-    return this.orderInfo.location_id;
+  get locationId() {
+    return this.order.location_id;
   }
   // Returns creation date
-  get createdAt(){
-    return this.orderInfo.created_at;
+  get createdAt() {
+    return this.order.created_at;
+  }
+  // Returns discount in order
+  get totalDiscountMoney() {
+    return (this.order.total_discount_money.amount / 100).toFixed(2);
+  }
+  // Returns service fee in order
+  get totalServiceChargeMoney() {
+    return (this.order.total_service_charge_money.amount / 100).toFixed(2);
+  }
+  // Returns tax in order
+  get totalTaxMoney() {
+    return (this.order.total_tax_money.amount / 100).toFixed(2);
+  }
+  // The subtotal money before tax applied
+  get preTaxTotalMoney() {
+    return (this.totalMoney - this.totalTaxMoney).toFixed(2);
   }
   // Returns money spent in order
-  get totalMoney(){
-    return this.orderInfo.total_money;
+  get totalMoney() {
+    return (this.order.total_money.amount / 100).toFixed(2);
+  }
+  // Returns fulfillment status
+  get fulfillmentState() {
+    return this.order.fulfillments[0].state;
+  }
+  // Returns delivery street address
+  get deliveryAddress() {
+    return this.order.fulfillments[0].shipment_details.recipient.address
+      .address_line_1;
+  }
+  // Returns delivery city, state, postal code as one line string
+  get deliveryCityAndPostalCode() {
+    const address = this.order.fulfillments[0].shipment_details.recipient
+      .address;
+    return `${address.locality}, ${address.administrative_district_level_1}, ${address.postal_code}`;
   }
 }
 

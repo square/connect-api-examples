@@ -10,17 +10,17 @@
 //- distributed under the License is distributed on an "AS IS" BASIS,
 //- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //- See the License for the specific language governing permissions and
-//- limitations under the License.
+//- limitations under the License. 
 
-doctype html
-html
-  head
-    title="Error - Order Ahead Example"
-    block styles
-      link(rel='stylesheet', href='/stylesheets/main.css')
-  body
-    div(class="cocoon")
-      h1= status
-      h2= message
-      pre #{error}
-
+div(class="panel")
+    h4(class="panel-title") Delivery Details
+    div(class="line-items")
+        div(class="line-item clearfix address")
+            div(class="left") Deliver To
+            div(class="right")
+                div #{order_info.recipientName}
+                div #{order_info.deliveryAddress}
+                div #{order_info.deliveryCityAndPostalCode}
+    div(class="clearfix")
+        div(class="left") Expected Delivery Time
+        div(class="right") #{order_info.deliveryTime}

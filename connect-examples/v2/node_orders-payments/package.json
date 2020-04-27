@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production node ./bin/www",
-    "test": "NODE_ENV=sandbox node ./bin/www",
+    "start": "NODE_ENV=production nodemon -e js,pug ./bin/www",
+    "test": "NODE_ENV=sandbox nodemon -e js,pug ./bin/www",
     "seed": "NODE_ENV=sandbox node ./bin/script/seed-catalog.js generate",
     "clear": "NODE_ENV=sandbox node ./bin/script/seed-catalog.js clear",
     "help": "NODE_ENV=sandbox node ./bin/script/seed-catalog.js --help"
@@ -20,5 +20,8 @@
     "request": "^2.88.0",
     "serve-favicon": "*",
     "square-connect": "*"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.0"
   }
 }

@@ -1,4 +1,20 @@
 {
+  "#Sales Tax": {
+    "data": {
+      "type": "TAX",
+      "id": "#Sales Tax",
+      "is_deleted": false,
+      "present_at_all_locations": true,
+      "tax_data": {
+        "name": "Sales Tax",
+        "calculation_phase": "TAX_TOTAL_PHASE",
+        "inclusion_type": "ADDITIVE",
+        "percentage": "8.5",
+        "applies_to_custom_amounts": true,
+        "enabled": true
+      }
+    }
+  },
   "#Bacon Cheeseburger": {
     "image": {
       "url": "./bin/script/img/bacon-burger@2x.png",
@@ -12,22 +28,23 @@
       "item_data": {
         "name": "Bacon Cheeseburger",
         "description": "One mouth-watering, flame-grilled, quarter-pound angus beef burger with your choice of cheese on a sesame seed bun. Comes with a side of fries.",
-        "variations": [
-          {
-            "type": "ITEM_VARIATION",
-            "id": "#Regular Bacon Cheeseburger",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Bacon Cheeseburger",
-              "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
-                "amount": 995,
-                "currency": "USD"
-              }
+        "variations": [{
+          "type": "ITEM_VARIATION",
+          "id": "#Regular Bacon Cheeseburger",
+          "is_deleted": false,
+          "present_at_all_locations": true,
+          "item_variation_data": {
+            "item_id": "#Bacon Cheeseburger",
+            "name": "Regular",
+            "pricing_type": "FIXED_PRICING",
+            "price_money": {
+              "amount": 995,
+              "currency": "USD"
             }
           }
+        }],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -45,22 +62,23 @@
         "name": "Fried Chicken Sandwich",
         "description": "A buttermilk fried chicken thigh with crispy skin on a sesame seed bun. Topped with fresh red cabbage slaw and jalapeños and our house hot sauce.",
         "abbreviation": "FCS",
-        "variations": [
-          {
-            "type": "ITEM_VARIATION",
-            "id": "#Regular Fried Chicken Sandwich",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Fried Chicken Sandwich",
-              "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
-                "amount": 675,
-                "currency": "USD"
-              }
+        "variations": [{
+          "type": "ITEM_VARIATION",
+          "id": "#Regular Fried Chicken Sandwich",
+          "is_deleted": false,
+          "present_at_all_locations": true,
+          "item_variation_data": {
+            "item_id": "#Fried Chicken Sandwich",
+            "name": "Regular",
+            "pricing_type": "FIXED_PRICING",
+            "price_money": {
+              "amount": 675,
+              "currency": "USD"
             }
           }
+        }],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -86,7 +104,7 @@
             "present_at_all_locations": true,
             "item_variation_data": {
               "item_id": "#Sunny-Side Egg on Toast",
-              "name": "Regular Sunny-Side Egg on Toast",
+              "name": "Regular",
               "pricing_type": "FIXED_PRICING",
               "price_money": {
                 "amount": 495,
@@ -94,6 +112,9 @@
               }
             }
           }
+        ],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -119,7 +140,7 @@
             "present_at_all_locations": true,
             "item_variation_data": {
               "item_id": "#Grilled Steak",
-              "name": "Regular Grilled Steak",
+              "name": "Regular",
               "pricing_type": "FIXED_PRICING",
               "price_money": {
                 "amount": 1195,
@@ -127,6 +148,9 @@
               }
             }
           }
+        ],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -144,22 +168,23 @@
         "name": "Italian Sandwich",
         "description": "Salami, capicolla, ham, provolone, fresh lettuce, peppers, onion, and olive oil served on our homemade sourdough. What more could you want in a sandwich?",
         "abbreviation": "IS",
-        "variations": [
-          {
-            "type": "ITEM_VARIATION",
-            "id": "#Regular Italian Sandwich",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Italian Sandwich",
-              "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
-                "amount": 895,
-                "currency": "USD"
-              }
+        "variations": [{
+          "type": "ITEM_VARIATION",
+          "id": "#Regular Italian Sandwich",
+          "is_deleted": false,
+          "present_at_all_locations": true,
+          "item_variation_data": {
+            "item_id": "#Italian Sandwich",
+            "name": "Regular",
+            "pricing_type": "FIXED_PRICING",
+            "price_money": {
+              "amount": 895,
+              "currency": "USD"
             }
           }
+        }],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -193,6 +218,9 @@
               }
             }
           }
+        ],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -210,22 +238,23 @@
         "name": "Mediterranean Yogurt Bowl",
         "description": "Greek yogurt topped with olives, chopped peppers, cucumber, crispy chickpeas, beans, and figs. Served with our fresh homemade pita.",
         "abbreviation": "MYB",
-        "variations": [
-          {
-            "type": "ITEM_VARIATION",
-            "id": "#Regular Mediterranean Yogurt Bowl",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Mediterranean Yogurt Bowl",
-              "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
-                "amount": 495,
-                "currency": "USD"
-              }
+        "variations": [{
+          "type": "ITEM_VARIATION",
+          "id": "#Regular Mediterranean Yogurt Bowl",
+          "is_deleted": false,
+          "present_at_all_locations": true,
+          "item_variation_data": {
+            "item_id": "#Mediterranean Yogurt Bowl",
+            "name": "Regular",
+            "pricing_type": "FIXED_PRICING",
+            "price_money": {
+              "amount": 495,
+              "currency": "USD"
             }
           }
+        }],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -251,7 +280,7 @@
             "present_at_all_locations": true,
             "item_variation_data": {
               "item_id": "#Oatmeal with Fruit",
-              "name": "Regular Oatmeal with Fruit",
+              "name": "Regular",
               "pricing_type": "FIXED_PRICING",
               "price_money": {
                 "amount": 495,
@@ -259,6 +288,9 @@
               }
             }
           }
+        ],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -284,7 +316,7 @@
             "present_at_all_locations": true,
             "item_variation_data": {
               "item_id": "#Pancakes with Fruit",
-              "name": "Regular Pancakes with Fruit",
+              "name": "Regular",
               "pricing_type": "FIXED_PRICING",
               "price_money": {
                 "amount": 995,
@@ -292,6 +324,9 @@
               }
             }
           }
+        ],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -317,7 +352,7 @@
             "present_at_all_locations": true,
             "item_variation_data": {
               "item_id": "#Salmon with Zucchini",
-              "name": "Regular Salmon with Zucchini",
+              "name": "Regular",
               "pricing_type": "FIXED_PRICING",
               "price_money": {
                 "amount": 1495,
@@ -325,6 +360,9 @@
               }
             }
           }
+        ],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -350,7 +388,7 @@
             "present_at_all_locations": true,
             "item_variation_data": {
               "item_id": "#Steak Tacos",
-              "name": "Regular Steak Tacos",
+              "name": "Regular",
               "pricing_type": "FIXED_PRICING",
               "price_money": {
                 "amount": 695,
@@ -358,6 +396,9 @@
               }
             }
           }
+        ],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }
@@ -383,7 +424,7 @@
             "present_at_all_locations": true,
             "item_variation_data": {
               "item_id": "#Autumn Soup",
-              "name": "Regular Autumn Soup",
+              "name": "Regular",
               "pricing_type": "FIXED_PRICING",
               "price_money": {
                 "amount": 695,
@@ -391,6 +432,9 @@
               }
             }
           }
+        ],
+        "tax_ids": [
+          "#Sales Tax"
         ]
       }
     }

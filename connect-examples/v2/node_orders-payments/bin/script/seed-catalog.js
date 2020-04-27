@@ -17,7 +17,7 @@ limitations under the License.
 /* eslint no-console: 0 */
 
 const SquareConnect = require("square-connect");
-const config = require("../../config.json")["sandbox"];
+const config = require("../../config.json")["sandbox"]; // We don't recommend to run this script in production environment
 const sample_data = require("./sample-seed-data.json");
 const request = require("request");
 const fs = require("fs");
@@ -45,39 +45,39 @@ const catalogInstance = new SquareConnect.CatalogApi();
 async function addImages(image, catalogObjectId, success) {
   // Create JSON request with required image information requirements.
   const img_req = {
-    "idempotency_key": require("crypto").randomBytes(64).toString("hex"),
-    "object_id": catalogObjectId,
-    "image": {
-      "id": image.id,
-      "type": "IMAGE",
-      "image_data": {
-        "caption": image.caption
-      }
-    }
+    idempotency_key: require("crypto").randomBytes(64).toString("hex"),
+    object_id: catalogObjectId,
+    image: {
+      id: image.id,
+      type: "IMAGE",
+      image_data: {
+        caption: image.caption,
+      },
+    },
   };
 
   // Headers for REST request.
   const headers = {
-    "Accept": "application/json",
-    "Authorization": "Bearer " + oauth2.accessToken,
+    Accept: "application/json",
+    Authorization: "Bearer " + oauth2.accessToken,
     "Cache-Control": "no-cache",
     "Square-Version": "2019-06-12",
     "Content-Disposition": "form-data; name=\"name\"; filename=\"name.jpg\"",
-    "Content-Type": "multipart/form-data"
+    "Content-Type": "multipart/form-data",
   };
 
   // Build form data since the createCatalogAPI only accepts multipart/form-data content-type.
   // It consists of a JSON request and the image file.
   const formData = {
-    "request": JSON.stringify(img_req),
-    "img_file": fs.createReadStream(image.url)
+    request: JSON.stringify(img_req),
+    img_file: fs.createReadStream(image.url),
   };
 
   // Make the request to createCatalogImage API.
   request.post({
     headers: headers,
-    url: "https://connect.squareupsandbox.com/v2/catalog/images",
-    formData: formData
+    url: `${config.path}/v2/catalog/images`,
+    formData: formData,
   },
   function result(err, httpResponse, body) {
     if (err) {
@@ -85,7 +85,8 @@ async function addImages(image, catalogObjectId, success) {
     } else {
       success();
     }
-  });
+  }
+  );
 }
 
 /*
@@ -96,11 +97,13 @@ async function addImages(image, catalogObjectId, success) {
  * https://developer.squareup.com/docs/api/connect/v2#endpoint-catalog-batchupsertcatalogobjects
  */
 async function addItems() {
-  const batches = [{ "objects": [] }];
+  const batches = [{
+    objects: []
+  }];
   const batchUpsertCatalogRequest = {
     // Each request needs a unique idempotency key.
-    "idempotency_key": require("crypto").randomBytes(64).toString("hex"),
-    "batches": batches
+    idempotency_key: require("crypto").randomBytes(64).toString("hex"),
+    batches: batches,
   };
 
   // Iterate through each item in the sample-seed-data.json file.
@@ -113,18 +116,20 @@ async function addItems() {
   try {
     // We call the Catalog API function batchUpsertCatalogObjects to upload all our
     // items at once.
-    const newCatalogObjects = await catalogInstance.batchUpsertCatalogObjects(batchUpsertCatalogRequest);
+    const newCatalogObjects = await catalogInstance.batchUpsertCatalogObjects(
+      batchUpsertCatalogRequest
+    );
 
     // The new catalog objects will be returned with a corresponding Square Object ID.
     // Using the new Square Object ID, we map each object with their image and upload their image.
-    newCatalogObjects.id_mappings.forEach(function (id_mapping, index) {
+    newCatalogObjects.id_mappings.forEach(function (id_mapping) {
       const client_object_id = id_mapping.client_object_id;
       const object_id = id_mapping.object_id;
 
-      if (sample_data[client_object_id]) {
+      if (sample_data[client_object_id] && sample_data[client_object_id].image) {
         const image = sample_data[client_object_id].image;
         addImages(image, object_id, () => {
-          console.log("Successfully uploaded item:", client_object_id);
+          console.log("Successfully uploaded image for item:", client_object_id);
         });
       }
     });
@@ -133,15 +138,16 @@ async function addItems() {
   }
 }
 
-
 /*
  * Given a list of catalogObjects, returns a list of the catalog object IDs.
  * @param Object of CatalogObjects (https://developer.squareup.com/docs/api/connect/v2#endpoint-catalog-listcatalog)
  * @returns Object with an array of Object Ids
  */
 function getCatalogObjectIds(catalogObjects) {
-  const catalogObjectIds = { "object_ids": [] };
-  for (let key in catalogObjects.objects) {
+  const catalogObjectIds = {
+    object_ids: []
+  };
+  for (const key in catalogObjects.objects) {
     catalogObjectIds["object_ids"].push(catalogObjects.objects[key].id);
   }
   return catalogObjectIds;
@@ -154,9 +160,11 @@ function getCatalogObjectIds(catalogObjects) {
 async function clearCatalog() {
   try {
     const catalogObjects = await catalogInstance.listCatalog();
-    if (catalogObjects.objects.length > 0) {
+    if (catalogObjects.objects && catalogObjects.objects.length > 0) {
       const catalogObjectIds = getCatalogObjectIds(catalogObjects);
-      const result = await catalogInstance.batchDeleteCatalogObjects(catalogObjectIds);
+      const result = await catalogInstance.batchDeleteCatalogObjects(
+        catalogObjectIds
+      );
       console.log("Successfully deleted catalog items ", result);
     } else {
       console.log("No items to delete from catalog");
@@ -173,9 +181,9 @@ const args = process.argv.slice(2);
 if (args[0] == "clear") {
   const rl = readline.createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
-  rl.question("Are you sure you want to clear everything in your sandbox catalog? (Y/N) ", (ans) => {
+  rl.question("Are you sure you want to clear everything in your sandbox catalog? (y/N) ", (ans) => {
     if (ans.toUpperCase() === "Y") {
       clearCatalog();
     } else if (ans.toUpperCase() === "N") {
@@ -185,8 +193,10 @@ if (args[0] == "clear") {
   });
 } else if (args[0] == "generate") {
   addItems();
-} else if (args[0] =="-h" || args[0] == "--help") {
-  console.log("Please check the README.md for more information on how to run our catalog script.\nAvailable commands include:\n npm run seed - Generates catalog items for your sandbox catalog.\n npm run clear - Clears your sandbox catalog of all items.\n\n More information can also be found on our Quick Start guide at https://developer.squareup.com/docs/orders-api/quick-start/start.");
+} else if (args[0] == "-h" || args[0] == "--help") {
+  console.log(
+    "Please check the README.md for more information on how to run our catalog script.\nAvailable commands include:\n npm run seed - Generates catalog items for your sandbox catalog.\n npm run clear - Clears your sandbox catalog of all items.\n\n More information can also be found on our Quick Start guide at https://developer.squareup.com/docs/orders-api/quick-start/start."
+  );
 } else {
   console.log("Command not recognized. Please try again.");
 }

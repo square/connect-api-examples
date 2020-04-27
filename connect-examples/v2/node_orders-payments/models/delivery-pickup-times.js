@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 /**
- * Class PickupTimes
+ * Class DeliveryPickUpTimes
  *
  * Description:
  *  The constructor creates a javascript Date object saving the time when the constrictor is run, as this.now.
@@ -23,36 +23,53 @@ limitations under the License.
  *
  * Methods:
  *  GETTER options:
- *    Returns array of objects, where each object has information for a pickup time. The three pieces of infor are
- *    "value" an ISO string later used to create a Square order, "date" a long form of the pickup time and lastly
- *    "time" a short 12 hour format for the pickup time.
+ *    Returns array of objects, where each object has information for a pickup or delivery time. The three pieces of information are
+ *    "value" an ISO string later used to create a Square order, "date" a long form of the pickup or delivery time
+ *    and lastly "time" a short 12 hour format for the pickup or delivery time.
  */
 
-class PickUpTimes{
-  constructor(){
-    this.dateFormat = { weekday: "long", month: "long", day: "numeric", hour: "numeric", minute: "2-digit" };
-    this.timeFormat = { hour: "numeric", minute: "2-digit" };
+class DeliveryPickUpTimes {
+  constructor() {
+    this.dateFormat = {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    };
+    this.timeFormat = {
+      hour: "numeric",
+      minute: "2-digit",
+    };
     this.now = new Date(); // The Date object that all other date objects are created from.
     this.dates = [];
 
     // Creates date object for our four time options
-    for (let i = 1; i < 5 ;i++){
-      const hourShift  =  1 + Math.floor(i / 2);
-      const minutes = i % 2 === 0 ? 0: 30;
-      this.dates.push(new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate(), this.now.getHours()+ hourShift, minutes ));
+    for (let i = 1; i < 5; i++) {
+      const hourShift = 1 + Math.floor(i / 2);
+      const minutes = i % 2 === 0 ? 0 : 30;
+      this.dates.push(
+        new Date(
+          this.now.getFullYear(),
+          this.now.getMonth(),
+          this.now.getDate(),
+          this.now.getHours() + hourShift,
+          minutes
+        )
+      );
     }
   }
 
   // Returns objects with formatted times and an ISOString which the Orders API consumes
-  get options(){
-    return this.dates.map((date) =>{
+  get options() {
+    return this.dates.map((date) => {
       return {
         value: date.toISOString(),
         date: date.toLocaleDateString("en-US", this.dateFormat),
-        time: date.toLocaleTimeString("en-US", this.timeFormat)
+        time: date.toLocaleTimeString("en-US", this.timeFormat),
       };
     });
   }
 }
 
-module.exports = PickUpTimes;
+module.exports = DeliveryPickUpTimes;
