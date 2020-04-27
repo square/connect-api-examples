@@ -46,7 +46,7 @@ const paymentForm = new SqPaymentForm({
     {
       backgroundColor: "transparent",
       color: "#333333",
-      fontFamily: '"Helvetica Neue", "Helvetica", sans-serif',
+      fontFamily: "\"Helvetica Neue\", \"Helvetica\", sans-serif",
       fontSize: "16px",
       fontWeight: "400",
       placeholderColor: "#8594A7",
@@ -145,24 +145,24 @@ const paymentForm = new SqPaymentForm({
      */
     inputEventReceived: function (inputEvent) {
       switch (inputEvent.eventType) {
-        case "focusClassAdded":
-          /* HANDLE AS DESIRED */
-          break;
-        case "focusClassRemoved":
-          /* HANDLE AS DESIRED */
-          break;
-        case "errorClassAdded":
-          /* HANDLE AS DESIRED */
-          break;
-        case "errorClassRemoved":
-          /* HANDLE AS DESIRED */
-          break;
-        case "cardBrandChanged":
-          /* HANDLE AS DESIRED */
-          break;
-        case "postalCodeChanged":
-          /* HANDLE AS DESIRED */
-          break;
+      case "focusClassAdded":
+        /* HANDLE AS DESIRED */
+        break;
+      case "focusClassRemoved":
+        /* HANDLE AS DESIRED */
+        break;
+      case "errorClassAdded":
+        /* HANDLE AS DESIRED */
+        break;
+      case "errorClassRemoved":
+        /* HANDLE AS DESIRED */
+        break;
+      case "cardBrandChanged":
+        /* HANDLE AS DESIRED */
+        break;
+      case "postalCodeChanged":
+        /* HANDLE AS DESIRED */
+        break;
       }
     },
 
