@@ -6,17 +6,15 @@ For more information, see [OAuth Overview](https://docs.connect.squareup.com/api
 
 ## Setup
 
-### Install SquareConnect SDK
+### Install Required Modules
 Open your terminal at this directory and type:
 ```
-pip install git+https://github.com/square/connect-python-sdk.git
+pip install -r requirements.txt
 ```
 
-### Install Flask
+### Uses Flask
 
-This application requires Python and the Flask web framework. If you have Python
-installed, you can install Flask by following
-[these steps](https://flask.palletsprojects.com/en/1.1.x/installation/).
+This application requires Python and the Flask web framework.
 
 ### Specify your application credentials
 
