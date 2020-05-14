@@ -34,14 +34,14 @@ for more information on the API sandbox.
 
 From the sample's root directory, run:
 
-    python -m CGIHTTPServer
+    python -m http.server --cgi
 
 You can then visit `localhost:8000/cgi-bin/index.py` in your browser to see the card form.
 
 If you're using your sandbox credentials, you can test a valid credit card
 transaction by providing the following card information in the form:
 
-* Card Number 4532 7597 3454 5858
+* Card Number 4111 1111 1111 1111
 * Card CVV 111
 * Card Expiration (Any time in the future)
 * Card Postal Code (Any valid US postal code)

@@ -3,12 +3,12 @@
 from __future__ import print_function
 import uuid
 import cgi
-import ConfigParser
+import configparser
 
 from square.client import Client
 
 # To read your secret credentials
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Create instance of FieldStorage
