@@ -79,4 +79,4 @@ php composer.phar install
     php -S localhost:8000
     ```
 
-1. Open http://localhost:8000/sandbox_refresh_token.php to start.
+1. Open http://localhost:8000/sandbox_request_token.php to start.
