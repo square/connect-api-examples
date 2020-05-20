@@ -1,0 +1,17 @@
+{
+  "version": "2.0",
+  "app_name": "oauth-example",
+  "autogen_policy": false,
+  "stages": {
+    "dev": {
+      "api_gateway_stage": "api",
+      "environment_variables": {
+        "environment": "sandbox",
+        "base_url": "https://connect.squareupsandbox.com",
+        "permissions": "ITEMS_READ PAYMENTS_READ",
+        "session": "true",
+        "oauth_table_name": "oauth_users"
+      }
+    }
+  }
+}
