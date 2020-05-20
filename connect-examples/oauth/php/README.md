@@ -1,15 +1,15 @@
-# Connect OAuth Flow Example (PHP)
+# Square OAuth Flow Example (PHP)
 
 This example demonstrates a bare-bones PHP implementation of the OAuth flow for
 Square APIs. It serves a link that directs merchants to the OAuth Permissions form
 and handles the result of the authorization, which is sent to your application's
 Redirect URL (specified on the application dashboard).
 
-For more information, see [OAuth Overview](https://docs.connect.squareup.com/api/oauth#oauth-overview), along with the comments included in `callback.php`.
+For more information, see [OAuth Overview](https://docs.connect.squareup.com/api/oauth#oauth-overview), along with the comments included in `sandbox_callback.php`.
 
-## Setup
+## Getting started
 
-### Download Composer and dependencies
+### Step 1: Download Composer and dependencies
 
 This application requires the PHP Square SDK as well as DotEnv for reading environment variables, which you install via
 Composer.
@@ -20,27 +20,63 @@ First, download Composer in this directory with the instructions on
 After you've downloaded Composer, install the dependencies with the following
 command from this directory:
 
-    php composer.phar install
+```
+php composer.phar install
+```
 
-### Specify your application credentials
+### Step 2: Get your credentials and set the redirect URL:
 
-In order for the sample to work, you must create a file called `.env`:
+1. Open the [Developer Dashboard](https://developer.squareup.com/apps).
+1. Choose **Open** on the card for an application.
+1. At the top of the page, set the dashboard mode to **Sandbox**.
+1. Choose **OAuth** in the left navigation pane. The OAuth page is shown.
+1. In the **Sandbox Redirect URL** box, enter the URL for the callback you will implement to complete the OAuth flow:
+    `http://localhost:8000/sandbox_callback.php`
 
-* In this file, supply either production, sandbox, or both credentials.
-* Be sure to put `true` or `false` for `USE_PROD` as it will change the domain being used.
+    This example uses localhost in the Square Sandbox. You can use HTTP for localhost but an actual web server implementation must use HTTPS.
+1. in the **Sandbox Application ID** box, copy the application ID.
+1. In the **Sandbox Application Secret** box, choose **Show**, and then copy the application secret.
+1. Click **Save**.
+1. Create the `sandbox_config.php` file and add the following code. Follow the instructions in the file to replace the appropriate `REPLACE_ME` placeholders with the Sandbox application ID and Sandbox application secret. The file should look like the following:
 
-### Set your application's Redirect URL
+    ```php
+    <?php
+    require 'vendor/autoload.php';
 
-On your application dashboard, set your application's Redirect URL to `http://localhost:8000/callback.php`.
+    // To keep it simple and because we are using sandbox, 
+    // this example uses a named constant to store the application secret.
+    // In production, you should encrypt sensitive data such as the application secret and OAuth tokens.
+    // For more information on best practices, see the Square API OAuth documentation.
 
-Note that applications that don't use a `localhost` URL must use HTTPS. HTTP is
-allowed for `localhost` URLs to simplify the development process.
+    // Sandbox application ID is used for the following:
+    // --The client_id query parameters for the Square Authorization Page URL
+    // --The client_id value in the POST body when calling Obtain Token
+    // REPLACE_ME = the sandbox application ID from the application's OAuth tab in the Developer Dashboard.
+    define('_SQ_SANDBOX_APP_ID', "REPLACE_ME");
 
-## Running the example
+    // Sandbox application secret is the client secret required to call obtain token.
+    // REPLACE_ME = the sandbox application secret from the application's OAuth tab.
+    define('_SQ_SANDBOX_APP_SECRET', "REPLACE_ME");
 
-To run the example, execute the following from the directory that contains these files:
+    // Square sandbox domain for REST API calls.
+    define('_SQ_SANDBOX_BASEURL', "https://connect.squareupsandbox.com");
+    ?>
+    ```
 
+    Note that OAuth Sandbox credentials begin with a sandbox prefix and that the base URL for calling Sandbox endpoints is https://connect.squareupsandbox.com. When you implement for production, you need production credentials and use https://connect.squareup.com as the base URL.
+
+    In addition, you should also avoid putting the application secret directly in your source code, encrypt the secret, and use other methods such as environment variables to reference the secret in your application.
+
+### Step 3: Running the example
+
+1. Open the [Developer Dashboard](https://developer.squareup.com/apps).
+
+1. In the Sandbox Test Accounts section, find one test acount and choose Open.
+
+1. Start the PHP server, if it is not running:
+
+    ```
     php -S localhost:8000
+    ```
 
-You can then proceed through the OAuth flow by visiting `http://localhost:8000`
-in your web browser.
+1. Open http://localhost:8000/sandbox_refresh_token.php to start.
