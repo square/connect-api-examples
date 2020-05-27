@@ -5,7 +5,8 @@ Square APIs. It serves a link that directs merchants to the OAuth Permissions fo
 and handles the result of the authorization, which is sent to your application's
 Redirect URL (specified on the application dashboard).
 
-For more information, see [OAuth Overview](https://docs.connect.squareup.com/api/oauth#oauth-overview), along with the comments included in `sandbox_callback.php`.
+For a detailed walkthrough of this example, see [OAuth Walkthrough](https://developer.squareup.com/docs/oauth-api/walkthrough),
+along with the comments included in `sandbox_callback.php`.
 
 ## Getting started
 
