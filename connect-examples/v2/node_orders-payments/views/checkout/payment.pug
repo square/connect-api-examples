@@ -29,9 +29,26 @@ block content
         h1(class="page-title") Review &amp; Complete Your Order
         div(class="tab-content")
             form(id="payment-form" action='/checkout/payment', method='post')
-                include ../includes/square-payment-form.pug
+                div(class="panel panel-left")
+                    h4(class="panel-title") Payment Details
+                    div(id="sq-ccbox")
+                        div(class="sq-field")
+                            label(class="sq-label") Card Number
+                            div(id="sq-card-number")
+                        div(class="sq-field-wrapper")
+                            div(class="sq-field sq-field--in-wrapper")
+                                label(class="sq-label") CVV
+                                div(id="sq-cvv")
+                            div(class="sq-field sq-field--in-wrapper")
+                                label(class="sq-label") Expiration
+                                div(id="sq-expiration-date")
+                            div(class="sq-field sq-field--in-wrapper")
+                                label(class="sq-label") Zip Code
+                                div(id="sq-postal-code")
+                        div(id="error")
                 input(name='order_id', type='hidden', value=order_info.orderId)
                 input(name='location_id', type='hidden', value=order_info.locationId)
+                input(name='idempotency_key', type='hidden', value=idempotency_key)
                 input(name="nonce" type="hidden" id="card-nonce")
             div(class="order-summary")
                 include ../includes/order-summary.pug
@@ -39,4 +56,6 @@ block content
                     include ../includes/pickup-details.pug
                 else
                     include ../includes/delivery-details.pug
+                if (loyalty_reward_info.show_reward_option)
+                    include ../includes/loyalty-panel.pug
                 button(id="sq-creditcard" class="form-button" type="button" onclick="onGetCardNonce(event)") Pay with Card

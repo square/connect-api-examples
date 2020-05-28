@@ -19,7 +19,7 @@
     "pug": "*",
     "request": "^2.88.0",
     "serve-favicon": "*",
-    "square-connect": "*"
+    "square-connect": "^3.20200528.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"

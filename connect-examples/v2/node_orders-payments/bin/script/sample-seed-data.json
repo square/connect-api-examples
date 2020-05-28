@@ -15,6 +15,26 @@
       }
     }
   },
+  "#Breakfast Category": {
+    "data": {
+      "type": "CATEGORY",
+      "id": "#Breakfast Category",
+      "present_at_all_locations": true,
+      "category_data": {
+        "name": "Breakfast"
+      }
+    }
+  },
+  "#Entree Category": {
+    "data": {
+      "type": "CATEGORY",
+      "id": "#Entree Category",
+      "present_at_all_locations": true,
+      "category_data": {
+        "name": "Entree"
+      }
+    }
+  },
   "#Bacon Cheeseburger": {
     "image": {
       "url": "./bin/script/img/bacon-burger@2x.png",
@@ -28,6 +48,7 @@
       "item_data": {
         "name": "Bacon Cheeseburger",
         "description": "One mouth-watering, flame-grilled, quarter-pound angus beef burger with your choice of cheese on a sesame seed bun. Comes with a side of fries.",
+        "category_id": "#Entree Category",
         "variations": [{
           "type": "ITEM_VARIATION",
           "id": "#Regular Bacon Cheeseburger",
@@ -62,6 +83,7 @@
         "name": "Fried Chicken Sandwich",
         "description": "A buttermilk fried chicken thigh with crispy skin on a sesame seed bun. Topped with fresh red cabbage slaw and jalapeños and our house hot sauce.",
         "abbreviation": "FCS",
+        "category_id": "#Entree Category",
         "variations": [{
           "type": "ITEM_VARIATION",
           "id": "#Regular Fried Chicken Sandwich",
@@ -96,6 +118,7 @@
         "name": "Sunny-Side Egg on Toast",
         "description": "One farm-fresh sunny side up egg, tomato, and green peppers on a slice of our toast fresh from our bakehouse.",
         "abbreviation": "ET",
+        "category_id": "#Breakfast Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
@@ -132,6 +155,7 @@
         "name": "Grilled Steak",
         "description": "Perfectly grilled flank steak that's been marinated in our award winning sauce, paired with fresh-from-the-farm veggies.",
         "abbreviation": "BRF",
+        "category_id": "#Entree Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
@@ -168,6 +192,7 @@
         "name": "Italian Sandwich",
         "description": "Salami, capicolla, ham, provolone, fresh lettuce, peppers, onion, and olive oil served on our homemade sourdough. What more could you want in a sandwich?",
         "abbreviation": "IS",
+        "category_id": "#Entree Category",
         "variations": [{
           "type": "ITEM_VARIATION",
           "id": "#Regular Italian Sandwich",
@@ -202,6 +227,7 @@
         "name": "Meatballs",
         "description": "Lean grilled lamb meatballs served with fresh greens. Perfect for those on a ketogenic diet.",
         "abbreviation": "MB",
+        "category_id": "#Entree Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
@@ -238,6 +264,7 @@
         "name": "Mediterranean Yogurt Bowl",
         "description": "Greek yogurt topped with olives, chopped peppers, cucumber, crispy chickpeas, beans, and figs. Served with our fresh homemade pita.",
         "abbreviation": "MYB",
+        "category_id": "#Entree Category",
         "variations": [{
           "type": "ITEM_VARIATION",
           "id": "#Regular Mediterranean Yogurt Bowl",
@@ -272,6 +299,7 @@
         "name": "Oatmeal with Fruit",
         "description": "A classic hot breakfast comprised of our famous steel-cut oats topped with fruit and almond slices straight from locally owned farms.",
         "abbreviation": "SB",
+        "category_id": "#Breakfast Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
@@ -308,6 +336,7 @@
         "name": "Pancakes with Fruit",
         "description": "The fluffiest, most perfectly golden pancakes you've ever had topped with fresh fruit from local farms. Real Canadian maple syrup served on the side.",
         "abbreviation": "PF",
+        "category_id": "#Breakfast Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
@@ -344,6 +373,7 @@
         "name": "Salmon with Zucchini",
         "description": "Fresh caught Alaskan king salmon served on a bed of braised spinach and diced zucchini.",
         "abbreviation": "SZ",
+        "category_id": "#Entree Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
@@ -380,6 +410,7 @@
         "name": "Steak Tacos",
         "description": "Two tacos with flank steak marinated for a minimum of 24 hours in our award-winning marinade. Topped with a mix of fresh cilantro and cooling cucumber.",
         "abbreviation": "ST",
+        "category_id": "#Entree Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",

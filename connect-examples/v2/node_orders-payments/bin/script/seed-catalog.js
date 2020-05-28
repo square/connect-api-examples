@@ -32,7 +32,7 @@ const oauth2 = defaultClient.authentications["oauth2"];
 oauth2.accessToken = config.squareAccessToken;
 
 // Configure catalog API instance
-const catalogInstance = new SquareConnect.CatalogApi();
+const catalogApi = new SquareConnect.CatalogApi();
 
 /*
  * Given an object with image data and a corresponding catalogObjectId,
@@ -116,7 +116,7 @@ async function addItems() {
   try {
     // We call the Catalog API function batchUpsertCatalogObjects to upload all our
     // items at once.
-    const newCatalogObjects = await catalogInstance.batchUpsertCatalogObjects(
+    const newCatalogObjects = await catalogApi.batchUpsertCatalogObjects(
       batchUpsertCatalogRequest
     );
 
@@ -159,10 +159,10 @@ function getCatalogObjectIds(catalogObjects) {
  */
 async function clearCatalog() {
   try {
-    const catalogObjects = await catalogInstance.listCatalog();
+    const catalogObjects = await catalogApi.listCatalog({ types: "ITEM,ITEM_VARIATION,TAX,IMAGE,CATEGORY" });
     if (catalogObjects.objects && catalogObjects.objects.length > 0) {
       const catalogObjectIds = getCatalogObjectIds(catalogObjects);
-      const result = await catalogInstance.batchDeleteCatalogObjects(
+      const result = await catalogApi.batchDeleteCatalogObjects(
         catalogObjectIds
       );
       console.log("Successfully deleted catalog items ", result);

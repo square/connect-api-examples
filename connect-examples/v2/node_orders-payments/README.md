@@ -1,70 +1,310 @@
 # Order-Ahead Sample App
-This project is written in [NodeJS](https://nodejs.org/en/) be sure to have NodeJS setup in your development environment before proceeding.
 
-Follow the [Order-Ahead Sample App guide](https://developer.squareup.com/docs/orders-api/quick-start/start) 
-to start taking pickup orders with the Square Orders API.
+  - [Setup](#setup)
+  - [Project organization](#project-organization)
+  - [Application flow](#application-flow)
 
-## Quick Start Guide
+This is a sample order-ahead web application where buyers place orders online, choose delivery options,
+and pay for the order. The application uses Square APIs for an integrated experience:
 
-### Step 1: Set your credentials. 
+*   [Orders API](https://developer.squareup.com/reference/square/orders-api) to manage orders.
+*   [Payments API](https://developer.squareup.com/reference/square/payments-api) to process payments.
+    The application also uses the Square-provided JavaScript library to include a payment form.
+*   [Catalog API](https://developer.squareup.com/reference/square/catalog-api) to manage the catalog of food items you sell.
+    We provide a script for you to prepopulate catalog items, variations, categories, and taxes.
+*   [Loyalty API](https://developer.squareup.com/reference/square/loyalty-api) to manage buyer loyalty accounts.
 
-Open `config.json`, you'll see that there are two sets of `squareApplicationId` 
-and `squareAccessToken` variables. The first set is for your `sandbox` credentials 
-and the second is for your `production` credentials. 
+After processing the payment, the seller can fulfill the order. The seller can view the orders on the Seller Dashboard
+or receive order information on the Square Point of Sale mobile app (after processing the payment, Square sends the order
+details to Square Point of Sale). For more information, see [Square Point of Sale](https://squareup.com/us/en/point-of-sale). 
 
-Replace the placeholders for `squareApplicationId` `squareAccessToken` with your 
-own production or sandbox credentials. For more help, see our [guide on how to get 
-your credentials](https://developer.squareup.com/docs/orders-api/quick-start/step-1). 
+Before you begin, note the following:
 
-**WARNING**: Remember to use your own credentials only for testing the sample app. 
-If you plan to make a version of this sample app available for your own purposes, 
-use the Square [OAuth API](https://developer.squareup.com/docs/oauth-api/what-it-does) 
-to safely manage access to Square accounts. 
+* **Application framework.** This sample uses [Express](https://expressjs.com/) (a web framework for Node.js).
+We chose Node.js primarily because it is easy to set up and test. Otherwise, you can use any other Square-provided SDKs.
+* **Sandbox testing.** Application configuration allows you to test the application both in the Square Sandbox
+and in the production environment. For testing, the Sandbox is great because you do not charge your real credit card.
+Instead, you use a fake card that Square provides for the Sandbox environment.
 
-### Step 2: Install dependencies
+## Setup
 
-* Open your terminal and install the sample application's dependencies with the command:
-```
-  npm install
-```
+1. Set your credentials. 
 
-### Step 3: Test the app.
+    Open `config.json`, you'll see that there are two sets of `squareApplicationId` 
+    and `squareAccessToken` variables. The first set is for your `sandbox` credentials 
+    and the second is for your `production` credentials. 
 
-Run the server with your production credentials:
-```
-  npm start
-```
-Run the server in with your sandbox credentials:
-```
-   npm test
-```
+    Replace the placeholders for `squareApplicationId`, `squareAccessToken` with your 
+    own production or sandbox credentials. For more help, see our [guide on how to get 
+    your credentials](https://developer.squareup.com/docs/orders-api/quick-start/step-1).
 
-To see the sample app running, open `localhost:3000` in your browser. If your 
-account has catalog items with images, the sample app will pull them in and display 
-them. 
+    **WARNING**: Remember to use your own credentials only for testing the sample app.
+    If you plan to make a version of this sample app available for your own purposes,
+    use the Square [OAuth API](https://developer.squareup.com/docs/oauth-api/what-it-does)
+    to safely manage access to Square accounts. 
 
-If your account does not have images (for example, if you are using a newly created  
-account for testing), it will appear as a gray screen. 
+1. Open your terminal and install the sample application's dependencies with the command:
+    ```
+    npm install
+    ```
 
-## Create test items for your sandbox accounts
+1. Test the app.
 
-We provide a script you can use to quickly populate your sandbox store's catalog with test items.
+    Run the server with your production credentials:
+    ```
+    npm start
+    ```
+    Run the server in with your sandbox credentials:
+    ```
+    npm test
+    ```
 
-1. Configure your app with `sandbox` credentials.
-2. Run the script:
-```
-  npm run seed
-```
-3. Run the server in with your sandbox credentials:
-```
-   npm test
-```
+1. Open `localhost:3000` in your browser. If your account has catalog items with images, the
+sample app will pull them in and display them.
 
-Navigate to `http://localhost:3000` to see the newly created items in the sample app. 
+    If your account does not have images (for example, if you are using a newly created account
+    for testing), it will appear as a gray screen.
 
-For more guidance, see the 
-[Order-Ahead Sample App guide](https://developer.squareup.com/docs/orders-api/quick-start/start).
-​
+1. [Optional] We provide a script you can use to quickly populate your sandbox store's catalog
+with test items. Run the script and refresh the page:
+
+    ```
+    npm run seed
+    ```
+
+## Project organization
+
+This Express.js project is organized as follows:
+
+* **config.json**. You provide credentials in this file. 
+* **/models**. JavaScript classes in these files are used to abstract data coming from Square APIs.
+  The views (.pug files) use these object models to access Square data. 
+* **/public.** These are the client-side JavaScript and CSS files used to render the home page and
+  create and initialize the client-side `SqPaymentForm` object. 
+* **/routes.** The following JavaScript files define the routes to handle requests:
+    * **Index.js.** Provides routes to handle all the requests for the initial page, which shows
+      catalog items that buyers can purchase.
+    * **Checkout.js.** Provides routes to handle all the requests related to the checkout flow.
+    * **Order-confirmation.js.** Provides routes to handle order confirmation requests.
+* **/util.** The code initializes the Square SDK client and provides utility functions.
+  The `retrieveOrderAndLocation` function, for example, retrieves order and location information.
+* **/views.** Provides the view (.pug) files.
+
+---
+
+## Application flow
+
+- [Basic order-ahead flow](#basic-order-ahead-flow)
+- [Integrating Loyalty Api](#integrating-loyalty-api)
+
+---
+### Basic order-ahead flow
+
+The application flow primarily explains Square API integration with this application, with the
+assumption that you are familiar with [Express](https://expressjs.com/) (the web framework for Node.js).
+
+1. Initially the `router.get("/", …) `controller (in [index.js](routes/index.js#L39)) executes and renders the home page.
+The page shows a list of food items that buyers can purchase.
+
+    The controller makes the following Square API calls:
+
+    * `listCatalog` (Catalog API) to retrieve a list of catalog items. 
+    * `listLocations `(Locations API) to get a list of seller locations. The application uses the
+      first location in the response. You need a location for the following purposes:
+        1. A location ID is required to create an order. 
+        2. The location object provides the business name that the application uses to display on the page header.
+
+    The controller then calls `res.render("index")` to compile the template (`/views/index.pug`)
+    with the catalog objects and location information, create an HTML output, and send it to the client.
+
+    <img src="./bin/images/Order-Ahead-Diagram-10.png" width="300"/>
+
+1. The client chooses an item, and then chooses **Buy This**.
+
+    <img src="./bin/images/Order-Ahead-Diagram-20.png" width="300"/>
+
+    The view file (index.pug) that compiles the page defines a form with the **Buy This** button. The form action
+    sends a POST request to the `router.post("/create-order")` controller in index.js to create an order.
+
+1. The `router.post("/create-order")` (in [index.js](routes/index.js#L70)) controller executes.
+The controller does the following:
+
+    * Calls `createOrder` (Orders API) to create an order (with one line item, price, and quantity).
+      In this application, the quantity ordered is always one.
+
+        **NOTE:** The integration of the Orders API and Catalog API enables `createOrder` to obtain
+        item price, tax information from the catalog.
+
+     * The tax is appended to the order by setting `orderRequestBody.order.taxes` to `tax_ids` of a catalog item.
+     * Calls ``res.redirect(`/checkout/choose-delivery-pickup, …)`` to redirect the request to
+       the `router.get("/choose-delivery-pickup", ...) `controller (in checkout.js).
+
+1. The controller does the following:
+
+    * Calls the `retrieveOrderAndLocation` helper function to get the order summary and
+      location information. The application calls this helper function in the checkout process
+      whenever a page needs to be rendered. \
+
+    * The controller then calls `res.render("checkout/choose-delivery-pickup", ...)` to compile
+      the template (`choose-delivery-pickup.pug`), create an HTML output, and send it to the client.
+
+    <img src="./bin/images/Order-Ahead-Diagram-30.png" width="400"/>
+
+
+1. We assume that the buyer chooses to get the item delivered. The application renders the
+**Add Delivery Details** page for the buyer to provide delivery information and the buyer then
+chooses **Continue To Payment**. An example screenshot is shown:
+
+    <img src="./bin/images/Order-Ahead-Diagram-40.png" width="400"/>
+
+    The view file `(add-delivery-details.pug`) that compiles the preceding page defines a `form`
+    for the delivery details and the **Continue To Payment** button. The form action sends a POST
+    request to the `router.post("/add-delivery-details", ...)` controller (in checkout.js) to update the order.
+
+1. The `router.post("/add-delivery-details", …)` controller (in [checkout.js](routes/checkout.js#L249)) executes.
+This controller does the following:
+
+    * Calls `updateOrder` (Orders API) to update the order with `fulfillments` information and
+      `service_charges` (delivery fee) to the order.
+    * Calls `res.redirect(/checkout/payment)` to redirect the request to the `router.get("/payment", ...)`
+      controller (in checkout.js).
+
+1. The `router.get("/payment")` controller (in [checkout.js](routes/checkout.js#L348)) executes.
+This controller does the following:
+
+    * Calls `getLoyaltyRewardInformation `(Loyalty API) to see whether the seller offers a loyalty program.
+      If yes, it also determines whether the buyer can redeem any rewards (to get discounts). We discuss loyalty integration later.
+    * Calls `res.render(checkout/payment)` to compile the template (`/checkout/payment.pug`), create the HTML output,
+      and send it to the client. An example screenshot is shown:
+
+    <img src="./bin/images/Order-Ahead-Diagram-50.png" width="400"/>
+
+    The `/checkout/payment.pug` compiles the preceding page. The page includes a payment form
+    (the **PAYMENT DETAILS** panel) for the buyer to provide card information. The application
+    uses the Square-provided `SqPaymentForm` JavaScript library to generate a secure token (nonce)
+    from the card information the buyer provides. After generating the nonce, a POST request is sent
+    to the `router.post("/payment"`) controller in checkout.js.
+
+    **NOTE:** This documentation does not cover details about using the `SqPaymentForm` library to embed
+    a payment form in your website. For more information, see [Square payments in your website](https://developer.squareup.com/docs/payment-form/overview).
+
+1. The `router.post("/payment"`) controller (in the [checkout.js](routes/checkout.js#L398)) executes.
+This controller does the following:
+
+     * Calls `createPayment` (Payments API) to take the payment by charging the nonce.
+       Note that depending on the discount the buyer gets (part of Loyalty API integration),
+       the order amount might change to $0. For example, the buyer orders a coffee and uses a
+       reward to get the coffee for free. When the amount is $0, `createPayment` (Payments API)
+       does not work. Instead, you call `order.payOrder `as shown so the application can go to the next step.
+    * Calls the `res.redirect("/order-confirmation")` controller in order-confirmation.js.
+
+1. The `router.get("/", ...)` controller (in [order-confirmation.js](routes/order-confirmation.js#L31)) executes.This controller calls `res.render()` to compile the template (`order-confirmation.pug`),
+creates the HTML output, and sends it to the client as shown:
+
+    <img src="./bin/images/Order-Ahead-Diagram-60.png" width="400"/>
+
+---
+
+### Integrating Loyalty Api
+
+- [Application flow for redeeming rewards](#application-flow-for-redeeming-rewards)
+- [Application flow for accruing points](#application-flow-for-accruing-points)
+
+To include a loyalty program in an order-ahead application, you need to set up a loyalty program
+in the seller’s account. Follow [example walkthrough 1](https://developer.squareup.com/docs/loyalty-api/walkthrough1)
+and set up the program. You do not need to create a loyalty account for buyers because the application creates an account, if needed.
+
+#### Application flow for redeeming rewards
+
+In the checkout flow, after the buyer places an order and provides fulfillment information,
+the controller, `router.get("/payment", ...),` in checkout.js renders the view (`checkout/payment`).
+The view compiles the following page: 
+
+<img src="./bin/images/Order-Ahead-Diagram-70.png" width="400"/>
+
+The page includes the **REDEEM REWARDS** panel only if the seller offers a loyalty program.
+The Loyalty API call `listLoyaltyPrograms` in the helper function (`getLoyaltyRewardInformation`)
+retrieves the seller’s loyalty program.
+
+If the buyer provides a phone number and chooses **Check in with phone number**, the application
+calls `retrieveLoyaltyAccount` to search the loyalty account associated with the phone number: 
+
+* If a loyalty account is not found, the panel remains for the buyer to provide another phone
+  number or proceed to pay for the order.
+* If a loyalty account is found, the application compares the reward tiers in the program with
+  the available points in the buyer’s account to determine which reward tiers the buyer can redeem.
+  The controller then renders the view again. This time the **REDEEM REWARDS** panel shows list of rewards for the buyer to select:
+
+<img src="./bin/images/Order-Ahead-Diagram-80.png" width="400"/>
+
+If the buyer chooses to redeem the reward, the controller applies the discount
+(call `CreateLoyaltyReward` (Loyalty API) in the `router.post("/redeem-loyalty-reward", ...)`
+controller to update the order and render the page again. The **Order Summary** panel shows the discount applied:
+
+<img src="./bin/images/Order-Ahead-Diagram-90.png" width="400"/>
+
+The following source files manage the application flow related to this page: 
+
+* **Controller.** `router.get("/payment", ...)` in [checkout.js](routes/checkout.js#L348).
+* **View file.** `/checkout/payment.pug`.
+* **Helper function.** `getLoyaltyRewardInformation()` in [square-connect-client.js](util/square-connect-client.js#L99). The helper function does several things. For example, it:
+    * Calls `ListLoyaltyPrograms` (Loyalty API) to verify that the seller offers a loyalty program.
+      If a loyalty program is offered, the UI can include the reward option panel. 
+    * Verifies that the order is not already updated with a reward. If it is, there is no need to offer the reward tiers again.
+    * Calls `RetrieveLoyaltyAccount` (Loyalty API). If a valid account ID exists, it retrieves the
+      account and gets the point balance that the buyer can use to redeem a reward.
+    * Compares the available points in the buyer’s account with the reward tiers that the program
+      offers to determine the reward tiers the buyer qualifies for.
+
+#### Application flow for accruing points
+
+After the buyer provides card information and chooses **Pay with Card**, the on-click event handler
+(`onGetCardNonce`) executes. The subsequent code path uses the `SqPaymentForm` JavaScript library to
+generate a nonce from the card information and calls `CreatePayment` (Payments API call) to charge the nonce. 
+
+**NOTE:** Details about how to integrate Square payments are not covered in this exercise.
+For related information, see [Square Payments in your Website](https://developer.squareupstaging.com/docs/payment-form/overview?preview=true).
+
+After processing the payment, the request gets redirected to the `router.get("/", ...)` controller in order-confirmation.js.
+The controller renders the `order-confirmation` view. The view compiles the following **Order Status** page: 
+
+<img src="./bin/images/Order-Ahead-Diagram-100.png" width="400"/>
+
+The application checks the following before deciding to include the **CHECK IN TO EARN POINTS** panel:
+
+* Calls `listLoyaltyPrograms` (Loyalty API) to check whether the seller has an active loyalty program.
+* Calls `calculateLoyaltyPoints` (Loyalty API) to determine whether the buyer should earn points for the
+  purchase (the point accrual rule in the loyalty program determines how many points a buyer can earn for a purchase).
+* Calls `searchLoyaltyEvents` (Loyalty API) to make sure the buyer did not previously accrue points for
+  this order (when you add points to the buyer account, an event gets added to the ledger).
+
+If the buyer chooses to provide a phone number and chooses **Check in**, the controller `router.post("/add-loyalty-point", …)`
+handles the POST request to add the points to the loyalty account associated with the phone number. If no account is found,
+the application creates the loyalty account by calling `createLoyaltyAccount` (Loyalty API) and adds points to the account
+by calling `accumulateLoyaltyPoints` (Loyalty API). Square records each point balance change in a ledger
+(see[ Loyalty Events](https://developer.squareup.com/docs/loyalty-api/overview?#loyalty-events)). The buyer is then redirect back to order-confirmation page, as shown:
+
+<img src="./bin/images/Order-Ahead-Diagram-110.png" width="400"/>
+
+
+The following source files manage the application flow related to this **Order Status** page:
+
+* **Controller. `router.get("/", ...)`** in [order-confirmation.js](routes/order-confirmation.js#L31).
+* **View file. `order-confirmation.pug`**.
+* **Helper function.** The `getLoyaltyPointAccumulateInformation()` function in [square-connect-client.js](util/square-connect-client.js#179).
+
+    Each time the helper function is called, it makes the following Loyalty API calls to determine whether to
+    include the **CHECK IN TO EARN POINTS** panel and ask the buyer for a phone number to get points for the purchase:
+
+    * `listLoyaltyPrograms` (Loyalty API) verifies that the seller offers a loyalty program.
+    * `searchLoyaltyEvents` (Loyalty API) searches the ledger for an event indicating that the buyer
+      accumulated points for the order You call the `accumulateLoyaltyPoints` function to add points to the buyer’s account.
+      This function also creates an event of type `ACCUMULATE_POINTS` in the ledger. For more information,
+      see [Loyalty events](https://developer.squareup.com/docs/loyalty-api/overview#loyalty-events).
+    * `calculateLoyaltyPoints` (Loyalty API). The example loyalty program gives the buyer one point for every dollar spent.
+      The application calls this function to check the order and determine whether the buyer qualifies to accumulate at least one point.
+
+
 # License
 Copyright 2019 Square, Inc.
 ​

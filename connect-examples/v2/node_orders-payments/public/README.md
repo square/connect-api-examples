@@ -10,10 +10,6 @@ This sub-directory contains all of the client side javascript for this demo appl
 
 This js file gets loaded by the index.pug template. This file controls the behavior of the item info modals.
 
-### add-delivery-pickup-details.js
-
-This js file helps to perform the client side validation and submit.
-
 ### sq-payment-form.js
 
 This js file is an example how you create and use Square Payment Form to take credit/debit card payment.

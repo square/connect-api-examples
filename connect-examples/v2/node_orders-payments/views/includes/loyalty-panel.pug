@@ -12,18 +12,8 @@
 //- See the License for the specific language governing permissions and
 //- limitations under the License. 
 
-extends layout
-block append styles  
-  link(rel='stylesheet', href='/stylesheets/checkout.css')
-block content
-  div(class="tab") 
-    h1(class="page-title") Order Status
-    div(class="tab-content")
-      if order_info.isPickup
-        include includes/pickup-confirmation.pug
-      else
-        include includes/delivery-confirmation.pug
-      div(class="order-summary")
-        include includes/order-summary.pug
-        if loyalty_accumulate_info.is_eligible_for_accrue_point
-          include includes/add-loyalty-point.pug
+div(class="panel clearfix")
+    if (!loyalty_reward_info.loyalty_account_id)
+        include ./attach-loyalty-account.pug
+    else
+        include ./redeem-loyalty-reward.pug
