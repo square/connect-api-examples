@@ -1,32 +1,32 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.4.2)
+    activesupport (5.2.4.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     aes_key_wrap (1.0.1)
     attr_required (1.0.1)
-    bindata (2.4.6)
+    bindata (2.4.7)
     concurrent-ruby (1.1.6)
     httpclient (2.8.3)
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
-    json-jwt (1.11.0)
+    json-jwt (1.12.0)
       activesupport (>= 4.2)
       aes_key_wrap
       bindata
-    minitest (5.14.0)
+    minitest (5.14.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     rack (2.2.2)
-    rack-oauth2 (1.10.1)
+    rack-oauth2 (1.14.0)
       activesupport
       attr_required
       httpclient
       json-jwt (>= 1.11.0)
-      rack
+      rack (>= 2.1.0)
     rack-protection (2.0.8.1)
       rack
     ruby2_keywords (0.0.2)
@@ -39,7 +39,7 @@ GEM
       rack-oauth2
     thread_safe (0.3.6)
     tilt (2.0.10)
-    tzinfo (1.2.6)
+    tzinfo (1.2.7)
       thread_safe (~> 0.1)
 
 PLATFORMS
