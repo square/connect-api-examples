@@ -15,12 +15,18 @@ limitations under the License.
 */
 
 const express = require("express");
-const { randomBytes } = require("crypto");
+const url = require("url");
+const {
+  randomBytes
+} = require("crypto");
 const {
   config,
   retrieveOrderAndLocation,
-  orderInstance,
-  paymentInstance,
+  getLoyaltyAccountByPhoneNumber,
+  getLoyaltyRewardInformation,
+  orderApi,
+  paymentApi,
+  loyaltyApi
 } = require("../util/square-connect-client");
 const DeliveryPickUpTimes = require("../models/delivery-pickup-times");
 
@@ -38,9 +44,15 @@ const router = express.Router();
  *  location_id: Id of the location that the order belongs to
  */
 router.get("/choose-delivery-pickup", async (req, res, next) => {
-  const { order_id, location_id } = req.query;
+  const {
+    order_id,
+    location_id
+  } = req.query;
   try {
-    const { order_info, location_info } = await retrieveOrderAndLocation(
+    const {
+      order_info,
+      location_info
+    } = await retrieveOrderAndLocation(
       order_id,
       location_id
     );
@@ -66,7 +78,11 @@ router.get("/choose-delivery-pickup", async (req, res, next) => {
  *  fulfillment_type: One of the fulfillment types, learn more https://developer.squareup.com/docs/api/connect/v2#type-orderfulfillmenttype
  */
 router.post("/choose-delivery-pickup", async (req, res, next) => {
-  const { order_id, location_id, fulfillment_type } = req.body;
+  const {
+    order_id,
+    location_id,
+    fulfillment_type
+  } = req.body;
   if (fulfillment_type === "PICKUP") {
     res.redirect(
       `/checkout/add-pickup-details?order_id=${order_id}&location_id=${location_id}`
@@ -91,9 +107,15 @@ router.post("/choose-delivery-pickup", async (req, res, next) => {
  *  location_id: Id of the location that the order belongs to
  */
 router.get("/add-pickup-details", async (req, res, next) => {
-  const { order_id, location_id } = req.query;
+  const {
+    order_id,
+    location_id
+  } = req.query;
   try {
-    const { order_info, location_info } = await retrieveOrderAndLocation(
+    const {
+      order_info,
+      location_info
+    } = await retrieveOrderAndLocation(
       order_id,
       location_id
     );
@@ -101,6 +123,7 @@ router.get("/add-pickup-details", async (req, res, next) => {
       location_info,
       expected_pick_up_times: new DeliveryPickUpTimes(),
       order_info,
+      idempotency_key: randomBytes(45).toString("hex"),
     });
   } catch (error) {
     next(error);
@@ -125,6 +148,7 @@ router.get("/add-pickup-details", async (req, res, next) => {
  * Request Body:
  *  order_id: Id of the order to be updated
  *  location_id: Id of the location that the order belongs to
+ *  idempotency_key: Unique identifier for request from client
  *  pickup_name: Name of the individual who ordered
  *  pickup_email: Email of the individual who ordered
  *  pickup_number: Phone number of the individual who ordered
@@ -134,47 +158,49 @@ router.post("/add-pickup-details", async (req, res, next) => {
   const {
     order_id,
     location_id,
+    idempotency_key,
     pickup_name,
     pickup_email,
     pickup_number,
     pickup_time,
   } = req.body;
   try {
-    const { orders } = await orderInstance.batchRetrieveOrders(location_id, {
+    const {
+      orders
+    } = await orderApi.batchRetrieveOrders(location_id, {
       order_ids: [order_id],
     });
     const order = orders[0];
-    await orderInstance.updateOrder(order.location_id, order.id, {
+    await orderApi.updateOrder(order.location_id, order.id, {
       order: {
-        fulfillments: [
-          {
-            // replace fulfillment if the order is updated again, otherwise add a new fulfillment details.
-            uid:
-              order.fulfillments && order.fulfillments[0]
-                ? order.fulfillments[0].uid
-                : undefined,
-            type: "PICKUP", // pickup type is determined by the endpoint
-            state: "PROPOSED",
-            pickup_details: {
-              recipient: {
-                display_name: pickup_name,
-                phone_number: pickup_number,
-                email: pickup_email,
-              },
-              pickup_at: pickup_time,
+        fulfillments: [{
+          // replace fulfillment if the order is updated again, otherwise add a new fulfillment details.
+          uid: order.fulfillments && order.fulfillments[0] ?
+            order.fulfillments[0].uid :
+            undefined,
+          type: "PICKUP", // pickup type is determined by the endpoint
+          state: "PROPOSED",
+          pickup_details: {
+            recipient: {
+              display_name: pickup_name,
+              phone_number: pickup_number,
+              email: pickup_email,
             },
+            pickup_at: pickup_time,
           },
-        ],
+        }, ],
         // Add an 10% Curbside Pickup promotion discount to the order
-        discounts: [
-          {
-            name: "Curbside Pickup Promotion",
-            percentage: "10",
-            scope: "ORDER"
-          }
-        ],
+        discounts: [{
+          // replace discount if the order is updated again, otherwise add a new discount.
+          uid: order.discounts && order.discounts[0] ?
+            order.discounts[0].uid :
+            undefined,
+          name: "Curbside Pickup Promotion",
+          percentage: "10",
+          scope: "ORDER"
+        }],
         version: order.version,
-        idempotency_key: randomBytes(45).toString("hex"),
+        idempotency_key,
       },
     });
     res.redirect(
@@ -197,9 +223,15 @@ router.post("/add-pickup-details", async (req, res, next) => {
  *  location_id: Id of the location that the order belongs to
  */
 router.get("/add-delivery-details", async (req, res, next) => {
-  const { order_id, location_id } = req.query;
+  const {
+    order_id,
+    location_id
+  } = req.query;
   try {
-    const { order_info, location_info } = await retrieveOrderAndLocation(
+    const {
+      order_info,
+      location_info
+    } = await retrieveOrderAndLocation(
       order_id,
       location_id
     );
@@ -207,6 +239,7 @@ router.get("/add-delivery-details", async (req, res, next) => {
       location_info,
       expected_delivery_times: new DeliveryPickUpTimes(),
       order_info,
+      idempotency_key: randomBytes(45).toString("hex"),
     });
   } catch (error) {
     next(error);
@@ -231,6 +264,7 @@ router.get("/add-delivery-details", async (req, res, next) => {
  * Request Body:
  *  order_id: Id of the order to be updated
  *  location_id: Id of the location that the order belongs to
+ *  idempotency_key: Unique identifier for request from client
  *  delivery_name: Name of the individual who will receive the delivery
  *  delivery_email: Email of the recipient
  *  delivery_number: Phone number of the recipient
@@ -244,6 +278,7 @@ router.post("/add-delivery-details", async (req, res, next) => {
   const {
     order_id,
     location_id,
+    idempotency_key,
     delivery_name,
     delivery_email,
     delivery_number,
@@ -254,51 +289,52 @@ router.post("/add-delivery-details", async (req, res, next) => {
     delivery_postal,
   } = req.body;
   try {
-    const { orders } = await orderInstance.batchRetrieveOrders(location_id, {
+    const {
+      orders
+    } = await orderApi.batchRetrieveOrders(location_id, {
       order_ids: [order_id],
     });
     const order = orders[0];
-    await orderInstance.updateOrder(order.location_id, order.id, {
+    await orderApi.updateOrder(order.location_id, order.id, {
       order: {
-        fulfillments: [
-          {
-            // replace fulfillment if the order is updated again, otherwise add a new fulfillment details.
-            uid:
-              order.fulfillments && order.fulfillments[0]
-                ? order.fulfillments[0].uid
-                : undefined,
-            type: "SHIPMENT", // SHIPMENT type is determined by the endpoint
-            state: "PROPOSED",
-            shipment_details: {
-              recipient: {
-                display_name: delivery_name,
-                phone_number: delivery_number,
-                email: delivery_email,
-                address: {
-                  address_line_1: delivery_address,
-                  administrative_district_level_1: delivery_state,
-                  locality: delivery_city,
-                  postal_code: delivery_postal,
-                },
+        fulfillments: [{
+          // replace fulfillment if the order is updated again, otherwise add a new fulfillment details.
+          uid: order.fulfillments && order.fulfillments[0] ?
+            order.fulfillments[0].uid :
+            undefined,
+          type: "SHIPMENT", // SHIPMENT type is determined by the endpoint
+          state: "PROPOSED",
+          shipment_details: {
+            recipient: {
+              display_name: delivery_name,
+              phone_number: delivery_number,
+              email: delivery_email,
+              address: {
+                address_line_1: delivery_address,
+                administrative_district_level_1: delivery_state,
+                locality: delivery_city,
+                postal_code: delivery_postal,
               },
-              expected_shipped_at: delivery_time,
             },
+            expected_shipped_at: delivery_time,
           },
-        ],
+        },],
         // Add an arbitratry $2.00 taxable delivery fee to the order
-        service_charges: [
-          {
-            name: "delivery fee",
-            amount_money: {
-              amount: 200,
-              currency: "USD"
-            },
-            taxable: true,
-            calculation_phase: "SUBTOTAL_PHASE",
-          }
-        ],
+        service_charges: [{
+          // replace service_charges if the order is updated again, otherwise add a new service_charge.
+          uid: order.service_charges && order.service_charges[0] ?
+            order.service_charges[0].uid :
+            undefined,
+          name: "delivery fee",
+          amount_money: {
+            amount: 200,
+            currency: "USD"
+          },
+          taxable: true,
+          calculation_phase: "SUBTOTAL_PHASE",
+        }],
         version: order.version,
-        idempotency_key: randomBytes(45).toString("hex"),
+        idempotency_key,
       },
     });
     res.redirect(
@@ -324,9 +360,16 @@ router.post("/add-delivery-details", async (req, res, next) => {
  *  location_id: Id of the location that the order belongs to
  */
 router.get("/payment", async (req, res, next) => {
-  const { order_id, location_id } = req.query;
+  const {
+    order_id,
+    location_id,
+    loyalty_account_id
+  } = req.query;
   try {
-    const { order_info, location_info } = await retrieveOrderAndLocation(
+    const {
+      order_info,
+      location_info
+    } = await retrieveOrderAndLocation(
       order_id,
       location_id
     );
@@ -337,10 +380,15 @@ router.get("/payment", async (req, res, next) => {
       );
     }
 
+    // collect loyalty account and reward tiers information so that the page can render reward options for customer to choose
+    const loyalty_reward_info = await getLoyaltyRewardInformation(order_info, loyalty_account_id);
+
     res.render("checkout/payment", {
       application_id: config.squareApplicationId,
       order_info,
       location_info,
+      loyalty_reward_info,
+      idempotency_key: randomBytes(45).toString("hex").slice(0, 45), // Payments api has 45 max length limit on idempotency_key
     });
   } catch (error) {
     next(error);
@@ -360,27 +408,115 @@ router.get("/payment", async (req, res, next) => {
  * Request Body:
  *  order_id: Id of the order to be updated
  *  location_id: Id of the location that the order belongs to
+ *  idempotency_key: Unique identifier for request from client
  *  nonce: Card nonce (a secure single use token) created by the Square Payment Form
  */
 router.post("/payment", async (req, res, next) => {
-  const { order_id, location_id, nonce } = req.body;
+  const {
+    order_id,
+    location_id,
+    idempotency_key,
+    nonce,
+  } = req.body;
   try {
     // get the latest order information in case the price is changed from a different session
-    const { orders } = await orderInstance.batchRetrieveOrders(location_id, {
+    const {
+      orders
+    } = await orderApi.batchRetrieveOrders(location_id, {
       order_ids: [order_id],
     });
     const order = orders[0];
-    await paymentInstance.createPayment({
-      source_id: nonce, // Card nonce created by the payment form
-      idempotency_key: randomBytes(45).toString("hex").slice(0, 45), // Unique identifier for request that is under 46 characters
-      amount_money: order.total_money, // Provides total amount of money and currency to charge for the order.
-      order_id: order.id, // Order that is associated with the payment
-    });
+    if (order.total_money.amount > 0) {
+      // Payment can only be made when order amount is greater than 0
+      await paymentApi.createPayment({
+        source_id: nonce, // Card nonce created by the payment form
+        idempotency_key,
+        amount_money: order.total_money, // Provides total amount of money and currency to charge for the order.
+        order_id: order.id, // Order that is associated with the payment
+      });
+    } else {
+      // Settle an order with a total of 0.
+      await orderApi.payOrder(order_id, {
+        idempotency_key
+      });
+    }
 
     // redirect to order confirmation page once the order is paid
     res.redirect(
       `/order-confirmation?order_id=${order.id}&location_id=${order.location_id}`
     );
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+/**
+ * Matches: POST /checkout/add-loyalty-account/
+ *
+ * Description:
+ *  Search for the loyalty account that is associated with the specified phone number.
+ *  Add the loyalty_account_id in the query parameter and redirect back to the current page,
+ *  if the loyalty account isn't found, still add the query parameter with 'null' value.
+ *
+ * Request Body:
+ *  order_id: Id of the order
+ *  location_id: Id of the location that the order belongs to
+ *  phone_number: Card nonce (a secure single use token) created by the Square Payment Form
+ */
+router.post("/add-loyalty-account", async (req, res, next) => {
+  const {
+    order_id,
+    location_id,
+    phone_number
+  } = req.body;
+  try {
+    const formated_phone_number = `+1${phone_number}`;
+    const current_loyalty_account = await getLoyaltyAccountByPhoneNumber(formated_phone_number);
+    // Get the referrer path and redirect back with the loyalty account id
+    const referrer_path = url.parse(req.get("referrer")).pathname;
+    res.redirect(`${referrer_path}?order_id=${order_id}&location_id=${location_id}&loyalty_account_id=${current_loyalty_account && current_loyalty_account.id}`);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+/**
+ * Matches: POST /checkout/redeem-loyalty-reward/
+ *
+ * Description:
+ *  Redeem the loyalty points with the reward tier selected by customer.
+ *
+ * Request Body:
+ *  order_id: Id of the order which will be applied a reward
+ *  location_id: Id of the location that the order belongs to
+ *  idempotency_key: Unique identifier for request from client
+ *  loyalty_account_id: Id of the loyalty account where we get point from
+ *  reward_tier_id: Id of the reward tier that is going to applied to the order
+ */
+router.post("/redeem-loyalty-reward", async (req, res, next) => {
+  const {
+    order_id,
+    location_id,
+    idempotency_key,
+    loyalty_account_id,
+    reward_tier_id
+  } = req.body;
+  try {
+    // apply the specified reward with `reward_tier_id` to the order
+    await loyaltyApi.createLoyaltyReward({
+      reward: {
+        order_id,
+        loyalty_account_id,
+        reward_tier_id,
+      },
+      idempotency_key,
+    });
+
+    // Get the referrer path and redirect back with the loyalty account id
+    const referrer_path = url.parse(req.get("referrer")).pathname;
+    res.redirect(`${referrer_path}?order_id=${order_id}&location_id=${location_id}&loyalty_account_id=${loyalty_account_id}`);
   } catch (error) {
     next(error);
   }

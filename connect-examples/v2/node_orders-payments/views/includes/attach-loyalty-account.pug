@@ -1,0 +1,37 @@
+//- Copyright 2019 Square Inc.
+ 
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+ 
+//-     http://www.apache.org/licenses/LICENSE-2.0
+ 
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License. 
+
+scripts
+    script(type="text/javascript").
+        function validateAndSubmit() {
+            if (document.forms["add-loyalty-account"].reportValidity()){
+                document.forms["add-loyalty-account"].submit();
+            } else {
+                const inputs = document.querySelectorAll(".panel-input");
+                // Marks the required fields with a red border
+                inputs.forEach( input => {
+                    input.classList.add("input--validity-visible");
+                });
+            }
+        }
+h4(class="panel-title") Redeem rewards
+form(id="add-loyalty-account" action='/checkout/add-loyalty-account', method='post')
+    div(class="panel-field")
+        input(class="panel-input", name="phone_number",type="tel", placeholder="Phone Number(10 digits): 0000000000", pattern="[0-9]{3}[0-9]{3}[0-9]{4}" autocomplete="tel", required)
+        if (loyalty_reward_info.account_not_found)
+            p(class="error-message") Can not find your account. Try another number?
+    input(name='order_id', type='hidden', value=order_info.orderId)
+    input(name='location_id', type='hidden', value=order_info.locationId)
+div(class="panel-field")
+    button(class="reward-button" type="button" onclick="validateAndSubmit()") Check in with phone number

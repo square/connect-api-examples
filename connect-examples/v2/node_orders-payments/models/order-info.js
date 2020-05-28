@@ -35,8 +35,17 @@ class OrderInfo {
     this.line_items = order.line_items.map((line_item) => ({
       name: line_item.name,
       quantity: line_item.quantity,
-      gross_sales_money: (line_item.gross_sales_money.amount / 100).toFixed(2),
+      gross_sales_money: this.getDecimalAmount(line_item.gross_sales_money.amount),
+      catalog_object_id: line_item.catalog_object_id,
     }));
+
+    this.order_discounts = [];
+    if (order.discounts) {
+      this.order_discounts = order.discounts.map((discount) => ({
+        name: discount.name,
+        applied_discount_money: this.getDecimalAmount(discount.applied_money.amount)
+      }));
+    }
   }
   // Returns order ID
   get orderId() {
@@ -82,17 +91,21 @@ class OrderInfo {
   get createdAt() {
     return this.order.created_at;
   }
+  // Returns discounts
+  get discounts() {
+    return this.order_discounts;
+  }
   // Returns discount in order
   get totalDiscountMoney() {
-    return (this.order.total_discount_money.amount / 100).toFixed(2);
+    return this.getDecimalAmount(this.order.total_discount_money.amount);
   }
   // Returns service fee in order
   get totalServiceChargeMoney() {
-    return (this.order.total_service_charge_money.amount / 100).toFixed(2);
+    return this.getDecimalAmount(this.order.total_service_charge_money.amount);
   }
   // Returns tax in order
   get totalTaxMoney() {
-    return (this.order.total_tax_money.amount / 100).toFixed(2);
+    return this.getDecimalAmount(this.order.total_tax_money.amount);
   }
   // The subtotal money before tax applied
   get preTaxTotalMoney() {
@@ -100,7 +113,7 @@ class OrderInfo {
   }
   // Returns money spent in order
   get totalMoney() {
-    return (this.order.total_money.amount / 100).toFixed(2);
+    return this.getDecimalAmount(this.order.total_money.amount);
   }
   // Returns fulfillment status
   get fulfillmentState() {
@@ -116,6 +129,21 @@ class OrderInfo {
     const address = this.order.fulfillments[0].shipment_details.recipient
       .address;
     return `${address.locality}, ${address.administrative_district_level_1}, ${address.postal_code}`;
+  }
+  // Returns the payment card details of this order
+  get card() {
+    // In this example, there is only one tender for each order
+    // so we can always assume the first tender will be the payment card details
+    return this.order.tenders && this.order.tenders.length > 0 ?
+      this.order.tenders[0].card_details.card : null;
+  }
+  // Returns the rewards applied to this order
+  get rewards() {
+    return this.order.rewards;
+  }
+  // Hepler function to convert the amount money to decimal amount
+  getDecimalAmount(amount) {
+    return (amount / 100).toFixed(2);
   }
 }
 

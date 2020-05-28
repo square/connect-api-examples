@@ -53,7 +53,6 @@ html, body{
     width: 100%;
     height: 56px;
     display: flex;
-    background: ;
     border: 1px solid var(--light-gray);
     box-sizing: border-box;
     border-radius: 4px;
@@ -100,6 +99,12 @@ html, body{
     margin: -2px 8px 0 0;
 }
 
+.bottom-label {
+    color: var(--neutral-gray);
+    text-align: center;
+    font-size: 16px;
+}
+
 .tab-content {
     display:flex;
     justify-content: center;
@@ -126,6 +131,7 @@ html, body{
     border-radius: 4px;
     font-weight: 500;
     line-height: 28px;
+    cursor: pointer;
 }
 
 .time-options {
@@ -170,10 +176,17 @@ input[type=radio]:checked + .time-option{
     color: var(--white);
     border: none;
 }
-.card-details {
-    color: var(--placeholder-gray);
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin: 4px 4px;
+}
+
+.order-extra-info {
     font-size: 16px;
-    padding-top: 8px;
+    margin-top: 8px;
+    text-align: right;
 }
 .confirmation {
     padding-bottom: 24px;
@@ -183,4 +196,25 @@ input[type=radio]:checked + .time-option{
 }
 .input--validity-visible:invalid {
     background-color: var(--warning);
+}
+
+.reward-button {
+    color: var(--neutral-gray);
+    background-color: var(--white);
+    border-color: var(--green);
+    width: 100%;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.reward-button:last-child {
+    margin-bottom: 0px;
+}
+
+.reward-button:disabled {
+    color: var(--placeholder-gray);
+    background-color: var(--white);
+    border-color: var(--placeholder-gray);
+    width: 100%;
+    margin-bottom: 8px;
 }

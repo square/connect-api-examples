@@ -17,9 +17,9 @@ limitations under the License.
 const express = require("express");
 const { randomBytes } = require("crypto");
 const {
-  catalogInstance,
-  locationInstance,
-  orderInstance,
+  catalogApi,
+  locationApi,
+  orderApi,
 } = require("../util/square-connect-client");
 
 const router = express.Router();
@@ -53,9 +53,9 @@ router.get("/", async (req, res, next) => {
     // Retrieves locations in order to display the store name
     const {
       locations
-    } = await locationInstance.listLocations();
+    } = await locationApi.listLocations();
     // Get CatalogItem and CatalogImage object
-    const catalogList = await catalogInstance.listCatalog(opt);
+    const catalogList = await catalogApi.listCatalog(opt);
     // Renders index view, with catalog and location information
     res.render("index", {
       items: new CatalogList(catalogList).items,
@@ -99,9 +99,9 @@ router.post("/create-order", async (req, res, next) => {
       }
     };
     // Apply the taxes that's related to this catalog item.
-    // Order API doesn't calulate the tax automatically even if you have apply the tax to the catalog item
+    // Order API doesn't calculate the tax automatically even if you have apply the tax to the catalog item
     // You must add the tax yourself when create order.
-    const catalogItem = await catalogInstance.retrieveCatalogObject(item_id);
+    const catalogItem = await catalogApi.retrieveCatalogObject(item_id);
     if (!!catalogItem.object.item_data.tax_ids && catalogItem.object.item_data.tax_ids.length > 0) {
       orderRequestBody.order.taxes = [];
       for (let i = 0; i < catalogItem.object.item_data.tax_ids.length; i++) {
@@ -113,7 +113,7 @@ router.post("/create-order", async (req, res, next) => {
     }
     const {
       order
-    } = await orderInstance.createOrder(location_id, orderRequestBody);
+    } = await orderApi.createOrder(location_id, orderRequestBody);
     res.redirect(`/checkout/choose-delivery-pickup?order_id=${order.id}&location_id=${location_id}`);
   } catch (error) {
     next(error);

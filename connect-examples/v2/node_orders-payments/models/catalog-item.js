@@ -55,7 +55,8 @@ class CatalogItem {
     const {
       price_money
     } = this.defaultVariation.item_variation_data;
-    return `${(price_money.amount/100).toFixed(2)}`;
+    // item price money can be undefined, then we default to 0.00
+    return price_money ? `${(price_money.amount/100).toFixed(2)}` : 0.00;
   }
   // Returns the first variation in the variations array, our example we are selling one version of the item
   get defaultVariation() {
