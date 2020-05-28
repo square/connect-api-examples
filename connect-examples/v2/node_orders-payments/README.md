@@ -117,11 +117,11 @@ The page shows a list of food items that buyers can purchase.
     The controller then calls `res.render("index")` to compile the template (`/views/index.pug`)
     with the catalog objects and location information, create an HTML output, and send it to the client.
 
-    ![](bin/images/Order-Ahead-Diagram-10.png =500x)
+    <img src="./bin/images/Order-Ahead-Diagram-10.png" width="300"/>
 
 1. The client chooses an item, and then chooses **Buy This**.
 
-    ![](bin/images/Order-Ahead-Diagram-20.png =300x)
+    <img src="./bin/images/Order-Ahead-Diagram-20.png" width="300"/>
 
     The view file (index.pug) that compiles the page defines a form with the **Buy This** button. The form action
     sends a POST request to the `router.post("/create-order")` controller in index.js to create an order.
@@ -148,14 +148,14 @@ The controller does the following:
     * The controller then calls `res.render("checkout/choose-delivery-pickup", ...)` to compile
       the template (`choose-delivery-pickup.pug`), create an HTML output, and send it to the client.
 
-    ![](bin/images/Order-Ahead-Diagram-30.png =500x)
+    <img src="./bin/images/Order-Ahead-Diagram-30.png" width="400"/>
 
 
 1. We assume that the buyer chooses to get the item delivered. The application renders the
 **Add Delivery Details** page for the buyer to provide delivery information and the buyer then
 chooses **Continue To Payment**. An example screenshot is shown:
 
-    ![](bin/images/Order-Ahead-Diagram-40.png =500x)
+    <img src="./bin/images/Order-Ahead-Diagram-40.png" width="400"/>
 
     The view file `(add-delivery-details.pug`) that compiles the preceding page defines a `form`
     for the delivery details and the **Continue To Payment** button. The form action sends a POST
@@ -177,7 +177,7 @@ This controller does the following:
     * Calls `res.render(checkout/payment)` to compile the template (`/checkout/payment.pug`), create the HTML output,
       and send it to the client. An example screenshot is shown:
 
-    ![](bin/images/Order-Ahead-Diagram-50.png =500x)
+    <img src="./bin/images/Order-Ahead-Diagram-50.png" width="400"/>
 
     The `/checkout/payment.pug` compiles the preceding page. The page includes a payment form
     (the **PAYMENT DETAILS** panel) for the buyer to provide card information. The application
@@ -201,7 +201,7 @@ This controller does the following:
 1. The `router.get("/", ...)` controller (in [order-confirmation.js](routes/order-confirmation.js#L31)) executes.This controller calls `res.render()` to compile the template (`order-confirmation.pug`),
 creates the HTML output, and sends it to the client as shown:
 
-    ![](bin/images/Order-Ahead-Diagram-60.png =500x)
+    <img src="./bin/images/Order-Ahead-Diagram-60.png" width="400"/>
 
 ---
 
@@ -220,7 +220,7 @@ In the checkout flow, after the buyer places an order and provides fulfillment i
 the controller, `router.get("/payment", ...),` in checkout.js renders the view (`checkout/payment`).
 The view compiles the following page: 
 
-![](bin/images/Order-Ahead-Diagram-70.png =500x)
+<img src="./bin/images/Order-Ahead-Diagram-70.png" width="400"/>
 
 The page includes the **REDEEM REWARDS** panel only if the seller offers a loyalty program.
 The Loyalty API call `listLoyaltyPrograms` in the helper function (`getLoyaltyRewardInformation`)
@@ -235,13 +235,13 @@ calls `retrieveLoyaltyAccount` to search the loyalty account associated with the
   the available points in the buyer’s account to determine which reward tiers the buyer can redeem.
   The controller then renders the view again. This time the **REDEEM REWARDS** panel shows list of rewards for the buyer to select:
 
-![](bin/images/Order-Ahead-Diagram-80.png =500x)
+<img src="./bin/images/Order-Ahead-Diagram-80.png" width="400"/>
 
 If the buyer chooses to redeem the reward, the controller applies the discount
 (call `CreateLoyaltyReward` (Loyalty API) in the `router.post("/redeem-loyalty-reward", ...)`
 controller to update the order and render the page again. The **Order Summary** panel shows the discount applied:
 
-![](bin/images/Order-Ahead-Diagram-90.png =500x)
+<img src="./bin/images/Order-Ahead-Diagram-90.png" width="400"/>
 
 The following source files manage the application flow related to this page: 
 
@@ -268,7 +268,7 @@ For related information, see [Square Payments in your Website](https://developer
 After processing the payment, the request gets redirected to the `router.get("/", ...)` controller in order-confirmation.js.
 The controller renders the `order-confirmation` view. The view compiles the following **Order Status** page: 
 
-![](bin/images/Order-Ahead-Diagram-100.png =500x)
+<img src="./bin/images/Order-Ahead-Diagram-100.png" width="400"/>
 
 The application checks the following before deciding to include the **CHECK IN TO EARN POINTS** panel:
 
@@ -284,7 +284,7 @@ the application creates the loyalty account by calling `createLoyaltyAccount` (L
 by calling `accumulateLoyaltyPoints` (Loyalty API). Square records each point balance change in a ledger
 (see[ Loyalty Events](https://developer.squareup.com/docs/loyalty-api/overview?#loyalty-events)). The buyer is then redirect back to order-confirmation page, as shown:
 
-![](bin/images/Order-Ahead-Diagram-110.png =500x)
+<img src="./bin/images/Order-Ahead-Diagram-110.png" width="400"/>
 
 
 The following source files manage the application flow related to this **Order Status** page:
