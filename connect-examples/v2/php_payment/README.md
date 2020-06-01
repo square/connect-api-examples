@@ -5,8 +5,6 @@ Square Connect PHP client library. There are two sections in this ReadMe.
 * [Setup](#setup) - Provides instructions for you to download and run the app.
 * [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the PHP web application.
 
-
-
 ## Setup
 
 ### Requirements
@@ -27,12 +25,20 @@ file. To install the client library:
 php composer.phar install
 ```
 
-### Provide required credentials
+### Specify your application credentials
 
-3. Please update the values found in .env. If you plan on using sandbox, then set
-USE_PROD=false. (<b>WARNING</b>: never upload .env with your credentials/access_token.) See
-[this article](https://docs.connect.squareup.com/articles/using-sandbox/)
-for more information on the API sandbox.
+In order for the example to work, you must edit the file called `.env` with your application credentials and environment configuration.
+
+Open your [application dashboard](https://developer.squareup.com/). Now supply either production, sandbox, or both credentials. Open this file and update the following variables:
+* WARNING: never upload .env with your credential/access_token
+
+| Variable               |  Type    |   Description   |
+|------------------------|:---------|-----------------|
+| ENVIRONMENT (`*`)      | `string` | `production` or `sandbox` depending on what type of endpoint you want to hit. For testing purposes please use the sandbox mode (already configured in the `.env`)   |
+| *_APP_ID               | `string` | `*` Application ID found on your Developer App Dashboard, Credentials tab.  |
+| *_ACCESS_TOKEN         | `string` | `*` Access Token found at the Developer App Dashboard, Credentials tab. |
+| *_LOCATION_ID           | `string` | `*` Location found at the Developer App Dashboard, Location tab. |
+
 
 ## Running the sample
 
@@ -113,30 +119,23 @@ After the buyer enters their information in the form and clicks **Pay $1 Now**, 
 All the remaining actions take place in the **process-card.php**.  This server-side component uses the Square PHP SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
 ```php
 ...
-$api_config = new \SquareConnect\Configuration();
-# Set 'Host' url to switch between sandbox env and production env
-# sandbox: https://connect.squareupsandbox.com
-# production: https://connect.squareup.com
-$api_config->setHost("https://connect.squareupsandbox.com");
-$api_config->setAccessToken($access_token);
-$api_client = new \SquareConnect\ApiClient($api_config);
-
+// Set 'environment' to be either sandbox or production.
+$client = new Square\SquareClient([
+  'accessToken' => $access_token,  
+  'environment' => $environment
+]);
 $nonce = $_POST['nonce'];
 
-$payments_api = new \SquareConnect\Api\PaymentsApi($api_client);
+$payments_api = $client->getPaymentsApi();
 
-$request_body = array (
-  "source_id" => $nonce,
-  "amount_money" => array (
-    "amount" => 100,
-    "currency" => "USD"
-  ),
-  "idempotency_key" => uniqid()
-);
+$money = new Money();
+$money->setAmount(100);
+$money->setCurrency('USD');
+$create_payment_request = new CreatePaymentRequest($nonce, uniqid(), $money);
 
 try {
-  $result = $payments_api->createPayment($request_body);
-} catch (\SquareConnect\ApiException $e) {
+    $response = $payments_api->createPayment($create_payment_request);
+} catch (Square\Exceptions\ApiException $e) {
 }
 ...
 ```
