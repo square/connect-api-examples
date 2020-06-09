@@ -1,0 +1,16 @@
+{
+  "name": "node-oauth-walkthrough",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jack Goettle",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "square-connect": "*"
+  }
+}
