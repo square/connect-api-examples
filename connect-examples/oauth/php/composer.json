@@ -1,6 +1,5 @@
 {
   "require": {
-    "square/square": "*",
-    "vlucas/phpdotenv": "^3.3"
+    "square/connect": "*"
   }
 }
