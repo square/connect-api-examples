@@ -33,7 +33,7 @@ npm install
 
     Note that OAuth Sandbox credentials begin with a sandbox prefix and that the base URL for calling Sandbox endpoints is https://connect.squareupsandbox.com. When you implement for production, you need production credentials and use https://connect.squareup.com as the base URL.
 
-    In addition, you should also avoid putting the application secret directly in your source code, encrypt the secret, and use other methods such as environment variables to reference the secret in your application.
+    **WARNING**: never upload config.json with your credentials/access_token.
 
 ### Step 3: Running the example
 
@@ -44,7 +44,24 @@ npm install
 1. Start the Node server, if it is not running:
 
     ```
-    node index.js
+    npm start
     ```
 
 1. Open http://localhost:8000/sandbox_request_token to start.
+
+# License
+Copyright 2020 Square, Inc.
+​
+```
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+​
+   http://www.apache.org/licenses/LICENSE-2.0
+​
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```

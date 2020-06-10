@@ -19,6 +19,17 @@ function writeTokensOnSuccess(access_token, refresh_token, expires_at, merchant_
         </div><br/>`
     )
 }
+
+// Display error message if the state doesn't match the state originally passed to the authorization page.
+function displayStateError() {
+    return (
+    `
+        <h1>Authorization failed</h1>
+        <div>Invalid state parameter.</div>`
+    )
+}
+
+
 // Display error if access token not acquired
 function displayError(error, error_description) {
     return (
@@ -32,5 +43,6 @@ function displayError(error, error_description) {
 
 module.exports = {
     writeTokensOnSuccess : writeTokensOnSuccess,
+    displayStateError : displayStateError,
     displayError : displayError
 }
