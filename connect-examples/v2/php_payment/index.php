@@ -1,8 +1,14 @@
 <?php
 require 'vendor/autoload.php';
+
+use Square\Environment;
 // dotenv is used to read from the '.env' file created for credentials
 $dotenv = Dotenv\Dotenv::create(__DIR__);
 $dotenv->load();
+
+// Pulled from the .env file and upper cased e.g. SANDBOX, PRODUCTION.
+$upper_case_environment = strtoupper(getenv('ENVIRONMENT'));
+
 ?>
 <html>
 <head>
@@ -11,7 +17,7 @@ $dotenv->load();
   <script type="text/javascript" src=
     <?php
         echo "\"";
-        echo ($_ENV["USE_PROD"] == 'true')  ?  "https://js.squareup.com/v2/paymentform"
+        echo ($_ENV["ENVIRONMENT"] === Environment::PRODUCTION)  ?  "https://js.squareup.com/v2/paymentform"
                                             :  "https://js.squareupsandbox.com/v2/paymentform";
         echo "\"";
     ?>
@@ -20,15 +26,13 @@ $dotenv->load();
     window.applicationId =
       <?php
         echo "\"";
-        echo ($_ENV["USE_PROD"] == 'true')  ?  $_ENV["PROD_APP_ID"]
-                                            :  $_ENV["SANDBOX_APP_ID"];
+        echo getenv($upper_case_environment.'_APP_ID');
         echo "\"";
       ?>;
     window.locationId =
     <?php
       echo "\"";
-      echo ($_ENV["USE_PROD"] == 'true')  ?  $_ENV["PROD_LOCATION_ID"]
-                                          :  $_ENV["SANDBOX_LOCATION_ID"];
+      echo getenv($upper_case_environment.'_LOCATION_ID');
       echo "\"";
     ?>;
   </script>

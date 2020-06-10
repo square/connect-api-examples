@@ -1,64 +1,93 @@
 <?php
-  require 'vendor/autoload.php';
 
-  // dotenv is used to read from the '.env' file created
-  $dotenv = Dotenv\Dotenv::create(__DIR__);
-  $dotenv->load();
+// Note this line needs to change if you don't use Composer:
+// require('square-php-sdk/autoload.php');
+require 'vendor/autoload.php';
 
-  $access_token = ($_ENV["USE_PROD"] == 'true')  ?  $_ENV["PROD_ACCESS_TOKEN"]
-                                                 :  $_ENV["SANDBOX_ACCESS_TOKEN"];
-  $location_id =  ($_ENV["USE_PROD"] == 'true')  ?  $_ENV["PROD_LOCATION_ID"]
-                                                 :  $_ENV["SANDBOX_LOCATION_ID"];
-  # Set 'Host' url to switch between sandbox env and production env
-  # sandbox: https://connect.squareupsandbox.com
-  # production: https://connect.squareup.com
-  $host_url = ($_ENV["USE_PROD"] == 'true')  ?  "https://connect.squareup.com"
-                                             :  "https://connect.squareupsandbox.com";
+use Dotenv\Dotenv;
+use Square\Models\CreateOrderRequest;
+use Square\Models\CreateCheckoutRequest;
+use Square\Models\Order;
+use Square\Models\OrderLineItem;
+use Square\Models\Money;
+use Square\Exceptions\ApiException;
+use Square\SquareClient;
 
-  $api_config = new \SquareConnect\Configuration();
-  $api_config->setHost($host_url);
-  # Initialize the authorization for Square
-  $api_config->setAccessToken($access_token);
-  $api_client = new \SquareConnect\ApiClient($api_config);
+// dotenv is used to read from the '.env' file created
+$dotenv = Dotenv::create(__DIR__);
+$dotenv->load();
 
-  // make sure we actually are on a POST with an amount
-  // This example assumes the order information is retrieved and hard coded
-  // You can find different ways to retrieve order information and fill in the following lineItems object.
-  try {
-    $checkout_api = new \SquareConnect\Api\CheckoutApi($api_client);
-    $request_body = new \SquareConnect\Model\CreateCheckoutRequest(
-      [
-        "idempotency_key" => uniqid(),
-        "order" => [
-          "order" => [
-            "location_id" => $location_id,
-            "line_items" => [
-            [
-              "name" => "Test Item A",
-              "quantity" => "1",
-              "base_price_money" => [
-                "amount" => 500,
-                "currency" => "USD"
-              ]
-            ],[
-              "name" => "Test Item B",
-              "quantity" => "3",
-              "base_price_money" => [
-                "amount" => 1000,
-                "currency" => "USD"
-              ]
-            ]]
-          ]
-        ]
-      ]
-    );
-    $response = $checkout_api->createCheckout($location_id, $request_body);
-  } catch (Exception $e) {
-    // if an error occurs, output the message
-    echo $e->getMessage();
-    exit();
-  }
-  // this redirects to the Square hosted checkout page
-  header("Location: ".$response->getCheckout()->getCheckoutPageUrl());
+// Pulled from the .env file and upper cased e.g. SANDBOX, PRODUCTION.
+$upper_case_environment = strtoupper(getenv('ENVIRONMENT'));
+
+// Use the environment and the key name to get the appropriate values from the .env file.
+$access_token = getenv($upper_case_environment.'_ACCESS_TOKEN');    
+$location_id =  getenv($upper_case_environment.'_LOCATION_ID');
+
+// Initialize the authorization for Square
+$client = new SquareClient([
+  'accessToken' => $access_token,
+  'environment' => getenv('ENVIRONMENT')
+]);
+
+// make sure we actually are on a POST with an amount
+// This example assumes the order information is retrieved and hard coded
+// You can find different ways to retrieve order information and fill in the following lineItems object.
+try {
+  $checkout_api = $client->getCheckoutApi();
+
+  // Monetary amounts are specified in the smallest unit of the applicable currency.
+  // This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
+  $money_A = new Money();
+  $money_A->setCurrency('USD');
+  $money_A->setAmount(500);
+
+  $item_A = new OrderLineItem(1);
+  $item_A->setName('Test Item A');
+  $item_A->setBasePriceMoney($money_A);
+
+  $money_B = new Money();
+  $money_B->setCurrency('USD');
+  $money_B->setAmount(1000);
+  
+  $item_B = new OrderLineItem(3);
+  $item_B->setName('Test Item B');
+  $item_B->setBasePriceMoney($money_B);
+
+  // Create a new order and add the line items as necessary.
+  $order = new Order($location_id);
+  $order->setLineItems([$item_A, $item_B]);
+
+  $create_order_request = new CreateOrderRequest();
+  $create_order_request->setOrder($order);
+
+  // Similar to payments you must have a unique idempotency key.
+  $checkout_request = new CreateCheckoutRequest(uniqid(), $create_order_request);
+
+  $response = $checkout_api->createCheckout($location_id, $checkout_request);
+} catch (ApiException $e) {
+  // If an error occurs, output the message
+  echo 'Caught exception!<br/>';
+  echo '<strong>Response body:</strong><br/>';
+  echo '<pre>'; var_dump($e->getResponseBody()); echo '</pre>';
+  echo '<br/><strong>Context:</strong><br/>';
+  echo '<pre>'; var_dump($e->getContext()); echo '</pre>';
   exit();
-?>
+}
+
+// If there was an error with the request we will
+// print them to the browser screen here
+if ($response->isError()) {
+  echo 'Api response has Errors';
+  $errors = $response->getErrors();
+  echo '<ul>';
+  foreach ($errors as $error) {
+      echo '<li>❌ ' . $error->getDetail() . '</li>';
+  }
+  echo '</ul>';
+  exit();
+}
+
+
+// This redirects to the Square hosted checkout page
+header('Location: '.$response->getResult()->getCheckout()->getCheckoutPageUrl());
