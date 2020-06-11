@@ -2,36 +2,52 @@
 require_once('sandbox_config.php');
 require_once('sandbox_messages.php');
 
+use Square\Exceptions\ApiException;
+use Square\SquareClient;
+use Square\Environment;
+use Square\Http\HttpResponse;
+use Square\Models\ObtainTokenReques;
+
 // The obtainOAuthToken function shows you how to obtain a OAuth access token
 // with the OAuth API with the authorization code returned to OAuth callback.
 function obtainOAuthToken($authorizationCode) {
-  // Initialize SquareConnect OAuth API client.
-  $apiConfig = new \SquareConnect\Configuration();
-  $apiConfig->setHost(_SQ_SANDBOX_BASEURL);
-  $apiClient = new \SquareConnect\ApiClient($apiConfig);
-  $oauthApi = new SquareConnect\Api\OAuthApi($apiClient);
+  // Initialize Square PHP SDK OAuth API client.
+  $apiClient = new SquareClient([
+    'environment' => Environment::SANDBOX,
+  ]);
+  $oauthApi = $apiClient->getOAuthApi();
 
   // Initialize the request parameters for the obtainToken request.
-  $body = new \SquareConnect\Model\ObtainTokenRequest();
-  $body->setClientId(_SQ_SANDBOX_APP_ID);
-  $body->setClientSecret(_SQ_SANDBOX_APP_SECRET);
-  $body->setGrantType('authorization_code');
+  $body_grantType = 'authorization_code';
+  $body = new ObtainTokenRequest(
+    _SQ_SANDBOX_APP_ID,
+    _SQ_SANDBOX_APP_SECRET,
+    $body_grantType
+  );
   $body->setCode($authorizationCode);
 
   // Call obtainToken endpoint to get the OAuth tokens.
   try {
       $response = $oauthApi->obtainToken($body);
+
+      if ($response->isError()) {
+        $code = $response->getErrors()[0]->getCode();
+        $category = $response->getErrors()[0]->getCategory();
+        $detail = $response->getErrors()[0]->getDetail();
+
+        throw new Exception("Error Processing Request: obtainToken failed!\n" . $code . "\n" . $category . "\n" . $reason, 1);
+      }
   } catch (ApiException $e) {
       error_log($e->getMessage());
-      error_log($e->getResponseBody());
-      throw new Exception("Error Processing Request: obtainToken failed!\n" . $e->getMessage() . "\n" . $e->getResponseBody(), 1);
+      error_log($e->getHttpResponse()->getRawBody());
+      throw new Exception("Error Processing Request: obtainToken failed!\n" . $e->getMessage() . "\n" . $e->getHttpResponse()->getRawBody(), 1);
   }
 
   // Extract the tokens from the response.
-  $accessToken = $response->getAccessToken();
-  $refreshToken = $response->getRefreshToken();
-  $expiresAt = $response->getExpiresAt();
-  $merchantId = $response->getMerchantId();
+  $accessToken = $response->getResult()->getAccessToken();
+  $refreshToken = $response->getResult()->getRefreshToken();
+  $expiresAt = $response->getResult()->getExpiresAt();
+  $merchantId = $response->getResult()->getMerchantId();
 
   // Return the tokens along with the expiry date/time and merchant ID.
   return array($accessToken, $refreshToken, $expiresAt, $merchantId);

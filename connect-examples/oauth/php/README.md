@@ -58,13 +58,10 @@ php composer.phar install
     // Sandbox application secret is the client secret required to call obtain token.
     // REPLACE_ME = the sandbox application secret from the application's OAuth tab.
     define('_SQ_SANDBOX_APP_SECRET', "REPLACE_ME");
-
-    // Square sandbox domain for REST API calls.
-    define('_SQ_SANDBOX_BASEURL', "https://connect.squareupsandbox.com");
     ?>
     ```
 
-    Note that OAuth Sandbox credentials begin with a sandbox prefix and that the base URL for calling Sandbox endpoints is https://connect.squareupsandbox.com. When you implement for production, you need production credentials and use https://connect.squareup.com as the base URL.
+    Note that OAuth Sandbox credentials begin with a sandbox prefix and that the base URL for calling Sandbox endpoints is https://connect.squareupsandbox.com. When you implement for production, you need production credentials and use the production environment.
 
     In addition, you should also avoid putting the application secret directly in your source code, encrypt the secret, and use other methods such as environment variables to reference the secret in your application.
 
