@@ -1,0 +1,5 @@
+{
+    "SQ_SANDBOX_BASEURL" : "https://connect.squareupsandbox.com",
+    "SQ_SANDBOX_APP_ID" : "YOUR_SANDBOX_APPLICATION_ID",
+    "SQ_SANDBOX_APP_SECRET" : "YOUR_SANDBOX_APPLICATION_SECRET"
+}

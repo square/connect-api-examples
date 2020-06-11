@@ -1,0 +1,16 @@
+{
+  "name": "node-oauth-walkthrough",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "dependencies": {
+    "express": "*",
+    "square-connect": "*",
+    "cookie-parser": "*",
+    "md5": "*"
+  }
+}
