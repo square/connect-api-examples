@@ -1,3 +1,18 @@
+/*
+Copyright 2020 Square Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 
 // Write tokens to page on success
 // WARNING: NEVER store or share OAuth access tokens or refresh tokens in clear text.
@@ -23,8 +38,7 @@ function writeTokensOnSuccess(access_token, refresh_token, expires_at, merchant_
 // Display error message if the state doesn't match the state originally passed to the authorization page.
 function displayStateError() {
     return (
-    `
-        <h1>Authorization failed</h1>
+        `<h1>Authorization failed</h1>
         <div>Invalid state parameter.</div>`
     )
 }
