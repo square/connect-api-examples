@@ -20,7 +20,7 @@ GEM
     minitest (5.14.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
-    rack (2.2.2)
+    rack (2.2.3)
     rack-oauth2 (1.14.0)
       activesupport
       attr_required
