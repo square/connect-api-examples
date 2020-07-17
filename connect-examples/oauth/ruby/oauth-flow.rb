@@ -15,7 +15,7 @@
 #   sinatra (http://www.sinatrarb.com/)
 
 require 'sinatra'
-require 'square_connect'
+require 'square'
 
 # Your application's ID and secret, available from your application dashboard.
 APP_ID     = 'REPLACE_ME'
@@ -23,7 +23,7 @@ APP_SECRET = 'REPLACE_ME'
 
 CONNECT_HOST = "https://connect.squareup.com"
 
-oauth_api = SquareConnect::OAuthApi.new
+oauth_api = Square::Client.new.o_auth
 
 # Serves the link that merchants click to authorize your application
 get '/' do
@@ -49,14 +49,14 @@ get '/callback' do
       'grant_type' => 'authorization_code'
     }
 
-    response = oauth_api.obtain_token(oauth_request_body)
+    response = oauth_api.obtain_token(body: oauth_request_body)
 
     # Extract the returned access token from the ObtainTokenResponse object
-    if response.access_token
+    if response.success?
 
       # Here, instead of printing the access token, your application server should store it securely
       # and use it in subsequent requests to the Connect API on behalf of the merchant.
-      puts 'Access token: ' + response.access_token
+      puts 'Access token: ' + response.data.access_token
       return 'Authorization succeeded!'
 
     # The response from the Obtain Token endpoint did not include an access token. Something went wrong.

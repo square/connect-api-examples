@@ -1,32 +1,22 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.4.3)
-      concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
-    aes_key_wrap (1.0.1)
-    attr_required (1.0.1)
-    bindata (2.4.7)
-    concurrent-ruby (1.1.6)
-    httpclient (2.8.3)
-    i18n (1.8.2)
-      concurrent-ruby (~> 1.0)
-    json-jwt (1.12.0)
-      activesupport (>= 4.2)
-      aes_key_wrap
-      bindata
-    minitest (5.14.1)
+    certifi (2018.01.18)
+    faraday (0.17.3)
+      multipart-post (>= 1.2, < 3)
+    faraday-http-cache (2.2.0)
+      faraday (>= 0.8)
+    faraday_middleware (0.14.0)
+      faraday (>= 0.7.4, < 1.0)
+    little-plugger (1.1.4)
+    logging (2.3.0)
+      little-plugger (~> 1.1)
+      multi_json (~> 1.14)
+    multi_json (1.15.0)
+    multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     rack (2.2.3)
-    rack-oauth2 (1.14.0)
-      activesupport
-      attr_required
-      httpclient
-      json-jwt (>= 1.11.0)
-      rack (>= 2.1.0)
     rack-protection (2.0.8.1)
       rack
     ruby2_keywords (0.0.2)
@@ -35,19 +25,20 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.8.1)
       tilt (~> 2.0)
-    square (0.0.4)
-      rack-oauth2
-    thread_safe (0.3.6)
+    square.rb (6.0.0.20200625)
+      certifi (~> 2018.1)
+      faraday (~> 0.15)
+      faraday-http-cache (~> 2.0)
+      faraday_middleware (~> 0.13)
+      logging (~> 2.2)
     tilt (2.0.10)
-    tzinfo (1.2.7)
-      thread_safe (~> 0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   sinatra (~> 2.0)
-  square
+  square.rb
 
 RUBY VERSION
    ruby 2.4.2p198
