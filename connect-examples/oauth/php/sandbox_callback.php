@@ -5,8 +5,7 @@ require_once('sandbox_messages.php');
 use Square\Exceptions\ApiException;
 use Square\SquareClient;
 use Square\Environment;
-use Square\Http\HttpResponse;
-use Square\Models\ObtainTokenReques;
+use Square\Models\ObtainTokenRequest;
 
 // The obtainOAuthToken function shows you how to obtain a OAuth access token
 // with the OAuth API with the authorization code returned to OAuth callback.
@@ -35,7 +34,7 @@ function obtainOAuthToken($authorizationCode) {
         $category = $response->getErrors()[0]->getCategory();
         $detail = $response->getErrors()[0]->getDetail();
 
-        throw new Exception("Error Processing Request: obtainToken failed!\n" . $code . "\n" . $category . "\n" . $reason, 1);
+        throw new Exception("Error Processing Request: obtainToken failed!\n" . $code . "\n" . $category . "\n" . $detail, 1);
       }
   } catch (ApiException $e) {
       error_log($e->getMessage());
