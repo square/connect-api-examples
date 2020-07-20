@@ -58,6 +58,8 @@ php composer.phar install
     // Sandbox application secret is the client secret required to call obtain token.
     // REPLACE_ME = the sandbox application secret from the application's OAuth tab.
     define('_SQ_SANDBOX_APP_SECRET', "REPLACE_ME");
+
+    define('_SQ_SANDBOX_BASEURL', "https://connect.squareupsandbox.com");
     ?>
     ```
 
