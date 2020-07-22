@@ -1,0 +1,55 @@
+//- Copyright 2020 Square Inc.
+ 
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+ 
+//-     http://www.apache.org/licenses/LICENSE-2.0
+ 
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License. 
+
+extends layout
+block content
+  a(class="back-button" href="/")
+    svg(width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg")
+      path(d="M8 1L1 8m0 0h14M1 8l7 7" stroke="#8594A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round")
+  div(class="container")
+    div(class="subtitle") Customer Details
+    div(class="title") #{customer.given_name} #{customer.family_name}
+    div(class="title-description") Card on file: #{customer.cards ? `${customer.cards[0].card_brand} ending in ${customer.cards[0].last_4}` : "None"}
+    div(class="title-description") Email: #{customer.email_address }
+
+    div(class="list-title") Roofing Services
+    div(class="list")
+      each item, index in service_items
+        div(class="listitem")
+          div(class="listitem__title") #{item.name}
+          div(class="listitem__subtitle") $#{(item.price_amount/100).toFixed(2)}
+          form(class="listitem__right" id="create-invoice" + index, action='/invoice/create', method='post')
+              input(name='location_id', type='hidden', value=location_id)
+              input(name='idempotency_key', type='hidden', value=idempotency_key + `_${index}`)
+              input(name='customer_id', type='hidden', value=customer.id)
+              input(name='name', type='hidden', value=item.name)
+              input(name='price_amount', type='hidden', value=item.price_amount)
+              button(class="blue" form="create-invoice" + index, type="submit") Create Invoice#{customer.cards ? " with Card on File" : ""}
+
+    div(class="list-title") Invoices
+    div(class="list")
+      each invoice in invoices
+        a(class="listitem" href=`/invoice/view/${location_id}/${customer.id}/${invoice.id}`)
+          div(class="listitem__title") ##{invoice.invoice_number} #{invoice.title}
+          div(class="listitem__subtitle") Due #{invoice.payment_requests[0].due_date}
+          div(class="listitem__right")
+            if invoice.status === "DRAFT" || invoice.status === "UNPAID"
+              div(class="tag-orange")
+                span(class="orange") #{invoice.status}
+            else if invoice.status === "PAID"
+              div(class="tag-green")
+                span(class="green") #{invoice.status}
+            else
+              div(class="tag-green")
+                span() #{invoice.status}

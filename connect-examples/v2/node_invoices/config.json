@@ -1,0 +1,12 @@
+{
+  "sandbox": {
+    "path": "https://connect.squareupsandbox.com",
+    "squareApplicationId": "YOUR_SANDBOX_APPLICATION_ID",
+    "squareAccessToken": "YOUR_SANDBOX_ACCESS_TOKEN"
+  },
+  "production": {
+    "path": "https://connect.squareup.com",
+    "squareApplicationId": "YOUR_APPLICATION_ID",
+    "squareAccessToken": "YOUR_ACCESS_TOKEN"
+  }
+}
