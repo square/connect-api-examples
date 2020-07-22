@@ -1,0 +1,92 @@
+//- Copyright 2020 Square Inc.
+ 
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+ 
+//-     http://www.apache.org/licenses/LICENSE-2.0
+ 
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License. 
+
+extends layout
+block append styles
+  link(rel='stylesheet', href='/stylesheets/invoice.css')
+block append scripts
+block content
+  a(class="back-button" href=`/management/${location_id}/${customer_id}`)
+    svg(width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg")
+      path(d="M8 1L1 8m0 0h14M1 8l7 7" stroke="#8594A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round")
+  div(class="container")
+    div(class="subtitle") Invoice ##{invoice.invoice_number}
+    div(class="title") #{invoice.title ? invoice.title : `#${invoice.invoice_number}`}
+    if invoice.status === "UNPAID" || invoice.status === "CANCELED"
+      div(class="title-description orange bold") INVOICE #{invoice.status}
+    else if invoice.status === "SCHEDULED" || invoice.status === "PAID"
+      div(class="title-description green bold") INVOICE #{invoice.status}
+    else
+      div(class="title-description blue bold") INVOICE #{invoice.status}
+
+    div(class="list")
+      div(class="listitem")
+        div(class="listitem__title") Recipient Name
+        div(class="listitem__subtitle") #{invoice.primary_recipient.given_name} #{invoice.primary_recipient.family_name}
+      div(class="listitem")
+        div(class="listitem__title") Recipient Email
+        div(class="listitem__subtitle") #{invoice.primary_recipient.email_address}
+      div(class="listitem")
+        div(class="listitem__title") Status
+        div(class="listitem__subtitle") #{invoice.status}
+      if invoice.scheduled_at
+        div(class="listitem")
+          div(class="listitem__title") Scheduled at
+          div(class="listitem__subtitle") #{invoice.scheduled_at}
+      div(class="listitem")
+        div(class="listitem__title") Payment Method
+        case invoice.payment_requests[0].request_method
+          when "EMAIL"
+            div(class="listitem__subtitle") Send an email to collect payment
+          when "CHARGE_CARD_ON_FILE"
+            div(class="listitem__subtitle") Charge card on file on due date
+          when "SHARE_MANUALLY"
+            div(class="listitem__subtitle") Manually handled
+      div(class="listitem")
+        div(class="listitem__title") Payment Due Date
+        div(class="listitem__subtitle") #{invoice.payment_requests[0].due_date}
+      div(class="listitem")
+        div(class="listitem__title") Amount Money
+        div(class="listitem__subtitle") $#{(invoice.payment_requests[0].computed_amount_money.amount / 100).toFixed(2)}
+      div(class="listitem")
+        div(class="listitem__title") Created At
+        div(class="listitem__subtitle") #{invoice.created_at}
+      if invoice.status !== "DRAFT" && invoice.status !== "SCHEDULED"
+        div(class="listitem")
+          div(class="listitem__title") Public Invoice Url
+          div(class="listitem__subtitle")
+            a(href=invoice.public_url) #{invoice.public_url}
+
+    div(class="button-container")
+      if invoice.status === "DRAFT"
+        form(id="delete", action='/invoice/delete', method='post')
+          input(name='location_id', type='hidden', value=location_id)
+          input(name="invoice_id", type='hidden', value=invoice.id)
+          input(name="invoice_version", type='hidden', value=invoice.version)
+          input(name="customer_id", type='hidden', value=customer_id)
+          button(class="action-button red" type="submit") Delete Invoice
+        form(id="publish", action='/invoice/publish', method='post')
+          input(name='idempotency_key', type='hidden', value=idempotency_key)
+          input(name='location_id', type='hidden', value=location_id)
+          input(name="invoice_id", type='hidden', value=invoice.id)
+          input(name="invoice_version", type='hidden', value=invoice.version)
+          input(name="customer_id", type='hidden', value=customer_id)
+          button(class="action-button primary-button" type="submit") Publish Invoice
+      if invoice.status !== "DRAFT" && invoice.status !== "PAID" && invoice.status !== "REFUNDED" && invoice.status !== "CANCELED" && invoice.status !== "FAILED"
+        form(id="cancel", action='/invoice/cancel', method='post')
+          input(name='location_id', type='hidden', value=location_id)
+          input(name="invoice_id", type='hidden', value=invoice.id)
+          input(name="invoice_version", type='hidden', value=invoice.version)
+          input(name="customer_id", type='hidden', value=customer_id)
+          button(class="action-button red" type="submit") Cancel Invoice
