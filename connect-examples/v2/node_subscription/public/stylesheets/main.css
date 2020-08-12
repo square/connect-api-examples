@@ -1,0 +1,178 @@
+/*
+Copyright 2020 Square Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+html, body {
+    color: var(--dark-gray);
+    font-size: 16px;
+    line-height: 24px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    color:  #151C1F;
+    margin: 0;
+    padding: 0;
+}
+
+button {
+    height: 48px;
+    border: none;
+    background: #F5F6F7;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 500;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.back-button {
+    position: fixed;
+    top: 48px;
+    left: 48px;
+    align-items: center;
+    border-radius: 100%;
+    box-sizing: border-box;
+    display: inline-flex;
+    justify-content: center;
+    height: 56px;
+    width: 56px;
+    border: none;
+    background: #F5F6F7;
+    /* cursor: pointer; */
+}
+
+.tag-green {
+    text-align: center;
+    font-weight: 500;
+    font-size: 10px;
+    background: rgba(23, 131, 135, 0.05);
+    border-radius: 50px;
+    padding: 4px 16px;
+    box-sizing: border-box;
+
+}
+
+.tag-orange {
+    text-align: center;
+    font-weight: 500;
+    font-size: 10px;
+    background: rgba(204, 75, 0, 0.05);
+    border-radius: 50px;
+    padding: 4px 16px;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 600px;
+    margin: 184px auto 0 auto;
+    padding: 0 24px 48px 24px;
+}
+
+.title {
+    font-weight: 500;
+    font-size: 50px;
+    line-height: 56px;
+}
+
+.subtitle {
+    margin-top: 184px;
+    font-size: 16px;
+    color: #5F666C;
+}
+
+.title-description {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #5F666C;
+}
+
+.hidden {
+    display: none;
+}
+
+.list-title {
+    margin-top: 80px;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #E4E7EB;
+}
+
+.list {
+    margin-top: 8px;
+}
+
+.listitem {
+    display: block;
+    padding: 24px 0;
+    flex: 1 0 auto;
+    position: relative;
+    border-bottom: 1px solid #E4E7EB;
+    text-decoration: none;
+}
+
+.listitem:last-of-type {
+    border-bottom: none;
+}
+
+.listitem__title {
+    font-size: 15px;
+    font-weight: 500;
+    color: #273240;
+    text-decoration: none;
+}
+
+.listitem__subtitle {
+    font-size: 14px;
+    color: #5F666C;
+}
+
+.listitem__right {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    position: absolute;
+    right: 0px;
+    top: 0;
+}
+
+.green {
+    color: #178387;
+}
+
+.blue {
+    color: #006BE6;
+}
+
+.orange {
+    color: #CC4B00;
+}
+
+.red {
+    color: #B30003;
+}
+
+.gray {
+    color: #5F666C;
+}
+
+.bold {
+    font-weight: 500;
+}

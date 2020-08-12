@@ -1,0 +1,64 @@
+/*
+Copyright 2020 Square Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+.customers-list-title {
+  margin-top: 52px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 32px;
+}
+
+.customers-list {
+  margin-top: 24px;
+}
+
+.customer-card {
+  height: 118px;
+  background-color: #FFFFFF;
+  border: 1px solid #E4E7EB;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.02), 0px 1px 2px rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
+  margin: 16px 0;
+}
+
+.customer-name {
+  font-size: 18px;
+  color: #273240;
+}
+
+.customer-info {
+  font-size: 14px;
+  color: #5F666C;
+  margin-top: 6px;
+}
+
+.customer-card a {
+  text-decoration: none;
+  flex: 1 0;
+  display: block;
+  position: relative;
+  padding: 32px;
+}
+
+.customer-card__right {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  position: absolute;
+  right: 32px;
+  top: 0px;
+}
