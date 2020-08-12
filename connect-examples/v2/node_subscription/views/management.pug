@@ -1,0 +1,44 @@
+//- Copyright 2020 Square Inc.
+ 
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+ 
+//-     http://www.apache.org/licenses/LICENSE-2.0
+ 
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License. 
+
+extends layout
+block content
+  a(class="back-button" href="/")
+    svg(width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg")
+      path(d="M8 1L1 8m0 0h14M1 8l7 7" stroke="#8594A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round")
+  div(class="container")
+    div(class="subtitle") Member details
+    div(class="title") #{customer.given_name} #{customer.family_name}
+    div(class="title-description") Card on file: #{customer.cards ? `${customer.cards[0].card_brand} ending in ${customer.cards[0].last_4}` : "None"}
+    div(class="title-description") Email: #{customer.email_address }
+
+    div(class="list-title") Enrolled Plans
+    div(class="list")
+      each subscription_info, index in enrolled_subscriptions_info
+        a(class="listitem" href=`/subscription/view/${location_id}/${customer.id}/${subscription_info.plan_id}`)
+          div(class="listitem__title" ) #{subscription_info.name}
+          div(class="listitem__subtitle blue") Active subscription
+          div(class="listitem__right")
+            svg(width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg")
+              path(d="M1 1L7 7L1 13" stroke="#D0D3D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round")
+
+    div(class="list-title") Additional Plans
+    div(class="list")
+      each subscription_info, index in additional_subscriptions_info
+        a(class="listitem" href=`/subscription/view/${location_id}/${customer.id}/${subscription_info.plan_id}`)
+          div(class="listitem__title") #{subscription_info.name}
+          div(class="listitem__subtitle") Add subscription
+          div(class="listitem__right")
+            svg(width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg")
+              path(d="M1 1L7 7L1 13" stroke="#D0D3D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round")

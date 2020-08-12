@@ -1,0 +1,69 @@
+//- Copyright 2020 Square Inc.
+ 
+//- Licensed under the Apache License, Version 2.0 (the "License");
+//- you may not use this file except in compliance with the License.
+//- You may obtain a copy of the License at
+ 
+//-     http://www.apache.org/licenses/LICENSE-2.0
+ 
+//- Unless required by applicable law or agreed to in writing, software
+//- distributed under the License is distributed on an "AS IS" BASIS,
+//- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//- See the License for the specific language governing permissions and
+//- limitations under the License. 
+
+extends ./layout
+block append styles
+  link(rel="stylesheet", href="/stylesheets/subscription.css")
+block content
+  a(class="back-button" href=`/management/${location_id}/${customer.id}`)
+    svg(width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg")
+      path(d="M8 1L1 8m0 0h14M1 8l7 7" stroke="#8594A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round")
+  div(class="container")
+    div(class="subtitle") Plan Details
+    div(class="title") #{subscription_plan_info.subscription_plan.name}
+    div(class="title-description") Customer - #{customer.given_name} #{customer.family_name}
+
+    div(class="list-title") Subscription Plan Info
+    div(class="list")
+      each phase_info in subscription_plan_info.plan_phase_infos
+        div(class="listitem")
+          div(class="listitem__title") #{phase_info.title}
+          div(class="listitem__subtitle") #{phase_info.sub_title}
+          div(class="listitem__right")
+            if (phase_info.label === "Current")
+              svg(width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg")
+                rect(width="24" height="24" rx="12" fill="#006BE6")
+                path(d="M8 12L10.8571 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round")
+            else 
+              div(class=("phase-label gray")) #{phase_info.label}
+
+    div(class="list-title") Current Subscription
+    div(class="list")
+      div(class="listitem")
+        if !subscription_plan_info.active_subscription
+          div(class="listitem__title") Customer doesn"t have an active subscritpion.
+          form(class="listitem__right" id="subscribe", action="/subscription/subscribe", method="post")
+                input(name="idempotency_key", type="hidden", value=idempotency_key)
+                input(name="location_id", type="hidden", value=location_id)
+                input(name="plan_id", type="hidden", value=subscription_plan_id)
+                input(name="customer_id", type="hidden", value=customer.id)
+                button(class="subscribe-button", form="subscribe", type="submit") Subscribe
+        else if !subscription_plan_info.active_subscription.canceled_date
+          div(class="listitem__title") Started on #{subscription_plan_info.active_subscription.start_date}
+          div(class="listitem__subtitle green") #{subscription_plan_info.active_subscription.status}
+          form(class="listitem__right" id="unsubscribe", action="/subscription/unsubscribe", method="post")
+                input(name="location_id", type="hidden", value=location_id)
+                input(name="subscription_id", type="hidden", value=subscription_plan_info.active_subscription.id)
+                input(name="customer_id", type="hidden", value=customer.id)
+                button(form="unsubscribe", type="submit") Unsubscribe
+        else 
+          div(class="listitem__title") Started on #{subscription_plan_info.active_subscription.start_date}
+          div(class="listitem__subtitle orange") Will cancel on #{subscription_plan_info.active_subscription.canceled_date}
+          form(class="listitem__right" id="revert", action="/subscription/revertcancel", method="post")
+                input(name="location_id", type="hidden", value=location_id)
+                input(name="subscription_id", type="hidden", value=subscription_plan_info.active_subscription.id)
+                input(name="subscription_version", type="hidden", value=subscription_plan_info.active_subscription.version)
+                input(name="plan_id", type="hidden", value=subscription_plan_id)
+                input(name="customer_id", type="hidden", value=customer.id)
+                button(form="revert", type="submit") Revert Cancelation
