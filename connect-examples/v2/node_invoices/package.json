@@ -22,7 +22,7 @@
     "square-connect": "^4.20200722.0"
   },
   "devDependencies": {
-    "nodemon": "^1.19.0",
+    "nodemon": "^2.0.4",
     "eslint": "^6.1.0"
   },
   "engines": {
