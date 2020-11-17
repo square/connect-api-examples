@@ -16,22 +16,23 @@ limitations under the License.
 
 /* eslint no-console: 0 */
 
-const SquareConnect = require("square-connect");
-const config = require("../../config.json")["sandbox"]; // We don't recommend to run this script in production environment
+const { Client, Environment } = require("square");
 const readline = require("readline");
 const crypto = require("crypto");
 const { program } = require("commander");
+require('dotenv').config()
 
-const defaultClient = SquareConnect.ApiClient.instance;
-// Default connect to sandbox.
-defaultClient.basePath = config.path;
+// We don't recommend to run this script in production environment
+const config = {
+  environment: Environment.Sandbox,
+  accessToken: process.env.SQUARE_ACCESS_TOKEN
 
-// Configure OAuth2 access token for authorization: oauth2
-const oauth2 = defaultClient.authentications["oauth2"];
-oauth2.accessToken = config.squareAccessToken;
+}
 
 // Configure customer API instance
-const customerApi = new SquareConnect.CustomersApi();
+const {
+  customersApi
+} = new Client(config);
 
 /*
  * Add two customers, one with card on file and one without card on file.
@@ -41,23 +42,23 @@ const customerApi = new SquareConnect.CustomersApi();
 async function addCustomers() {
   try {
     // Create first customer with card on file
-    const { customer } = await customerApi.createCustomer({
-      idempotency_key: crypto.randomBytes(32).toString("hex"),
-      given_name: "Ryan",
-      family_name: "Nakamura",
-      email_address: "nakamura710@square-example.com" // it is a fake email
+    const { result : { customer } } = await customersApi.createCustomer({
+      idempotencyKey: crypto.randomBytes(32).toString("hex"),
+      givenName: "Ryan",
+      familyName: "Nakamura",
+      emailAddress: "nakamura710@square-example.com" // it is a fake email
     });
 
-    await customerApi.createCustomerCard(customer.id, {
-      card_nonce: "cnon:card-nonce-ok"
+    await customersApi.createCustomerCard(customer.id, {
+      cardNonce: "cnon:card-nonce-ok"
     });
 
     // create second customer with no card on file
-    await customerApi.createCustomer({
-      idempotency_key: crypto.randomBytes(32).toString("hex"),
-      given_name: "Kaitlyn",
-      family_name: "Spindel",
-      email_address: "kaitlyn@square-example.com" // it is a fake email
+    await customersApi.createCustomer({
+      idempotencyKey: crypto.randomBytes(32).toString("hex"),
+      givenName: "Kaitlyn",
+      familyName: "Spindel",
+      emailAddress: "kaitlyn@square-example.com" // it is a fake email
     });
 
     console.log("Successfully created customers");
@@ -72,11 +73,11 @@ async function addCustomers() {
  */
 async function clearCustomers() {
   try {
-    const { customers } = await customerApi.listCustomers();
+    const { result : { customers } } = await customersApi.listCustomers();
     if (customers) {
       for (const key in customers) {
         const customer = customers[key];
-        await customerApi.deleteCustomer(customer.id);
+        await customersApi.deleteCustomer(customer.id);
       }
       console.log("Successfully deleted customers");
     } else {

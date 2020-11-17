@@ -22,12 +22,12 @@ const {
   customersApi,
   catalogApi,
   subscriptionsApi,
-} = require("../util/square-connect-client");
+} = require("../util/square-client");
 
 const router = express.Router();
 
 /**
- * Matches: GET /management/:location_id/:customer_id
+ * Matches: GET /management/:locationId/:customerId
  *
  * Description:
  *  Renders the membership management page that:
@@ -35,72 +35,72 @@ const router = express.Router();
  *  * display the current subscription status of each plan for the current customer
  *
  * Query Parameters:
- *  customer_id: Id of the selected customer
- *  location_id: Id of the location that the subscription belongs to
+ *  customerId: Id of the selected customer
+ *  locationId: Id of the location that the subscription belongs to
  */
-router.get("/:location_id/:customer_id", async (req, res, next) => {
+router.get("/:locationId/:customerId", async (req, res, next) => {
   // Post request body contains id of item that is going to be purchased
   const {
-    customer_id,
-    location_id,
+    customerId,
+    locationId,
   } = req.params;
   try {
-    const { customer } = await customersApi.retrieveCustomer(customer_id);
+    const { result: { customer } } = await customersApi.retrieveCustomer(customerId);
 
     // Get the subscription plans that are available for current location, an available plan is either
-    // * present_at_all_locations is true and current location id NOT in absent_at_location_ids
-    // * present_at_all_locations is false and current location id is in present_at_location_ids
-    const { objects } = await catalogApi.listCatalog({ types: "SUBSCRIPTION_PLAN" });
-    const active_subscriptoin_plans = objects ?
+    // * presentAtAllLocations is true and current location id NOT in absentAtLocationIds
+    // * presentAtAllLocations is false and current location id is in presentAtLocationIds
+    const { result: { objects } } = await catalogApi.listCatalog(undefined,"SUBSCRIPTION_PLAN");
+    const activeSubscriptionPlans = objects ?
       objects.filter(plan => (
-        (plan.present_at_all_locations && (!plan.absent_at_location_ids || plan.absent_at_location_ids.indexOf(location_id) < 0 )
-          || (plan.present_at_location_ids && plan.present_at_location_ids.indexOf(location_id) >= 0)
+        (plan.presentAtAllLocations && (!plan.absentAtLocationIds || plan.absentAtLocationIds.indexOf(locationId) < 0 )
+          || (plan.presentAtLocationIds && plan.presentAtLocationIds.indexOf(locationId) >= 0)
         )
       ))
       : [];
 
     // Find the all the subcriptions for the current customer at current location
-    const { subscriptions } = await subscriptionsApi.searchSubscriptions({
-      location_ids: [location_id],
-      customer_ids: [customer.id]
+    const { result: { subscriptions } } = await subscriptionsApi.searchSubscriptions({
+      locationIds: [locationId],
+      customerIds: [customer.id]
     });
 
     // filter the subscriptions that are active
-    const active_subscriptions = subscriptions ?
+    const activeSubscriptions = subscriptions ?
       subscriptions.filter(sub => (sub.status === "ACTIVE" || sub.status === "PENDING"))
       : [];
-    const active_subscriptions_map = active_subscriptions
+    const activeSubscriptionsMap = activeSubscriptions
       .reduce((map, sub) => {
-        map.set(sub.plan_id, sub);
+        map.set(sub.planId, sub);
         return map;
       }, new Map());
 
     // build enrolled subscription info and additional subscription plan info for display
-    const enrolled_subscriptions_info = [];
-    const additional_subscriptions_info = [];
-    for (const key in active_subscriptoin_plans) {
-      const subscription_plan = active_subscriptoin_plans[key];
-      if (active_subscriptions_map.has(subscription_plan.id)) {
-        enrolled_subscriptions_info.push({
-          plan_id: subscription_plan.id,
-          name: subscription_plan.subscription_plan_data.name,
-          id: active_subscriptions_map.get(subscription_plan.id).id,
-          status: active_subscriptions_map.get(subscription_plan.id).status,
+    const enrolledSubscriptionsInfo = [];
+    const additionalSubscriptionsInfo = [];
+    for (const key in activeSubscriptionPlans) {
+      const subscriptionPlan = activeSubscriptionPlans[key];
+      if (activeSubscriptionsMap.has(subscriptionPlan.id)) {
+        enrolledSubscriptionsInfo.push({
+          planId: subscriptionPlan.id,
+          name: subscriptionPlan.subscriptionPlanData.name,
+          id: activeSubscriptionsMap.get(subscriptionPlan.id).id,
+          status: activeSubscriptionsMap.get(subscriptionPlan.id).status,
         });
       } else {
-        additional_subscriptions_info.push({
-          plan_id: subscription_plan.id,
-          name: subscription_plan.subscription_plan_data.name,
+        additionalSubscriptionsInfo.push({
+          planId: subscriptionPlan.id,
+          name: subscriptionPlan.subscriptionPlanData.name,
         });
       }
     }
 
     res.render("management", {
-      idempotency_key: uuidv4(),
-      location_id,
+      idempotencyKey: uuidv4(),
+      locationId,
       customer,
-      enrolled_subscriptions_info,
-      additional_subscriptions_info,
+      enrolledSubscriptionsInfo,
+      additionalSubscriptionsInfo,
     });
   } catch (error) {
     next(error);

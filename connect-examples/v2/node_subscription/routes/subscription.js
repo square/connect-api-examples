@@ -19,17 +19,18 @@ const {
   v4: uuidv4
 } = require("uuid");
 const {
+  revertCanceledSubscription,
   catalogApi,
   customersApi,
   subscriptionsApi,
-} = require("../util/square-connect-client");
+} = require("../util/square-client");
 const SubscriptionDetailsInfo = require("../models/subscription-details-info");
 
 const router = express.Router();
 
 
 /**
- * Matches: GET /subscription/view/:location_id/:customer_id/:subscription_plan_id
+ * Matches: GET /subscription/view/:locationId/:customerId/:subscriptionPlanId
  *
  * Description:
  *  Renders the subscription plan information that includes:
@@ -38,45 +39,45 @@ const router = express.Router();
  *    * button to subscribe, unsubscribe or revert cancelling subscription depends on the status of subscription
  *
  * Query Parameters:
- *  location_id: Id of the location that the invoice belongs to
- *  customer_id: Id of the selected customer
- *  subscription_plan_id: Id of the subscription plan
+ *  locationId: Id of the location that the invoice belongs to
+ *  customerId: Id of the selected customer
+ *  subscriptionPlanId: Id of the subscription plan
  */
-router.get("/view/:location_id/:customer_id/:subscription_plan_id", async (req, res, next) => {
+router.get("/view/:locationId/:customerId/:subscriptionPlanId", async (req, res, next) => {
   const {
-    location_id,
-    customer_id,
-    subscription_plan_id,
+    locationId,
+    customerId,
+    subscriptionPlanId,
   } = req.params;
   try {
-    const { customer } = await customersApi.retrieveCustomer(customer_id);
-    const { object } = await catalogApi.retrieveCatalogObject(subscription_plan_id);
-    const subscription_plan = object.subscription_plan_data;
-    const { subscriptions } = await subscriptionsApi.searchSubscriptions({
-      location_ids: [location_id],
-      customer_ids: [customer_id]
+    const { result: { customer } } = await customersApi.retrieveCustomer(customerId);
+    const { result: { object } } = await catalogApi.retrieveCatalogObject(subscriptionPlanId);
+    const subscriptionPlan = object.subscriptionPlanData;
+    const { result: { subscriptions } } = await subscriptionsApi.searchSubscriptions({
+      locationIds: [locationId],
+      customerIds: [customerId]
     });
 
     // find the first active subscription for the current plan
     // In the current workflow of the example, we don't allow more than one active subscription for each customer
     // so we'll assume we can rely on the first active subscription if there are multiple
-    const active_subscription = subscriptions ?
+    const activeSubscription = subscriptions ?
       Object.values(subscriptions).find((subscription) => {
-        return subscription.plan_id === subscription_plan_id
+        return subscription.planId === subscriptionPlanId
           && (subscription.status === "ACTIVE" || subscription.status === "PENDING");
       }) : null;
 
     // create a SubscriptionDetailsInfo object which translate the subscription plan and active subscription
     // information for the subscription page to render
-    const subscription_plan_info = new SubscriptionDetailsInfo(subscription_plan, active_subscription);
+    const subscriptionPlanInfo = new SubscriptionDetailsInfo(subscriptionPlan, activeSubscription);
 
     // render the subscription plan information and its subscription status
     res.render("subscription", {
-      idempotency_key: uuidv4(),
-      location_id,
+      idempotencyKey: uuidv4(),
+      locationId,
       customer,
-      subscription_plan_id,
-      subscription_plan_info,
+      subscriptionPlanId,
+      subscriptionPlanInfo,
     });
   } catch (error) {
     next(error);
@@ -91,42 +92,42 @@ router.get("/view/:location_id/:customer_id/:subscription_plan_id", async (req, 
  *  subscribe to the plan by create a subscription with the plan id
  *
  * Request Body:
- *  plan_id: Id of the subscription plan
- *  customer_id: Id of the selected customer
- *  location_id: Id of the location that the order belongs to
- *  idempotency_key: Unique identifier for request from client
+ *  planId: Id of the subscription plan
+ *  customerId: Id of the selected customer
+ *  locationId: Id of the location that the order belongs to
+ *  idempotencyKey: Unique identifier for request from client
  */
 router.post("/subscribe", async (req, res, next) => {
   const {
-    plan_id,
-    customer_id,
-    location_id,
-    idempotency_key,
+    planId,
+    customerId,
+    locationId,
+    idempotencyKey,
   } = req.body;
   try {
-    const { customer } = await customersApi.retrieveCustomer(customer_id);
+    const { result: { customer } } = await customersApi.retrieveCustomer(customerId);
 
     if (customer.cards && customer.cards.length > 0) {
       // create subscription with the first card id
       await subscriptionsApi.createSubscription({
-        idempotency_key,
-        location_id,
-        plan_id,
-        customer_id,
-        card_id: customer.cards[0].id,
+        idempotencyKey,
+        locationId,
+        planId,
+        customerId,
+        cardIsd: customer.cards[0].id,
       });
     } else {
       // create subscription without card id
       await subscriptionsApi.createSubscription({
-        idempotency_key,
-        location_id,
-        plan_id,
-        customer_id,
+        idempotencyKey,
+        locationId,
+        planId,
+        customerId,
       });
     }
 
     // redirect to the subscription plan detail page
-    res.redirect(`view/${location_id}/${customer_id}/${plan_id}`);
+    res.redirect(`view/${locationId}/${customerId}/${planId}`);
   } catch (error) {
     next(error);
   }
@@ -140,34 +141,31 @@ router.post("/subscribe", async (req, res, next) => {
  *  revert the cancelling subscription and change the status back to active
  *
  * Request Body:
- *  plan_id: Id of the subscription plan
- *  customer_id: Id of the selected customer
- *  location_id: Id of the location that the order belongs to
- *  subscription_id: Id of the subscription
- *  subscription_version: Version of the subscription
+ *  planId: Id of the subscription plan
+ *  customerId: Id of the selected customer
+ *  locationId: Id of the location that the order belongs to
+ *  subscriptionId: Id of the subscription
+ *  subscriptionVersion: Version of the subscription
  */
 router.post("/revertcancel", async (req, res, next) => {
   const {
-    plan_id,
-    customer_id,
-    location_id,
-    subscription_id,
-    subscription_version
+    planId,
+    customerId,
+    locationId,
+    subscriptionId,
+    subscriptionVersion
   } = req.body;
   try {
+
     // revert a cancelling subscription by
-    // removing the `canceled_date` field from the subscription
-    await subscriptionsApi.updateSubscription(subscription_id, {
-      subscription: {
-        version: parseInt(subscription_version)
-      },
-      fields_to_clear:[
-        "canceled_date"
-      ]
+    // removing the `canceledDate` field from the subscription
+    await revertCanceledSubscription({
+      subscriptionId,
+      version: subscriptionVersion
     });
 
     // redirect to the subscription plan detail page
-    res.redirect(`view/${location_id}/${customer_id}/${plan_id}`);
+    res.redirect(`view/${locationId}/${customerId}/${planId}`);
   } catch (error) {
     next(error);
   }
@@ -181,20 +179,20 @@ router.post("/revertcancel", async (req, res, next) => {
  *  unsubscribe from the subscription
  *
  * Request Body:
- *  customer_id: Id of the selected customer
- *  location_id: Id of the location that the order belongs to
- *  subscription_id: Id of the subscription
+ *  customerId: Id of the selected customer
+ *  locationId: Id of the location that the order belongs to
+ *  subscriptionId: Id of the subscription
  */
 router.post("/unsubscribe", async (req, res, next) => {
   const {
-    customer_id,
-    location_id,
-    subscription_id,
+    customerId,
+    locationId,
+    subscriptionId,
   } = req.body;
   try {
     // Cancel the subscription
-    const { subscription } = await subscriptionsApi.cancelSubscription(subscription_id);
-    res.redirect(`view/${location_id}/${customer_id}/${subscription.plan_id}`);
+    const { result: { subscription } } = await subscriptionsApi.cancelSubscription(subscriptionId);
+    res.redirect(`view/${locationId}/${customerId}/${subscription.planId}`);
   } catch (error) {
     next(error);
   }

@@ -16,22 +16,22 @@ div(class="panel panel-left")
     h4(class="panel-title") Order Details
     div(class="panel-field")
         label(class="sq-label") Pickup at
-        div #{location_info.storeName}
-        div #{location_info.addressLine}
-        div #{location_info.cityStateZip}
+        div #{locationInfo.storeName}
+        div #{locationInfo.addressLine}
+        div #{locationInfo.cityStateZip}
     div(class="panel-field")
         label(class="sq-label") Pickup Time
         div(class="time-options")
-            each timeOption, index in expected_pick_up_times.options
-                input(id=timeOption.time, type="radio", name="pickup_time", value=timeOption.value, checked = index === 0) 
+            each timeOption, index in expectedPickUpTimes.options
+                input(id=timeOption.time, type="radio", name="pickupTime", value=timeOption.value, checked = index === 0) 
                 label(class="time-option",for=timeOption.time) #{timeOption.time}
     div(class="panel-field")
         label(class="sq-label") Pickup Name
-        input(class="panel-input", name="pickup_name",type="text", placeholder="Pickup Name", autocomplete="name", required)
+        input(class="panel-input", name="pickupName",type="text", placeholder="Pickup Name", autocomplete="name", required)
     div(class="panel-field")
         label(class="sq-label") Pickup Phone Number
-        input(class="panel-input", name="pickup_number",type="tel", placeholder="Pickup Number", autocomplete="tel", required)
+        input(class="panel-input", name="pickupNumber",type="tel", placeholder="Pickup Number", autocomplete="tel", required)
     div(class="panel-field")
         label(class="sq-label") Pickup Email 
             span(class="subtext") (Optional)
-        input(class="panel-input", name="pickup_email",type="email", placeholder="Pickup Email", autocomplete="email")
+        input(class="panel-input", name="pickupEmail",type="email", placeholder="Pickup Email", autocomplete="email")

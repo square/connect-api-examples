@@ -1,6 +1,6 @@
 {
   "name": "square-invoice-api-sample-app",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production nodemon -e js,pug ./bin/www",
@@ -11,15 +11,17 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "colors": "^1.4.0",
     "commander": "^6.0.0",
     "cookie-parser": "^1.4.5",
     "debug": "^4.1.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.0",
     "morgan": "^1.10.0",
     "pug": "^3.0.0",
     "request": "^2.88.0",
     "serve-favicon": "^2.5.0",
-    "square-connect": "^4.20200722.0"
+    "square": "7.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4",

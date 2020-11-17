@@ -14,20 +14,20 @@
 
 scripts
     script(type="text/javascript").
-        function validateAndSubmit(reward_id) {
-            document.getElementById("reward_tier_id").value = reward_id;
+        function validateAndSubmit(rewardId) {
+            document.getElementById("rewardTierId").value = rewardId;
             document.forms["select-loyalty-reward"].submit();
         }
 h4(class="panel-title") Redeem rewards
 form(id="select-loyalty-reward" action='/checkout/redeem-loyalty-reward', method='post')
     div(class="panel-field")
-        each reward_tier in loyalty_reward_info.available_reward_tiers
-            button(class="reward-button" type="button" onclick=`validateAndSubmit("${reward_tier.id}")`) #{reward_tier.name} for #{reward_tier.points} points
-        each reward_tier in loyalty_reward_info.unavailable_reward_tiers
-            button(class="reward-button" disabled type="button") #{reward_tier.name} for #{reward_tier.points} points
-    input(name='order_id', type='hidden', value=order_info.orderId)
-    input(name='location_id', type='hidden', value=order_info.locationId)
-    input(name='idempotency_key', type='hidden', value=idempotency_key)
-    input(name='loyalty_account_id', type='hidden', value=loyalty_reward_info.loyalty_account_id)
-    input(id='reward_tier_id', name='reward_tier_id', type='hidden')
-div(class="bottom-label") #{loyalty_reward_info.balance} points available
+        each rewardTier in loyaltyRewardInfo.availableRewardTiers
+            button(class="reward-button" type="button" onclick=`validateAndSubmit("${rewardTier.id}")`) #{rewardTier.name} for #{rewardTier.points} points
+        each rewardTier in loyaltyRewardInfo.unavailableRewardTiers
+            button(class="reward-button" disabled type="button") #{rewardTier.name} for #{rewardTier.points} points
+    input(name='orderId', type='hidden', value=orderInfo.orderId)
+    input(name='locationId', type='hidden', value=orderInfo.locationId)
+    input(name='idempotencyKey', type='hidden', value=idempotencyKey)
+    input(name='loyaltyAccountId', type='hidden', value=loyaltyRewardInfo.loyaltyAccountId)
+    input(id='rewardTierId', name='rewardTierId', type='hidden')
+div(class="bottom-label") #{loyaltyRewardInfo.balance} points available

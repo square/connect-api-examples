@@ -24,11 +24,8 @@ Before you begin, note the following:
 
 1. Set your credentials.
 
-    Open `config.json`, you'll see that there are two sets of `squareApplicationId` 
-    and `squareAccessToken` variables. The first set is for your `sandbox` credentials 
-    and the second is for your `production` credentials. 
-
-    Replace the placeholders for `squareApplicationId`, `squareAccessToken` with your 
+    Create a `.env` file in the root of this directory. Populate the file with the following
+    line `SQUARE_ACCESS_TOKEN=YOUR_ACCESS_TOKEN`. Replace the placeholder for `SQUARE_ACCESS_TOKEN` with your 
     own production or sandbox credentials. For more help, see our [guide on how to get 
     your credentials](https://developer.squareup.com/docs/orders-api/quick-start/step-1).
 

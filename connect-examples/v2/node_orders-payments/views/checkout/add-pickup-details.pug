@@ -32,9 +32,9 @@ block content
     div(class="tab-content")
         form(id="pickup-details-form" action='/checkout/add-pickup-details', method='post')
             include ../includes/pickup-info-input.pug
-            input(name='order_id', type='hidden', value=order_info.orderId)
-            input(name='location_id', type='hidden', value=order_info.locationId)
-            input(name='idempotency_key', type='hidden', value=idempotency_key)
+            input(name='orderId', type='hidden', value=orderInfo.orderId)
+            input(name='locationId', type='hidden', value=orderInfo.locationId)
+            input(name='idempotencyKey', type='hidden', value=idempotencyKey)
         div(class="order-summary")
             include ../includes/order-summary.pug
             button(class="form-button" type="button" onclick="validateAndSubmit()") Continue To Payment

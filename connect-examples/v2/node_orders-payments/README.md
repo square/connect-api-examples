@@ -30,13 +30,10 @@ Instead, you use a fake card that Square provides for the Sandbox environment.
 
 1. Set your credentials. 
 
-    Open `config.json`, you'll see that there are two sets of `squareApplicationId` 
-    and `squareAccessToken` variables. The first set is for your `sandbox` credentials 
-    and the second is for your `production` credentials. 
+    Create a copy of the `.env.example` file in the root directory of this example and name it `.env`.
 
-    Replace the placeholders for `squareApplicationId`, `squareAccessToken` with your 
-    own production or sandbox credentials. For more help, see our [guide on how to get 
-    your credentials](https://developer.squareup.com/docs/orders-api/quick-start/step-1).
+    Replace the placeholders with your own production and/or sandbox credentials. 
+    For more help, see our [guide on how to get your credentials](https://developer.squareup.com/docs/orders-api/quick-start/step-1).
 
     **WARNING**: Remember to use your own credentials only for testing the sample app.
     If you plan to make a version of this sample app available for your own purposes,
@@ -76,7 +73,6 @@ with test items. Run the script and refresh the page:
 
 This Express.js project is organized as follows:
 
-* **config.json**. You provide credentials in this file. 
 * **/models**. JavaScript classes in these files are used to abstract data coming from Square APIs.
   The views (.pug files) use these object models to access Square data. 
 * **/public.** These are the client-side JavaScript and CSS files used to render the home page and
@@ -247,7 +243,7 @@ The following source files manage the application flow related to this page:
 
 * **Controller.** `router.get("/payment", ...)` in [checkout.js](routes/checkout.js#L348).
 * **View file.** `/checkout/payment.pug`.
-* **Helper function.** `getLoyaltyRewardInformation()` in [square-connect-client.js](util/square-connect-client.js#L99). The helper function does several things. For example, it:
+* **Helper function.** `getLoyaltyRewardInformation()` in [square-client.js](util/square-client.js#L99). The helper function does several things. For example, it:
     * Calls `ListLoyaltyPrograms` (Loyalty API) to verify that the seller offers a loyalty program.
       If a loyalty program is offered, the UI can include the reward option panel. 
     * Verifies that the order is not already updated with a reward. If it is, there is no need to offer the reward tiers again.
@@ -291,7 +287,7 @@ The following source files manage the application flow related to this **Order S
 
 * **Controller. `router.get("/", ...)`** in [order-confirmation.js](routes/order-confirmation.js#L31).
 * **View file. `order-confirmation.pug`**.
-* **Helper function.** The `getLoyaltyPointAccumulateInformation()` function in [square-connect-client.js](util/square-connect-client.js#179).
+* **Helper function.** The `getLoyaltyPointAccumulateInformation()` function in [square-client.js](util/square-client.js#L180).
 
     Each time the helper function is called, it makes the following Loyalty API calls to determine whether to
     include the **CHECK IN TO EARN POINTS** panel and ask the buyer for a phone number to get points for the purchase:

@@ -23,8 +23,8 @@ const bodyParser = require("body-parser");
 const routes = require("./routes/index");
 const app = express();
 
-// Node creates cashed instance of square-connect-client, on initial load
-require("./util/square-connect-client");
+// Node creates cashed instance of square-client, on initial load
+require("./util/square-client");
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -58,7 +58,7 @@ app.use(function (err, req, res, next) {
     status: err.status,
     message: err.message,
     // If it is a response error then format the JSON string, if not output the error
-    error: err.response ? JSON.stringify(err.response, null, 4) : err.stack
+    error: err.errors ? JSON.stringify(err.errors, null, 4) : err.stack
   });
 });
 

@@ -32,11 +32,8 @@ Instead, you use a fake card that Square provides for the Sandbox environment.
 
 1. Set your credentials.
 
-    Open `config.json`, you'll see that there are two sets of `squareApplicationId` 
-    and `squareAccessToken` variables. The first set is for your `sandbox` credentials 
-    and the second is for your `production` credentials. 
-
-    Replace the placeholders for `squareApplicationId`, `squareAccessToken` with your 
+    Create a `.env` file in the root of this directory. Populate the file with the following
+    line `SQUARE_ACCESS_TOKEN=YOUR_ACCESS_TOKEN`. Replace the placeholder for `SQUARE_ACCESS_TOKEN` with your 
     own production or sandbox credentials. For more help, see our [guide on how to get 
     your credentials](https://developer.squareup.com/docs/orders-api/quick-start/step-1).
 
@@ -115,7 +112,7 @@ The application uses the following JSON in a [UpsertCatalogObject](https://devel
       {
      "type": "SUBSCRIPTION_PLAN",
      "id": "#Multiphase Gym Membership",
-     "subscription_plan_data": {
+     "subscriptionPlanData": {
        "name": "Gym Membership",
        "phases": [
          {
@@ -123,7 +120,7 @@ The application uses the following JSON in a [UpsertCatalogObject](https://devel
            "id": "#Gym Membership phase1",
            "cadence": "MONTHLY",
            "periods": 1,
-           "recurring_price_money": {
+           "recurringPriceMoney": {
              "amount": 100,
              "currency": "USD"
            }
@@ -132,7 +129,7 @@ The application uses the following JSON in a [UpsertCatalogObject](https://devel
            "type": "SUBSCRIPTION_PHASE",
            "id": "#Gym Membership phase2",
            "cadence": "WEEKLY",
-           "recurring_price_money": {
+           "recurringPriceMoney": {
              "amount": 1500,
              "currency": "USD"
            }
@@ -150,7 +147,7 @@ The application uses the following JSON in a [UpsertCatalogObject](https://devel
       {
        "type": "SUBSCRIPTION_PLAN",
        "id": "#Spa Service Addon",
-       "subscription_plan_data": {
+       "subscriptionPlanData": {
          "name": "Spa Service Addon",
          "phases": [
            {
@@ -158,7 +155,7 @@ The application uses the following JSON in a [UpsertCatalogObject](https://devel
              "id": "#Spa Service Addon phase1",
              "cadence": "WEEKLY",
              "periods": 2,
-             "recurring_price_money": {
+             "recurringPriceMoney": {
                "amount": 0,
                "currency": "USD"
              }
@@ -167,7 +164,7 @@ The application uses the following JSON in a [UpsertCatalogObject](https://devel
              "type": "SUBSCRIPTION_PHASE",
              "id": "#Spa Service Addon phase2",
              "cadence": "MONTHLY",
-             "recurring_price_money": {
+             "recurringPriceMoney": {
                "amount": 8000,
                "currency": "USD"
              }
@@ -183,14 +180,14 @@ The application uses the following JSON in a [UpsertCatalogObject](https://devel
       {
        "type": "SUBSCRIPTION_PLAN",
        "id": "#Laundry Service Addon",
-       "subscription_plan_data": {
+       "subscriptionPlanData": {
          "name": "Laundry Service Addon",
          "phases": [
            {
              "type": "SUBSCRIPTION_PHASE",
              "id": "#Laundry Service Addon phase",
              "cadence": "WEEKLY",
-             "recurring_price_money": {
+             "recurringPriceMoney": {
                "amount": 1000,
                "currency": "USD"
              }
@@ -215,9 +212,9 @@ the UI shows some of the customer profile information (name and card on file) in
    When creating a subscription, you have the option to either email subscription invoices or charge the customer's
    card on file and email receipts. The sample application is configured as follows:
 
-    * If you choose a customer without a card on file, the application does not include the card_id field in the
+    * If you choose a customer without a card on file, the application does not include the cardId field in the
     `CreateSubscription` request. Square sends the invoice to the customer's email address.
-    * If you choose a customer with a card on file, the application includes the optional `card_id` in the
+    * If you choose a customer with a card on file, the application includes the optional `cardId` in the
     `CreateSubscription` request. Square charges the card on file and sends a receipt of the invoice to the
     customer’s email address.
 
@@ -231,7 +228,7 @@ the UI shows some of the customer profile information (name and card on file) in
     The controller then calls `res.render("index") `to compile the template (/views/index.pug), create an HTML output,
     and send it to the client (as previously shown).
 
-2. The client chooses a gym member and the `router.get("/:location_id/:customer_id", …)` controller (in [management.js](routes/management.js#L30)) runs.
+2. The client chooses a gym member and the `router.get("/:locationId/:customerId", …)` controller (in [management.js](routes/management.js#L30)) runs.
 The controller renders the member details page showing:
     * **Enrolled plans.** Subscription plans the member is already enrolled in. 
     * **Additional plans.** Subscription plans the member can subscribe to. For example, the member might have subscribed to
@@ -245,8 +242,8 @@ The controller renders the member details page showing:
 
    * Calls` listCatalog `to retrieve the subscription plans from the catalog (a list of `CatalogObject` instances of
    the `SUBSCRIPTION_PLAN` type). The controller then filters the list to extract only the plans that are available at
-   the main location. The code uses these `CatalogObject` fields to filter the objects: `present_at_all_locations`,
-   `absent_at_location_ids` and `present_at_location_ids` (see [management.js](routes/management.js#L50)).
+   the main location. The code uses these `CatalogObject` fields to filter the objects: `presentAtAllLocations`,
+   `absentAtLocationIds` and `presentAtLocationIds` (see [management.js](routes/management.js#L50)).
 
       For more information about these fields, see [CatalogObject](https://developer.squareupstaging.com/reference/square/objects/CatalogObject) type.
 
@@ -269,7 +266,7 @@ For illustration, the following section describes the process flow to create and
 
 ### Choose a plan and create a subscription
 
-1. After the client chooses a plan from the Additional Plans list, the `router.get("/view/:location_id/:customer_id/:subscription_plan_id", …)`
+1. After the client chooses a plan from the Additional Plans list, the `router.get("/view/:locationId/:customerId/:subscriptionPlanId", …)`
 controller (in [subscription.js](routes/subscription.js#L31)) runs and renders a page with the subscription plan information as shown:
 
    <img src="./bin/images/screenshot-3.png" width="400"/>
@@ -305,8 +302,8 @@ controller (in [subscription.js](routes/subscription.js#L31)) runs and renders a
         NOTE: The Square Sandbox does not send emails, but you can verify the invoice in the Seller Sandbox Dashboard. For instructions,
         see [Create Subscriptions](https://developer.squareup.com/docs/subscriptions-api/walkthrough).
 
-    * Calls `res.redirect(`view/${location_id}/${customer_id}/${plan_id}`);` to redirect the request to the
-    `router.get("/view/:location_id/:customer_id/:invoice_id",...)` controller in the same [subscription.js](routes/subscription.js#L31) file.
+    * Calls `res.redirect(`view/${locationId}/${customerId}/${planId}`);` to redirect the request to the
+    `router.get("/view/:locationId/:customerId/:invoiceId",...)` controller in the same [subscription.js](routes/subscription.js#L31) file.
     This controller retrieves and renders the subscription information again.
 
       <img src="./bin/images/screenshot-4.png" width="400"/>
@@ -327,7 +324,7 @@ and present user-friendly information about the plans on the **Subscription Plan
 The application creates an instance of this helper class in the subscription.js file:
 
 ```javascript
-const subscription_plan_info = new SubscriptionDetailsInfo(subscription_plan, active_subscription);
+const subscriptionPlanInfo = new SubscriptionDetailsInfo(subscriptionPlan, activeSubscription);
 ```
 
 # License

@@ -19,15 +19,15 @@ block content
       path(d="M8 1L1 8m0 0h14M1 8l7 7" stroke="#8594A7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round")
   div(class="container")
     div(class="subtitle") Member details
-    div(class="title") #{customer.given_name} #{customer.family_name}
-    div(class="title-description") Card on file: #{customer.cards ? `${customer.cards[0].card_brand} ending in ${customer.cards[0].last_4}` : "None"}
-    div(class="title-description") Email: #{customer.email_address }
+    div(class="title") #{customer.givenName} #{customer.familyName}
+    div(class="title-description") Card on file: #{customer.cards ? `${customer.cards[0].cardBrand} ending in ${customer.cards[0].last4}` : "None"}
+    div(class="title-description") Email: #{customer.emailAddress }
 
     div(class="list-title") Enrolled Plans
     div(class="list")
-      each subscription_info, index in enrolled_subscriptions_info
-        a(class="listitem" href=`/subscription/view/${location_id}/${customer.id}/${subscription_info.plan_id}`)
-          div(class="listitem__title" ) #{subscription_info.name}
+      each subscriptionInfo, index in enrolledSubscriptionsInfo
+        a(class="listitem" href=`/subscription/view/${locationId}/${customer.id}/${subscriptionInfo.planId}`)
+          div(class="listitem__title" ) #{subscriptionInfo.name}
           div(class="listitem__subtitle blue") Active subscription
           div(class="listitem__right")
             svg(width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg")
@@ -35,9 +35,9 @@ block content
 
     div(class="list-title") Additional Plans
     div(class="list")
-      each subscription_info, index in additional_subscriptions_info
-        a(class="listitem" href=`/subscription/view/${location_id}/${customer.id}/${subscription_info.plan_id}`)
-          div(class="listitem__title") #{subscription_info.name}
+      each subscriptionInfo, index in additionalSubscriptionsInfo
+        a(class="listitem" href=`/subscription/view/${locationId}/${customer.id}/${subscriptionInfo.planId}`)
+          div(class="listitem__title") #{subscriptionInfo.name}
           div(class="listitem__subtitle") Add subscription
           div(class="listitem__right")
             svg(width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg")
