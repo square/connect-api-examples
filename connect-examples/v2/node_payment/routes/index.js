@@ -4,47 +4,51 @@ const crypto = require('crypto');
 
 const app = express();
 const env = app.get('env');
-const config = require('.././config.json')[env];
+const { paymentsApi } = require('../util/square-client');
 
 /* GET home page. */
 router.get('/', function (req, res) {
   // Set the app and location ids for sqpaymentform.js to use
   res.render('index', {
-    'title': 'Make Payment',
-    'square_application_id': config.squareApplicationId,
-    'square_location_id': config.squareLocationId,
-    'env': env,
+    env,
+    title: 'Make Payment',
+    squareApplicationId: process.env.SQUARE_APPLICATION_ID,
+    squareLocationId: process.env.SQUARE_LOCATION_ID
   });
 });
 
 router.post('/process-payment', async (req, res) => {
-  const request_params = req.body;
+  const { nonce } = req.body;
 
   // length of idempotency_key should be less than 45
-  const idempotency_key = crypto.randomBytes(22).toString('hex');
+  const idempotencyKey = crypto.randomBytes(22).toString('hex');
 
   // Charge the customer's card
-  const payments_api = new squareConnect.PaymentsApi();
-  const request_body = {
-    source_id: request_params.nonce,
-    amount_money: {
+  const requestBody = {
+    idempotencyKey,
+    sourceId: nonce,
+    amountMoney: {
       amount: 100, // $1.00 charge
       currency: 'USD'
-    },
-    idempotency_key: idempotency_key
+    }
   };
 
   try {
-    const respone = await payments_api.createPayment(request_body);
-    const json = JSON.stringify(respone);
+    const { result: { payment } } = await paymentsApi.createPayment(requestBody);
+    const result = JSON.stringify(payment, null, 4);
+
     res.render('process-payment', {
-      'title': 'Payment Successful',
-      'result': json
+      result,
+      'title': 'Payment Successful'
     });
   } catch (error) {
+    let result = JSON.stringify(error, null, 4);
+    if (error.errors) {
+      result = JSON.stringify(error.errors, null, 4);
+    }
     res.render('process-payment', {
-      'title': 'Payment Failure',
-      'result': error.response.text
+      result,
+      'title': 'Payment Failure'
     });
   }
 });

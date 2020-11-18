@@ -16,77 +16,55 @@ limitations under the License.
 
 /* eslint no-console: 0 */
 
-const SquareConnect = require("square-connect");
-const config = require("../../config.json")["sandbox"]; // We don't recommend to run this script in production environment
-const sample_data = require("./sample-seed-data.json");
-const request = require("request");
+const { Client, Environment, FileWrapper } = require("square");
+const sampleData = require("./sample-seed-data.json");
 const fs = require("fs");
 const readline = require("readline");
+require('dotenv').config();
 
-const defaultClient = SquareConnect.ApiClient.instance;
-// Default connect to sandbox.
-defaultClient.basePath = config.path;
-
+// We don't recommend to run this script in production environment
 // Configure OAuth2 access token for authorization: oauth2
-const oauth2 = defaultClient.authentications["oauth2"];
-oauth2.accessToken = config.squareAccessToken;
-
+const config = {
+  environment: Environment.Sandbox,
+  accessToken: process.env.SQUARE_SANDBOX_ACCESS_TOKEN
+};
 // Configure catalog API instance
-const catalogApi = new SquareConnect.CatalogApi();
+const { catalogApi } = new Client(config);
 
 /*
  * Given an object with image data and a corresponding catalogObjectId,
  * calls the createCatalogImage API and uploads the image to the corresponding catalogObjectId.
  * For more information on the createCatalogImage API, visit:
- * https://developer.squareup.com/docs/api/connect/v2#endpoint-catalog-createcatalogimage
+ * https://developer.squareup.com/reference/square/catalog-api/create-catalog-image
  * @param Object with Image information
  * @param String catalogObjectId
  */
-async function addImages(image, catalogObjectId, success) {
+const addImages = async (image, catalogObjectId, success) => {
   // Create JSON request with required image information requirements.
-  const img_req = {
-    idempotency_key: require("crypto").randomBytes(64).toString("hex"),
-    object_id: catalogObjectId,
+  const request = {
+    idempotencyKey: require("crypto").randomBytes(64).toString("hex"),
+    objectId: catalogObjectId,
     image: {
       id: image.id,
       type: "IMAGE",
-      image_data: {
+      imageData: {
         caption: image.caption,
       },
     },
   };
 
-  // Headers for REST request.
-  const headers = {
-    Accept: "application/json",
-    Authorization: "Bearer " + oauth2.accessToken,
-    "Cache-Control": "no-cache",
-    "Square-Version": "2019-06-12",
-    "Content-Disposition": "form-data; name=\"name\"; filename=\"name.jpg\"",
-    "Content-Type": "multipart/form-data",
-  };
+  const fileReadStream = fs.createReadStream(image.url);
+  const imageFile = new FileWrapper(fileReadStream, {
+    contentType: 'image/jpeg',
+  });
 
-  // Build form data since the createCatalogAPI only accepts multipart/form-data content-type.
-  // It consists of a JSON request and the image file.
-  const formData = {
-    request: JSON.stringify(img_req),
-    img_file: fs.createReadStream(image.url),
-  };
+  try {
+    const { result: { image } } = await catalogApi.createCatalogImage(request,imageFile);
+    success();
 
-  // Make the request to createCatalogImage API.
-  request.post({
-    headers: headers,
-    url: `${config.path}/v2/catalog/images`,
-    formData: formData,
-  },
-  function result(err, httpResponse, body) {
-    if (err) {
-      console.error("Image upload failed with error: ", err);
-    } else {
-      success();
-    }
+  } catch (error) {
+    console.error("Image upload failed with error: ", error);
   }
-  );
 }
 
 /*
@@ -94,21 +72,21 @@ async function addImages(image, catalogObjectId, success) {
  * and add each object to the catalog in a batch. It also calls addImages to upload
  * the corresponding image file after getting the new Square Object IDs from uploading.
  * Visit for more information:
- * https://developer.squareup.com/docs/api/connect/v2#endpoint-catalog-batchupsertcatalogobjects
+ * https://developer.squareup.com/reference/square/catalog-api/batch-upsert-catalog-objects
  */
-async function addItems() {
+const addItems = async () => {
   const batches = [{
     objects: []
   }];
   const batchUpsertCatalogRequest = {
     // Each request needs a unique idempotency key.
-    idempotency_key: require("crypto").randomBytes(64).toString("hex"),
+    idempotencyKey: require("crypto").randomBytes(64).toString("hex"),
     batches: batches,
   };
 
   // Iterate through each item in the sample-seed-data.json file.
-  for (const item in sample_data) {
-    const currentCatalogItem = sample_data[item];
+  for (const item in sampleData) {
+    const currentCatalogItem = sampleData[item];
     // Add the object data to the batch request item.
     batchUpsertCatalogRequest.batches[0].objects.push(currentCatalogItem.data);
   }
@@ -116,20 +94,20 @@ async function addItems() {
   try {
     // We call the Catalog API function batchUpsertCatalogObjects to upload all our
     // items at once.
-    const newCatalogObjects = await catalogApi.batchUpsertCatalogObjects(
+    const { result : { idMappings }} = await catalogApi.batchUpsertCatalogObjects(
       batchUpsertCatalogRequest
     );
 
     // The new catalog objects will be returned with a corresponding Square Object ID.
     // Using the new Square Object ID, we map each object with their image and upload their image.
-    newCatalogObjects.id_mappings.forEach(function (id_mapping) {
-      const client_object_id = id_mapping.client_object_id;
-      const object_id = id_mapping.object_id;
+    idMappings.forEach(function (idMapping) {
+      const clientObjectId = idMapping.clientObjectId;
+      const objectId = idMapping.objectId;
 
-      if (sample_data[client_object_id] && sample_data[client_object_id].image) {
-        const image = sample_data[client_object_id].image;
-        addImages(image, object_id, () => {
-          console.log("Successfully uploaded image for item:", client_object_id);
+      if (sampleData[clientObjectId] && sampleData[clientObjectId].image) {
+        const image = sampleData[clientObjectId].image;
+        addImages(image, objectId, () => {
+          console.log("Successfully uploaded image for item:", clientObjectId);
         });
       }
     });
@@ -140,15 +118,15 @@ async function addItems() {
 
 /*
  * Given a list of catalogObjects, returns a list of the catalog object IDs.
- * @param Object of CatalogObjects (https://developer.squareup.com/docs/api/connect/v2#endpoint-catalog-listcatalog)
+ * @param Object of CatalogObjects (https://developer.squareup.com/reference/square/catalog-api/list-catalog)
  * @returns Object with an array of Object Ids
  */
-function getCatalogObjectIds(catalogObjects) {
+function getCatalogObjectIds(objects) {
   const catalogObjectIds = {
-    object_ids: []
+    objectIds: []
   };
-  for (const key in catalogObjects.objects) {
-    catalogObjectIds["object_ids"].push(catalogObjects.objects[key].id);
+  for (const key in objects) {
+    catalogObjectIds["objectIds"].push(objects[key].id);
   }
   return catalogObjectIds;
 }
@@ -157,15 +135,15 @@ function getCatalogObjectIds(catalogObjects) {
  * Function that clears every object in the catalog.
  * WARNING: This is permanent and irreversable!
  */
-async function clearCatalog() {
+const clearCatalog = async () => {
   try {
-    const catalogObjects = await catalogApi.listCatalog({ types: "ITEM,ITEM_VARIATION,TAX,IMAGE,CATEGORY" });
-    if (catalogObjects.objects && catalogObjects.objects.length > 0) {
-      const catalogObjectIds = getCatalogObjectIds(catalogObjects);
-      const result = await catalogApi.batchDeleteCatalogObjects(
+    const { result: { objects } } = await catalogApi.listCatalog(undefined, "ITEM,ITEM_VARIATION,TAX,IMAGE,CATEGORY");
+    if (objects && objects.length > 0) {
+      const catalogObjectIds = getCatalogObjectIds(objects);
+      const { result: { deletedObjectIds } } = await catalogApi.batchDeleteCatalogObjects(
         catalogObjectIds
       );
-      console.log("Successfully deleted catalog items ", result);
+      console.log("Successfully deleted catalog items ", deletedObjectIds);
     } else {
       console.log("No items to delete from catalog");
     }

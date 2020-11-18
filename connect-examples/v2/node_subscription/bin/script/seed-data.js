@@ -16,24 +16,25 @@ limitations under the License.
 
 /* eslint no-console: 0 */
 
-const SquareConnect = require("square-connect");
-const config = require("../../config.json")["sandbox"]; // We don't recommend to run this script in production environment
+const { Client, Environment } = require("square");
+
 const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
 const { program } = require("commander");
-const sample_data = require("./sample-seed-data.json");
+const sampleData = require("./sample-seed-data.json");
+require('dotenv').config()
 
-const defaultClient = SquareConnect.ApiClient.instance;
-// Default connect to sandbox.
-defaultClient.basePath = config.path;
+// Client configuration
+const config = {
+  environment: Environment.Sandbox,
+  accessToken: process.env.SQUARE_ACCESS_TOKEN
+}
 
-// Configure OAuth2 access token for authorization: oauth2
-const oauth2 = defaultClient.authentications["oauth2"];
-oauth2.accessToken = config.squareAccessToken;
-
-// Configure customer API instance
-const catalogApi = new SquareConnect.CatalogApi();
-const customersApi = new SquareConnect.CustomersApi();
+// Configure API instances
+const {
+  catalogApi,
+  customersApi
+} = new Client(config)
 
 /**
  * Add two customers, one with card on file and one without card on file.
@@ -43,23 +44,23 @@ const customersApi = new SquareConnect.CustomersApi();
 async function addCustomers() {
   try {
     // Create first customer with card on file
-    const { customer } = await customersApi.createCustomer({
-      idempotency_key: uuidv4(),
-      given_name: "John",
-      family_name: "Doe",
-      email_address: "johndoe@square-example.com" // it is a fake email
+    const { result : { customer } } = await customersApi.createCustomer({
+      idempotencyKey: uuidv4(),
+      givenName: "John",
+      familyName: "Doe",
+      emailAddress: "johndoe@square-example.com" // it is a fake email
     });
 
     await customersApi.createCustomerCard(customer.id, {
-      card_nonce: "cnon:card-nonce-ok"
+      cardNonce: "cnon:card-nonce-ok"
     });
 
     // create second customer with no card on file
     await customersApi.createCustomer({
-      idempotency_key: uuidv4(),
-      given_name: "Amelia",
-      family_name: "Earhart",
-      email_address: "ameliae@square-example.com" // it is a fake email
+      idempotencyKey: uuidv4(),
+      givenName: "Amelia",
+      familyName: "Earhart",
+      emailAddress: "ameliae@square-example.com" // it is a fake email
     });
 
     console.log("Successfully created customers");
@@ -74,7 +75,7 @@ async function addCustomers() {
  */
 async function clearCustomers() {
   try {
-    const { customers } = await customersApi.listCustomers();
+    const { result: { customers } } = await customersApi.listCustomers();
     if (customers) {
       for (const key in customers) {
         const customer = customers[key];
@@ -100,13 +101,13 @@ async function addSubscriptionPlans() {
   }];
   const batchUpsertCatalogRequest = {
     // Each request needs a unique idempotency key.
-    idempotency_key: uuidv4(),
+    idempotencyKey: uuidv4(),
     batches: batches,
   };
 
   // Iterate through each item in the sample-seed-data.json file.
-  for (const key in sample_data) {
-    const currentCatalogItem = sample_data[key];
+  for (const key in sampleData) {
+    const currentCatalogItem = sampleData[key];
     // Add the object data to the batch request item.
     batchUpsertCatalogRequest.batches[0].objects.push(currentCatalogItem.data);
   }
@@ -133,23 +134,23 @@ async function disableSubscriptionPlans() {
   }];
   const batchUpsertCatalogRequest = {
     // Each request needs a unique idempotency key.
-    idempotency_key: uuidv4(),
+    idempotencyKey: uuidv4(),
     batches: batches,
   };
 
   try {
-    const { objects } = await catalogApi.listCatalog({ types: "SUBSCRIPTION_PLAN" });
+    const { result: { objects } } = await catalogApi.listCatalog(undefined, "SUBSCRIPTION_PLAN");
     if (objects && objects.length > 0) {
       for (const key in objects) {
         const object = objects[key];
-        // Add the object data with `present_at_all_locations: false` to the batch request item.
+        // Add the object data with `presentAtAllLocations: false` to the batch request item.
         batchUpsertCatalogRequest.batches[0].objects.push({
           id: object.id,
           type: object.type,
-          present_at_all_locations: false,
-          subscription_plan_data: {
-            name: object.subscription_plan_data.name,
-            phases: object.subscription_plan_data.phases
+          presentAtAllLocations: false,
+          subscriptionPlanData: {
+            name: object.subscriptionPlanData.name,
+            phases: object.subscriptionPlanData.phases
           },
           version: object.version
         });

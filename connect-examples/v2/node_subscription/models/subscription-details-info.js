@@ -19,7 +19,7 @@ const moment = require("moment");
 
 // Define the metadata of plan cadence so that we can calculate the dates
 // for each plan phase definition.
-const plan_cadence_metadata = {
+const planCadenceMetadata = {
   "DAILY": {
     count: 1,
     unit: "days",
@@ -88,79 +88,79 @@ const plan_cadence_metadata = {
 };
 
 /**
- * The clase that translate subscrption_plan and active_subscription informaiton
+ * The clase that translate subscriptionPlan and activeSubscription informaiton
  * into human readable messages and map the active subscription to a phase of subscription plan
  */
 class SubscriptionDetailsInfo {
-  constructor(subscription_plan, active_subscription) {
-    this.active_subscription = active_subscription;
-    this.subscription_plan = subscription_plan;
-    this.start_date = active_subscription ? moment(active_subscription.start_date) : undefined;
-    this.phase_infos = [];
+  constructor(subscriptionPlan, activeSubscription) {
+    this.activeSubscription = activeSubscription;
+    this.subscriptionPlan = subscriptionPlan;
+    this.startDate = activeSubscription ? moment(activeSubscription.startDate) : undefined;
+    this.phaseInfos = [];
     this.constructPlanPhaseInfos();
   }
 
   /**
    * Get the translated plan phase informaiton
    */
-  get plan_phase_infos() {
-    return this.phase_infos;
+  get planPhaseInfos() {
+    return this.phaseInfos;
   }
 
   /**
    * construct the translated subscription plan phase information
    */
   constructPlanPhaseInfos() {
-    for (const key in this.subscription_plan.phases) {
-      const phase = this.subscription_plan.phases[key];
-      const prev_phase_info = key > 0 ? this.phase_infos[key-1] : undefined;
-      const phase_info = {};
+    for (const key in this.subscriptionPlan.phases) {
+      const phase = this.subscriptionPlan.phases[key];
+      const prevPhaseInfo = key > 0 ? this.phaseInfos[key-1] : undefined;
+      const phaseInfo = {};
 
-      phase_info.title = phase.recurring_price_money.amount < 1 ?
+      phaseInfo.title = phase.recurringPriceMoney.amount < 1 ?
         `${this.getPeriodDescription(phase)} Free Trial`
         : `${this.getPeriodDescription(phase)} Subscription`;
-      const cur_date = moment();
+      const curDate = moment();
 
-      if (this.start_date) {
+      if (this.startDate) {
         // the subscription started for this plan
         // so that we can calculate the specific time for each phase
-        const phase_metadata = plan_cadence_metadata[phase.cadence];
-        let phase_end_date;
+        const phaseMetadata = planCadenceMetadata[phase.cadence];
+        let phaseEndDate;
         if (phase.periods) {
-          phase_end_date =  prev_phase_info ?
-            moment(prev_phase_info.end_date).add(phase_metadata.count * phase.periods, phase_metadata.unit)
-            : moment(this.start_date).add(phase_metadata.count * phase.periods, phase_metadata.unit);
+          phaseEndDate =  prevPhaseInfo ?
+            moment(prevPhaseInfo.endDate).add(phaseMetadata.count * phase.periods, phaseMetadata.unit)
+            : moment(this.startDate).add(phaseMetadata.count * phase.periods, phaseMetadata.unit);
         }
-        phase_info.end_date = phase_end_date;
+        phaseInfo.endDate = phaseEndDate;
 
         // Set the label of the phase information
-        if (cur_date.isAfter(phase_end_date)) {
-          phase_info.label = "Expired";
+        if (curDate.isAfter(phaseEndDate)) {
+          phaseInfo.label = "Expired";
         } else if (
-          !prev_phase_info
-          || (cur_date.isAfter(prev_phase_info.end_date) && cur_date.isBefore(phase.end_date))
-          || (!phase_end_date && cur_date.isAfter(prev_phase_info.end_date))
+          !prevPhaseInfo
+          || (curDate.isAfter(prevPhaseInfo.endDate) && curDate.isBefore(phase.endDate))
+          || (!phaseEndDate && curDate.isAfter(prevPhaseInfo.endDate))
         ) {
-          phase_info.label = "Current";
+          phaseInfo.label = "Current";
         } else {
-          phase_info.label = `Starts on ${prev_phase_info.end_date.format("YYYY-MM-DD")}`;
+          phaseInfo.label = `Starts on ${prevPhaseInfo.endDate.format("YYYY-MM-DD")}`;
         }
 
         // Set the subtitle of the phase information
-        const payment_desc = phase_info.label === "Current" && phase.recurring_price_money.amount >= 100 ?
-          ` - Payment due on ${this.active_subscription.paid_until_date}`
+        const paymentDesc = phaseInfo.label === "Current" && phase.recurringPriceMoney.amount >= 100 ?
+          ` - Payment due on ${this.activeSubscription.paidUntilDate}`
           : "";
 
-        phase_info.sub_title = `$${(phase.recurring_price_money.amount / 100).toFixed(2)}${payment_desc}`;
+        phaseInfo.subTitle = `$${(phase.recurringPriceMoney.amount / 100).toFixed(2)}${paymentDesc}`;
       } else {
         // The subscription plan has no active subscription
-        phase_info.label =  "Starts on subscription";
-        if (prev_phase_info) {
-          phase_info.label = `Starts after ${prev_phase_info.title}`;
+        phaseInfo.label =  "Starts on subscription";
+        if (prevPhaseInfo) {
+          phaseInfo.label = `Starts after ${prevPhaseInfo.title}`;
         }
-        phase_info.sub_title = `$${(phase.recurring_price_money.amount / 100).toFixed(2)}`;
+        phaseInfo.subTitle = `$${(phase.recurringPriceMoney.amount / 100).toFixed(2)}`;
       }
-      this.phase_infos.push(phase_info);
+      this.phaseInfos.push(phaseInfo);
     }
   }
 
@@ -170,7 +170,7 @@ class SubscriptionDetailsInfo {
    */
   getPeriodDescription(phase) {
     return phase.periods ?
-      `${phase.periods} ${plan_cadence_metadata[phase.cadence].label}${phase.periods > 1 ? "s" : "" }`
+      `${phase.periods} ${planCadenceMetadata[phase.cadence].label}${phase.periods > 1 ? "s" : "" }`
       : phase.cadence[0] + phase.cadence.slice(1).toLowerCase();
   }
 }

@@ -3,7 +3,7 @@
     "data": {
       "type": "SUBSCRIPTION_PLAN",
       "id": "#Multiphase Gym Membership",
-      "subscription_plan_data": {
+      "subscriptionPlanData": {
         "name": "Gym Membership",
         "phases": [
           {
@@ -11,7 +11,7 @@
             "id": "#Gym Membership phase1",
             "cadence": "MONTHLY",
             "periods": 1,
-            "recurring_price_money": {
+            "recurringPriceMoney": {
               "amount": 100,
               "currency": "USD"
             }
@@ -20,7 +20,7 @@
             "type": "SUBSCRIPTION_PHASE",
             "id": "#Gym Membership phase2",
             "cadence": "WEEKLY",
-            "recurring_price_money": {
+            "recurringPriceMoney": {
               "amount": 1500,
               "currency": "USD"
             }
@@ -33,7 +33,7 @@
     "data": {
       "type": "SUBSCRIPTION_PLAN",
       "id": "#Spa Service Addon",
-      "subscription_plan_data": {
+      "subscriptionPlanData": {
         "name": "Spa Service Addon",
         "phases": [
           {
@@ -41,7 +41,7 @@
             "id": "#Spa Service Addon phase1",
             "cadence": "WEEKLY",
             "periods": 2,
-            "recurring_price_money": {
+            "recurringPriceMoney": {
               "amount": 0,
               "currency": "USD"
             }
@@ -50,7 +50,7 @@
             "type": "SUBSCRIPTION_PHASE",
             "id": "#Spa Service Addon phase2",
             "cadence": "MONTHLY",
-            "recurring_price_money": {
+            "recurringPriceMoney": {
               "amount": 8000,
               "currency": "USD"
             }
@@ -63,14 +63,14 @@
     "data": {
       "type": "SUBSCRIPTION_PLAN",
       "id": "#Laundry Service Addon",
-      "subscription_plan_data": {
+      "subscriptionPlanData": {
         "name": "Laundry Service Addon",
         "phases": [
           {
             "type": "SUBSCRIPTION_PHASE",
             "id": "#Laundry Service Addon phase",
             "cadence": "WEEKLY",
-            "recurring_price_money": {
+            "recurringPriceMoney": {
               "amount": 1000,
               "currency": "USD"
             }

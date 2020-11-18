@@ -3,14 +3,14 @@
     "data": {
       "type": "TAX",
       "id": "#Sales Tax",
-      "is_deleted": false,
-      "present_at_all_locations": true,
-      "tax_data": {
+      "isDeleted": false,
+      "presentAtAllLocations": true,
+      "taxData": {
         "name": "Sales Tax",
-        "calculation_phase": "TAX_TOTAL_PHASE",
-        "inclusion_type": "ADDITIVE",
+        "calculationPhase": "TAX_TOTAL_PHASE",
+        "inclusionType": "ADDITIVE",
         "percentage": "8.5",
-        "applies_to_custom_amounts": true,
+        "appliesToCustomAmounts": true,
         "enabled": true
       }
     }
@@ -19,8 +19,8 @@
     "data": {
       "type": "CATEGORY",
       "id": "#Breakfast Category",
-      "present_at_all_locations": true,
-      "category_data": {
+      "presentAtAllLocations": true,
+      "categoryData": {
         "name": "Breakfast"
       }
     }
@@ -29,8 +29,8 @@
     "data": {
       "type": "CATEGORY",
       "id": "#Entree Category",
-      "present_at_all_locations": true,
-      "category_data": {
+      "presentAtAllLocations": true,
+      "categoryData": {
         "name": "Entree"
       }
     }
@@ -44,27 +44,27 @@
     "data": {
       "type": "ITEM",
       "id": "#Bacon Cheeseburger",
-      "present_at_all_locations": true,
-      "item_data": {
+      "presentAtAllLocations": true,
+      "itemData": {
         "name": "Bacon Cheeseburger",
         "description": "One mouth-watering, flame-grilled, quarter-pound angus beef burger with your choice of cheese on a sesame seed bun. Comes with a side of fries.",
-        "category_id": "#Entree Category",
+        "categoryId": "#Entree Category",
         "variations": [{
           "type": "ITEM_VARIATION",
           "id": "#Regular Bacon Cheeseburger",
-          "is_deleted": false,
-          "present_at_all_locations": true,
-          "item_variation_data": {
-            "item_id": "#Bacon Cheeseburger",
+          "isDeleted": false,
+          "presentAtAllLocations": true,
+          "itemVariationData": {
+            "itemId": "#Bacon Cheeseburger",
             "name": "Regular",
-            "pricing_type": "FIXED_PRICING",
-            "price_money": {
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
               "amount": 995,
               "currency": "USD"
             }
           }
         }],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -79,27 +79,27 @@
     "data": {
       "type": "ITEM",
       "id": "#Fried Chicken Sandwich",
-      "item_data": {
+      "itemData": {
         "name": "Fried Chicken Sandwich",
         "description": "A buttermilk fried chicken thigh with crispy skin on a sesame seed bun. Topped with fresh red cabbage slaw and jalapeños and our house hot sauce.",
         "abbreviation": "FCS",
-        "category_id": "#Entree Category",
+        "categoryId": "#Entree Category",
         "variations": [{
           "type": "ITEM_VARIATION",
           "id": "#Regular Fried Chicken Sandwich",
-          "is_deleted": false,
-          "present_at_all_locations": true,
-          "item_variation_data": {
-            "item_id": "#Fried Chicken Sandwich",
+          "isDeleted": false,
+          "presentAtAllLocations": true,
+          "itemVariationData": {
+            "itemId": "#Fried Chicken Sandwich",
             "name": "Regular",
-            "pricing_type": "FIXED_PRICING",
-            "price_money": {
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
               "amount": 675,
               "currency": "USD"
             }
           }
         }],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -114,29 +114,29 @@
     "data": {
       "type": "ITEM",
       "id": "#Sunny-Side Egg on Toast",
-      "item_data": {
+      "itemData": {
         "name": "Sunny-Side Egg on Toast",
         "description": "One farm-fresh sunny side up egg, tomato, and green peppers on a slice of our toast fresh from our bakehouse.",
         "abbreviation": "ET",
-        "category_id": "#Breakfast Category",
+        "categoryId": "#Breakfast Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
             "id": "#Regular Sunny-Side Egg on Toast",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Sunny-Side Egg on Toast",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Sunny-Side Egg on Toast",
               "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
                 "amount": 495,
                 "currency": "USD"
               }
             }
           }
         ],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -151,29 +151,29 @@
     "data": {
       "type": "ITEM",
       "id": "#Grilled Steak",
-      "item_data": {
+      "itemData": {
         "name": "Grilled Steak",
         "description": "Perfectly grilled flank steak that's been marinated in our award winning sauce, paired with fresh-from-the-farm veggies.",
         "abbreviation": "BRF",
-        "category_id": "#Entree Category",
+        "categoryId": "#Entree Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
             "id": "#Regular Grilled Steak",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Grilled Steak",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Grilled Steak",
               "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
                 "amount": 1195,
                 "currency": "USD"
               }
             }
           }
         ],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -188,27 +188,27 @@
     "data": {
       "type": "ITEM",
       "id": "#Italian Sandwich",
-      "item_data": {
+      "itemData": {
         "name": "Italian Sandwich",
         "description": "Salami, capicolla, ham, provolone, fresh lettuce, peppers, onion, and olive oil served on our homemade sourdough. What more could you want in a sandwich?",
         "abbreviation": "IS",
-        "category_id": "#Entree Category",
+        "categoryId": "#Entree Category",
         "variations": [{
           "type": "ITEM_VARIATION",
           "id": "#Regular Italian Sandwich",
-          "is_deleted": false,
-          "present_at_all_locations": true,
-          "item_variation_data": {
-            "item_id": "#Italian Sandwich",
+          "isDeleted": false,
+          "presentAtAllLocations": true,
+          "itemVariationData": {
+            "itemId": "#Italian Sandwich",
             "name": "Regular",
-            "pricing_type": "FIXED_PRICING",
-            "price_money": {
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
               "amount": 895,
               "currency": "USD"
             }
           }
         }],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -223,29 +223,29 @@
     "data": {
       "type": "ITEM",
       "id": "#Meatballs",
-      "item_data": {
+      "itemData": {
         "name": "Meatballs",
         "description": "Lean grilled lamb meatballs served with fresh greens. Perfect for those on a ketogenic diet.",
         "abbreviation": "MB",
-        "category_id": "#Entree Category",
+        "categoryId": "#Entree Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
             "id": "#Regular Meatballs",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Meatballs",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Meatballs",
               "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
                 "amount": 695,
                 "currency": "USD"
               }
             }
           }
         ],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -260,27 +260,27 @@
     "data": {
       "type": "ITEM",
       "id": "#Mediterranean Yogurt Bowl",
-      "item_data": {
+      "itemData": {
         "name": "Mediterranean Yogurt Bowl",
         "description": "Greek yogurt topped with olives, chopped peppers, cucumber, crispy chickpeas, beans, and figs. Served with our fresh homemade pita.",
         "abbreviation": "MYB",
-        "category_id": "#Entree Category",
+        "categoryId": "#Entree Category",
         "variations": [{
           "type": "ITEM_VARIATION",
           "id": "#Regular Mediterranean Yogurt Bowl",
-          "is_deleted": false,
-          "present_at_all_locations": true,
-          "item_variation_data": {
-            "item_id": "#Mediterranean Yogurt Bowl",
+          "isDeleted": false,
+          "presentAtAllLocations": true,
+          "itemVariationData": {
+            "itemId": "#Mediterranean Yogurt Bowl",
             "name": "Regular",
-            "pricing_type": "FIXED_PRICING",
-            "price_money": {
+            "pricingType": "FIXED_PRICING",
+            "priceMoney": {
               "amount": 495,
               "currency": "USD"
             }
           }
         }],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -295,29 +295,29 @@
     "data": {
       "type": "ITEM",
       "id": "#Oatmeal with Fruit",
-      "item_data": {
+      "itemData": {
         "name": "Oatmeal with Fruit",
         "description": "A classic hot breakfast comprised of our famous steel-cut oats topped with fruit and almond slices straight from locally owned farms.",
         "abbreviation": "SB",
-        "category_id": "#Breakfast Category",
+        "categoryId": "#Breakfast Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
             "id": "#Regular Oatmeal with Fruit",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Oatmeal with Fruit",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Oatmeal with Fruit",
               "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
                 "amount": 495,
                 "currency": "USD"
               }
             }
           }
         ],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -332,29 +332,29 @@
     "data": {
       "type": "ITEM",
       "id": "#Pancakes with Fruit",
-      "item_data": {
+      "itemData": {
         "name": "Pancakes with Fruit",
         "description": "The fluffiest, most perfectly golden pancakes you've ever had topped with fresh fruit from local farms. Real Canadian maple syrup served on the side.",
         "abbreviation": "PF",
-        "category_id": "#Breakfast Category",
+        "categoryId": "#Breakfast Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
             "id": "#Regular Pancakes with Fruit",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Pancakes with Fruit",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Pancakes with Fruit",
               "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
                 "amount": 995,
                 "currency": "USD"
               }
             }
           }
         ],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -369,29 +369,29 @@
     "data": {
       "type": "ITEM",
       "id": "#Salmon with Zucchini",
-      "item_data": {
+      "itemData": {
         "name": "Salmon with Zucchini",
         "description": "Fresh caught Alaskan king salmon served on a bed of braised spinach and diced zucchini.",
         "abbreviation": "SZ",
-        "category_id": "#Entree Category",
+        "categoryId": "#Entree Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
             "id": "#Regular Salmon with Zucchini",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Salmon with Zucchini",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Salmon with Zucchini",
               "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
                 "amount": 1495,
                 "currency": "USD"
               }
             }
           }
         ],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -406,29 +406,29 @@
     "data": {
       "type": "ITEM",
       "id": "#Steak Tacos",
-      "item_data": {
+      "itemData": {
         "name": "Steak Tacos",
         "description": "Two tacos with flank steak marinated for a minimum of 24 hours in our award-winning marinade. Topped with a mix of fresh cilantro and cooling cucumber.",
         "abbreviation": "ST",
-        "category_id": "#Entree Category",
+        "categoryId": "#Entree Category",
         "variations": [
           {
             "type": "ITEM_VARIATION",
             "id": "#Regular Steak Tacos",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Steak Tacos",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Steak Tacos",
               "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
                 "amount": 695,
                 "currency": "USD"
               }
             }
           }
         ],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }
@@ -443,7 +443,7 @@
     "data": {
       "type": "ITEM",
       "id": "#Autumn Soup",
-      "item_data": {
+      "itemData": {
         "name": "Autumn Soup",
         "description": "The smoothest butternut squash soup you've ever had served with locally made goat cheese and toasted nuts.",
         "abbreviation": "AS",
@@ -451,20 +451,20 @@
           {
             "type": "ITEM_VARIATION",
             "id": "#Regular Autumn Soup",
-            "is_deleted": false,
-            "present_at_all_locations": true,
-            "item_variation_data": {
-              "item_id": "#Autumn Soup",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Autumn Soup",
               "name": "Regular",
-              "pricing_type": "FIXED_PRICING",
-              "price_money": {
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
                 "amount": 695,
                 "currency": "USD"
               }
             }
           }
         ],
-        "tax_ids": [
+        "taxIds": [
           "#Sales Tax"
         ]
       }

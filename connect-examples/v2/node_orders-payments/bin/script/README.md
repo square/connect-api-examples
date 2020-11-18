@@ -41,7 +41,7 @@ There is also an image part of the JSON item. This item has a url, image id, and
 ```
 
 #### Data
-The last part of the item is the data portion. This data includes pricing, variations, description, and more. We need this information in order to create a catalog item. Please see [documentation for CatalogObject](https://developer.squareup.com/docs/api/connect/v2#type-catalogobject) for more information.
+The last part of the item is the data portion. This data includes pricing, variations, description, and more. We need this information in order to create a catalog item. Please see [documentation for CatalogObject](https://developer.squareup.com/reference/square/objects/CatalogObject) for more information.
 ```
 "data": {
     "type": "ITEM",

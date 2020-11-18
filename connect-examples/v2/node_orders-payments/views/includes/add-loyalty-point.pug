@@ -27,12 +27,12 @@ scripts
         }
 div(class="panel clearfix")
     h4(class="panel-title") Check in to earn points
-    p Add your loyalty account number to collect #{loyalty_accumulate_info.eligible_point} points.
+    p Add your loyalty account number to collect #{loyaltyAccumulateInfo.eligiblePoint} points.
     form(id="add-loyalty-point" action='/order-confirmation/add-loyalty-point', method='post')
         div(class="panel-field")
-            input(class="panel-input", name="phone_number",type="tel", placeholder="Phone Number(10 digits): 0000000000", pattern="[0-9]{3}[0-9]{3}[0-9]{4}" autocomplete="tel", required)
-        input(name='order_id', type='hidden', value=order_info.orderId)
-        input(name='location_id', type='hidden', value=order_info.locationId)
-        input(name='idempotency_key', type='hidden', value=idempotency_key)
+            input(class="panel-input", name="phoneNumber",type="tel", placeholder="Phone Number(10 digits): 0000000000", pattern="[0-9]{3}[0-9]{3}[0-9]{4}" autocomplete="tel", required)
+        input(name='orderId', type='hidden', value=orderInfo.orderId)
+        input(name='locationId', type='hidden', value=orderInfo.locationId)
+        input(name='idempotencyKey', type='hidden', value=idempotencyKey)
     div(class="panel-field")
         button(class="form-button" type="button" onclick="validateAndSubmit()") Check in

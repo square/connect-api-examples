@@ -18,9 +18,9 @@ const express = require("express");
 const managementRoute = require("./management");
 const invoiceRoute = require("./invoice");
 const {
-  customerApi,
-  locationApi,
-} = require("../util/square-connect-client");
+  customersApi,
+  locationsApi,
+} = require("../util/square-client");
 
 const router = express.Router();
 
@@ -44,11 +44,11 @@ router.get("/", async (req, res, next) => {
 
   try {
     // Retrieve the main location which is the very first location merchant has
-    const { location } = await locationApi.retrieveLocation("main");
+    const { result: { location } } = await locationsApi.retrieveLocation("main");
     // Retrieves customers for this current merchant
-    let { customers } = await customerApi.listCustomers();
+    let { result: { customers } } = await customersApi.listCustomers();
     // Invoices should work with the customers that have an email.
-    customers = customers ? customers.filter(customer => customer.email_address) : [];
+    customers = customers ? customers.filter(customer => customer.emailAddress) : [];
 
     if (customers.length === 0) {
       // throw error to remind the possible issue
@@ -57,8 +57,8 @@ router.get("/", async (req, res, next) => {
 
     // Render the customer list homepage
     res.render("index", {
-      location_id: location.id, // use the main location as the default
       customers,
+      locationId: location.id, // use the main location as the default
     });
   } catch (error) {
     next(error);

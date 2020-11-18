@@ -18,9 +18,9 @@ const express = require("express");
 const { randomBytes } = require("crypto");
 const {
   catalogApi,
-  locationApi,
-  orderApi,
-} = require("../util/square-connect-client");
+  locationsApi,
+  ordersApi,
+} = require("../util/square-client");
 
 const router = express.Router();
 const CatalogList = require("../models/catalog-list");
@@ -45,21 +45,17 @@ router.use("/order-confirmation", require("./order-confirmation"));
  */
 router.get("/", async (req, res, next) => {
   // Set to retrieve ITEM and IMAGE CatalogObjects
-  const opt = {
-    types: "ITEM,IMAGE", // To retrieve TAX or CATEGORY objects add them to types
-  };
+  const types = "ITEM,IMAGE"; // To retrieve TAX or CATEGORY objects add them to types
 
   try {
     // Retrieves locations in order to display the store name
-    const {
-      locations
-    } = await locationApi.listLocations();
+    const { result: { locations } } = await locationsApi.listLocations();
     // Get CatalogItem and CatalogImage object
-    const catalogList = await catalogApi.listCatalog(opt);
+    const { result: { objects } } = await catalogApi.listCatalog(undefined, types);
     // Renders index view, with catalog and location information
     res.render("index", {
-      items: new CatalogList(catalogList).items,
-      location_info: new LocationInfo(locations[0]), // take the first location for the sake of simplicity.
+      items: new CatalogList(objects).items,
+      locationInfo: new LocationInfo(locations[0]), // take the first location for the sake of simplicity.
     });
   } catch (error) {
     next(error);
@@ -77,44 +73,43 @@ router.get("/", async (req, res, next) => {
  *  items to create an order and then proceed with the checkout process.
  *
  * Request Body:
- *  item_var_id: Id of the CatalogItem which will be purchased
- *  item_quantity: Quantility of the item
- *  location_id: The Id of the location
+ *  itemVarId: Id of the CatalogItem which will be purchased
+ *  itemQuantity: Quantility of the item
+ *  locationId: The Id of the location
  */
 router.post("/create-order", async (req, res, next) => {
   const {
-    item_var_id,
-    item_id,
-    item_quantity,
-    location_id
+    itemVarId,
+    itemId,
+    itemQuantity,
+    locationId
   } = req.body;
   try {
     const orderRequestBody = {
-      idempotency_key: randomBytes(45).toString("hex"), // Unique identifier for request
+      idempotencyKey: randomBytes(45).toString("hex"), // Unique identifier for request
       order: {
-        line_items: [{
-          quantity: item_quantity,
-          catalog_object_id: item_var_id // Id for CatalogItem object
+        locationId,
+        lineItems: [{
+          quantity: itemQuantity,
+          catalogObjectId: itemVarId // Id for CatalogItem object
         }]
       }
     };
     // Apply the taxes that's related to this catalog item.
     // Order API doesn't calculate the tax automatically even if you have apply the tax to the catalog item
     // You must add the tax yourself when create order.
-    const catalogItem = await catalogApi.retrieveCatalogObject(item_id);
-    if (!!catalogItem.object.item_data.tax_ids && catalogItem.object.item_data.tax_ids.length > 0) {
+    const { result: { object } } = await catalogApi.retrieveCatalogObject(itemId);
+    if (!!object.itemData.taxIds && object.itemData.taxIds.length > 0) {
       orderRequestBody.order.taxes = [];
-      for (let i = 0; i < catalogItem.object.item_data.tax_ids.length; i++) {
+      for (let i = 0; i < object.itemData.taxIds.length; i++) {
         orderRequestBody.order.taxes.push({
-          catalog_object_id: catalogItem.object.item_data.tax_ids[i],
+          catalogObjectId: object.itemData.taxIds[i],
           scope: "ORDER",
         });
       }
     }
-    const {
-      order
-    } = await orderApi.createOrder(location_id, orderRequestBody);
-    res.redirect(`/checkout/choose-delivery-pickup?order_id=${order.id}&location_id=${location_id}`);
+    const { result: { order } } = await ordersApi.createOrder(orderRequestBody);
+    res.redirect(`/checkout/choose-delivery-pickup?orderId=${order.id}&locationId=${locationId}`);
   } catch (error) {
     next(error);
   }

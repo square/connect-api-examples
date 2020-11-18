@@ -28,10 +28,10 @@ scripts
 h4(class="panel-title") Redeem rewards
 form(id="add-loyalty-account" action='/checkout/add-loyalty-account', method='post')
     div(class="panel-field")
-        input(class="panel-input", name="phone_number",type="tel", placeholder="Phone Number(10 digits): 0000000000", pattern="[0-9]{3}[0-9]{3}[0-9]{4}" autocomplete="tel", required)
-        if (loyalty_reward_info.account_not_found)
+        input(class="panel-input", name="phoneNumber",type="tel", placeholder="Phone Number(10 digits): 0000000000", pattern="[0-9]{3}[0-9]{3}[0-9]{4}" autocomplete="tel", required)
+        if (loyaltyRewardInfo.accountNotFound)
             p(class="error-message") Can not find your account. Try another number?
-    input(name='order_id', type='hidden', value=order_info.orderId)
-    input(name='location_id', type='hidden', value=order_info.locationId)
+    input(name='orderId', type='hidden', value=orderInfo.orderId)
+    input(name='locationId', type='hidden', value=orderInfo.locationId)
 div(class="panel-field")
     button(class="reward-button" type="button" onclick="validateAndSubmit()") Check in with phone number

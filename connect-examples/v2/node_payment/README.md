@@ -7,9 +7,8 @@ There are two sections in this ReadMe.
 
 ## Setup
 
-* Open `config.json` and fill in values for squareApplicationId & squareAccessToken & squareLocationId
-with both your sandbox and production credentials.
-<b>WARNING</b>: never upload `config.json` with your credentials/access_token.
+* Create a `.env` file in the root directory of this example, `.env.example` is an example of what your `.env` file should look like. Fill in values for SQUARE_APPLICATION_ID & SQUARE_ACCESS_TOKEN & SQUARE_LOCATION_ID with your sandbox or production credentials.
+<b>WARNING</b>: never save your credentials in your code.
 
 * Ensure you have npm installed (`npm -v` in your terminal). If not please follow the instructions for your OS: https://www.npmjs.com/get-npm
 
@@ -91,33 +90,37 @@ All the remaining actions take place in the **routes/index.js**.  This server-si
 ```javascript
 ...
 router.post('/process-payment', async (req, res) => {
-  const request_params = req.body;
+  const { nonce } = req.body;
 
   // length of idempotency_key should be less than 46
-  const idempotency_key = crypto.randomBytes(23).toString('hex');
+  const idempotencyKey = crypto.randomBytes(22).toString('hex');
 
   // Charge the customer's card
-  const payments_api = new squareConnect.PaymentsApi();
-  const request_body = {
-    source_id: request_params.nonce,
-    amount_money: {
+  const requestBody = {
+    idempotencyKey,
+    sourceId: nonce,
+    amountMoney: {
       amount: 100, // $1.00 charge
       currency: 'USD'
-    },
-    idempotency_key: idempotency_key
+    }
   };
 
   try {
-    const response = await payments_api.createPayment(request_body);
-    const json = JSON.stringify(response);
+    const { result: { payment } } = await paymentsApi.createPayment(requestBody);
+    const result = JSON.stringify(payment, null, 4);
+
     res.render('process-payment', {
-      'title': 'Payment Successful',
-      'result': json
+      result,
+      'title': 'Payment Successful'
     });
   } catch (error) {
+    let result = JSON.stringify(error, null, 4);
+    if (error.errors) {
+      result = JSON.stringify(error.errors, null, 4);
+    }
     res.render('process-payment', {
-      'title': 'Payment Failure',
-      'result': error.response.text
+      result,
+      'title': 'Payment Failure'
     });
   }
 });

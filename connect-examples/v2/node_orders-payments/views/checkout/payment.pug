@@ -19,11 +19,11 @@ block append styles
 block append scripts
     - let productionUrl = "https://js.squareup.com/v2/paymentform";
     - let sandBoxUrl = "https://js.squareupsandbox.com/v2/paymentform";
-    - let paymentFormSrc = process.env.NODE_ENV === "sandbox" ? sandBoxUrl :productionUrl;
+    - let paymentFormSrc = process.env.NODE_ENV === "sandbox" ? sandBoxUrl : productionUrl;
     script(type="text/javascript" src=paymentFormSrc)
     script(type="text/javascript").
-        window.applicationId= "#{application_id}";
-        window.locationId= "#{location_info.id}";
+        window.applicationId= "#{applicationId}";
+        window.locationId= "#{locationInfo.id}";
     script(type="text/javascript" src="/js/sq-payment-form.js")
 block content
         h1(class="page-title") Review &amp; Complete Your Order
@@ -46,16 +46,16 @@ block content
                                 label(class="sq-label") Zip Code
                                 div(id="sq-postal-code")
                         div(id="error")
-                input(name='order_id', type='hidden', value=order_info.orderId)
-                input(name='location_id', type='hidden', value=order_info.locationId)
-                input(name='idempotency_key', type='hidden', value=idempotency_key)
+                input(name='orderId', type='hidden', value=orderInfo.orderId)
+                input(name='locationId', type='hidden', value=orderInfo.locationId)
+                input(name='idempotencyKey', type='hidden', value=idempotencyKey)
                 input(name="nonce" type="hidden" id="card-nonce")
             div(class="order-summary")
                 include ../includes/order-summary.pug
-                if order_info.isPickup
+                if orderInfo.isPickup
                     include ../includes/pickup-details.pug
                 else
                     include ../includes/delivery-details.pug
-                if (loyalty_reward_info.show_reward_option)
+                if (loyaltyRewardInfo.showRewardOption)
                     include ../includes/loyalty-panel.pug
                 button(id="sq-creditcard" class="form-button" type="button" onclick="onGetCardNonce(event)") Pay with Card

@@ -37,13 +37,13 @@ class LocationInfo {
 
   // Returns the store name stored in the locationObj
   get storeName() {
-    return this.locationObj.business_name || this.locationObj.name;
+    return this.locationObj.businessName || this.locationObj.name;
   }
 
   // Returns Address Line 1
   get addressLine() {
     const { address } = this.locationObj;
-    return address ? address.address_line_1 : "";
+    return address ? address.addressLine1 : "";
   }
 
   // Returns formatted city, state, and zip code as one string
@@ -51,10 +51,10 @@ class LocationInfo {
     if (this.locationObj.address) {
       const {
         locality,
-        administrative_district_level_1,
-        postal_code,
+        administrativeDistrictLevel1,
+        postalCode,
       } = this.locationObj.address;
-      return `${locality}, ${administrative_district_level_1}, ${postal_code}`;
+      return `${locality}, ${administrativeDistrictLevel1}, ${postalCode}`;
     } else {
       return "";
     }

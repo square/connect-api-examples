@@ -10,10 +10,11 @@
     "body-parser": "*",
     "cookie-parser": "*",
     "debug": "*",
+    "dotenv": "^8.2.0",
     "express": "*",
-    "pug": "*",
     "morgan": "*",
+    "pug": "*",
     "serve-favicon": "*",
-    "square-connect": "2.20190814.0"
+    "square": "7.0.0"
   }
 }

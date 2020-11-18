@@ -21,7 +21,7 @@ const subscriptionRoute = require("./subscription");
 const {
   customersApi,
   locationsApi,
-} = require("../util/square-connect-client");
+} = require("../util/square-client");
 
 const router = express.Router();
 
@@ -39,17 +39,17 @@ router.use("/subscription", subscriptionRoute);
  * Matches: GET /
  *
  * Description:
- *  Retrieves list of customers then render the homepage with a list of the customers that has an email.
+ * Retrieves list of customers then render the homepage with a list of the customers that has an email.
  */
 router.get("/", async (req, res, next) => {
 
   try {
     // Retrieve the main location which is the very first location merchant has
-    const { location } = await locationsApi.retrieveLocation("main");
+    const { result : { location } } = await locationsApi.retrieveLocation("main");
     // Retrieves customers for this current merchant
-    let { customers } = await customersApi.listCustomers();
+    let { result: { customers } } = await customersApi.listCustomers();
     // Subscriptions API should work with the customers that have an email.
-    customers = customers ? customers.filter(customer => customer.email_address) : [];
+    customers = customers ? customers.filter(customer => customer.emailAddress) : [];
 
     if (customers.length === 0) {
       // throw error to remind the possible issue
@@ -58,7 +58,7 @@ router.get("/", async (req, res, next) => {
 
     // Render the customer list homepage
     res.render("index", {
-      location_id: location.id, // use the main location as the default
+      locationId: location.id, // use the main location as the default
       customers,
     });
   } catch (error) {

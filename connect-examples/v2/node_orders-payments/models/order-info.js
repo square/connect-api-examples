@@ -24,7 +24,7 @@ limitations under the License.
 class OrderInfo {
   constructor(order) {
     this.order = order;
-    this.date_format = {
+    this.dateFormat = {
       weekday: "long",
       month: "long",
       day: "numeric",
@@ -32,18 +32,18 @@ class OrderInfo {
       minute: "2-digit",
     };
     // populate line Items
-    this.line_items = order.line_items.map((line_item) => ({
-      name: line_item.name,
-      quantity: line_item.quantity,
-      gross_sales_money: this.getDecimalAmount(line_item.gross_sales_money.amount),
-      catalog_object_id: line_item.catalog_object_id,
+    this._lineItems = order.lineItems.map((lineItem) => ({
+      name: lineItem.name,
+      quantity: lineItem.quantity,
+      grossSalesMoney: this.getDecimalAmount(lineItem.grossSalesMoney.amount),
+      catalogObjectId: lineItem.catalogObjectId,
     }));
 
-    this.order_discounts = [];
+    this.orderDiscounts = [];
     if (order.discounts) {
-      this.order_discounts = order.discounts.map((discount) => ({
+      this.orderDiscounts = order.discounts.map((discount) => ({
         name: discount.name,
-        applied_discount_money: this.getDecimalAmount(discount.applied_money.amount)
+        appliedDiscountMoney: this.getDecimalAmount(discount.appliedMoney.amount)
       }));
     }
   }
@@ -58,21 +58,21 @@ class OrderInfo {
   // Returns the recipient's name
   get recipientName() {
     return this.isPickup ?
-      this.order.fulfillments[0].pickup_details.recipient.display_name :
-      this.order.fulfillments[0].shipment_details.recipient.display_name;
+      this.order.fulfillments[0].pickupDetails.recipient.displayName :
+      this.order.fulfillments[0].shipmentDetails.recipient.displayName;
   }
   // Returns the expected pickup time of the order.
   get pickupTime() {
     const pickupDate = new Date(
-      this.order.fulfillments[0].pickup_details.pickup_at
-    ).toLocaleDateString("en-US", this.date_format);
+      this.order.fulfillments[0].pickupDetails.pickupAt
+    ).toLocaleDateString("en-US", this.dateFormat);
     return pickupDate;
   }
   // Returns the expected delivery time of the order.
   get deliveryTime() {
     const deliveryTime = new Date(
-      this.order.fulfillments[0].shipment_details.expected_shipped_at
-    ).toLocaleDateString("en-US", this.date_format);
+      this.order.fulfillments[0].shipmentDetails.expectedShippedAt
+    ).toLocaleDateString("en-US", this.dateFormat);
     return deliveryTime;
   }
   // Returns true if fulfillments info exist
@@ -81,31 +81,31 @@ class OrderInfo {
   }
   // Returns the line items ordered in the order
   get lineItems() {
-    return this.line_items;
+    return this._lineItems;
   }
   // Returns location Id
   get locationId() {
-    return this.order.location_id;
+    return this.order.locationId;
   }
   // Returns creation date
   get createdAt() {
-    return this.order.created_at;
+    return this.order.createdAt;
   }
   // Returns discounts
   get discounts() {
-    return this.order_discounts;
+    return this.orderDiscounts;
   }
   // Returns discount in order
   get totalDiscountMoney() {
-    return this.getDecimalAmount(this.order.total_discount_money.amount);
+    return this.getDecimalAmount(this.order.totalDiscountMoney.amount);
   }
   // Returns service fee in order
   get totalServiceChargeMoney() {
-    return this.getDecimalAmount(this.order.total_service_charge_money.amount);
+    return this.getDecimalAmount(this.order.totalServiceChargeMoney.amount);
   }
   // Returns tax in order
   get totalTaxMoney() {
-    return this.getDecimalAmount(this.order.total_tax_money.amount);
+    return this.getDecimalAmount(this.order.totalTaxMoney.amount);
   }
   // The subtotal money before tax applied
   get preTaxTotalMoney() {
@@ -113,7 +113,7 @@ class OrderInfo {
   }
   // Returns money spent in order
   get totalMoney() {
-    return this.getDecimalAmount(this.order.total_money.amount);
+    return this.getDecimalAmount(this.order.totalMoney.amount);
   }
   // Returns fulfillment status
   get fulfillmentState() {
@@ -121,21 +121,21 @@ class OrderInfo {
   }
   // Returns delivery street address
   get deliveryAddress() {
-    return this.order.fulfillments[0].shipment_details.recipient.address
-      .address_line_1;
+    return this.order.fulfillments[0].shipmentDetails.recipient.address
+      .addressLine1;
   }
   // Returns delivery city, state, postal code as one line string
   get deliveryCityAndPostalCode() {
-    const address = this.order.fulfillments[0].shipment_details.recipient
+    const address = this.order.fulfillments[0].shipmentDetails.recipient
       .address;
-    return `${address.locality}, ${address.administrative_district_level_1}, ${address.postal_code}`;
+    return `${address.locality}, ${address.administrativeDistrictLevel1}, ${address.postalCode}`;
   }
   // Returns the payment card details of this order
   get card() {
     // In this example, there is only one tender for each order
     // so we can always assume the first tender will be the payment card details
     return this.order.tenders && this.order.tenders.length > 0 ?
-      this.order.tenders[0].card_details.card : null;
+      this.order.tenders[0].cardDetails.card : null;
   }
   // Returns the rewards applied to this order
   get rewards() {
