@@ -29,11 +29,12 @@ npm install
 1. In the **Sandbox Application ID** box, copy the application ID.
 1. In the **Sandbox Application Secret** box, choose **Show**, and then copy the application secret.
 1. Click **Save**.
-1. Navigate to the `config.json` file in your project directory and replace the `YOUR_SANDBOX_APPLICATION_ID` and `YOUR_SANDBOX_APPLICATION_SECRET` placeholders with the Sandbox application ID and Sandbox application secret, respectively. 
+1. In your project directory, create a copy of the `.env.example` file and name it `.env`
+1. In the newly created .env file, replace the `YOUR_SANDBOX_APPLICATION_ID` and `YOUR_SANDBOX_APPLICATION_SECRET` placeholders with the Sandbox application ID and Sandbox application secret, respectively.
 
     Note that OAuth Sandbox credentials begin with a sandbox prefix and that the base URL for calling Sandbox endpoints is https://connect.squareupsandbox.com. When you implement for production, you need production credentials and use https://connect.squareup.com as the base URL.
 
-    **WARNING**: never upload config.json with your credentials/access_token.
+   **WARNING**: Never check your credentials/access_token into your version control system. We've added `.env` to the `.gitignore` file to help prevent uploading confidential information.
 
 ### Step 3: Running the example
 

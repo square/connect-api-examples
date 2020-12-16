@@ -20,7 +20,7 @@
     "pug": "*",
     "request": "^2.88.0",
     "serve-favicon": "*",
-    "square": "7.0.0"
+    "square": "^8.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.0"
