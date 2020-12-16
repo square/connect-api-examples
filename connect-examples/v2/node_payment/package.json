@@ -15,6 +15,6 @@
     "morgan": "*",
     "pug": "*",
     "serve-favicon": "*",
-    "square": "7.0.0"
+    "square": "^8.0.0"
   }
 }
