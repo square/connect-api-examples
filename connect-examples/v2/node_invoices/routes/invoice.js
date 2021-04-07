@@ -103,7 +103,7 @@ router.post("/create", async (req, res, next) => {
           quantity: "1",
           basePriceMoney: {
             amount: parseInt(priceAmount),
-            currency: "CAD",
+            currency: "USD",
           }
         }]
       },
@@ -171,7 +171,7 @@ router.post("/create", async (req, res, next) => {
         paymentRequests: [
           paymentRequest
         ]
-      },
+      }
     };
 
     console.log(requestBody);
