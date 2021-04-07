@@ -69,7 +69,7 @@ with card on file. Run the script, wait for 30 seconds and refresh the page:
 
 This Express.js project is organized as follows:
 
-*   **config.json.** You provide credentials in this file.
+*   **.env.** You provide credentials in this file.
 *   **/public.** These are the CSS files used to render the home page 
 *   **/routes.** The following JavaScript files define the routes to handle requests:
     * **index.js.** Provides routes to handle all the requests for the initial page, which shows a list of customers.
@@ -148,7 +148,7 @@ Regardless of whether a customer has a card on file, the creation of the invoice
 Wait until the configured `schedule_at` time (10 minutes after the invoice is created) and view the invoice. You see that the invoice status changed from SCHEDULED to UNPAID. When the `due_date` arrives (set to 7 days after the invoice is created), depending on whether the customer has a card on file, Square charges the card on the due date or the customer is responsible to pay for the invoice within the due date (wait 10 minutes and then refresh the invoice page to see the URL to the Square-hosted invoice page that you can use to pay). The invoice status then changes to PAID. 
 
 # License
-Copyright 2020 Square, Inc.
+Copyright 2021 Square, Inc.
 ​
 ```
 Licensed under the Apache License, Version 2.0 (the "License");

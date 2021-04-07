@@ -103,7 +103,7 @@ router.post("/create", async (req, res, next) => {
           quantity: "1",
           basePriceMoney: {
             amount: parseInt(priceAmount),
-            currency: "USD",
+            currency: "CAD",
           }
         }]
       },
@@ -132,11 +132,11 @@ router.post("/create", async (req, res, next) => {
     let paymentRequest = null;
     if (customer.cards && customer.cards.length > 0) {
       // the current customer has a card on file
-      // creating invoice with the payment request method CHARGE_CARD_ON_FILE
+      // creating invoice with the payment request method CARD_ON_FILE
       // the invoice will be charged with the card on file on the due date
       paymentRequest = {
         requestType: "BALANCE",
-        requestMethod: "CHARGE_CARD_ON_FILE",
+        automaticPaymentSource: "CARD_ON_FILE",
         dueDate: dueDateString,
         cardId: customer.cards[0].id // Take the first card
       };
@@ -146,7 +146,7 @@ router.post("/create", async (req, res, next) => {
       // the invoice will be sent and paid by customer
       paymentRequest = {
         requestType: "BALANCE",
-        requestMethod: "EMAIL",
+        automaticPaymentSource: "NONE",
         dueDate: dueDateString,
         reminders: [
           {
@@ -160,6 +160,7 @@ router.post("/create", async (req, res, next) => {
     const requestBody = {
       idempotencyKey,
       invoice: {
+        deliveryMethod: "EMAIL",
         orderId: order.id,
         locationId: locationId,
         title: name,
@@ -170,8 +171,10 @@ router.post("/create", async (req, res, next) => {
         paymentRequests: [
           paymentRequest
         ]
-      }
+      },
     };
+
+    console.log(requestBody);
     const { result : { invoice }} = await invoicesApi.createInvoice(requestBody);
 
     res.redirect(`view/${locationId}/${customerId}/${invoice.id}`);
