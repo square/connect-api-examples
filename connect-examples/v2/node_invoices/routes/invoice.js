@@ -108,7 +108,6 @@ router.post("/create", async (req, res, next) => {
         }]
       },
       idempotencyKey, // Unique identifier for request
-      locationId,
     });
 
     // We set two important time below, scheduledAt and dueDate.
