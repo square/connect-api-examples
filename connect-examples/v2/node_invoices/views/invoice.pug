@@ -46,19 +46,19 @@ block content
           div(class="listitem__subtitle") #{invoice.scheduledAt}
       div(class="listitem")
         div(class="listitem__title") Payment Method
-        case invoice.paymentRequests[0].requestMethod
-          when "EMAIL"
-            div(class="listitem__subtitle") Send an email to collect payment
-          when "CHARGE_CARD_ON_FILE"
+        case invoice.paymentRequests[0].automaticPaymentSource
+          when "NONE"
+            div(class="listitem__subtitle") Automatic payment not configured
+          when "CARD_ON_FILE"
             div(class="listitem__subtitle") Charge card on file on due date
-          when "SHARE_MANUALLY"
-            div(class="listitem__subtitle") Manually handled
+          when "BANK_ON_FILE"
+            div(class="listitem__subtitle") Charge bank account on file //- This option is not used in this sample app
       div(class="listitem")
         div(class="listitem__title") Payment Due Date
         div(class="listitem__subtitle") #{invoice.paymentRequests[0].dueDate}
       div(class="listitem")
         div(class="listitem__title") Amount Money
-        div(class="listitem__subtitle") $#{(invoice.paymentRequests[0].computedAmountMoney.amount / 100).toFixed(2)}
+        div(class="listitem__subtitle") $#{(parseInt(invoice.paymentRequests[0].computedAmountMoney.amount) / 100).toFixed(2)}
       div(class="listitem")
         div(class="listitem__title") Created At
         div(class="listitem__subtitle") #{invoice.createdAt}

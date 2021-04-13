@@ -22,7 +22,7 @@
     "pug": "^3.0.0",
     "request": "^2.88.0",
     "serve-favicon": "^2.5.0",
-    "square": "^8.0.0"
+    "square": "^9.0.0"
   },
   "devDependencies": {
     "eslint": "^6.1.0",
