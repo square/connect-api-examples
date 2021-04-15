@@ -148,6 +148,7 @@ Regardless of whether a customer has a card on file, the creation of the invoice
 Wait until the configured `schedule_at` time (10 minutes after the invoice is created) and view the invoice. You see that the invoice status changed from SCHEDULED to UNPAID. When the `due_date` arrives (set to 7 days after the invoice is created), depending on whether the customer has a card on file, Square charges the card on the due date or the customer is responsible to pay for the invoice within the due date (wait 10 minutes and then refresh the invoice page to see the URL to the Square-hosted invoice page that you can use to pay). The invoice status then changes to PAID. 
 
 # License
+
 Copyright 2021 Square, Inc.
 ​
 ```
