@@ -111,12 +111,12 @@ All the remaining actions take place in the **cgi-bin/process_card.py**.  This s
 ...
 nonce = form.getvalue('nonce')
 
-config_type = "PRODUCTION" if config.get("DEFAULT", "is_production") == "true" else "SANDBOX"
-access_token = config.get(config_type, "access_token")
+config_type = config.get("DEFAULT", "environment").upper()
+access_token = config.get(config_type, "square_access_token")
 
 client = Client(
     access_token=access_token,
-    environment=config.get(config_type, "environment"),
+    environment=config.get("DEFAULT", "environment"),
 )
 
 idempotency_key = str(uuid.uuid1())
