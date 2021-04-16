@@ -14,12 +14,9 @@ use Square\SquareClient;
 $dotenv = Dotenv::create(__DIR__);
 $dotenv->load();
 
-// Pulled from the .env file and upper cased e.g. SANDBOX, PRODUCTION.
-$upper_case_environment = strtoupper(getenv('ENVIRONMENT'));
-
 // The access token to use in all Connect API requests.
 // Set your environment as *sandbox* if you're just testing things out.
-$access_token =  getenv($upper_case_environment.'_ACCESS_TOKEN');    
+$access_token =  getenv('SQUARE_ACCESS_TOKEN');    
 
 // Initialize the Square client.
 $client = new SquareClient([

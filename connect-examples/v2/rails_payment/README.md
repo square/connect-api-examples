@@ -27,6 +27,7 @@ bundle exec rake db:create db:migrate # (No db in example, but keeps rails from 
 (<b>WARNING</b>: never upload .env with your credentials/access_token)
 
 ```
+ENVIRONMENT=production|sandbox
 SQUARE_APPLICATION_ID=your-app-id
 SQUARE_ACCESS_TOKEN=your-access-token
 SQUARE_LOCATION_ID=your-location-id
@@ -99,7 +100,7 @@ All the remaining actions take place in the **charges_controller.rb**.  This ser
   def charge_card
     api_client = Square::Client.new(
       access_token: Rails.application.secrets.square_access_token,
-      environment: ENV['IS_PRODUCTION'] == 'false' ? 'sandbox' : 'production'
+      environment: ENV['ENVIRONMENT']
     )
 
     request_body = {

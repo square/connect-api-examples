@@ -111,7 +111,7 @@ All the remaining actions take place in the **cgi-bin/process_card.py**.  This s
 ...
 nonce = form.getvalue('nonce')
 
-config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
+config_type = "PRODUCTION" if config.get("DEFAULT", "is_production") == "true" else "SANDBOX"
 access_token = config.get(config_type, "access_token")
 
 client = Client(

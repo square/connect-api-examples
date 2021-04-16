@@ -8,7 +8,7 @@
     window.applicationId = '<%=Rails.application.secrets.square_application_id %>';
     window.locationId = '<%=Rails.application.secrets.square_location_id %>';
   </script>
-  <% if ENV['IS_PRODUCTION'] == 'true' %>
+  <% if ENV['ENVIRONMENT'] == 'production' %>
     <%= javascript_include_tag 'application', "https://js.squareup.com/v2/paymentform", 'data-turbolinks-track' => true%>
   <% else %>
     <%= javascript_include_tag 'application', "https://js.squareupsandbox.com/v2/paymentform", 'data-turbolinks-track' => true%>

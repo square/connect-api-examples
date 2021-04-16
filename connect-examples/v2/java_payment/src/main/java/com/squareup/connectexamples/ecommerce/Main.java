@@ -41,7 +41,7 @@ public class Main {
 
     // The environment variable containing a Square application ID.
     // This must be set in order for the application to start.
-    private static final String SQUARE_APP_ID_ENV_VAR = "SQUARE_APP_ID";
+    private static final String SQUARE_APP_ID_ENV_VAR = "SQUARE_APPLICATION_ID";
 
     // The environment variable containing a Square location ID.
     // This must be set in order for the application to start.

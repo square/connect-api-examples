@@ -8,10 +8,10 @@ config.read('config.ini')
 
 
 # Retrive credentials based on is_prod
-config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
+config_type = config.get("DEFAULT", "environment").upper()
 payment_form_url = "https://js.squareup.com/v2/paymentform" if config_type == "PRODUCTION" else "https://js.squareupsandbox.com/v2/paymentform";
-app_id = config.get(config_type, "app_id")
-location_id = config.get(config_type, "location_id")
+app_id = config.get(config_type, "square_application_id")
+location_id = config.get(config_type, "square_location_id")
 
 # print out the entire SqPaymentForm web page
 html = """<!DOCTYPE html>

@@ -26,13 +26,13 @@ $upper_case_environment = strtoupper(getenv('ENVIRONMENT'));
     window.applicationId =
       <?php
         echo "\"";
-        echo getenv($upper_case_environment.'_APP_ID');
+        echo getenv('SQUARE_APPLICATION_ID');
         echo "\"";
       ?>;
     window.locationId =
     <?php
       echo "\"";
-      echo getenv($upper_case_environment.'_LOCATION_ID');
+      echo getenv('SQUARE_LOCATION_ID');
       echo "\"";
     ?>;
   </script>
