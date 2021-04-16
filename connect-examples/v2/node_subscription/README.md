@@ -328,6 +328,7 @@ const subscriptionPlanInfo = new SubscriptionDetailsInfo(subscriptionPlan, activ
 ```
 
 # License
+
 Copyright 2020 Square, Inc.
 ​
 ```

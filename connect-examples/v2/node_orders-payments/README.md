@@ -300,8 +300,8 @@ The following source files manage the application flow related to this **Order S
     * `calculateLoyaltyPoints` (Loyalty API). The example loyalty program gives the buyer one point for every dollar spent.
       The application calls this function to check the order and determine whether the buyer qualifies to accumulate at least one point.
 
-
 # License
+
 Copyright 2019 Square, Inc.
 ​
 ```
