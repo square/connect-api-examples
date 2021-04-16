@@ -149,7 +149,7 @@ Wait until the configured `schedule_at` time (10 minutes after the invoice is cr
 
 # License
 
-Copyright 2020 Square, Inc.
+Copyright 2021 Square, Inc.
 ​
 ```
 Licensed under the Apache License, Version 2.0 (the "License");
