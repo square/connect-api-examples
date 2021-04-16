@@ -20,7 +20,6 @@ To get the app running:
 
 ```
 bundle install
-bundle exec rake db:create db:migrate # (No db in example, but keeps rails from complaining)
 ```
 
 * Update the .env file at the root with following values:
