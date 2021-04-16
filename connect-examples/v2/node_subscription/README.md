@@ -329,7 +329,7 @@ const subscriptionPlanInfo = new SubscriptionDetailsInfo(subscriptionPlan, activ
 
 # License
 
-Copyright 2021 Square, Inc.
+Copyright 2020 Square, Inc.
 ​
 ```
 Licensed under the Apache License, Version 2.0 (the "License");

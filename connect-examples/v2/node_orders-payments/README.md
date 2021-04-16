@@ -302,7 +302,7 @@ The following source files manage the application flow related to this **Order S
 
 # License
 
-Copyright 2021 Square, Inc.
+Copyright 2019 Square, Inc.
 ​
 ```
 Licensed under the Apache License, Version 2.0 (the "License");
