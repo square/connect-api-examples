@@ -25,7 +25,7 @@ Before you begin, note the following:
 1. Set your credentials.
 
     Create a `.env` file in the root of this directory. Populate the file with the following
-    line `SQUARE_ACCESS_TOKEN=YOUR_ACCESS_TOKEN`. Replace the placeholder for `SQUARE_ACCESS_TOKEN` with your 
+    line `SQUARE_ACCESS_TOKEN=your-access-token`. Replace the placeholder for `SQUARE_ACCESS_TOKEN` with your 
     own production or sandbox credentials. For more help, see our [guide on how to get 
     your credentials](https://developer.squareup.com/docs/orders-api/quick-start/step-1).
 

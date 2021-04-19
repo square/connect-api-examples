@@ -26,7 +26,7 @@ require('dotenv').config();
 // Configure OAuth2 access token for authorization: oauth2
 const config = {
   environment: Environment.Sandbox,
-  accessToken: process.env.SQUARE_SANDBOX_ACCESS_TOKEN
+  accessToken: process.env.SQUARE_ACCESS_TOKEN
 };
 // Configure catalog API instance
 const { catalogApi } = new Client(config);

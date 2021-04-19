@@ -18,15 +18,15 @@ nonce = form.getvalue('nonce')
 
 # The access token to use in all Connect API requests. Use your *sandbox* access
 # token if you're just testing things out.
-config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
-access_token = config.get(config_type, "access_token")
+config_type = config.get("DEFAULT", "environment").upper()
+access_token = config.get(config_type, "square_access_token")
 
 # Create an instance of the API Client 
 # and initialize it with the credentials 
 # for the Square account whose assets you want to manage
 client = Client(
     access_token=access_token,
-    environment=config.get(config_type, "environment"),
+    environment=config.get("DEFAULT", "environment"),
 )
 
 # Every payment you process with the SDK must have a unique idempotency key.

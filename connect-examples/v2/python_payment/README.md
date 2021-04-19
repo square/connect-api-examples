@@ -13,9 +13,9 @@ Make sure you have Python 2 >=2.79 or Python 3 >= 3.4
 
 1. Make sure you have Python 2 >=2.79 or Python 3 >= 3.4 installed from [python.org](https://www.python.org/).
 
-2. Run the following command to install `squareup` package:
+2. Run the following command to install `squareup` package and other dependencies:
 
-    pip install squareup
+    `pip install -r requirements.txt`
 
 ### Provide required credentials
 
@@ -28,7 +28,6 @@ If you're just testing things out, it's recommended that you use your _sandbox_
 credentials for now. See
 [this article](https://docs.connect.squareup.com/articles/using-sandbox/)
 for more information on the API sandbox.
-
 
 ## Running the sample
 
@@ -50,6 +49,7 @@ You can find more testing values in this [article](https://docs.connect.squareup
 
 **Note that if you are _not_ using your sandbox credentials and you enter _real_
 credit card information, YOU WILL CHARGE THE CARD.**
+
 ## Application Flow
 
 The Python web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
@@ -111,12 +111,12 @@ All the remaining actions take place in the **cgi-bin/process_card.py**.  This s
 ...
 nonce = form.getvalue('nonce')
 
-config_type = "PRODUCTION" if config.get("DEFAULT", "is_prod") == "true" else "SANDBOX"
-access_token = config.get(config_type, "access_token")
+config_type = config.get("DEFAULT", "environment").upper()
+access_token = config.get(config_type, "square_access_token")
 
 client = Client(
     access_token=access_token,
-    environment=config.get(config_type, "environment"),
+    environment=config.get("DEFAULT", "environment"),
 )
 
 idempotency_key = str(uuid.uuid1())

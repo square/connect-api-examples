@@ -6,7 +6,7 @@ class ChargesController < ApplicationController
     # for the Square account whose assets you want to manage.
     api_client = Square::Client.new(
       access_token: Rails.application.secrets.square_access_token,
-      environment: ENV['IS_PRODUCTION'] == 'false' ? 'sandbox' : 'production'
+      environment: ENV['ENVIRONMENT']
     )
 
     # To learn more about splitting payments with additional recipients,

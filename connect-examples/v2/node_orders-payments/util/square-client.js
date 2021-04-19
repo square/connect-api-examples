@@ -21,8 +21,8 @@ const OrderInfo = require("../models/order-info");
 const LocationInfo = require("../models/location-info");
 
 const env = process.env.NODE_ENV;
-const accessToken = process.env[`SQUARE_${env.toUpperCase()}_ACCESS_TOKEN`]
-const squareApplicationId = process.env[`SQUARE_${env.toUpperCase()}_APPLICATION_ID`]
+const accessToken = process.env[`SQUARE_ACCESS_TOKEN`]
+const squareApplicationId = process.env[`SQUARE_APPLICATION_ID`]
 
 // Set Square credentials
 const config = {
