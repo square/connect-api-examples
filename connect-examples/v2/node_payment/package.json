@@ -13,7 +13,7 @@
     "dotenv": "^8.2.0",
     "express": "*",
     "morgan": "*",
-    "pug": "*",
+    "pug": "^3.0.2",
     "serve-favicon": "*",
     "square": "^8.0.0"
   }

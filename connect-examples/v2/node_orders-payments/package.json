@@ -17,7 +17,7 @@
     "eslint": "^6.1.0",
     "express": "*",
     "morgan": "*",
-    "pug": "*",
+    "pug": "^3.0.2",
     "request": "^2.88.0",
     "serve-favicon": "*",
     "square": "^8.0.0"
