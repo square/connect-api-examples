@@ -4,7 +4,7 @@ const crypto = require('crypto');
 
 const app = express();
 const env = app.get('env');
-const { paymentsApi } = require('../util/square-client');
+const { paymentsApi, locationsApi } = require('../util/square-client');
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -22,6 +22,7 @@ router.post('/process-payment', async (req, res) => {
 
   // length of idempotency_key should be less than 45
   const idempotencyKey = crypto.randomBytes(22).toString('hex');
+  const currency = locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID).currency;
 
   // Charge the customer's card
   const requestBody = {
@@ -29,7 +30,7 @@ router.post('/process-payment', async (req, res) => {
     sourceId: nonce,
     amountMoney: {
       amount: 100, // $1.00 charge
-      currency: 'USD'
+      currency: currency
     }
   };
 

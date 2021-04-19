@@ -50,7 +50,9 @@ $money = new Money();
   // Monetary amounts are specified in the smallest unit of the applicable currency.
   // This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
 $money->setAmount(100);
-$money->setCurrency('USD');
+  // Set currency to the currency for the location
+$currency = $client->getLocationsApi()->retrieveLocation(getenv('SQUARE_LOCATION_ID'))->currency;
+$money->setCurrency($currency);
 
   // Every payment you process with the SDK must have a unique idempotency key.
   // If you're unsure whether a particular payment succeeded, you can reattempt

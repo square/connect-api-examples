@@ -33,7 +33,8 @@ const config = {
 // Configure API instances
 const {
   catalogApi,
-  customersApi
+  customersApi,
+  merchantsApi
 } = new Client(config)
 
 /**
@@ -105,9 +106,14 @@ async function addSubscriptionPlans() {
     batches: batches,
   };
 
+  // set the currency for the current merchant
+  const currency = merchantsApi.listMerchants[0].currency;
+
   // Iterate through each item in the sample-seed-data.json file.
   for (const key in sampleData) {
     const currentCatalogItem = sampleData[key];
+    // Set the currency for each see data
+    currentCatalogItem.data.subscriptionPlanData.phases.forEach(x => x.recurringPriceMoney.currency = currency);
     // Add the object data to the batch request item.
     batchUpsertCatalogRequest.batches[0].objects.push(currentCatalogItem.data);
   }

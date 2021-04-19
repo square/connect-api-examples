@@ -26,7 +26,8 @@ const {
   getLoyaltyRewardInformation,
   ordersApi,
   paymentsApi,
-  loyaltyApi
+  loyaltyApi,
+  locationsApi
 } = require("../util/square-client");
 const DeliveryPickUpTimes = require("../models/delivery-pickup-times");
 
@@ -294,6 +295,7 @@ router.post("/add-delivery-details", async (req, res, next) => {
       orderIds: [orderId],
     });
     const order = orders[0];
+    const currency = locationsApi.retrieveLocation(locationId).currency;
     await ordersApi.updateOrder(order.id, {
       order: {
         locationId,
@@ -328,7 +330,7 @@ router.post("/add-delivery-details", async (req, res, next) => {
           name: "delivery fee",
           amountMoney: {
             amount: 200,
-            currency: "USD"
+            currency: currency
           },
           taxable: true,
           calculationPhase: "SUBTOTAL_PHASE",

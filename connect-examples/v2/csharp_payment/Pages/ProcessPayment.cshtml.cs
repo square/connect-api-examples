@@ -38,12 +38,15 @@ namespace sqRazorSample.Pages
             // the buyer.
             string uuid = NewIdempotencyKey();
 
+            // Get the currency
+            string currency = await client.LocationsApi.RetrieveLocationAsync(locationId: configuration["AppSettings:LocationId"]);
+
             // Monetary amounts are specified in the smallest unit of the applicable currency.
             // This amount is in cents. It's also hard-coded for $1.00,
             // which isn't very useful.
             Money amount = new Money.Builder()
                 .Amount(500L)
-                .Currency("USD")
+                .Currency(currency)
                 .Build();
 
             // To learn more about splitting payments with additional recipients,

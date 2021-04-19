@@ -35,8 +35,11 @@ try {
 
   // Monetary amounts are specified in the smallest unit of the applicable currency.
   // This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
+  
+  // Set currency to the currency for the location
+  $currency = $client->getLocationsApi()->retrieveLocation(getenv('SQUARE_LOCATION_ID'))->currency;
   $money_A = new Money();
-  $money_A->setCurrency('USD');
+  $money_A->setCurrency($currency);
   $money_A->setAmount(500);
 
   $item_A = new OrderLineItem(1);
@@ -44,7 +47,7 @@ try {
   $item_A->setBasePriceMoney($money_A);
 
   $money_B = new Money();
-  $money_B->setCurrency('USD');
+  $money_B->setCurrency($currency);
   $money_B->setAmount(1000);
   
   $item_B = new OrderLineItem(3);

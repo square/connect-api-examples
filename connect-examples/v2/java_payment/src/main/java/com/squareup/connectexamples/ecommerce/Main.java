@@ -96,9 +96,22 @@ public class Main {
         // To learn more about splitting payments with additional recipients,
         // see the Payments API documentation on our [developer site]
         // (https://developer.squareup.com/docs/payments-api/overview).
+
+        // Get currency for location
+        String currency;
+        LocationsApi locationsApi = squareClient.getLocationsApi();
+        currency = locationsApi.retrieveLocationAsync("main")
+        .thenAccept(result -> {
+          return result.location.currency;
+        })
+        .exceptionally(exception -> {
+          System.out.println("Failed to make the request");
+          System.out.println(String.format("Exception: %s", exception.getMessage()));
+          return null;
+        });
         Money bodyAmountMoney = new Money.Builder()
             .amount(100L)
-            .currency("USD")
+            .currency(currency)
             .build();
         CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
                 form.getNonce(),

@@ -35,6 +35,9 @@ namespace csharp_checkout.Pages
       ICheckoutApi checkoutApi = client.CheckoutApi;
       try
       {
+        // Get the currency
+        string currency = await client.LocationsApi.RetrieveLocationAsync(locationId: configuration["AppSettings:LocationId"]);
+
         // create line items for the order
         // This example assumes the order information is retrieved and hard coded
         // You can find different ways to retrieve order information and fill in the following lineItems object.
@@ -42,7 +45,7 @@ namespace csharp_checkout.Pages
 
         Money firstLineItemBasePriceMoney = new Money.Builder()
           .Amount(500L)
-          .Currency("USD")
+          .Currency(currency)
           .Build();
 
         OrderLineItem firstLineItem = new OrderLineItem.Builder("1")
@@ -54,7 +57,7 @@ namespace csharp_checkout.Pages
 
         Money secondLineItemBasePriceMoney = new Money.Builder()
           .Amount(1000L)
-          .Currency("USD")
+          .Currency(currency)
           .Build();
 
         OrderLineItem secondLineItem = new OrderLineItem.Builder("3")
