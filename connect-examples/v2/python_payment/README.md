@@ -5,13 +5,13 @@ Square Connect Python client library.
 
 ## Requirements
 
-Make sure you have Python 2 >=2.79 or Python 3 >= 3.4
+Make sure you have Python 3 >= 3.4
 
 ## Setup
 
 ### Install the Python client library
 
-1. Make sure you have Python 2 >=2.79 or Python 3 >= 3.4 installed from [python.org](https://www.python.org/).
+1. Make sure you have Python 3 >= 3.4 installed from [python.org](https://www.python.org/).
 
 2. Run the following command to install `squareup` package and other dependencies:
 
