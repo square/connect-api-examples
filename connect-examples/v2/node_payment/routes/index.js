@@ -22,7 +22,10 @@ router.post('/process-payment', async (req, res) => {
 
   // length of idempotency_key should be less than 45
   const idempotencyKey = crypto.randomBytes(22).toString('hex');
-  const currency = locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID).currency;
+
+  // get the currency for the location
+  const location = await locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID));
+  const currency = location.result.location.currency;
 
   // Charge the customer's card
   const requestBody = {

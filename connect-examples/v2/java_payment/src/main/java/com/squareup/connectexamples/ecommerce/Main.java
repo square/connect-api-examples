@@ -18,13 +18,16 @@ package com.squareup.connectexamples.ecommerce;
 
 import com.squareup.square.Environment;
 import com.squareup.square.api.PaymentsApi;
+import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.*;
 import com.squareup.square.SquareClient;
 import com.squareup.square.exceptions.ApiException;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -50,7 +53,7 @@ public class Main {
     // The environment variable indicate the square environment - sandbox or
     // production.
     // This must be set in order for the application to start.
-    private static final String SQUARE_ENV_ENV_VAR = "SQUARE_ENV";
+    private static final String SQUARE_ENV_ENV_VAR = "ENVIRONMENT";
 
     private final SquareClient squareClient;
     private final String squareLocationId;
@@ -92,23 +95,24 @@ public class Main {
     }
 
     @PostMapping("/charge")
-    String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException, IOException {
+    String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException, IOException, InterruptedException, ExecutionException {
         // To learn more about splitting payments with additional recipients,
         // see the Payments API documentation on our [developer site]
         // (https://developer.squareup.com/docs/payments-api/overview).
 
         // Get currency for location
-        String currency;
         LocationsApi locationsApi = squareClient.getLocationsApi();
-        currency = locationsApi.retrieveLocationAsync("main")
-        .thenAccept(result -> {
-          return result.location.currency;
+        CompletableFuture<RetrieveLocationResponse> location = locationsApi.retrieveLocationAsync("main")
+        .thenApply(result -> {
+          return result;
         })
         .exceptionally(exception -> {
           System.out.println("Failed to make the request");
           System.out.println(String.format("Exception: %s", exception.getMessage()));
           return null;
         });
+        String currency = location.get().getLocation().getCurrency();
+
         Money bodyAmountMoney = new Money.Builder()
             .amount(100L)
             .currency(currency)

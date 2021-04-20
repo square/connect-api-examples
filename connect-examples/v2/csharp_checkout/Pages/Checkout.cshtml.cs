@@ -6,13 +6,14 @@ using Square;
 using Square.Models;
 using Square.Apis;
 using Square.Exceptions;
+using System.Threading.Tasks;
 
 namespace csharp_checkout.Pages
 {
   public class CheckoutModel : PageModel
   {
     private SquareClient client;
-    private readonly string locationId;
+    private readonly string LocationId;
 
     public CheckoutModel( Microsoft.Extensions.Configuration.IConfiguration configuration)
     {
@@ -26,17 +27,18 @@ namespace csharp_checkout.Pages
         .AccessToken(configuration["AppSettings:AccessToken"])
         .Build();
 
-      locationId = configuration["AppSettings:LocationId"];
+      LocationId = configuration["AppSettings:LocationId"];
 
     }
 
-    public IActionResult OnPost()
+    async public Task<IActionResult> OnPost()
     {
       ICheckoutApi checkoutApi = client.CheckoutApi;
       try
       {
-        // Get the currency
-        string currency = await client.LocationsApi.RetrieveLocationAsync(locationId: configuration["AppSettings:LocationId"]);
+        // Get the currency for the location
+        RetrieveLocationResponse location = await client.LocationsApi.RetrieveLocationAsync(locationId: LocationId);
+        string currency = location.Location.Currency;
 
         // create line items for the order
         // This example assumes the order information is retrieved and hard coded
@@ -68,7 +70,7 @@ namespace csharp_checkout.Pages
         lineItems.Add(secondLineItem);
 
         // create Order object with line items
-        Order order = new Order.Builder(locationId)
+        Order order = new Order.Builder(LocationId)
           .LineItems(lineItems)
           .Build();
 
@@ -84,7 +86,7 @@ namespace csharp_checkout.Pages
           .Build();
 
         // create checkout response, and redirect to checkout page if successful
-        CreateCheckoutResponse response = checkoutApi.CreateCheckout(locationId, createCheckoutRequest);
+        CreateCheckoutResponse response = checkoutApi.CreateCheckout(LocationId, createCheckoutRequest);
         return Redirect(response.Checkout.CheckoutPageUrl);
       }
       catch (ApiException e)

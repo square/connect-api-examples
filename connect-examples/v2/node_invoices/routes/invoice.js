@@ -93,7 +93,8 @@ router.post("/create", async (req, res, next) => {
   } = req.body;
   try {
     const { result : { customer } } = await customersApi.retrieveCustomer(customerId);
-    const currency = await locationsApi.retrieveLocation(locationId).currency;
+    const location = await locationsApi.retrieveLocation(locationId);
+    const currency = location.result.location.currency;
 
     // Create an order to be attached to invoice
     const { result : { order } } = await ordersApi.createOrder({

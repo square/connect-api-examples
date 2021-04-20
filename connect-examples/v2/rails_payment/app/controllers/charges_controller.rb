@@ -13,7 +13,8 @@ class ChargesController < ApplicationController
     # see the Payments API documentation on our [developer site]
     # (https://developer.squareup.com/docs/payments-api/overview).
     # Charge 1 dollar (100 cent)
-    currency = api_client.locations.retrieve_location(location_id: ENV['SQUARE_LOCATION_ID'])
+    currency = api_client.locations.retrieve_location(location_id: ENV['SQUARE_LOCATION_ID']).data.location[:currency]
+    puts currency
     request_body = {
       :source_id => params[:nonce],
       :amount_money => {

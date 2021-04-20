@@ -107,7 +107,8 @@ async function addSubscriptionPlans() {
   };
 
   // set the currency for the current merchant
-  const currency = merchantsApi.listMerchants[0].currency;
+  const merchant = await merchantsApi.listMerchants();
+  const currency = merchant.result.merchant[0].currency;
 
   // Iterate through each item in the sample-seed-data.json file.
   for (const key in sampleData) {

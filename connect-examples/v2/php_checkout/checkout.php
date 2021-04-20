@@ -37,7 +37,7 @@ try {
   // This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
   
   // Set currency to the currency for the location
-  $currency = $client->getLocationsApi()->retrieveLocation(getenv('SQUARE_LOCATION_ID'))->currency;
+  $currency = $client->getLocationsApi()->retrieveLocation(getenv('SQUARE_LOCATION_ID'))->getResult()->getLocation()->getCurrency();
   $money_A = new Money();
   $money_A->setCurrency($currency);
   $money_A->setAmount(500);

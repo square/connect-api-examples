@@ -38,7 +38,7 @@ idempotency_key = str(uuid.uuid1())
 # Monetary amounts are specified in the smallest unit of the applicable currency.
 # This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
 # The currency charged is set to the currency of the location provided
-currency = client.locations.retrieve_location(location_id = config.get(config_type, "square_location_id"))
+currency = client.locations.retrieve_location(location_id = config.get(config_type, "square_location_id")).body['location']['currency']
 amount = {'amount': 100, 'currency': currency}
 
 # To learn more about splitting payments with additional recipients,
