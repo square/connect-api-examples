@@ -13,7 +13,7 @@ namespace sqRazorSample.Pages
     public class ProcessPaymentModel : PageModel
     {
         private SquareClient client;
-        private string LocationId;
+        private string locationId;
         
         public string ResultMessage { get; set; }
 
@@ -28,7 +28,7 @@ namespace sqRazorSample.Pages
                 .AccessToken(configuration["AppSettings:AccessToken"])
                 .Build();
 
-            LocationId = configuration["AppSettings:LocationId"];
+            locationId = configuration["AppSettings:LocationId"];
         }
 
         async public Task<IActionResult> OnPost()
@@ -42,7 +42,7 @@ namespace sqRazorSample.Pages
             string uuid = NewIdempotencyKey();
 
             // Get the currency for the location
-            RetrieveLocationResponse location = await client.LocationsApi.RetrieveLocationAsync(locationId: LocationId);
+            RetrieveLocationResponse location = await client.LocationsApi.RetrieveLocationAsync(locationId: locationId);
             string currency = location.Location.Currency;
 
             // Monetary amounts are specified in the smallest unit of the applicable currency.
