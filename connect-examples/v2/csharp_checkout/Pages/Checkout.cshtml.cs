@@ -13,7 +13,7 @@ namespace csharp_checkout.Pages
   public class CheckoutModel : PageModel
   {
     private SquareClient client;
-    private readonly string LocationId;
+    private readonly string locationId;
 
     public CheckoutModel( Microsoft.Extensions.Configuration.IConfiguration configuration)
     {
@@ -27,7 +27,7 @@ namespace csharp_checkout.Pages
         .AccessToken(configuration["AppSettings:AccessToken"])
         .Build();
 
-      LocationId = configuration["AppSettings:LocationId"];
+      locationId = configuration["AppSettings:LocationId"];
 
     }
 
@@ -37,7 +37,7 @@ namespace csharp_checkout.Pages
       try
       {
         // Get the currency for the location
-        RetrieveLocationResponse location = await client.LocationsApi.RetrieveLocationAsync(locationId: LocationId);
+        RetrieveLocationResponse location = await client.LocationsApi.RetrieveLocationAsync(locationId: locationId);
         string currency = location.Location.Currency;
 
         // create line items for the order
@@ -70,7 +70,7 @@ namespace csharp_checkout.Pages
         lineItems.Add(secondLineItem);
 
         // create Order object with line items
-        Order order = new Order.Builder(LocationId)
+        Order order = new Order.Builder(locationId)
           .LineItems(lineItems)
           .Build();
 
@@ -86,7 +86,7 @@ namespace csharp_checkout.Pages
           .Build();
 
         // create checkout response, and redirect to checkout page if successful
-        CreateCheckoutResponse response = checkoutApi.CreateCheckout(LocationId, createCheckoutRequest);
+        CreateCheckoutResponse response = checkoutApi.CreateCheckout(locationId, createCheckoutRequest);
         return Redirect(response.Checkout.CheckoutPageUrl);
       }
       catch (ApiException e)
