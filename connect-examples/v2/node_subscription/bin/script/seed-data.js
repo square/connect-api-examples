@@ -107,14 +107,14 @@ async function addSubscriptionPlans() {
   };
 
   // set the currency for the current merchant
-  const merchant = await merchantsApi.listMerchants();
-  const currency = merchant.result.merchant[0].currency;
+  const merchantResponse = await merchantsApi.listMerchants();
+  const currency = merchantResponse.result.merchant[0].currency;
 
   // Iterate through each item in the sample-seed-data.json file.
   for (const key in sampleData) {
     const currentCatalogItem = sampleData[key];
     // Set the currency for each see data
-    currentCatalogItem.data.subscriptionPlanData.phases.forEach(x => x.recurringPriceMoney.currency = currency);
+    currentCatalogItem.data.subscriptionPlanData.phases.forEach(phase => phase.recurringPriceMoney.currency = currency);
     // Add the object data to the batch request item.
     batchUpsertCatalogRequest.batches[0].objects.push(currentCatalogItem.data);
   }

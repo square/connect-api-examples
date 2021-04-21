@@ -37,8 +37,8 @@ namespace csharp_checkout.Pages
       try
       {
         // Get the currency for the location
-        RetrieveLocationResponse location = await client.LocationsApi.RetrieveLocationAsync(locationId: locationId);
-        string currency = location.Location.Currency;
+        RetrieveLocationResponse locationResponse = await client.LocationsApi.RetrieveLocationAsync(locationId: locationId);
+        string currency = locationResponse.Location.Currency;
 
         // create line items for the order
         // This example assumes the order information is retrieved and hard coded

@@ -102,7 +102,7 @@ public class Main {
 
         // Get currency for location
         LocationsApi locationsApi = squareClient.getLocationsApi();
-        CompletableFuture<RetrieveLocationResponse> location = locationsApi.retrieveLocationAsync("main")
+        CompletableFuture<RetrieveLocationResponse> locationResponse = locationsApi.retrieveLocationAsync("main")
         .thenApply(result -> {
           return result;
         })
@@ -111,7 +111,7 @@ public class Main {
           System.out.println(String.format("Exception: %s", exception.getMessage()));
           return null;
         });
-        String currency = location.get().getLocation().getCurrency();
+        String currency = locationResponse.get().getLocation().getCurrency();
 
         Money bodyAmountMoney = new Money.Builder()
             .amount(100L)

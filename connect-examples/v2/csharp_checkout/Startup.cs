@@ -46,7 +46,6 @@ namespace csharp_checkout
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
               endpoints.MapRazorPages();

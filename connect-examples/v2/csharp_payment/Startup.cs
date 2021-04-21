@@ -47,7 +47,6 @@ namespace sqRazorSample
             app.UseStaticFiles();
 
             app.UseRouting();
-            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
               endpoints.MapRazorPages();

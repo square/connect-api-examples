@@ -297,8 +297,8 @@ router.post("/add-delivery-details", async (req, res, next) => {
     const order = orders[0];
 
     // get the currency for the location
-    const location = await locationsApi.retrieveLocation(locationId);
-    const currency = location.result.location.currency;
+    const locationResponse = await locationsApi.retrieveLocation(locationId);
+    const currency = locationResponse.result.location.currency;
 
     await ordersApi.updateOrder(order.id, {
       order: {

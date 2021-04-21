@@ -24,8 +24,8 @@ router.post('/process-payment', async (req, res) => {
   const idempotencyKey = crypto.randomBytes(22).toString('hex');
 
   // get the currency for the location
-  const location = await locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID));
-  const currency = location.result.location.currency;
+  const locationResponse = await locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID);
+  const currency = locationResponse.result.location.currency;
 
   // Charge the customer's card
   const requestBody = {

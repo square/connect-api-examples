@@ -42,8 +42,8 @@ namespace sqRazorSample.Pages
             string uuid = NewIdempotencyKey();
 
             // Get the currency for the location
-            RetrieveLocationResponse location = await client.LocationsApi.RetrieveLocationAsync(locationId: locationId);
-            string currency = location.Location.Currency;
+            RetrieveLocationResponse locationResponse = await client.LocationsApi.RetrieveLocationAsync(locationId: locationId);
+            string currency = locationResponse.Location.Currency;
 
             // Monetary amounts are specified in the smallest unit of the applicable currency.
             // This amount is in cents. It's also hard-coded for $1.00,
