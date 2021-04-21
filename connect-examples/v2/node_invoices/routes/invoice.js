@@ -22,6 +22,7 @@ const {
   ordersApi,
   invoicesApi,
   customersApi,
+  locationsApi
 } = require("../util/square-client");
 
 const router = express.Router();
@@ -92,6 +93,8 @@ router.post("/create", async (req, res, next) => {
   } = req.body;
   try {
     const { result : { customer } } = await customersApi.retrieveCustomer(customerId);
+    const locationResponse = await locationsApi.retrieveLocation(locationId);
+    const currency = locationResponse.result.location.currency;
 
     // Create an order to be attached to invoice
     const { result : { order } } = await ordersApi.createOrder({
@@ -103,7 +106,7 @@ router.post("/create", async (req, res, next) => {
           quantity: "1",
           basePriceMoney: {
             amount: parseInt(priceAmount),
-            currency: "USD",
+            currency: currency,
           }
         }]
       },
