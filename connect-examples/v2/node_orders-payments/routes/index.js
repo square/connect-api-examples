@@ -52,12 +52,10 @@ router.get("/", async (req, res, next) => {
     console.log(locations);
     // Get CatalogItem and CatalogImage object
     const { result: { objects } } = await catalogApi.listCatalog(undefined, types);
-
-    let catalog = new CatalogList(objects);
     
     // Renders index view, with catalog and location information
     res.render("index", {
-      items: catalog.items,
+      items: CatalogList(objects).items,
       locationInfo: new LocationInfo(locations[0]), // take the first location for the sake of simplicity.
     });
   } catch (error) {
