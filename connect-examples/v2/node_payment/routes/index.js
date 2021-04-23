@@ -48,7 +48,6 @@ router.post('/process-payment', async (req, res) => {
       'title': 'Payment Successful'
     });
   } catch (error) {
-    console.log(error);
     let result = JSON.stringify(error, null, 4);
     if (error.errors) {
       result = JSON.stringify(error.errors, null, 4);

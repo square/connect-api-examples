@@ -49,7 +49,6 @@ router.get("/", async (req, res, next) => {
   try {
     // Retrieves locations in order to display the store name
     const { result: { locations } } = await locationsApi.listLocations();
-    console.log(locations);
     // Get CatalogItem and CatalogImage object
     const { result: { objects } } = await catalogApi.listCatalog(undefined, types);
     
