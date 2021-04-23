@@ -61,8 +61,12 @@ router.get("/:locationId/:customerId", async (req, res, next) => {
 
     // Find the all the subcriptions for the current customer at current location
     const { result: { subscriptions } } = await subscriptionsApi.searchSubscriptions({
-      locationIds: [locationId],
-      customerIds: [customer.id]
+      query: {
+        filter: {
+          locationIds: [locationId],
+          customerIds: [customer.id]
+        }
+      }
     });
 
     // filter the subscriptions that are active

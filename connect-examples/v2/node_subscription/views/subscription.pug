@@ -63,7 +63,7 @@ block content
           form(class="listitem__right" id="revert", action="/subscription/revertcancel", method="post")
                 input(name="locationId", type="hidden", value=locationId)
                 input(name="subscriptionId", type="hidden", value=subscriptionPlanInfo.activeSubscription.id)
-                input(name="subscriptionVersion", type="hidden", value=subscriptionPlanInfo.activeSubscription.version)
+                input(name="subscriptionVersion", type="hidden", value=`${parseInt(subscriptionPlanInfo.activeSubscription.version)}`)
                 input(name="planId", type="hidden", value=subscriptionPlanId)
                 input(name="customerId", type="hidden", value=customer.id)
                 button(form="revert", type="submit") Revert Cancelation

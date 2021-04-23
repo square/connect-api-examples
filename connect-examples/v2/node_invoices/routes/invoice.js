@@ -172,7 +172,12 @@ router.post("/create", async (req, res, next) => {
         },
         paymentRequests: [
           paymentRequest
-        ]
+        ],
+        acceptedPaymentMethods: {
+          bankAccount: true,
+          squareGiftCard: true,
+          bankAccount: false
+        }
       }
     };
 
