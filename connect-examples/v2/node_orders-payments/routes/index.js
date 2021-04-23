@@ -55,7 +55,7 @@ router.get("/", async (req, res, next) => {
     
     // Renders index view, with catalog and location information
     res.render("index", {
-      items: CatalogList(objects).items,
+      items: new CatalogList(objects).items,
       locationInfo: new LocationInfo(locations[0]), // take the first location for the sake of simplicity.
     });
   } catch (error) {
