@@ -8,7 +8,7 @@ This example hosts a payment form in Java. It is a Spring Boot app and requires 
 ## Setup
 
 First, you'll need to have created a Square application. If you haven't done this yet, you can quickly
-set on up in the [Square Developer Portal](https://connect.squareup.com/apps).
+set on up in the [Square Developer Portal](https://developer.squareup.com/apps).
 
 Once you've created an Square application, you'll need both the Application ID and the
 Personal Access Token for it. These are available in the Square Developer Portal as well.
@@ -16,7 +16,7 @@ Personal Access Token for it. These are available in the Square Developer Portal
 If you want to test Apple Pay, you'll need to replace the contents of
 `src/main/resources/public/.well-known/apple-developer-merchantid-domain-association`.
 You can get real content for this file from the
-[Square Developer Portal](https://connect.squareup.com/apps), in the Apple Pay section of your
+[Square Developer Portal](https://developer.squareup.com/apps), in the Apple Pay section of your
 application.
 
 Note that Apple Pay cannot be tested when running locally. You'll need to deploy the app to try it out.
