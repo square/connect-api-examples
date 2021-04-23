@@ -29,7 +29,7 @@ router.post('/process-payment', async (req, res) => {
 
   // Charge the customer's card
   const requestBody = {
-    idempotencyKey,
+    idempotencyKey: idempotencyKey,
     sourceId: nonce,
     amountMoney: {
       amount: 100, // $1.00 charge
@@ -39,13 +39,16 @@ router.post('/process-payment', async (req, res) => {
 
   try {
     const { result: { payment } } = await paymentsApi.createPayment(requestBody);
-    const result = JSON.stringify(payment, null, 4);
+    const result = JSON.stringify(payment, (key, value) => {
+      return typeof value === "bigint" ? parseInt(value) : value;
+    }, 4);
 
     res.render('process-payment', {
       result,
       'title': 'Payment Successful'
     });
   } catch (error) {
+    console.log(error);
     let result = JSON.stringify(error, null, 4);
     if (error.errors) {
       result = JSON.stringify(error.errors, null, 4);

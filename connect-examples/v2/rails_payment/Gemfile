@@ -22,7 +22,7 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 1.0.0', group: :doc
 
-gem 'square.rb', '~> 9.1.0.20210317'
+gem 'square.rb', '~> 10.0.0.20210421'
 
 gem 'rails_12factor', group: :production
 

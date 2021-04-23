@@ -151,14 +151,14 @@ class SubscriptionDetailsInfo {
           ` - Payment due on ${this.activeSubscription.paidUntilDate}`
           : "";
 
-        phaseInfo.subTitle = `$${(phase.recurringPriceMoney.amount / 100).toFixed(2)}${paymentDesc}`;
+        phaseInfo.subTitle = `$${(parseInt(phase.recurringPriceMoney.amount) / 100).toFixed(2)}${paymentDesc}`;
       } else {
         // The subscription plan has no active subscription
         phaseInfo.label =  "Starts on subscription";
         if (prevPhaseInfo) {
           phaseInfo.label = `Starts after ${prevPhaseInfo.title}`;
         }
-        phaseInfo.subTitle = `$${(phase.recurringPriceMoney.amount / 100).toFixed(2)}`;
+        phaseInfo.subTitle = `$${(parseInt(phase.recurringPriceMoney.amount) / 100).toFixed(2)}`;
       }
       this.phaseInfos.push(phaseInfo);
     }

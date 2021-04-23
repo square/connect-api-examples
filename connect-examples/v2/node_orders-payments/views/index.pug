@@ -33,7 +33,7 @@ block content
             p(class='product-description') #{item.description}
             div(class='product-meta')
               h2(class='productCost')
-                span(class="green") $#{item.price}
+                span(class="green") #{item.price}
               form(action='create-order', method='post')
                 input(name='itemVarId',type='hidden',value=item.defaultVariationId,style='display: none')
                 input(name='itemId',type='hidden',value=item.itemObjectId,style='display: none')

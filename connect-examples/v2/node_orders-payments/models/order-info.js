@@ -35,7 +35,7 @@ class OrderInfo {
     this._lineItems = order.lineItems.map((lineItem) => ({
       name: lineItem.name,
       quantity: lineItem.quantity,
-      grossSalesMoney: this.getDecimalAmount(lineItem.grossSalesMoney.amount),
+      grossSalesMoney: this.getDecimalAmount(parseInt(lineItem.grossSalesMoney.amount)),
       catalogObjectId: lineItem.catalogObjectId,
     }));
 
@@ -43,7 +43,7 @@ class OrderInfo {
     if (order.discounts) {
       this.orderDiscounts = order.discounts.map((discount) => ({
         name: discount.name,
-        appliedDiscountMoney: this.getDecimalAmount(discount.appliedMoney.amount)
+        appliedDiscountMoney: this.getDecimalAmount(parseInt(discount.appliedMoney.amount))
       }));
     }
   }
@@ -97,15 +97,15 @@ class OrderInfo {
   }
   // Returns discount in order
   get totalDiscountMoney() {
-    return this.getDecimalAmount(this.order.totalDiscountMoney.amount);
+    return this.getDecimalAmount(parseInt(this.order.totalDiscountMoney.amount));
   }
   // Returns service fee in order
   get totalServiceChargeMoney() {
-    return this.getDecimalAmount(this.order.totalServiceChargeMoney.amount);
+    return this.getDecimalAmount(parseInt(this.order.totalServiceChargeMoney.amount));
   }
   // Returns tax in order
   get totalTaxMoney() {
-    return this.getDecimalAmount(this.order.totalTaxMoney.amount);
+    return this.getDecimalAmount(parseInt(this.order.totalTaxMoney.amount));
   }
   // The subtotal money before tax applied
   get preTaxTotalMoney() {
@@ -113,7 +113,7 @@ class OrderInfo {
   }
   // Returns money spent in order
   get totalMoney() {
-    return this.getDecimalAmount(this.order.totalMoney.amount);
+    return this.getDecimalAmount(parseInt(this.order.totalMoney.amount));
   }
   // Returns fulfillment status
   get fulfillmentState() {

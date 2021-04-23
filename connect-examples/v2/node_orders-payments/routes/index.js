@@ -46,15 +46,18 @@ router.use("/order-confirmation", require("./order-confirmation"));
 router.get("/", async (req, res, next) => {
   // Set to retrieve ITEM and IMAGE CatalogObjects
   const types = "ITEM,IMAGE"; // To retrieve TAX or CATEGORY objects add them to types
-
   try {
     // Retrieves locations in order to display the store name
     const { result: { locations } } = await locationsApi.listLocations();
+    console.log(locations);
     // Get CatalogItem and CatalogImage object
     const { result: { objects } } = await catalogApi.listCatalog(undefined, types);
+
+    let catalog = new CatalogList(objects);
+    
     // Renders index view, with catalog and location information
     res.render("index", {
-      items: new CatalogList(objects).items,
+      items: catalog.items,
       locationInfo: new LocationInfo(locations[0]), // take the first location for the sake of simplicity.
     });
   } catch (error) {
