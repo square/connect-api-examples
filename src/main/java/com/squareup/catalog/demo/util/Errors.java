@@ -16,7 +16,7 @@
 package com.squareup.catalog.demo.util;
 
 import com.squareup.catalog.demo.Logger;
-import com.squareup.connect.models.Error;
+import com.squareup.square.models.Error;
 import java.util.List;
 
 /**

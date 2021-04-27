@@ -30,13 +30,20 @@ import com.squareup.catalog.demo.example.RetrieveCatalogObjectExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
 import com.squareup.catalog.demo.example.clone.CloneCatalogExample;
 import com.squareup.catalog.demo.util.GsonProvider;
-import com.squareup.connect.ApiClient;
-import com.squareup.connect.ApiException;
+import com.squareup.square.SquareClient;
+import com.squareup.square.SquareClient.Builder;
+import com.squareup.square.Environment;
+// import com.squareup.connect.ApiClient;
+import com.squareup.square.exceptions.ApiException;
 import com.squareup.connect.Configuration;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
+// import com.squareup.connect.api.CatalogApi;
+// import com.squareup.connect.api.LocationsApi;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
 import com.squareup.connect.auth.OAuth;
 import com.squareup.connect.models.Error;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -124,7 +131,9 @@ public class Main {
     // Process arguments associated with the example.
     String accessToken = null;
     boolean cleanup = false;
-    ApiClient apiClient = Configuration.getDefaultApiClient();
+    // ApiClient apiClient = Configuration.getDefaultApiClient();
+
+    Builder apiClientBuilder = new SquareClient.Builder();
     for (int i = 1; i < args.length; i++) {
       String arg = args[i].toLowerCase(Locale.US);
       switch (arg) {
@@ -133,7 +142,8 @@ public class Main {
             usage(ARG_BASE_URL + " specified without a url");
             return;
           }
-          apiClient = new ApiClient().setBasePath(args[i + 1]);
+          // apiClient = new ApiClient().setBasePath(args[i + 1]);
+          apiClientBuilder.customUrl(args[i + 1]);
           i++;
           break;
         case ARG_CLEANUP:
@@ -164,12 +174,23 @@ public class Main {
       return;
     }
 
-    // Configure OAuth2 access token for authorization: oauth2
-    OAuth oauth2 = (OAuth) apiClient.getAuthentication("oauth2");
-    oauth2.setAccessToken(accessToken);
+    // Build the client using the arguments provided
+    // TODO: might want to have an argument for sandbox vs prod, also change variable name
+    SquareClient apiClient2 = apiClientBuilder
+        .environment(Environment.PRODUCTION)
+        .accessToken(accessToken)
+        .build();
 
-    CatalogApi catalogApi = new CatalogApi(apiClient);
-    LocationsApi locationsApi = new LocationsApi(apiClient);
+    // Configure OAuth2 access token for authorization: oauth2
+    // OAuth oauth2 = (OAuth) apiClient.getAuthentication("oauth2");
+    // oauth2.setAccessToken(accessToken);
+
+    // CatalogApi catalogApi = new CatalogApi(apiClient);
+    // LocationsApi locationsApi = new LocationsApi(apiClient);
+
+    CatalogApi catalogApi = apiClient2.getCatalogApi();
+    LocationsApi locationsApi = apiClient2.getLocationsApi();
+
     executeExample(command, cleanup, catalogApi, locationsApi);
   }
 
@@ -214,7 +235,7 @@ public class Main {
    * @param catalogApi the CatalogApi utility
    */
   private void executeExample(String exampleName, boolean cleanup, CatalogApi catalogApi,
-      LocationsApi locationsApi) {
+  LocationsApi locationsApi) {
     for (Example example : examples) {
       if (example.getName().equalsIgnoreCase(exampleName)) {
         try {
@@ -223,8 +244,8 @@ public class Main {
           } else {
             example.execute(catalogApi, locationsApi);
           }
-        } catch (ApiException e) {
-          handleApiException(e);
+        } catch (ApiException | IOException e) {
+            throw new RuntimeException(e);
         }
         return;
       }
@@ -232,30 +253,30 @@ public class Main {
     throw new IllegalArgumentException("Example " + exampleName + " not found");
   }
 
-  /**
-   * Attempts to log {@link Error}s from an {@link ApiException}, or rethrows if the response body
-   * cannot be parsed.
-   */
-  private void handleApiException(ApiException apiException) {
-    try {
-      // If the response includes a body, it means that he server returned some error message.
-      ErrorResponse response =
-          GsonProvider.gson().fromJson(apiException.getResponseBody(), ErrorResponse.class);
+//   /**
+//    * Attempts to log {@link Error}s from an {@link ApiException}, or rethrows if the response body
+//    * cannot be parsed.
+//    */
+//   private void handleApiException(ApiException apiException) {
+//     try {
+//       // If the response includes a body, it means that he server returned some error message.
+//       ErrorResponse response =
+//           GsonProvider.gson().fromJson(apiException.getHttpContext().getResponse().getRawBodyString(), ErrorResponse.class);
 
-      // If we found errors in the response body, log them. Otherwise, rethrow.
-      if (!checkAndLogErrors(response.errors, logger)) {
-        throw new RuntimeException(apiException);
-      }
-    } catch (JsonSyntaxException e) {
-      // If the error message isn't in JSON format, rethrow the error.
-      throw new RuntimeException(apiException);
-    }
-  }
+//       // If we found errors in the response body, log them. Otherwise, rethrow.
+//       if (!checkAndLogErrors(response.errors, logger)) {
+//         throw new RuntimeException(apiException);
+//       }
+//     } catch (JsonSyntaxException e) {
+//       // If the error message isn't in JSON format, rethrow the error.
+//       throw new RuntimeException(apiException);
+//     }
+//   }
 
-  /**
-   * Represents the response body of an {@link ApiException} that contains server specified errors.
-   */
-  private static class ErrorResponse {
-    List<Error> errors;
-  }
+//   /**
+//    * Represents the response body of an {@link ApiException} that contains server specified errors.
+//    */
+//   private static class ErrorResponse {
+//     List<Error> errors;
+//   }
 }
