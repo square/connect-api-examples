@@ -16,20 +16,25 @@
 package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.BatchUpsertCatalogObjectsRequest;
-import com.squareup.connect.models.BatchUpsertCatalogObjectsResponse;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.CatalogObjectBatch;
-import com.squareup.connect.models.RetrieveCatalogObjectResponse;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+// import com.squareup.connect.ApiException;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.BatchUpsertCatalogObjectsRequest;
+import com.squareup.square.models.BatchUpsertCatalogObjectsResponse;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.square.models.CatalogObjectBatch;
+import com.squareup.square.models.RetrieveCatalogObjectResponse;
+
+import java.util.List;
 import java.util.UUID;
 
 import static com.squareup.catalog.demo.util.CatalogObjects.item;
 import static com.squareup.catalog.demo.util.CatalogObjects.itemVariation;
-import static com.squareup.connect.models.SearchCatalogObjectsRequest.ObjectTypesEnum.ITEM;
 import static java.util.Collections.singletonList;
+
+import java.io.IOException;
 
 /**
  * This example creates a new CatalogItem called "Soda" with three
@@ -44,7 +49,7 @@ public class CreateItemExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException, IOException {
     // First create the parent CatalogItem.
     CatalogObject newItem = createItem(catalogApi);
     if (newItem == null) {
@@ -56,14 +61,14 @@ public class CreateItemExample extends Example {
   }
 
   @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException {
-    cleanCatalogObjectsByName(catalogApi, ITEM, "Soda");
+      throws ApiException, IOException {
+    cleanCatalogObjectsByName(catalogApi, CatalogObjectTypes.ITEM.toString(), "Soda");
   }
 
   /**
    * Creates a new item and returns it.
    **/
-  private CatalogObject createItem(CatalogApi catalogApi) throws ApiException {
+  private CatalogObject createItem(CatalogApi catalogApi) throws ApiException, IOException {
     /*
      * Build the request to create the new item.
      *
@@ -77,14 +82,19 @@ public class CreateItemExample extends Example {
      * Note: this call only *creates* the new objects and packages them for
      * upsert. Nothing has been uploaded to the server at this point.
      */
-    BatchUpsertCatalogObjectsRequest request = new BatchUpsertCatalogObjectsRequest()
-        .idempotencyKey(UUID.randomUUID().toString())
-        .batches(singletonList(new CatalogObjectBatch()
-            .objects(singletonList(
-                item("#SODA", "Soda", null,
-                    itemVariation("#SODA-SMALL", "Small", 150),
-                    itemVariation("#SODA-MEDIUM", "Medium", 175),
-                    itemVariation("#SODA-LARGE", "Large", 200))))));
+    List<CatalogObject> objects = singletonList(
+        item("#SODA", "Soda", null,
+        itemVariation("#SODA-SMALL", "Small", 150),
+        itemVariation("#SODA-MEDIUM", "Medium", 175),
+        itemVariation("#SODA-LARGE", "Large", 200))
+    );
+
+    CatalogObjectBatch batch = new CatalogObjectBatch(objects);
+
+    BatchUpsertCatalogObjectsRequest request = new BatchUpsertCatalogObjectsRequest(
+        UUID.randomUUID().toString(),
+        singletonList(batch)
+    );
 
     /*
      * Post the batch upsert to insert the new item.
@@ -113,10 +123,13 @@ public class CreateItemExample extends Example {
    *
    * @param itemId the ID of the newly created item.
    **/
-  private void retrieveItem(CatalogApi catalogApi, String itemId) throws ApiException {
+  private void retrieveItem(CatalogApi catalogApi, String itemId) throws ApiException, IOException {
     // Send GET request to retrieve a single object based on the object ID.
     logger.info("Retrieving item with id: " + itemId);
-    RetrieveCatalogObjectResponse response = catalogApi.retrieveCatalogObject(itemId, false);
+
+    // Set optional parameter as null.
+    Long catalogVersion = null;
+    RetrieveCatalogObjectResponse response = catalogApi.retrieveCatalogObject(itemId, false, catalogVersion);
     if (checkAndLogErrors(response.getErrors())) {
       return;
     }
