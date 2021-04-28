@@ -17,23 +17,9 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.Errors;
-// import com.squareup.connect.ApiException;
-// import com.squareup.connect.api.CatalogApi;
-// import com.squareup.connect.api.LocationsApi;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.SearchCatalogObjectsRequest;
-import com.squareup.square.models.SearchCatalogObjectsResponse;
-// import com.squareup.connect.models.BatchDeleteCatalogObjectsRequest;
-// import com.squareup.connect.models.CatalogObject;
-// import com.squareup.connect.models.CatalogQuery;
-// import com.squareup.connect.models.CatalogQueryExact;
-// import com.squareup.connect.models.CreateCustomerRequest;
-// import com.squareup.connect.models.Error;
-// import com.squareup.connect.models.SearchCatalogObjectsRequest;
-import com.squareup.connect.models.SearchCatalogObjectsRequest.ObjectTypesEnum;
-// import com.squareup.connect.models.CatalogQuery;
-// import com.squareup.connect.models.CatalogQueryExact;
 import java.util.List;
 import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.BatchDeleteCatalogObjectsRequest;
@@ -109,64 +95,39 @@ public abstract class Example {
    * @param type the type of objects to delete
    * @param name the name of objects to delete
    */
-  protected void cleanCatalogObjectsByName(CatalogApi catalogApi, ObjectTypesEnum type, String name)
+  protected void cleanCatalogObjectsByName(CatalogApi catalogApi, String type, String name)
       throws ApiException, IOException {
-    // Search for objects by name and type.
-    logger.info("Search for " + type + " named " + name);
+        // Search for objects by name and type.
+        logger.info("Search for " + type + " named " + name);
 
-    //TODO: hardcoded "ITEM" NEEDS TO BE GONE, input should come as string to this function
-    SearchCatalogObjectsRequest searchRequest = new SearchCatalogObjectsRequest.Builder()
-        .objectTypes(singletonList("ITEM"))
-        .query(new CatalogQuery.Builder()
-            // An Exact query searches for exact matches of the specified attribute.
-            .exactQuery(new CatalogQueryExact("name", name))
-            .build()
-        ).build();
+        SearchCatalogObjectsRequest searchRequest = new SearchCatalogObjectsRequest.Builder()
+            .objectTypes(singletonList(type))
+            .query(new CatalogQuery.Builder()
+                // An Exact query searches for exact matches of the specified attribute.
+                .exactQuery(new CatalogQueryExact("name", name))
+                .build()
+            ).build();
 
-        // .objectTypes(singletonList(type))
-        // .query(new CatalogQuery()
-        //     // An Exact query searches for exact matches of the specified attribute.
-        //     .exactQuery(new CatalogQueryExact()
-        //         .attributeName("name")
-        //         .attributeValue(name)
-        //     )
-        // );
-
-
-        SearchCatalogObjectsResponse searchResponse = catalogApi.searchCatalogObjects(searchRequest);
-        if (checkAndLogErrors(searchResponse.getErrors())) {
-            return;
-        }
-        List<CatalogObject> found = searchResponse.getObjects();
-        if (found.size() == 0) {
-            logger.info("No " + type + " found");
-        } else {
-            // Delete the objects.
-            logger.info("Deleting " + found.size() + " " + type);
-            List<String> ids = new ArrayList<>();
-            for(CatalogObject catalogObject : found) {
-                ids.add(catalogObject.getId());
+        catalogApi.searchCatalogObjectsAsync(searchRequest).thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+                return;
             }
-            BatchDeleteCatalogObjectsRequest deleteRequest = new BatchDeleteCatalogObjectsRequest(ids);
-            catalogApi.batchDeleteCatalogObjects(deleteRequest);
-        }
-    // SearchCatalogObjectsResponse searchResponse = catalogApi.searchCatalogObjects(searchRequest);
-    // catalogApi.searchCatalogObjectsAsync(searchRequest)
-    // if (checkAndLogErrors(searchResponse.getErrors())) {
-    //   return;
-    // }
 
-    // List<CatalogObject> found = searchResponse.getObjects();
-    // if (found.size() == 0) {
-    //   logger.info("No " + type + " found");
-    // } else {
-    //   // Delete the objects.
-    //   logger.info("Deleting " + found.size() + " " + type);
-    //   BatchDeleteCatalogObjectsRequest deleteRequest = new BatchDeleteCatalogObjectsRequest();
-    //   for (CatalogObject catalogObject : searchResponse.getObjects()) {
-    //     deleteRequest.addObjectIdsItem(catalogObject.getId());
-    //   }
-    //   catalogApi.batchDeleteCatalogObjects(deleteRequest);
-    // }
+            if (result.getObjects() == null || result.getObjects().size() == 0) {
+                logger.info("No " + type + " found");
+            } else {
+                List<CatalogObject> found = result.getObjects();
+                // Delete the objects.
+                logger.info("Deleting " + found.size() + " " + type);
+                List<String> ids = new ArrayList<>();
+                for(CatalogObject catalogObject : found) {
+                    ids.add(catalogObject.getId());
+                }
+                BatchDeleteCatalogObjectsRequest deleteRequest = new BatchDeleteCatalogObjectsRequest(ids);
+                catalogApi.batchDeleteCatalogObjectsAsync(deleteRequest);
+            }
+        }).exceptionally(exception -> {
+            throw new RuntimeException(exception);
+        });
   }
 }
