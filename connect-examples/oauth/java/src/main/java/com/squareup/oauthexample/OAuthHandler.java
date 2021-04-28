@@ -15,7 +15,7 @@
    This sample requires the Unirest Java library. Download instructions are here:
    http://unirest.io/java.html
 
-   This sample requires Java SE 6 or later.
+   This sample requires Java SE 8 or later.
  */
 
 package com.squareup.oauthexample;
@@ -50,7 +50,6 @@ public class OAuthHandler {
   // ID and secret. If you are testing in production, use the production application ID and secret.
   private static final String APPLICATION_ID =  "REPLACE ME";
   private static final String APPLICATION_SECRET =  "REPLACE ME";
-
   // Modify this list as needed
   private static final String[] SCOPES = { "MERCHANT_PROFILE_READ", "PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS", "PAYMENTS_WRITE", "PAYMENTS_READ" };
   // Serves the authorize link
