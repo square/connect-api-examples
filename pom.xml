@@ -40,18 +40,22 @@
       <artifactId>gson</artifactId>
       <version>${gson.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.squareup</groupId>
-      <artifactId>connect</artifactId>
-      <version>${connect.version}</version>
-      <scope>compile</scope>
-    </dependency>
         <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>square</artifactId>
       <version>${square.version}</version>
       <scope>compile</scope>
     </dependency>
+      <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-api</artifactId>
+    <version>2.13.0</version>
+  </dependency>
+  <dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-core</artifactId>
+    <version>2.13.0</version>
+  </dependency>
 
     <!-- Test Dependencies. -->
     <dependency>
