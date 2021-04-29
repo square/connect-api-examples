@@ -16,28 +16,31 @@
 package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.CatalogItem;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.CatalogTax;
-import com.squareup.connect.models.ListCatalogResponse;
-import com.squareup.connect.models.UpdateItemTaxesRequest;
-import com.squareup.connect.models.UpdateItemTaxesResponse;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.square.models.CatalogTax;
+import com.squareup.square.models.UpdateItemTaxesRequest;
 import java.util.ArrayList;
 import java.util.List;
+import static java.util.Collections.singletonList;
+
 
 import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
-import static com.squareup.connect.models.CatalogItem.ProductTypeEnum.REGULAR;
-import static com.squareup.connect.models.CatalogObjectType.ITEM;
-import static com.squareup.connect.models.CatalogObjectType.TAX;
 
 /**
  * This example shows a list of taxes to choose from, then applies the selected tax to
  * all items in the Item Library.
  **/
 public class ApplyTaxToAllIItemsExample extends Example {
+
+    private String cursor = null;
+
+    private int totalItemsApplied = 0;
+
+    private int totalItemsVisited = 0;
 
   public ApplyTaxToAllIItemsExample(Logger logger) {
     super("apply_tax_to_all_items", "Applies a selected tax to all items.", logger);
@@ -47,7 +50,7 @@ public class ApplyTaxToAllIItemsExample extends Example {
       throws ApiException {
     // Retrieve taxes from the server.
     List<CatalogObject> allTaxes = retrieveAllTaxes(catalogApi);
-    if (allTaxes.isEmpty()) {
+    if (allTaxes == null || allTaxes.isEmpty()) {
       logger.info("No taxes found in catalog");
       return;
     }
@@ -69,19 +72,28 @@ public class ApplyTaxToAllIItemsExample extends Example {
    */
   private List<CatalogObject> retrieveAllTaxes(CatalogApi catalogApi) throws ApiException {
     List<CatalogObject> allTaxes = new ArrayList<>();
-    String cursor = null;
+
+    // Optional parameters can be set to null.
+    Long catalogVersion = null;
+    this.cursor = null;
+
     do {
-      // Retrieve a page of taxes
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, TAX.toString());
-      if (checkAndLogErrors(listResponse.getErrors())) {
-        return null;
-      }
+        // Retrieve a page of taxes
+        catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.TAX.toString(), catalogVersion).thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+                return;
+            }
 
-      // Append the new taxes to the complete list of taxes.
-      allTaxes.addAll(listResponse.getObjects());
+            // Append the new taxes to the complete list of taxes.
+            allTaxes.addAll(result.getObjects());
 
-      // Move to the next page.
-      cursor = listResponse.getCursor();
+            // Move to the next page.
+            cursor = result.getCursor();
+        }).exceptionally(exception -> {
+            // Log exception, return null.
+            logger.error(exception.getMessage());
+            return null;
+        }).join();
     } while (cursor != null);
 
     return allTaxes;
@@ -127,60 +139,67 @@ public class ApplyTaxToAllIItemsExample extends Example {
     logger.info("Applying " + tax.getTaxData().getName() + " to all items");
 
     final String taxId = tax.getId();
-    String cursor = null;
-    int totalItemsApplied = 0;
-    int totalItemsVisited = 0;
+    this.cursor = null;
     final long startTimeMillis = System.currentTimeMillis();
+
+     // Optional parameters can be set to null.
+     Long catalogVersion = null;
+
     do {
       // Retrieve a page of items.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, ITEM.toString());
-      if (checkAndLogErrors(listResponse.getErrors())) {
-        return;
-      }
+        catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.ITEM.toString(), catalogVersion).thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+                return;
+            }
+            List<CatalogObject> items = result.getObjects();
+            if (items.size() == 0) {
+              if (cursor == null) {
+                logger.info("No items found in catalog.");
+                return;
+              }
+            } else {
+                // Figure out which items to apply the tax to.
+                List<String> itemIds = new ArrayList<>();
+                for (CatalogObject item : items) {
+                    // Ignore non-regular items and items already linked to the tax.
+                    String itemType = item.getItemData().getProductType();
+                    if ((itemType == null || itemType.equals("REGULAR")) && (item.getItemData().getTaxIds() == null || !item.getItemData().getTaxIds().contains(taxId))) {
+                        itemIds.add(item.getId());
+                    }
+                }
 
-      List<CatalogObject> items = listResponse.getObjects();
-      if (items.size() == 0) {
-        if (cursor == null) {
-          logger.info("No items found in catalog.");
-          return;
-        }
-      } else {
-        // Figure out which items to apply the tax to.
-        UpdateItemTaxesRequest updateItemTaxesRequest = new UpdateItemTaxesRequest()
-            .addTaxesToEnableItem(taxId);
-        for (CatalogObject item : items) {
-          // Ignore non-regular items and items already linked to the tax.
-          CatalogItem.ProductTypeEnum itemType = item.getItemData().getProductType();
-          if ((itemType == null || itemType == REGULAR) &&
-              !item.getItemData().getTaxIds().contains(taxId)) {
-            updateItemTaxesRequest.addItemIdsItem(item.getId());
-          }
-        }
+                UpdateItemTaxesRequest updateItemTaxesRequest = new UpdateItemTaxesRequest.Builder(itemIds)
+                    .taxesToEnable(singletonList(taxId))
+                    .build();
 
-        // Add the tax to the items.
-        if (updateItemTaxesRequest.getItemIds().size() > 0) {
-          totalItemsApplied += updateItemTaxesRequest.getItemIds().size();
-          UpdateItemTaxesResponse updateItemTaxesResponse =
-              catalogApi.updateItemTaxes(updateItemTaxesRequest);
-          if (checkAndLogErrors(updateItemTaxesResponse.getErrors())) {
-            return;
-          }
-        }
+              // Add the tax to the items.
+              if (updateItemTaxesRequest.getItemIds().size() > 0) {
+                totalItemsApplied += updateItemTaxesRequest.getItemIds().size();
+                catalogApi.updateItemTaxesAsync(updateItemTaxesRequest).thenAccept(updateResponse -> {
+                    if (checkAndLogErrors(updateResponse.getErrors())) {
+                        return;
+                    }
+                }).join();
+              }
 
-        // Log info about this page of items we just deleted.
-        long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
-        totalItemsVisited += items.size();
-        logger.info("Added tax to "
-            + updateItemTaxesRequest.getItemIds().size()
-            + " items ("
-            + totalItemsVisited
-            + " total items processed in "
-            + elapsedTimeSeconds
-            + " seconds)");
-      }
-
-      // Move to the next page.
-      cursor = listResponse.getCursor();
+              // Log info about this page of items we just deleted.
+              long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
+              totalItemsVisited += items.size();
+              logger.info("Added tax to "
+                  + updateItemTaxesRequest.getItemIds().size()
+                  + " items ("
+                  + totalItemsVisited
+                  + " total items processed in "
+                  + elapsedTimeSeconds
+                  + " seconds)");
+            }
+            // Move to the next page.
+            cursor = result.getCursor();
+      }).exceptionally(exception -> {
+            // Log exception, return null.
+            logger.error(exception.getMessage());
+            return null;
+      }).join();
     } while (cursor != null);
 
     // Log results.
