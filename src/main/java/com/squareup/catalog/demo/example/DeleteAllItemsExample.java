@@ -16,22 +16,28 @@
 package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.BatchDeleteCatalogObjectsRequest;
-import com.squareup.connect.models.BatchDeleteCatalogObjectsResponse;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.ListCatalogResponse;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.BatchDeleteCatalogObjectsRequest;
+import com.squareup.square.models.CatalogObject;
+
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
-import static com.squareup.connect.models.CatalogObjectType.ITEM;
 
 /**
  * This example deletes all items and variations in a merchant's Item Library.
  */
 public class DeleteAllItemsExample extends Example {
+
+  private int totalDeletedItems = 0;
+
+  private String cursor = null;
 
   private static final String CONFIRMATION_PROMPT =
       "Are you sure you want to delete ALL items in your Item Library?"
@@ -43,7 +49,7 @@ public class DeleteAllItemsExample extends Example {
   }
 
   @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException {
+      throws ApiException, IOException {
 
     // Prompt the  user to verify that they actually want to delete all items in the library.
     if (!promptUserInput(CONFIRMATION_PROMPT).equals("DELETE")) {
@@ -51,56 +57,57 @@ public class DeleteAllItemsExample extends Example {
       return;
     }
 
-    String cursor = null;
-    int totalDeletedItems = 0;
+    // Optional parameters can be set to null.
+    Long catalogVersion = null;
+
     final long startTimeMillis = System.currentTimeMillis();
+
     do {
-      // Retrieve a page of items.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, ITEM.toString());
-      if (checkAndLogErrors(listResponse.getErrors())) {
-        return;
-      }
+        catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.ITEM.toString(), catalogVersion).thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+                return;
+            }
 
-      List<CatalogObject> items = listResponse.getObjects();
-      if (items.size() == 0) {
-        if (cursor == null) {
-          logger.info("No items found. Item Library was already empty.");
-          return;
-        }
-      } else {
-        // Delete all items in the page of results.
-        BatchDeleteCatalogObjectsRequest deleteRequest = new BatchDeleteCatalogObjectsRequest();
-        for (CatalogObject catalogObject : items) {
-          deleteRequest.addObjectIdsItem(catalogObject.getId());
-        }
-        BatchDeleteCatalogObjectsResponse deleteResponse =
-            catalogApi.batchDeleteCatalogObjects(deleteRequest);
-        if (checkAndLogErrors(deleteResponse.getErrors())) {
-          return;
-        }
+            List<CatalogObject> items = result.getObjects();
+            if (items.size() == 0) {
+                if (cursor == null) {
+                logger.info("No items found. Item Library was already empty.");
+                return;
+                }
+            } else {
+                // Delete all items in the page of results.
+                List<String> ids = new ArrayList<>();
+                for (CatalogObject catalogObject : items) {
+                ids.add(catalogObject.getId());
+                }
+                BatchDeleteCatalogObjectsRequest deleteRequest = new BatchDeleteCatalogObjectsRequest(ids);
+                catalogApi.batchDeleteCatalogObjectsAsync(deleteRequest).thenAccept(deleteResponse -> {
+                    if (checkAndLogErrors(deleteResponse.getErrors())) {
+                        return;
+                    }
 
-        // Log info about this page of items we just deleted.
-        long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
-        totalDeletedItems += items.size();
-        logger.info("Deleted "
-            + items.size()
-            + " items ("
-            + totalDeletedItems
-            + " total in "
-            + elapsedTimeSeconds
-            + " seconds)");
-      }
-
-      // Move to the next page.
-      cursor = listResponse.getCursor();
+                    // Log info about this page of items we just deleted.
+                    long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
+                    logDeletedItems(items.size(), elapsedTimeSeconds);
+                }).join();
+            }
+            cursor = result.getCursor();
+        }).exceptionally(exception -> {
+            // Log exception, return null.
+            logger.error(exception.getMessage());
+            return null;
+        }).join();
     } while (cursor != null);
+  }
 
-    // Show completion message.
-    long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
-    logger.info("Complete! Deleted "
+  private void logDeletedItems(int currentSize, long elapsedTime) {
+    totalDeletedItems += currentSize;
+    logger.info("Deleted "
+        + currentSize
+        + " items ("
         + totalDeletedItems
-        + " total items in "
-        + elapsedTimeSeconds
-        + " seconds");
+        + " total in "
+        + elapsedTime
+        + " seconds)");
   }
 }
