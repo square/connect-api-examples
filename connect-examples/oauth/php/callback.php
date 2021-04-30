@@ -1,26 +1,31 @@
 <?php
-require_once('sandbox_config.php');
-require_once('sandbox_messages.php');
+require 'vendor/autoload.php';
+require_once('messages.php');
 
 use Square\Exceptions\ApiException;
 use Square\SquareClient;
 use Square\Environment;
 use Square\Models\ObtainTokenRequest;
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::create(__DIR__);
+$dotenv->load();
 
 // The obtainOAuthToken function shows you how to obtain a OAuth access token
 // with the OAuth API with the authorization code returned to OAuth callback.
 function obtainOAuthToken($authorizationCode) {
   // Initialize Square PHP SDK OAuth API client.
+  $environment = getenv('SQ_ENVIRONMENT') == "sandbox" ? Environment::SANDBOX : Environment::PRODUCTION;
   $apiClient = new SquareClient([
-    'environment' => Environment::SANDBOX,
+    'environment' => $environment
   ]);
   $oauthApi = $apiClient->getOAuthApi();
 
   // Initialize the request parameters for the obtainToken request.
   $body_grantType = 'authorization_code';
   $body = new ObtainTokenRequest(
-    _SQ_SANDBOX_APP_ID,
-    _SQ_SANDBOX_APP_SECRET,
+    getenv('SQ_APPLICATION_ID'),
+    getenv('SQ_APPLICATION_SECRET'),
     $body_grantType
   );
   $body->setCode($authorizationCode);

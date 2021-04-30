@@ -14,7 +14,7 @@
         <div><strong>OAuth access token expires at:</strong> <?= $expiresAt ?></div><br/>
         <div><strong>OAuth refresh token:</strong> <?= $refreshToken ?></div><br/>
         <div><strong>Merchant Id:</strong> <?= $merchantId ?></div><br/>
-        <div><p>You can this OAuth access token in Sandbox to call Create Payment and other APIs that were authorized by this seller.</p>
+        <div><p>You can this OAuth access token to call Create Payment and other APIs that were authorized by this seller.</p>
           <p>Try it out with <a href='https://developer.squareup.com/explorer/square/payments-api/create-payment' target='_blank'>API Explorer</a>.</p>
         </div><br/>
 
