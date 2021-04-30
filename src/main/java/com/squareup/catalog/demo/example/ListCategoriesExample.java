@@ -15,20 +15,22 @@
  */
 package com.squareup.catalog.demo.example;
 
-import com.squareup.catalog.demo.Logger;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.CatalogCategory;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.ListCatalogResponse;
+import java.util.List;
 
-import static com.squareup.connect.models.CatalogObjectType.CATEGORY;
+import com.squareup.catalog.demo.Logger;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.CatalogCategory;
+import com.squareup.square.models.CatalogObject;
 
 /**
  * This example lists all categories in the catalog.
  */
 public class ListCategoriesExample extends Example {
+
+  private String cursor = null;
 
   public ListCategoriesExample(Logger logger) {
     super("list_categories", "List all categories.", logger);
@@ -36,26 +38,36 @@ public class ListCategoriesExample extends Example {
 
   @Override
   public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
-    String cursor = null;
+
+    // Optional parameters can be set to null.
+    Long catalogVersion = null;
+
     do {
-      // Retrieve a page of categories.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, CATEGORY.toString());
-      if (checkAndLogErrors(listResponse.getErrors())) {
-        return;
-      }
+        // Retrieve a page of categories.
+        catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.CATEGORY.toString(), catalogVersion).thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+                return;
+            }
 
-      if (listResponse.getObjects().isEmpty() && cursor == null) {
-        logger.info("No categories found.");
-        return;
-      }
-
-      for (CatalogObject categoryObject : listResponse.getObjects()) {
-        CatalogCategory category = categoryObject.getCategoryData();
-        logger.info(category.getName() + " (" + categoryObject.getId() + ")");
-      }
-
-      // Move to the next page.
-      cursor = listResponse.getCursor();
+            List<CatalogObject> categories = result.getObjects();
+            if (categories.size() == 0) {
+                if (cursor == null) {
+                    logger.info("No items found. Item Library was already empty.");
+                    return;
+                }
+            } else {
+                for(CatalogObject categoryObject : categories) {
+                    CatalogCategory category = categoryObject.getCategoryData();
+                    logger.info(category.getName() + " (" + categoryObject.getId() + ")");
+                }
+            }
+            // Move to the next page.
+            cursor = result.getCursor();
+        }).exceptionally(exception -> {
+            // Log exception, return null.
+            logger.error(exception.getMessage());
+            return null;
+        }).join();
     } while (cursor != null);
   }
 }
