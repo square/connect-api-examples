@@ -38,23 +38,37 @@ const { ApiError, Client, Environment } = require('square');
 const app = express();
 app.use(cookieParser());
 
-const {PORT, SQ_SANDBOX_APP_ID, SQ_SANDBOX_APP_SECRET } = process.env;
+const {PORT, SQ_ENVIRONMENT, SQ_APPLICATION_ID, SQ_APPLICATION_SECRET } = process.env;
+
+let basePath;
+let environment;
+if (SQ_ENVIRONMENT.toLowerCase() === "production") {
+  basePath = `https://connect.squareup.com`;
+  environment = Environment.Production;
+
+} else if (SQ_ENVIRONMENT.toLowerCase() === "sandbox") {
+  basePath = `https://connect.squareupsandbox.com`;
+  environment = Environment.Sandbox;
+} else {
+  console.warn('Unsupported value for SQ_ENVIRONMENT in .env file.');
+  process.exit(1);
+}
 
 // Check if example secrets were set
-if (!SQ_SANDBOX_APP_ID || !SQ_SANDBOX_APP_SECRET) {
-    console.warn('\x1b[33m%s\x1b[0m','Missing secrets! Configure set values for SQ_SANDBOX_APP_ID and SQ_SANDBOX_APP_SECRET in a .env file.');
+if (!SQ_APPLICATION_ID || !SQ_APPLICATION_SECRET) {
+    console.warn('\x1b[33m%s\x1b[0m','Missing secrets! Configure set values for SQ_APPLICATION_ID and SQ_APPLICATION_SECRET in a .env file.');
     process.exit(1);
 }
 
 const port = PORT || "8000";
-const messages = require('./sandbox-messages');
+const messages = require('./messages');
 
 // The default environment for this example is sandbox
-let basePath = `https://connect.squareupsandbox.com`;
+
 
 // Configure Square defcault client
 const squareClient = new Client({
-    environment: Environment.Sandbox
+    environment: environment
 });
 
 // Configure Square OAuth API instance
@@ -73,14 +87,14 @@ const scopes = [
  * Description:
  *  Serves the link that merchants click to authorize your application
  */
-app.get("/sandbox_request_token", (req, res) => {
+app.get("/request_token", (req, res) => {
     // Set the Auth_State cookie with a random md5 string to protect against cross-site request forgery.
     // Auth_State will expire in 300 seconds (5 mins) after the page is loaded.
     var state = md5(Date.now())
-    var url = basePath + `/oauth2/authorize?client_id=${process.env.SQ_SANDBOX_APP_ID}&` + `response_type=code&` + `scope=${scopes.join('+')}` + `&state=` + state
+    var url = basePath + `/oauth2/authorize?client_id=${process.env.SQ_APPLICATION_ID}&` + `response_type=code&` + `scope=${scopes.join('+')}` + `&state=` + state
     res.cookie("Auth_State", state, {expire: Date.now() + 300000}).send(
         `<p>
-            <a href='${url}'> SANDBOX: Authorize this application</a>
+            <a href='${url}'>Authorize this application</a>
         </p>`
     )
 });
@@ -96,7 +110,7 @@ app.get("/sandbox_request_token", (req, res) => {
  *  response_type: the type of the response; should be "code"
  *  code: the authorization code
  */
-app.get('/sandbox_callback', async (req, res) => {
+app.get('/callback', async (req, res) => {
     console.log(req.query);
     // Verify the state to protect against cross-site request forgery.
     if (req.cookies["Auth_State"] !== req.query['state']) {
@@ -123,8 +137,8 @@ app.get('/sandbox_callback', async (req, res) => {
             let { result } = await oauthInstance.obtainToken({
                 // Provide the code in a request to the Obtain Token endpoint
                 code,
-                clientId: process.env.SQ_SANDBOX_APP_ID,
-                clientSecret: process.env.SQ_SANDBOX_APP_SECRET,
+                clientId: process.env.SQ_APPLICATION_ID,
+                clientSecret: process.env.SQ_APPLICATION_SECRET,
                 grantType: 'authorization_code'
             });
 

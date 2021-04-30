@@ -29,7 +29,7 @@ function writeTokensOnSuccess(access_token, refresh_token, expires_at, merchant_
         <div><strong>OAuth access token expires at: </strong> ${expires_at} </div><br/>
         <div><strong>OAuth refresh token: </strong>  ${refresh_token} </div><br/>
         <div><strong>Merchant Id: </strong>  ${merchant_id} </div><br/>
-        <div><p>You can this OAuth access token in Sandbox to call Create Payment and other APIs that were authorized by this seller.</p>
+        <div><p>You can this OAuth access token to call Create Payment and other APIs that were authorized by this seller.</p>
           <p>Try it out with <a href='https://developer.squareup.com/explorer/square/payments-api/create-payment' target='_blank'>API Explorer</a>.</p>
         </div><br/>`
     )
