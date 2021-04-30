@@ -84,8 +84,10 @@ public class ApplyTaxToAllIItemsExample extends Example {
                 return;
             }
 
+            List<CatalogObject> taxes = result.getObjects() == null ? new ArrayList<>() : result.getObjects();
+
             // Append the new taxes to the complete list of taxes.
-            allTaxes.addAll(result.getObjects());
+            allTaxes.addAll(taxes);
 
             // Move to the next page.
             cursor = result.getCursor();

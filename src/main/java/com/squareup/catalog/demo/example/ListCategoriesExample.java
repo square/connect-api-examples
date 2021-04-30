@@ -50,13 +50,13 @@ public class ListCategoriesExample extends Example {
             }
 
             List<CatalogObject> categories = result.getObjects();
-            if (categories.size() == 0) {
+            if (categories == null || categories.size() == 0) {
                 if (cursor == null) {
-                    logger.info("No items found. Item Library was already empty.");
+                    logger.info("No categories found.");
                     return;
                 }
             } else {
-                for(CatalogObject categoryObject : categories) {
+                for (CatalogObject categoryObject : categories) {
                     CatalogCategory category = categoryObject.getCategoryData();
                     logger.info(category.getName() + " (" + categoryObject.getId() + ")");
                 }

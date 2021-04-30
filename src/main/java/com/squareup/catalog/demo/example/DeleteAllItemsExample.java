@@ -69,7 +69,7 @@ public class DeleteAllItemsExample extends Example {
             }
 
             List<CatalogObject> items = result.getObjects();
-            if (items.size() == 0) {
+            if (items == null || items.size() == 0) {
                 if (cursor == null) {
                 logger.info("No items found. Item Library was already empty.");
                 return;
