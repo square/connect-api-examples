@@ -15,21 +15,25 @@
  */
 package com.squareup.catalog.demo.example;
 
-import com.squareup.catalog.demo.Logger;
-import com.squareup.catalog.demo.util.Moneys;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.CatalogDiscount;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.ListCatalogResponse;
+import java.util.List;
 
-import static com.squareup.connect.models.CatalogObjectType.DISCOUNT;
+import com.squareup.catalog.demo.Logger;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.catalog.demo.util.DiscountTypes;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.CatalogDiscount;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.catalog.demo.util.Moneys;
+
 
 /**
  * This example lists all discounts in the catalog.
  */
 public class ListDiscountsExample extends Example {
+
+  private String cursor = null;
 
   public ListDiscountsExample(Logger logger) {
     super("list_discounts", "List all discounts.", logger);
@@ -37,50 +41,59 @@ public class ListDiscountsExample extends Example {
 
   @Override
   public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
-    String cursor = null;
+
+    // Optional parameters can be set to null.
+    Long catalogVersion = null;
+
     do {
-      // Retrieve a page of discounts.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, DISCOUNT.toString());
-      if (checkAndLogErrors(listResponse.getErrors())) {
-        return;
-      }
+        // Retrieve a page of discounts.
+        catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.DISCOUNT.toString(), catalogVersion).thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+                return;
+            }
 
-      if (listResponse.getObjects().isEmpty() && cursor == null) {
-        logger.info("No discounts found.");
-        return;
-      }
+            List<CatalogObject> discounts = result.getObjects();
+            if (discounts == null || discounts.size() == 0) {
+                if (cursor == null) {
+                    logger.info("No discounts found.");
+                    return;
+                }
+            } else {
+                for (CatalogObject discountObject : discounts) {
+                    CatalogDiscount discount = discountObject.getDiscountData();
+                    String amount = null;
 
-      for (CatalogObject discountObject : listResponse.getObjects()) {
-        CatalogDiscount discount = discountObject.getDiscountData();
-        String amount = null;
+                     // Determine which type of discount this is.
+                    switch (DiscountTypes.valueOf(discount.getDiscountType())) {
+                        case FIXED_AMOUNT:
+                            amount = Moneys.format(discount.getAmountMoney());
+                            break;
+                        case FIXED_PERCENTAGE:
+                            amount = discount.getPercentage() + "%";
+                            break;
+                        case VARIABLE_AMOUNT:
+                            amount = "variable $";
+                            break;
+                        case VARIABLE_PERCENTAGE:
+                            amount = "variable %";
+                            break;
+                    }
 
-        // Determine which type of discount this is.
-        switch (discount.getDiscountType()) {
-          case FIXED_AMOUNT:
-            amount = Moneys.format(discount.getAmountMoney());
-            break;
-          case FIXED_PERCENTAGE:
-            amount = discount.getPercentage() + "%";
-            break;
-          case VARIABLE_AMOUNT:
-            amount = "variable $";
-            break;
-          case VARIABLE_PERCENTAGE:
-            amount = "variable %";
-            break;
-        }
-
-        // Log the name and amount of the discount.
-        String logMessage = discount.getName();
-        if (amount != null) {
-          logMessage += " [" + amount + "]";
-        }
-        logMessage += " (" + discountObject.getId() + ")";
-        logger.info(logMessage);
-      }
-
-      // Move to the next page.
-      cursor = listResponse.getCursor();
+                    // Log the name and amount of the discount.
+                    String logMessage = discount.getName();
+                    if (amount != null) {
+                        logMessage += " [" + amount + "]";
+                    }
+                    logMessage += " (" + discountObject.getId() + ")";
+                    logger.info(logMessage);
+                }
+            }
+            cursor = result.getCursor();
+        }).exceptionally(exception -> {
+            // Log exception, return null.
+            logger.error(exception.getMessage());
+            return null;
+        }).join();
     } while (cursor != null);
   }
 }
