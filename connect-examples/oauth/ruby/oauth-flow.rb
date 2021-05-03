@@ -16,18 +16,27 @@
 
 require 'sinatra'
 require 'square'
+require 'dotenv/load'
 
 # Your application's ID and secret, available from your application dashboard.
-APP_ID     = 'REPLACE_ME'
-APP_SECRET = 'REPLACE_ME'
+application_id = ENV['SQ_APPLICATION_ID']
+application_secret = ENV['SQ_APPLICATION_SECRET']
+environment = ENV['SQ_ENVIRONMENT'].downcase
 
-CONNECT_HOST = "https://connect.squareup.com"
+if environment == 'production'
+  connect_host = "https://connect.squareup.com"
+else
+  connect_host = "https://connect.squareupsandbox.com"
+end
 
-oauth_api = Square::Client.new.o_auth
+client = Square::Client.new(
+  environment: environment
+)
+oauth_api = client.o_auth
 
 # Serves the link that merchants click to authorize your application
 get '/' do
-  "<a href=\"#{CONNECT_HOST}/oauth2/authorize?client_id=#{APP_ID}\">Click here</a>
+  "<a href=\"#{connect_host}/oauth2/authorize?client_id=#{application_id}\">Click here</a>
             to authorize the application."
 end
 
@@ -43,8 +52,8 @@ get '/callback' do
 
     # Provide the code in a request to the Obtain Token endpoint
     oauth_request_body = {
-      'client_id' => APP_ID,
-      'client_secret' => APP_SECRET,
+      'client_id' => application_id,
+      'client_secret' => application_secret,
       'code' => authorization_code,
       'grant_type' => 'authorization_code'
     }
