@@ -16,20 +16,21 @@
 package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.catalog.demo.util.Moneys;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.CatalogCategory;
-import com.squareup.connect.models.CatalogDiscount;
-import com.squareup.connect.models.CatalogItem;
-import com.squareup.connect.models.CatalogItemModifierListInfo;
-import com.squareup.connect.models.CatalogItemVariation;
-import com.squareup.connect.models.CatalogModifier;
-import com.squareup.connect.models.CatalogModifierList;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.CatalogTax;
-import com.squareup.connect.models.RetrieveCatalogObjectResponse;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.CatalogCategory;
+import com.squareup.square.models.CatalogDiscount;
+import com.squareup.square.models.CatalogImage;
+import com.squareup.square.models.CatalogItem;
+import com.squareup.square.models.CatalogItemModifierListInfo;
+import com.squareup.square.models.CatalogItemVariation;
+import com.squareup.square.models.CatalogModifier;
+import com.squareup.square.models.CatalogModifierList;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.square.models.CatalogTax;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,22 +50,35 @@ public class RetrieveCatalogObjectExample extends Example {
     String catalogObjectId = promptUserInput("Enter catalog object ID: ");
 
     // Send a request to retrieve the catalog object by ID. The second boolean arguments indicates
-    // the we want related objects, such as the taxes linked to an item.
-    RetrieveCatalogObjectResponse response =
-        catalogApi.retrieveCatalogObject(catalogObjectId, true);
-    if (checkAndLogErrors(response.getErrors())) {
-      return;
-    }
+    // the we want related objects, such as the taxes linked to an item. Optional variable version
+    // is set to null.
+    Long catalogVersion = null;
+    catalogApi.retrieveCatalogObjectAsync(catalogObjectId, true, catalogVersion).thenAccept(result -> {
+        if (checkAndLogErrors(result.getErrors())) {
+            return;
+        }
 
-    // Put the related objects into a map keyed by catalog object ID so we can look them up faster.
-    HashMap<String, CatalogObject> relatedObjectsMap = new HashMap<>();
-    for (CatalogObject relatedObject : response.getRelatedObjects()) {
-      String relatedObjectId = relatedObject.getId();
-      relatedObjectsMap.put(relatedObjectId, relatedObject);
-    }
+        if(result.getObject() != null) {
+            // Put the related objects into a map keyed by catalog object ID so we can look them up faster.
+            HashMap<String, CatalogObject> relatedObjectsMap = new HashMap<>();
+            if (result.getRelatedObjects() != null) {
+                for (CatalogObject relatedObject : result.getRelatedObjects()) {
+                    String relatedObjectId = relatedObject.getId();
+                    relatedObjectsMap.put(relatedObjectId, relatedObject);
+                }
+            }
 
-    CatalogObject catalogObject = response.getObject();
-    logCatalogObjectDetails(catalogObject, relatedObjectsMap);
+            CatalogObject catalogObject = result.getObject();
+            logCatalogObjectDetails(catalogObject, relatedObjectsMap);
+        } else {
+            // There is no object with the given id.
+            logger.info("No items with the given id were found.");
+        }
+    }).exceptionally(exception -> {
+        // Log exception, return null.
+        logger.error(exception.getMessage());
+        return null;
+    });
   }
 
   /**
@@ -73,9 +87,8 @@ public class RetrieveCatalogObjectExample extends Example {
    * @param catalogObject the {@link CatalogObject} to log info about
    * @param relatedObjectsMap a map of related objects keyed by their IDs
    */
-  void logCatalogObjectDetails(CatalogObject catalogObject,
-      Map<String, CatalogObject> relatedObjectsMap) {
-    CatalogObject.TypeEnum type = catalogObject.getType();
+  void logCatalogObjectDetails(CatalogObject catalogObject, Map<String, CatalogObject> relatedObjectsMap) {
+    CatalogObjectTypes type = CatalogObjectTypes.valueOf(catalogObject.getType());
     switch (type) {
       case CATEGORY:
         logCategoryDetails(catalogObject);
@@ -90,13 +103,16 @@ public class RetrieveCatalogObjectExample extends Example {
         logItemVariationDetails(catalogObject, relatedObjectsMap);
         break;
       case MODIFIER:
-        logger.info(getModifierLogMessage(catalogObject, ""));
+        logModifierDetails(catalogObject, "");
         break;
       case MODIFIER_LIST:
-        logModifierListData(catalogObject);
+        logModifierListDetails(catalogObject);
         break;
       case TAX:
-        logger.info(getTaxLogMessage(catalogObject, ""));
+        logTaxDetails(catalogObject, "");
+        break;
+      case IMAGE:
+        logImageDetails(catalogObject, "");
         break;
       default:
         logger.info("Unrecognized catalog object type: " + type);
@@ -116,78 +132,96 @@ public class RetrieveCatalogObjectExample extends Example {
    */
   private void logDiscountDetails(CatalogObject discountObject) {
     CatalogDiscount discount = discountObject.getDiscountData();
-    String logMessage = ("[" + discountObject.getType() + "] " + discount.getName())
-        + "\n  ID: " + discountObject.getId()
-        + "\n  Type: " + discount.getDiscountType()
-        + "\n  Amount: " + Moneys.format(discount.getAmountMoney())
-        + "\n  Percentage: " + discount.getPercentage();
-    logger.info(logMessage);
+    StringBuilder logMessage = new StringBuilder();
+
+    logMessage.append("[" + discountObject.getType() + "] " + discount.getName())
+        .append("\n  ID: " + discountObject.getId())
+        .append("\n  Type: " + discount.getDiscountType())
+        .append("\n  Amount: " + Moneys.format(discount.getAmountMoney()))
+        .append("\n  Percentage: " + discount.getPercentage());
+
+    logger.info(logMessage.toString());
   }
 
   /**
    * Logs information about a {@link CatalogItem}.
    */
-  private void logItemDetails(CatalogObject itemObject,
-      Map<String, CatalogObject> relatedObjectsMap) {
+  private void logItemDetails(CatalogObject itemObject, Map<String, CatalogObject> relatedObjectsMap) {
     CatalogItem item = itemObject.getItemData();
-    String logMessage = "[" + itemObject.getType() + "] " + item.getName()
-        + "\n  ID: " + itemObject.getId()
-        + "\n  Image URL: " + item.getImageUrl();
+    StringBuilder logMessage = new StringBuilder();
+
+    logMessage.append("[" + itemObject.getType() + "] ")
+        .append(item.getName())
+        .append("\n  ID: " + itemObject.getId());
+
+    // Append image id if one exists.
+    if(itemObject.getImageId() != null) {
+        logMessage.append("\n  Image ID: " + itemObject.getImageId());
+    }
 
     // Get the category from the related objects.
-    logMessage += "\n  Category: ";
+    logMessage.append("\n  Category: ");
     if (item.getCategoryId() == null) {
-      logMessage += "<uncategorized>";
+      logMessage.append("<uncategorized>");
     } else {
       CatalogObject categoryObject = relatedObjectsMap.get(item.getCategoryId());
-      logMessage +=
-          categoryObject.getCategoryData().getName() + " (" + categoryObject.getId() + ")";
+      logMessage.append(categoryObject.getCategoryData().getName() + " (" + categoryObject.getId() + ")");
     }
 
     // Add item variations.
-    logMessage += "\n  Item Variations:";
+    logMessage.append("\n  Item Variations:");
     for (CatalogObject variationObject : item.getVariations()) {
       CatalogItemVariation variation = variationObject.getItemVariationData();
-      logMessage += "\n    [" + variationObject.getType() + "] " + variation.getName()
-          + "\n      ID: " + variationObject.getId()
-          + "\n      Price: " + Moneys.format(variation.getPriceMoney())
-          + "\n      SKU: " + variation.getSku();
+      logMessage.append("\n    [" + variationObject.getType() + "] " + variation.getName())
+        .append("\n      ID: " + variationObject.getId())
+        .append("\n      Price: " + Moneys.format(variation.getPriceMoney()))
+        .append("\n      SKU: " + (variation.getSku() == null ? "<none>" : variation.getSku()));
     }
 
     // Add taxes.
-    logMessage += "\n  Taxes:";
-    if (item.getTaxIds().isEmpty()) {
-      logMessage += " <none>";
+    logMessage.append("\n  Taxes:");
+    if (item.getTaxIds() == null || item.getTaxIds().isEmpty()) {
+      logMessage.append(" <none>");
     } else {
       for (String taxId : item.getTaxIds()) {
         CatalogObject taxObject = relatedObjectsMap.get(taxId);
-        logMessage += "\n" + getTaxLogMessage(taxObject, "    ");
+        logMessage.append("\n" + getTaxLogMessage(taxObject, "    "));
       }
     }
 
     // Add modifier lists.
-    logMessage += "\n  Modifier Lists:";
+    logMessage.append("\n  Modifier Lists:");
     boolean hasModifierList = false;
-    for (CatalogItemModifierListInfo modifierListInfo : item.getModifierListInfo()) {
-      // If a CatalogItemModifierListInfo is disabled, it means that the item was once linked to
-      // the modifier list, but has since been unlinked. We keep the CatalogItemModifierListInfo
-      // around so we can restore the item-specific modifier list configuration (ex. pre-selected
-      // modifiers) when the item is re-linked to the modifier list.
-      Boolean modifierListEnabledForItem = modifierListInfo.getEnabled();
-      if (modifierListEnabledForItem != null && modifierListEnabledForItem) {
-        String modifierListId = modifierListInfo.getModifierListId();
-        CatalogObject modifierListObject = relatedObjectsMap.get(modifierListId);
-        CatalogModifierList modifierList = modifierListObject.getModifierListData();
-        logMessage += "\n    " + modifierList.getName() + " (" + modifierListId + ")";
-        hasModifierList = true;
-      }
+    if (item.getModifierListInfo() != null) {
+        for (CatalogItemModifierListInfo modifierListInfo : item.getModifierListInfo()) {
+            // If a CatalogItemModifierListInfo is disabled, it means that the item was once linked to
+            // the modifier list, but has since been unlinked. We keep the CatalogItemModifierListInfo
+            // around so we can restore the item-specific modifier list configuration (ex. pre-selected
+            // modifiers) when the item is re-linked to the modifier list.
+            Boolean modifierListEnabledForItem = modifierListInfo.getEnabled();
+            if (modifierListEnabledForItem != null && modifierListEnabledForItem) {
+              String modifierListId = modifierListInfo.getModifierListId();
+              CatalogObject modifierListObject = relatedObjectsMap.get(modifierListId);
+              CatalogModifierList modifierList = modifierListObject.getModifierListData();
+              logMessage.append("\n    " + modifierList.getName() + " (" + modifierListId + ")");
+              hasModifierList = true;
+            }
+        }
     }
     if (!hasModifierList) {
-      logMessage += " <none>";
+      logMessage.append(" <none>");
+    }
+
+    // Add image. If the image_id exists, we can grab the image object from the related objects map and log it.
+    logMessage.append("\n  Image:");
+    if (itemObject.getImageId() != null) {
+        logMessage.append("\n" + getImageLogMessage(relatedObjectsMap.get(itemObject.getImageId()), "    "));
+    } else {
+        logMessage.append(" <none>");
     }
 
     // Log the message.
-    logger.info(logMessage);
+    logger.info(logMessage.toString());
   }
 
   /**
@@ -196,62 +230,97 @@ public class RetrieveCatalogObjectExample extends Example {
   private void logItemVariationDetails(CatalogObject itemVariationObject,
       Map<String, CatalogObject> relatedObjectsMap) {
     CatalogItemVariation itemVariation = itemVariationObject.getItemVariationData();
-    String logMessage = "[" + itemVariationObject.getType() + "] " + itemVariation.getName()
-        + "\n  ID: " + itemVariationObject.getId()
-        + "\n  Price: " + Moneys.format(itemVariation.getPriceMoney())
-        + "\n  SKU: " + itemVariation.getSku();
+    StringBuilder logMessage = new StringBuilder();
+
+    logMessage.append("[" + itemVariationObject.getType() + "] " + itemVariation.getName())
+        .append("\n  ID: " + itemVariationObject.getId())
+        .append("\n  Price: " + Moneys.format(itemVariation.getPriceMoney()))
+        .append("\n  SKU: " + (itemVariation.getSku() == null ? "<none>" : itemVariation.getSku()));
 
     // Get the item from the related objects.
     CatalogObject itemObject = relatedObjectsMap.get(itemVariation.getItemId());
     CatalogItem item = itemObject.getItemData();
-    logMessage += "\n  Item: " + item.getName() + " (" + itemObject.getId() + ")";
+    logMessage.append("\n  Item: " + item.getName() + " (" + itemObject.getId() + ")");
 
-    logger.info(logMessage);
+    logger.info(logMessage.toString());
   }
 
   /**
    * Logs information about a {@link CatalogModifierList}.
    */
-  private void logModifierListData(CatalogObject modifierListObject) {
+  private void logModifierListDetails(CatalogObject modifierListObject) {
     CatalogModifierList modifierList = modifierListObject.getModifierListData();
-    String logMessage = "[" + modifierListObject.getType() + "] " + modifierList.getName()
-        + "\n  ID: " + modifierListObject.getId()
-        + "\n  Selection Type: " + modifierList.getSelectionType()
-        + "\n  Modifiers: ";
+    StringBuilder logMessage = new StringBuilder();
+
+    logMessage.append("[" + modifierListObject.getType() + "] " + modifierList.getName())
+        .append("\n  ID: " + modifierListObject.getId())
+        .append("\n  Selection Type: " + modifierList.getSelectionType())
+        .append("\n  Modifiers: ");
 
     // Add the modifiers.
     for (CatalogObject modifierObject : modifierList.getModifiers()) {
       CatalogModifier modifier = modifierObject.getModifierData();
-      logMessage += "\n    " + modifier.getName() + " (" + modifierObject.getId() + ")";
+      logMessage.append("\n    " + modifier.getName() + " (" + modifierObject.getId() + ")");
     }
 
-    logger.info(logMessage);
+    logger.info(logMessage.toString());
   }
 
   /**
-   * Returns a log message describing a {@link CatalogModifier}.
-   *
-   * @param modifierObject the {@link CatalogObject} containing the {@link CatalogModifier}.
-   * @param prefix the prefix to apply to each line of the log message
+   * Logs information about a {@link CatalogModifier}.
    */
-  private String getModifierLogMessage(CatalogObject modifierObject, String prefix) {
+  private void logModifierDetails(CatalogObject modifierObject, String prefix) {
     CatalogModifier modifier = modifierObject.getModifierData();
-    return prefix + "[" + modifierObject.getType() + "] " + modifier.getName()
-        + "\n" + prefix + "  ID: " + modifierObject.getId()
-        + "\n" + prefix + "  Price: " + Moneys.format(modifier.getPriceMoney());
+    StringBuilder logMessage = new StringBuilder(prefix);
+
+    logMessage.append("[" + modifierObject.getType() + "] " + modifier.getName())
+        .append("\n" + prefix + "  ID: " + modifierObject.getId())
+        .append("\n" + prefix + "  Price: " + Moneys.format(modifier.getPriceMoney()));
+
+    logger.info(logMessage.toString());
+  }
+
+  /**
+   * Logs information about a {@link CatalogTax}.
+   */
+  private void logTaxDetails(CatalogObject taxObject, String prefix) {
+    logger.info(getTaxLogMessage(taxObject, prefix));
+  }
+
+  /**
+   * Logs information about a {@link CatalogImage}.
+   */
+  private void logImageDetails(CatalogObject imageObject, String prefix) {
+      logger.info(getImageLogMessage(imageObject, prefix));
   }
 
   /**
    * Returns a log message describing a {@link CatalogTax}.
-   *
-   * @param taxObject the {@link CatalogObject} containing the {@link CatalogTax}.
-   * @param prefix the prefix to apply to each line of the log message
    */
   private String getTaxLogMessage(CatalogObject taxObject, String prefix) {
     CatalogTax tax = taxObject.getTaxData();
-    return prefix + "[" + taxObject.getType() + "] " + tax.getName()
-        + "\n" + prefix + "  ID: " + taxObject.getId()
-        + "\n" + prefix + "  Percentage: " + tax.getPercentage()
-        + "\n" + prefix + "  Inclusion Type: " + tax.getInclusionType();
+    StringBuilder logMessage = new StringBuilder(prefix);
+
+    logMessage.append("[" + taxObject.getType() + "] " + tax.getName())
+        .append("\n" + prefix + "  ID: " + taxObject.getId())
+        .append("\n" + prefix + "  Percentage: " + tax.getPercentage())
+        .append("\n" + prefix + "  Inclusion Type: " + tax.getInclusionType());
+
+    return logMessage.toString();
+  }
+
+  /**
+   * Returns a log message describing a {@link CatalogImage}.
+   */
+  private String getImageLogMessage(CatalogObject imageObject, String prefix) {
+    CatalogImage image = imageObject.getImageData();
+    StringBuilder logMessage = new StringBuilder(prefix);
+
+    logMessage.append("[" + imageObject.getType() + "] " + image.getName())
+    .append("\n" + prefix + "  ID: " + imageObject.getId())
+    .append("\n" + prefix + "  Caption: " + image.getCaption())
+    .append("\n" + prefix + "  URL: " + image.getUrl());
+
+    return logMessage.toString();
   }
 }
