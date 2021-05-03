@@ -4,7 +4,7 @@ This example demonstrates a bare-bones Java implementation of the Square Connect
 OAuth flow. The application links merchants to the OAuth Permissions form and
 handles the result of the authorization, which is sent to the application's Redirect URL.
 
-For more information, see [OAuth Overview](https://docs.connect.squareup.com/api/oauth#oauth-overview),
+For more information, see [OAuth Overview](https://developer.squareup.com/docs/oauth-api/overview),
 along with the comments included in `OAuthHandler.java`.
 
 ## Setup
