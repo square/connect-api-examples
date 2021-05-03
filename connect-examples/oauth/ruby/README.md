@@ -6,6 +6,11 @@ For more information, see [OAuth Overview](https://docs.connect.squareup.com/api
 
 ## Setup
 
+### Install Square SDK and Sinatra
+
+This application requires gems for the Sinatra web framework and Square Connect
+Install them with `bundle install`
+
 ### Get your credentials and set the redirect URL:
 
 1. Open the [Developer Dashboard](https://developer.squareup.com/apps).
@@ -31,7 +36,6 @@ For more information, see [OAuth Overview](https://docs.connect.squareup.com/api
 
 To run the example, execute the following from the command line:
 
-    bundle install
     ruby oauth-flow.rb
 
 You can then proceed through the OAuth flow by going to `http://localhost:4567` in your web browser.
