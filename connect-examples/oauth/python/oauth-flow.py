@@ -13,23 +13,30 @@
 
 from flask import Flask, request
 from square.client import Client
+from dotenv import load_dotenv
+import os;
 
+load_dotenv()  # take environment variables from .env.
+
+environment = os.getenv('SQ_ENVIRONMENT').lower()
 client = Client(
-  environment="production"
+  environment = environment
 )
 obtain_token = client.o_auth.obtain_token
 
 app = Flask(__name__)
 
 # Your application's ID and secret, available from your application dashboard.
-application_id = 'REPLACE_ME'
-application_secret = 'REPLACE_ME'
+application_id = os.getenv('SQ_APPLICATION_ID')
+application_secret = os.getenv('SQ_APPLICATION_SECRET')
+
+base_url = "https://connect.squareup.com" if environment == "production" else "https://connect.squareupsandbox.com"
 
 # Serves the link that merchants click to authorize your application
 @app.route('/', methods=['GET'])
 def authorize():
-  return '''<a href="https://connect.squareup.com/oauth2/authorize?client_id={0}">Click here</a>
-            to authorize the application.'''.format(application_id)
+  return '''<a href="{0}/oauth2/authorize?client_id={1}">Click here</a>
+            to authorize the application.'''.format(base_url, application_id)
 
 # Serves requsts from Square to your application's redirect URL
 # Note that you need to set your application's Redirect URL to
