@@ -29,7 +29,7 @@ php composer.phar install
 
 1. Open the [Developer Dashboard](https://developer.squareup.com/apps).
 1. Choose **Open** on the card for an application.
-1. At the top of the page, set the dashboard mode to **Sandbox** or **Production**.
+1. At the top of the page, set the dashboard mode to the environment that you want to work with by choosing **Sandbox** or **Production**.
 1. Choose **OAuth** in the left navigation pane. The OAuth page is shown.
 1. In the **Redirect URL** box, enter the URL for the callback you will implement to complete the OAuth flow:
     `http://localhost:8000/callback.php`

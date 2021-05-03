@@ -29,7 +29,6 @@ This sample requires the following dependencies:
     express (https://expressjs.com/)
 */
 
-
 const dotenv = require('dotenv').config(); // Loads .env file
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -45,7 +44,6 @@ let environment;
 if (SQ_ENVIRONMENT.toLowerCase() === "production") {
   basePath = `https://connect.squareup.com`;
   environment = Environment.Production;
-
 } else if (SQ_ENVIRONMENT.toLowerCase() === "sandbox") {
   basePath = `https://connect.squareupsandbox.com`;
   environment = Environment.Sandbox;
@@ -62,9 +60,6 @@ if (!SQ_APPLICATION_ID || !SQ_APPLICATION_SECRET) {
 
 const port = PORT || "8000";
 const messages = require('./messages');
-
-// The default environment for this example is sandbox
-
 
 // Configure Square defcault client
 const squareClient = new Client({
@@ -103,7 +98,7 @@ app.get("/request_token", (req, res) => {
  * Description:
  *  Serves requests from Square to your application's redirect URL
  *  Note that you need to set your application's Redirect URL to
- *  http://localhost:8000/sandbox_callback from your application dashboard
+ *  http://localhost:8000/callback from your application dashboard
  *
  * Query Parameters:
  *  state: the Auth State set in request_token
