@@ -94,6 +94,26 @@ public class CloneCatalogExample extends Example {
       if (config.taxCloneUtil != null) {
         cloneCatalogObjectType(sourceCatalogApi, targetCatalogApi, config.taxCloneUtil);
       }
+
+      /*
+       * Clone categories from source to target account.
+       *
+       * If a category in the source account has the same name, then the category in the source account is not cloned.
+       */
+      if (config.categoryCloneUtil != null) {
+        cloneCatalogObjectType(sourceCatalogApi, targetCatalogApi, config.categoryCloneUtil);
+      }
+
+      /*
+       * Clone items from source to target account.
+       *
+       * If an item in the source account has the same name, descriptions, and item variations (just same variation name),
+       * then the item in the source account is not cloned.
+       */
+      if (config.itemCloneUtil != null) {
+        cloneCatalogObjectType(sourceCatalogApi, targetCatalogApi, config.itemCloneUtil);
+      }
+
     } catch (CloneCatalogException e) {
       if (e.getMessage() != null) {
         logger.error(e.getMessage());
@@ -122,6 +142,14 @@ public class CloneCatalogExample extends Example {
 
     if (promptUserInputYesNo("Clone all taxes (y/n)? ", logger)) {
       config.taxCloneUtil = new TaxCloneUtil();
+    }
+
+    if (promptUserInputYesNo("Clone all categories (y/n)? ", logger)) {
+        config.categoryCloneUtil = new CategoryCloneUtil();
+    }
+
+    if (promptUserInputYesNo("Clone all items (y/n)? ", logger)) {
+        config.itemCloneUtil = new ItemCloneUtil();
     }
 
     return config;
@@ -171,6 +199,7 @@ public class CloneCatalogExample extends Example {
     logger.info("  Retrieving " + cloneUtil.type.toString() + " from source account");
     cursor = null;
     Long catalogVersion = null;
+    count = 0;
 
     do {
         List<CatalogObject> catalogObjectsToUpsert = new ArrayList<>();
@@ -308,5 +337,7 @@ public class CloneCatalogExample extends Example {
     private DiscountCloneUtil discountCloneUtil;
     private ModifierListCloneUtil modifierListCloneUtil;
     private TaxCloneUtil taxCloneUtil;
+    private ItemCloneUtil itemCloneUtil;
+    private CategoryCloneUtil categoryCloneUtil;
   }
 }
