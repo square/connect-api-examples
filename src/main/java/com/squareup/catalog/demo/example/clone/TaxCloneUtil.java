@@ -15,19 +15,18 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
-import com.squareup.connect.models.CatalogDiscount;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.CatalogTax;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.square.models.CatalogTax;
 
-import static com.squareup.connect.models.CatalogObject.TypeEnum.TAX;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
 
 /**
- * Utility methods used to clone a {@link CatalogDiscount}.
+ * Utility methods used to clone a {@link CatalogTax}.
  */
 class TaxCloneUtil extends CatalogObjectCloneUtil<CatalogTax> {
 
   TaxCloneUtil() {
-    super(TAX);
+    super(CatalogObjectTypes.TAX);
   }
 
   @Override CatalogTax getCatalogData(CatalogObject catalogObject) {

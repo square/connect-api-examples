@@ -15,8 +15,9 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.Money;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.square.models.Money;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -27,9 +28,9 @@ import java.util.UUID;
  */
 abstract class CatalogObjectCloneUtil<T> {
 
-  final CatalogObject.TypeEnum type;
+  final CatalogObjectTypes type;
 
-  CatalogObjectCloneUtil(CatalogObject.TypeEnum type) {
+  CatalogObjectCloneUtil(CatalogObjectTypes type) {
     this.type = type;
   }
 
@@ -75,22 +76,20 @@ abstract class CatalogObjectCloneUtil<T> {
    *
    * @param catalogObject the {@link CatalogObject} to modify
    */
-  void removeSourceAccountMetaData(CatalogObject catalogObject) {
-    // We need to set a temporary client generated ID.
-    catalogObject.setId("#" + UUID.randomUUID());
-
-    // The V1 IDs from the source account do not apply to the target account.
-    catalogObject.setCatalogV1Ids(Collections.emptyList());
-
-    // The location IDs from the source account do not apply to the target account.
-    catalogObject.setPresentAtLocationIds(Collections.emptyList());
-    catalogObject.setAbsentAtLocationIds(Collections.emptyList());
-
-    // The server will assign a version.
-    catalogObject.setVersion(null);
-
-    // The server will update the timestamp.
-    catalogObject.setUpdatedAt(null);
+  CatalogObject removeSourceAccountMetaData(CatalogObject catalogObject) {
+    return catalogObject.toBuilder()
+        // We need to set a temporary client generated ID.
+        .id("#" + UUID.randomUUID())
+        // The V1 IDs from the source account do not apply to the target account.
+        .catalogV1Ids(Collections.emptyList())
+        // The location IDs from the source account do not apply to the target account.
+        .presentAtLocationIds(Collections.emptyList())
+        .absentAtLocationIds(Collections.emptyList())
+        // The server will assign a version.
+        .version(null)
+        // The server will update the timestamp.
+        .updatedAt(null)
+        .build();
   }
 
   /**

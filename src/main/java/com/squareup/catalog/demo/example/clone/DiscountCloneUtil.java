@@ -15,10 +15,10 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
-import com.squareup.connect.models.CatalogDiscount;
-import com.squareup.connect.models.CatalogObject;
+import com.squareup.square.models.CatalogDiscount;
+import com.squareup.square.models.CatalogObject;
 
-import static com.squareup.connect.models.CatalogObject.TypeEnum.DISCOUNT;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
 
 /**
  * Utility methods used to clone a {@link CatalogDiscount}.
@@ -28,7 +28,7 @@ class DiscountCloneUtil extends CatalogObjectCloneUtil<CatalogDiscount> {
   private final boolean presentAtAllLocationsByDefault;
 
   DiscountCloneUtil(boolean presentAtAllLocationsByDefault) {
-    super(DISCOUNT);
+    super(CatalogObjectTypes.DISCOUNT);
     this.presentAtAllLocationsByDefault = presentAtAllLocationsByDefault;
   }
 
@@ -46,10 +46,12 @@ class DiscountCloneUtil extends CatalogObjectCloneUtil<CatalogDiscount> {
         + amountOrNull(discount.getAmountMoney());
   }
 
-  @Override void removeSourceAccountMetaData(CatalogObject catalogObject) {
-    super.removeSourceAccountMetaData(catalogObject);
+  @Override CatalogObject removeSourceAccountMetaData(CatalogObject catalogObject) {
+    CatalogObject.Builder cleanObjectBuilder = super.removeSourceAccountMetaData(catalogObject).toBuilder();
     if (presentAtAllLocationsByDefault) {
-      catalogObject.setPresentAtAllLocations(presentAtAllLocationsByDefault);
+        cleanObjectBuilder
+            .presentAtAllLocations(presentAtAllLocationsByDefault);
     }
+    return cleanObjectBuilder.build();
   }
 }
