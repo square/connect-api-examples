@@ -8,7 +8,12 @@ import com.squareup.square.models.CatalogObject;
 public enum CatalogObjectTypes {
     ITEM("ITEM"),
     ITEM_VARIATION("ITEM_VARIATION"),
-    CATEGORY("CATEGORY");
+    CATEGORY("CATEGORY"),
+    TAX("TAX"),
+    DISCOUNT("DISCOUNT"),
+    MODIFIER("MODIFIER"),
+    MODIFIER_LIST("MODIFIER_LIST"),
+    IMAGE("IMAGE");
 
     private final String type;
 

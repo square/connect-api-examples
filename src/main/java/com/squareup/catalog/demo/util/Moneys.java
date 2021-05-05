@@ -15,12 +15,11 @@
  */
 package com.squareup.catalog.demo.util;
 
-import com.squareup.connect.models.Money;
+import com.squareup.square.models.Money;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
-import static com.squareup.connect.models.Money.CurrencyEnum.USD;
 
 public class Moneys {
 
@@ -28,9 +27,10 @@ public class Moneys {
    * Creates a Money object for the specified amount of cents in USD.
    */
   public static Money usd(long cents) {
-    return new Money()
+    return new Money.Builder()
         .amount(cents)
-        .currency(USD);
+        .currency("CAD")
+        .build();
   }
 
   /**

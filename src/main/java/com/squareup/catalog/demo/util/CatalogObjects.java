@@ -15,12 +15,12 @@
  */
 package com.squareup.catalog.demo.util;
 
-import com.squareup.connect.models.CatalogCategory;
-import com.squareup.connect.models.CatalogItem;
-import com.squareup.connect.models.CatalogItemVariation;
-import com.squareup.connect.models.CatalogItemVariation.PricingTypeEnum;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.CatalogObject.TypeEnum;
+import com.squareup.square.models.CatalogCategory;
+import com.squareup.square.models.CatalogItem;
+import com.squareup.square.models.CatalogItemVariation;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.square.models.Money;
+
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
@@ -38,12 +38,10 @@ public class CatalogObjects {
    * @return the new {@link CatalogObject} that wraps the category
    */
   public static CatalogObject category(String clientId, String name) {
-    return new CatalogObject()
-        .type(TypeEnum.CATEGORY)
-        .id(clientId)
+    return new CatalogObject.Builder(CatalogObjectTypes.CATEGORY.toString(), clientId)
         .presentAtAllLocations(true) // Categories are always available at all locations
-        .categoryData(new CatalogCategory()
-            .name(name));
+        .categoryData(new CatalogCategory(name))
+        .build();
   }
 
   /**
@@ -71,14 +69,16 @@ public class CatalogObjects {
    */
   public static CatalogObject item(String clientId, String name, String categoryId,
       CatalogObject... itemVariations) {
-    return new CatalogObject()
-        .type(TypeEnum.ITEM)
-        .id(clientId)
+    return new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), clientId)
         .presentAtAllLocations(true)
-        .itemData(new CatalogItem()
+        .itemData(
+            new CatalogItem.Builder()
             .name(name)
             .categoryId(categoryId)
-            .variations(asList(itemVariations)));
+            .variations(asList(itemVariations))
+            .build()
+        )
+        .build();
   }
 
   /**
@@ -90,14 +90,16 @@ public class CatalogObjects {
    * @return the new {@link CatalogObject} that wraps the item variation
    */
   public static CatalogObject itemVariation(String clientId, String name, long cents) {
-    return new CatalogObject()
-        .type(TypeEnum.ITEM_VARIATION)
-        .id(clientId)
-        .presentAtAllLocations(true)
-        .itemVariationData(new CatalogItemVariation()
-            .name(name)
-            .pricingType(PricingTypeEnum.FIXED_PRICING)
-            .priceMoney(Moneys.usd(cents)));
+    return new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(), clientId)
+    .presentAtAllLocations(true)
+    .itemVariationData(
+        new CatalogItemVariation.Builder()
+        .name(name)
+        .pricingType("FIXED_PRICING")
+        .priceMoney(new Money(cents, "CAD"))
+        .build()
+    )
+    .build();
   }
 
   private CatalogObjects() {

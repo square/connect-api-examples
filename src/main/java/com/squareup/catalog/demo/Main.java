@@ -15,7 +15,6 @@
  */
 package com.squareup.catalog.demo;
 
-import com.google.gson.JsonSyntaxException;
 import com.squareup.catalog.demo.example.ApplyTaxToAllIItemsExample;
 import com.squareup.catalog.demo.example.CreateItemExample;
 import com.squareup.catalog.demo.example.DeduplicateTaxesExample;
@@ -29,25 +28,14 @@ import com.squareup.catalog.demo.example.LocationSpecificPriceExample;
 import com.squareup.catalog.demo.example.RetrieveCatalogObjectExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
 import com.squareup.catalog.demo.example.clone.CloneCatalogExample;
-import com.squareup.catalog.demo.util.GsonProvider;
 import com.squareup.square.SquareClient;
 import com.squareup.square.SquareClient.Builder;
 import com.squareup.square.Environment;
-// import com.squareup.connect.ApiClient;
 import com.squareup.square.exceptions.ApiException;
-import com.squareup.connect.Configuration;
-// import com.squareup.connect.api.CatalogApi;
-// import com.squareup.connect.api.LocationsApi;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
-import com.squareup.connect.auth.OAuth;
-import com.squareup.connect.models.Error;
-
-import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 
-import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
 import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 
 public class Main {
@@ -86,18 +74,19 @@ public class Main {
   public static void main(String[] args) {
     Logger logger = new Logger.SystemLogger();
     Main main = new Main(logger,
-        new ApplyTaxToAllIItemsExample(logger),
-        new CloneCatalogExample(logger),
         new CreateItemExample(logger),
-        new DeduplicateTaxesExample(logger),
         new DeleteAllItemsExample(logger),
+        new ApplyTaxToAllIItemsExample(logger),
+        new DeduplicateTaxesExample(logger),
         new DeleteCategoryExample(logger),
-        new GloballyEnableAllItemsExample(logger),
         new ListCategoriesExample(logger),
         new ListDiscountsExample(logger),
         new LocationSpecificPriceExample(logger),
+        new SearchItemsExample(logger),
         new RetrieveCatalogObjectExample(logger),
-        new SearchItemsExample(logger));
+        new GloballyEnableAllItemsExample(logger),
+        new CloneCatalogExample(logger)
+       );
     main.processArgs(args);
   }
 
@@ -175,9 +164,8 @@ public class Main {
     }
 
     // Build the client using the arguments provided
-    // TODO: might want to have an argument for sandbox vs prod, also change variable name
-    SquareClient apiClient2 = apiClientBuilder
-        .environment(Environment.PRODUCTION)
+    SquareClient apiClient = apiClientBuilder
+        .environment(Environment.SANDBOX)
         .accessToken(accessToken)
         .build();
 
@@ -188,8 +176,8 @@ public class Main {
     // CatalogApi catalogApi = new CatalogApi(apiClient);
     // LocationsApi locationsApi = new LocationsApi(apiClient);
 
-    CatalogApi catalogApi = apiClient2.getCatalogApi();
-    LocationsApi locationsApi = apiClient2.getLocationsApi();
+    CatalogApi catalogApi = apiClient.getCatalogApi();
+    LocationsApi locationsApi = apiClient.getLocationsApi();
 
     executeExample(command, cleanup, catalogApi, locationsApi);
   }
@@ -244,7 +232,7 @@ public class Main {
           } else {
             example.execute(catalogApi, locationsApi);
           }
-        } catch (ApiException | IOException e) {
+        } catch (ApiException e) {
             throw new RuntimeException(e);
         }
         return;
@@ -252,31 +240,4 @@ public class Main {
     }
     throw new IllegalArgumentException("Example " + exampleName + " not found");
   }
-
-//   /**
-//    * Attempts to log {@link Error}s from an {@link ApiException}, or rethrows if the response body
-//    * cannot be parsed.
-//    */
-//   private void handleApiException(ApiException apiException) {
-//     try {
-//       // If the response includes a body, it means that he server returned some error message.
-//       ErrorResponse response =
-//           GsonProvider.gson().fromJson(apiException.getHttpContext().getResponse().getRawBodyString(), ErrorResponse.class);
-
-//       // If we found errors in the response body, log them. Otherwise, rethrow.
-//       if (!checkAndLogErrors(response.errors, logger)) {
-//         throw new RuntimeException(apiException);
-//       }
-//     } catch (JsonSyntaxException e) {
-//       // If the error message isn't in JSON format, rethrow the error.
-//       throw new RuntimeException(apiException);
-//     }
-//   }
-
-//   /**
-//    * Represents the response body of an {@link ApiException} that contains server specified errors.
-//    */
-//   private static class ErrorResponse {
-//     List<Error> errors;
-//   }
 }
