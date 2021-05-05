@@ -42,12 +42,14 @@ public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
     @Override
     String encodeCatalogData(CatalogItem item) {
         List<String> variationNames = new ArrayList<>();
-        for(CatalogObject variation : item.getVariations()) {
-            variationNames.add(variation.getItemVariationData().getName());
-        }
+        if(item.getVariations() != null) {
+            for(CatalogObject variation : item.getVariations()) {
+                variationNames.add(variation.getItemVariationData().getName());
+            }
 
-        // Sort to keep order of variations consistent.
-        Collections.sort(variationNames);
+            // Sort to keep order of variations consistent.
+            Collections.sort(variationNames);
+        }
 
         String encodedVariations = String.join("::", variationNames);
         return item.getName()
@@ -81,6 +83,7 @@ public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
                 .variations(newVariations)
                 .taxIds(Collections.emptyList())
                 .build())
+            .presentAtAllLocations(true)
             .build();
 
     }

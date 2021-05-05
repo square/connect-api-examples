@@ -90,6 +90,8 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
       }
     }
 
+    cleanModifiers.addAll(targetModifierList.getModifiers());
+
     CatalogObject updatedObject = targetCatalogObject.toBuilder()
         .modifierListData(targetModifierList.toBuilder().modifiers(cleanModifiers).build())
         .build();
