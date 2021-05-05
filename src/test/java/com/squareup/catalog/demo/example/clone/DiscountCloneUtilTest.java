@@ -16,14 +16,9 @@
 package com.squareup.catalog.demo.example.clone;
 
 import com.squareup.catalog.demo.util.Moneys;
-import com.squareup.connect.models.CatalogDiscount;
+import com.squareup.square.models.CatalogDiscount;
 import org.junit.Before;
 import org.junit.Test;
-
-import static com.squareup.connect.models.CatalogDiscount.DiscountTypeEnum.FIXED_AMOUNT;
-import static com.squareup.connect.models.CatalogDiscount.DiscountTypeEnum.FIXED_PERCENTAGE;
-import static com.squareup.connect.models.CatalogDiscount.DiscountTypeEnum.VARIABLE_AMOUNT;
-import static com.squareup.connect.models.CatalogDiscount.DiscountTypeEnum.VARIABLE_PERCENTAGE;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class DiscountCloneUtilTest {
@@ -35,41 +30,45 @@ public class DiscountCloneUtilTest {
   }
 
   @Test public void encodeCatalogData_fixedAmount() {
-    CatalogDiscount discount = new CatalogDiscount()
+    CatalogDiscount discount = new CatalogDiscount.Builder()
         .name("name")
-        .discountType(FIXED_AMOUNT)
+        .discountType("FIXED_AMOUNT")
         .percentage(null)
-        .amountMoney(Moneys.usd(1000));
+        .amountMoney(Moneys.usd(1000))
+        .build();
     assertThat(cloneUtil.encodeCatalogData(discount)).isEqualTo(
         "name:::FIXED_AMOUNT:::null:::1000");
   }
 
   @Test public void encodeCatalogData_fixedPercentage() {
-    CatalogDiscount discount = new CatalogDiscount()
+    CatalogDiscount discount = new CatalogDiscount.Builder()
         .name("name")
-        .discountType(FIXED_PERCENTAGE)
+        .discountType("FIXED_PERCENTAGE")
         .percentage("12.34")
-        .amountMoney(null);
+        .amountMoney(null)
+        .build();
     assertThat(cloneUtil.encodeCatalogData(discount)).isEqualTo(
         "name:::FIXED_PERCENTAGE:::12.34:::null");
   }
 
   @Test public void encodeCatalogData_variableAmount() {
-    CatalogDiscount discount = new CatalogDiscount()
+    CatalogDiscount discount = new CatalogDiscount.Builder()
         .name("name")
-        .discountType(VARIABLE_AMOUNT)
+        .discountType("VARIABLE_AMOUNT")
         .percentage(null)
-        .amountMoney(null);
+        .amountMoney(null)
+        .build();
     assertThat(cloneUtil.encodeCatalogData(discount)).isEqualTo(
         "name:::VARIABLE_AMOUNT:::null:::null");
   }
 
   @Test public void encodeCatalogData_variablePercentage() {
-    CatalogDiscount discount = new CatalogDiscount()
+    CatalogDiscount discount = new CatalogDiscount.Builder()
         .name("name")
-        .discountType(VARIABLE_PERCENTAGE)
+        .discountType("VARIABLE_PERCENTAGE")
         .percentage(null)
-        .amountMoney(null);
+        .amountMoney(null)
+        .build();
     assertThat(cloneUtil.encodeCatalogData(discount)).isEqualTo(
         "name:::VARIABLE_PERCENTAGE:::null:::null");
   }

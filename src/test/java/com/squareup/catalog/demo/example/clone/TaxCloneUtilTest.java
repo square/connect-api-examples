@@ -15,11 +15,10 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
-import com.squareup.connect.models.CatalogTax;
+import com.squareup.square.models.CatalogTax;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.squareup.connect.models.CatalogTax.InclusionTypeEnum.ADDITIVE;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class TaxCloneUtilTest {
@@ -31,10 +30,11 @@ public class TaxCloneUtilTest {
   }
 
   @Test public void encodeCatalogData() {
-    CatalogTax tax = new CatalogTax()
+    CatalogTax tax = new CatalogTax.Builder()
         .name("name")
         .percentage("12.34")
-        .inclusionType(ADDITIVE);
+        .inclusionType("ADDITIVE")
+        .build();
     assertThat(cloneUtil.encodeCatalogData(tax)).isEqualTo("name:::12.34:::ADDITIVE");
   }
 }

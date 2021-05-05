@@ -16,15 +16,13 @@
 package com.squareup.catalog.demo;
 
 import com.squareup.catalog.demo.example.Example;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -79,26 +77,14 @@ public class MainTest {
   }
 
   @Test public void processArgs_executeExample() throws ApiException {
-    ArgumentCaptor<CatalogApi> catalogApiCaptor = ArgumentCaptor.forClass(CatalogApi.class);
-    ArgumentCaptor<LocationsApi> locationApiCaptor = ArgumentCaptor.forClass(LocationsApi.class);
     main.processArgs(new String[] {"foo", "-token", "abcdef"});
-    verify(exampleFoo).execute(catalogApiCaptor.capture(), locationApiCaptor.capture());
-    CatalogApi catalogApi = catalogApiCaptor.getValue();
-    assertEquals("https://connect.squareup.com", catalogApi.getApiClient().getBasePath());
-    assertEquals("https://connect.squareup.com",
-        locationApiCaptor.getValue().getApiClient().getBasePath());
-
     verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
+    verify(exampleFoo).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 
   @Test public void processArgs_executeExampleWithBaseUrl() throws ApiException {
-    ArgumentCaptor<CatalogApi> catalogApiCaptor = ArgumentCaptor.forClass(CatalogApi.class);
-    main.processArgs(
-        new String[] {"foo", "-token", "abcdef", "-base-url", "http://squareup.com/baseurl"});
-    verify(exampleFoo).execute(catalogApiCaptor.capture(), any(LocationsApi.class));
-    CatalogApi catalogApi = catalogApiCaptor.getValue();
-    assertEquals("http://squareup.com/baseurl", catalogApi.getApiClient().getBasePath());
-
+    main.processArgs(new String[] {"foo", "-token", "abcdef", "-base-url", "http://squareup.com/baseurl"});
+    verify(exampleFoo).execute(any(CatalogApi.class), any(LocationsApi.class));
     verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 
@@ -119,15 +105,8 @@ public class MainTest {
   }
 
   @Test public void processArgs_cleanupExample() throws ApiException {
-    ArgumentCaptor<CatalogApi> catalogApiCaptor = ArgumentCaptor.forClass(CatalogApi.class);
-    ArgumentCaptor<LocationsApi> locationApiCaptor = ArgumentCaptor.forClass(LocationsApi.class);
     main.processArgs(new String[] {"foo", "-token", "abcdef", "-cleanup"});
-    verify(exampleFoo).cleanup(catalogApiCaptor.capture(), locationApiCaptor.capture());
-    CatalogApi catalogApi = catalogApiCaptor.getValue();
-    assertEquals("https://connect.squareup.com", catalogApi.getApiClient().getBasePath());
-    assertEquals("https://connect.squareup.com",
-        locationApiCaptor.getValue().getApiClient().getBasePath());
-
+    verify(exampleFoo).cleanup(any(CatalogApi.class), any(LocationsApi.class));
     verify(exampleFoo, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
     verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
   }

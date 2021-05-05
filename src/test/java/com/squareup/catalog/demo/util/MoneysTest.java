@@ -15,16 +15,13 @@
  */
 package com.squareup.catalog.demo.util;
 
-import com.squareup.connect.models.Money;
+import com.squareup.square.models.Money;
 import java.util.Locale;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static com.squareup.catalog.demo.util.Moneys.format;
-import static com.squareup.connect.models.Money.CurrencyEnum.EUR;
-import static com.squareup.connect.models.Money.CurrencyEnum.JPY;
-import static com.squareup.connect.models.Money.CurrencyEnum.USD;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class MoneysTest {
@@ -42,33 +39,24 @@ public class MoneysTest {
   }
 
   @Test public void format_us_dollars() {
-    assertThat(format($(1_23, USD))).isEqualTo("$1.23");
-    assertThat(format($(1234_56, USD))).isEqualTo("$1,234.56");
-
-    Locale.setDefault(Locale.JAPAN);
-    assertThat(format($(1_23, USD))).isEqualTo("USD1.23");
-    assertThat(format($(1234_56, USD))).isEqualTo("USD1,234.56");
-  }
-
-  @Test public void format_euro() {
-    assertThat(format($(1_23, EUR))).isEqualTo("EUR1.23");
-    assertThat(format($(1234_56, EUR))).isEqualTo("EUR1,234.56");
-
-    Locale.setDefault(Locale.FRANCE);
-    assertThat(format($(1_23, EUR))).isEqualTo("1,23 €");
-    assertThat(format($(1234_56, EUR))).isEqualTo("1 234,56 €");
+    Locale.setDefault(Locale.US);
+    assertThat(format($(1_23, "USD"))).isEqualTo("$1.23");
+    assertThat(format($(1234_56, "USD"))).isEqualTo("$1,234.56");
   }
 
   @Test public void format_japanese_yen() {
-    assertThat(format($(123, JPY))).isEqualTo("JPY123");
-    assertThat(format($(123456, JPY))).isEqualTo("JPY123,456");
-
     Locale.setDefault(Locale.JAPAN);
-    assertThat(format($(123, JPY))).isEqualTo("￥123");
-    assertThat(format($(123456, JPY))).isEqualTo("￥123,456");
+    assertThat(format($(123, "JPY"))).isEqualTo("￥123");
+    assertThat(format($(123456, "JPY"))).isEqualTo("￥123,456");
   }
 
-  private Money $(long amount, Money.CurrencyEnum currency) {
-    return new Money().amount(amount).currency(currency);
+  @Test public void format_canadian_dollars() {
+    Locale.setDefault(Locale.CANADA);
+    assertThat(format($(123, "CAD"))).isEqualTo("$1.23");
+    assertThat(format($(123456, "CAD"))).isEqualTo("$1,234.56");
+  }
+
+  private Money $(long amount, String currency) {
+    return new Money.Builder().amount(amount).currency(currency).build();
   }
 }
