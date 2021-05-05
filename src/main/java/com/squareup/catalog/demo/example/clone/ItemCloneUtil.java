@@ -72,7 +72,7 @@ public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
             // we want to remove item_id from the itemVariationData
             CatalogItemVariation oldItemVariationData = oldVariation.getItemVariationData();
             CatalogObject newVariation = super.removeSourceAccountMetaData(oldVariation).toBuilder()
-                .itemVariationData(oldItemVariationData.toBuilder().itemId(null).build())
+                .itemVariationData(oldItemVariationData.toBuilder().itemId(null).locationOverrides(null).build())
                 .build();
             newVariations.add(newVariation);
         }

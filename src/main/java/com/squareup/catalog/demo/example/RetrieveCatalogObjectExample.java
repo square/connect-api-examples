@@ -18,7 +18,6 @@ package com.squareup.catalog.demo.example;
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.catalog.demo.util.Moneys;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.CatalogCategory;
@@ -46,7 +45,7 @@ public class RetrieveCatalogObjectExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
     String catalogObjectId = promptUserInput("Enter catalog object ID: ");
 
     // Send a request to retrieve the catalog object by ID. The second boolean arguments indicates

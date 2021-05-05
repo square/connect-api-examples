@@ -17,7 +17,6 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchUpsertCatalogObjectsRequest;
@@ -48,8 +47,7 @@ public class GloballyEnableAllItemsExample extends Example {
     super("globally_enable_items", "Make all items available at all locations.", logger);
   }
 
-  @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException {
+  @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
 
         // Optional parameters can be set to null.
         Long catalogVersion = null;

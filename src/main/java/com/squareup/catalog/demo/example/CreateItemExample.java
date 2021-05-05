@@ -17,7 +17,6 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchUpsertCatalogObjectsRequest;
@@ -31,7 +30,6 @@ import static com.squareup.catalog.demo.util.CatalogObjects.item;
 import static com.squareup.catalog.demo.util.CatalogObjects.itemVariation;
 import static java.util.Collections.singletonList;
 
-import java.io.IOException;
 
 /**
  * This example creates a new CatalogItem called "Soda" with three
@@ -46,7 +44,7 @@ public class CreateItemExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException, IOException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
     // First create the parent CatalogItem.
     CatalogObject newItem = createItem(catalogApi);
     if (newItem == null) {
@@ -57,15 +55,14 @@ public class CreateItemExample extends Example {
     retrieveItem(catalogApi, newItem.getId());
   }
 
-  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException, IOException {
+  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) {
     cleanCatalogObjectsByName(catalogApi, CatalogObjectTypes.ITEM.toString(), "Soda");
   }
 
   /**
    * Creates a new item and returns it.
    **/
-  private CatalogObject createItem(CatalogApi catalogApi) throws ApiException, IOException {
+  private CatalogObject createItem(CatalogApi catalogApi) {
     /*
      * Build the request to create the new item.
      *
@@ -124,7 +121,7 @@ public class CreateItemExample extends Example {
    *
    * @param itemId the ID of the newly created item.
    **/
-  private void retrieveItem(CatalogApi catalogApi, String itemId) throws ApiException, IOException {
+  private void retrieveItem(CatalogApi catalogApi, String itemId) {
     // Send GET request to retrieve a single object based on the object ID.
     logger.info("Retrieving item with id: " + itemId);
 

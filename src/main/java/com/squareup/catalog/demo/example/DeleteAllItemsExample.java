@@ -17,14 +17,12 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchDeleteCatalogObjectsRequest;
 import com.squareup.square.models.CatalogObject;
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,8 +46,7 @@ public class DeleteAllItemsExample extends Example {
         "Delete ALL items. This is a destructive action and cannot be undone.", logger);
   }
 
-  @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException, IOException {
+  @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
 
     // Prompt the  user to verify that they actually want to delete all items in the library.
     if (!promptUserInput(CONFIRMATION_PROMPT).equals("DELETE")) {

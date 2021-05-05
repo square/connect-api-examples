@@ -17,7 +17,6 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchDeleteCatalogObjectsRequest;
@@ -50,8 +49,7 @@ public class DeduplicateTaxesExample extends Example {
         "Merge identical taxes (same name, percentage, and inclusion type)", logger);
   }
 
-  @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException {
+  @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
 
         // A map that allows us to look up a tax based on his name, percentage, and inclusion type.
         Map<String, DuplicateTaxInfo> taxInfoMap = new HashMap<>();
@@ -168,6 +166,10 @@ public class DeduplicateTaxesExample extends Example {
 
     void markObjectAsDuplicate() {
         this.foundDuplicate = true;
+    }
+
+    CatalogObject getMasterTax() {
+        return this.masterTax;
     }
 
     void mergeDuplicate(CatalogObject duplicateTax, Logger logger) {

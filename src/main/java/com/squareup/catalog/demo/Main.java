@@ -32,7 +32,6 @@ import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.SquareClient;
 import com.squareup.square.SquareClient.Builder;
 import com.squareup.square.Environment;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.Location;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
@@ -268,7 +267,7 @@ public class Main {
           } else {
             example.execute(catalogApi, locationsApi);
           }
-        } catch (ApiException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return;

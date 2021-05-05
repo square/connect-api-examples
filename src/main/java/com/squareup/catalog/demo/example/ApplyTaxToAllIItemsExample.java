@@ -17,7 +17,6 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.CatalogObject;
@@ -46,8 +45,7 @@ public class ApplyTaxToAllIItemsExample extends Example {
     super("apply_tax_to_all_items", "Applies a selected tax to all items.", logger);
   }
 
-  @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException {
+  @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
     // Retrieve taxes from the server.
     List<CatalogObject> allTaxes = retrieveAllTaxes(catalogApi);
     if (allTaxes == null || allTaxes.isEmpty()) {
@@ -70,7 +68,7 @@ public class ApplyTaxToAllIItemsExample extends Example {
    *
    * @return a complete list of taxes
    */
-  private List<CatalogObject> retrieveAllTaxes(CatalogApi catalogApi) throws ApiException {
+  private List<CatalogObject> retrieveAllTaxes(CatalogApi catalogApi) {
     List<CatalogObject> allTaxes = new ArrayList<>();
 
     // Optional parameters can be set to null.
@@ -107,7 +105,7 @@ public class ApplyTaxToAllIItemsExample extends Example {
    * @param allTaxes a complete list of taxes
    * @return the selected tax
    */
-  private CatalogObject promptUserForTax(List<CatalogObject> allTaxes) throws ApiException {
+  private CatalogObject promptUserForTax(List<CatalogObject> allTaxes) {
     // Display the list of taxes.
     logger.info("Available Taxes:");
     for (int i = 0; i < allTaxes.size(); i++) {
@@ -137,7 +135,7 @@ public class ApplyTaxToAllIItemsExample extends Example {
    *
    * @param tax the tax to apply to all items
    */
-  private void applyTaxToAllItems(CatalogApi catalogApi, CatalogObject tax) throws ApiException {
+  private void applyTaxToAllItems(CatalogApi catalogApi, CatalogObject tax) {
     logger.info("Applying " + tax.getTaxData().getName() + " to all items");
 
     final String taxId = tax.getId();

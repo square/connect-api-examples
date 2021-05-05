@@ -26,11 +26,9 @@ import com.squareup.square.models.BatchDeleteCatalogObjectsRequest;
 import com.squareup.square.models.Error;
 import com.squareup.square.models.CatalogQuery;
 import com.squareup.square.models.CatalogQueryExact;
-import com.squareup.square.exceptions.ApiException;
 
 import static java.util.Collections.singletonList;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -62,8 +60,7 @@ public abstract class Example {
    * @param catalogApi the API abstraction used to interact with the Catalog API
    * @param locationsApi the API abstraction used to interact with merchant locations
    */
-  public abstract void execute(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException, IOException;
+  public abstract void execute(CatalogApi catalogApi, LocationsApi locationsApi);
 
   /**
    * Cleans up {@link CatalogObject}s created by this example.
@@ -74,7 +71,7 @@ public abstract class Example {
    * @param catalogApi the API abstraction used to interact with the Catalog API
    * @param locationsApi the API abstraction used to interact with merchant locations
    */
-  public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException, IOException {
+  public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) {
     logger.info("Nothing to cleanup");
   }
 
@@ -95,8 +92,7 @@ public abstract class Example {
    * @param type the type of objects to delete
    * @param name the name of objects to delete
    */
-  protected void cleanCatalogObjectsByName(CatalogApi catalogApi, String type, String name)
-      throws ApiException, IOException {
+  protected void cleanCatalogObjectsByName(CatalogApi catalogApi, String type, String name) {
         // Search for objects by name and type.
         logger.info("Search for " + type + " named " + name);
 
@@ -127,7 +123,9 @@ public abstract class Example {
                 catalogApi.batchDeleteCatalogObjectsAsync(deleteRequest);
             }
         }).exceptionally(exception -> {
-            throw new RuntimeException(exception);
+            // Log excpetion, return null.
+            logger.error(exception.getMessage());
+            return null;
         });
   }
 }

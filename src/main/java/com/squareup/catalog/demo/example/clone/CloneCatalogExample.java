@@ -17,7 +17,6 @@ package com.squareup.catalog.demo.example.clone;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.example.Example;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchUpsertCatalogObjectsRequest;
@@ -40,9 +39,6 @@ import static java.util.Collections.singletonList;
  * This example clones catalog objects from one merchant account to another. The accessToken
  * specified when the script is executed is assumed to be the source account from which catalog
  * objects are copied.
- *
- * NOTE: This example is in development. Currently it only clones discounts, modifier lists, and
- * taxes. Items are not yet cloned.
  */
 public class CloneCatalogExample extends Example {
 
@@ -55,7 +51,7 @@ public class CloneCatalogExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi sourceCatalogApi, LocationsApi locationsApi) throws ApiException {
+  public void execute(CatalogApi sourceCatalogApi, LocationsApi locationsApi) {
     // Prompt the user for configuration info.
     Config config = promptForConfigurationOptions();
 
@@ -189,7 +185,7 @@ public class CloneCatalogExample extends Example {
    * @param cloneUtil the clone utility methods for the specified catalog object type
    */
   private void cloneCatalogObjectType(CatalogApi sourceCatalogApi, CatalogApi targetCatalogApi,
-      CatalogObjectCloneUtil<?> cloneUtil) throws ApiException {
+      CatalogObjectCloneUtil<?> cloneUtil) {
     logger.info("\nCloning " + cloneUtil.type.toString());
 
     // Retrieve identifiers from the target account.
@@ -265,7 +261,7 @@ public class CloneCatalogExample extends Example {
    * @param cloneUtil the clone utility methods for the specified catalog object type
    * @return a map of the encoded string to the {@link CatalogObject} in the target account
    */
-  private HashMap<String, CatalogObject> retrieveTargetCatalogObjects(CatalogApi targetCatalogApi,CatalogObjectCloneUtil<?> cloneUtil) throws ApiException {
+  private HashMap<String, CatalogObject> retrieveTargetCatalogObjects(CatalogApi targetCatalogApi,CatalogObjectCloneUtil<?> cloneUtil) {
     logger.info("  Retrieving " + cloneUtil.type.toString() + " from target account");
     HashMap<String, CatalogObject> identifierToCatalogObject = new HashMap<>();
     Long catalogVersion = null;

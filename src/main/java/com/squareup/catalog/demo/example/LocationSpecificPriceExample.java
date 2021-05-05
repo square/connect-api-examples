@@ -2,7 +2,6 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchUpsertCatalogObjectsRequest;
@@ -29,7 +28,7 @@ public class LocationSpecificPriceExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
     // Get the list of locations for this merchant.
     logger.info("Retrieving locations");
     locationsApi.listLocationsAsync().thenAccept(result -> {
@@ -111,7 +110,7 @@ public class LocationSpecificPriceExample extends Example {
     });
 }
 
-  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) {
     cleanCatalogObjectsByName(catalogApi, CatalogObjectTypes.ITEM.toString(), "Soda");
   }
 }

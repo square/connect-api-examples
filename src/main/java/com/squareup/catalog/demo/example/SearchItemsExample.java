@@ -17,7 +17,6 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.CatalogObject;
@@ -39,7 +38,7 @@ public class SearchItemsExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
     /*
      * Build the search request
      *

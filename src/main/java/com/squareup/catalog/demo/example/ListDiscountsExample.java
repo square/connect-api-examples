@@ -20,7 +20,6 @@ import java.util.List;
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.catalog.demo.util.DiscountTypes;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.CatalogDiscount;
@@ -40,7 +39,7 @@ public class ListDiscountsExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
 
     // Optional parameters can be set to null.
     Long catalogVersion = null;

@@ -17,7 +17,6 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchDeleteCatalogObjectsRequest;
@@ -35,8 +34,6 @@ import static com.squareup.catalog.demo.util.CatalogObjects.item;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
-import java.io.IOException;
-
 /**
  * This example creates a new CatalogObject category with three CatalogItems
  * (soda, water, and juice). It then deletes the newly created category and all
@@ -51,7 +48,7 @@ public class DeleteCategoryExample extends Example {
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
     // Create a category with items.
     BatchUpsertCatalogObjectsResponse result = createCategoryWithItems(catalogApi);
     if(result.getObjects() == null) {
@@ -62,8 +59,7 @@ public class DeleteCategoryExample extends Example {
     deleteCategoryAndItems(catalogApi, result.getObjects());
   }
 
-  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException, IOException {
+  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) {
         cleanCatalogObjectsByName(catalogApi, CatalogObjectTypes.ITEM.toString(), "Soda");
         cleanCatalogObjectsByName(catalogApi, CatalogObjectTypes.ITEM.toString(), "Water");
         cleanCatalogObjectsByName(catalogApi, CatalogObjectTypes.ITEM.toString(), "Juice");
@@ -75,8 +71,7 @@ public class DeleteCategoryExample extends Example {
    *
    * @return an array containing the new category and items
    **/
-  private BatchUpsertCatalogObjectsResponse createCategoryWithItems(CatalogApi catalogApi)
-      throws ApiException {
+  private BatchUpsertCatalogObjectsResponse createCategoryWithItems(CatalogApi catalogApi) {
     /*
      * Build the request to create the item and categories.
      *
@@ -142,8 +137,7 @@ public class DeleteCategoryExample extends Example {
   /**
    * Deletes all of the specified catalog objects.
    **/
-  private void deleteCategoryAndItems(CatalogApi catalogApi, List<CatalogObject> objectsToDelete)
-      throws ApiException {
+  private void deleteCategoryAndItems(CatalogApi catalogApi, List<CatalogObject> objectsToDelete) {
     /*
      * Convert the list of CatalogObjects (objectsToDelete) to a list of string
      * IDs so can use them to populate a new BatchDeleteCatalogObjectsRequest.
