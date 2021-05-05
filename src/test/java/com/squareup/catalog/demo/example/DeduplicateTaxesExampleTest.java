@@ -18,16 +18,24 @@ package com.squareup.catalog.demo.example;
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.example.DeduplicateTaxesExample.DuplicateTaxInfo;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.models.CatalogObject;
 import java.util.Arrays;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.junit.Before;
 
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class DeduplicateTaxesExampleTest {
 
   @Mock Logger logger;
+
+  @Before public void setUp() {
+    initMocks(this);
+    Moneys.setCurrency("CAD");
+  }
 
   @Test public void mergeDuplicate_bothPresentAtAllLocations() {
     CatalogObject master = createCatalogObjectAbsentAtLocations("L1", "L2");

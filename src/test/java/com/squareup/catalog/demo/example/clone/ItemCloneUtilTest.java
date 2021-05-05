@@ -34,6 +34,7 @@ public class ItemCloneUtilTest {
 
   @Before public void setUp() {
     this.cloneUtil = new ItemCloneUtil();
+    Moneys.setCurrency("CAD");
   }
 
   @Test public void encodeCatalogData_withVariations() {
@@ -44,7 +45,7 @@ public class ItemCloneUtilTest {
         "#variationID")
         .itemVariationData(new CatalogItemVariation.Builder()
             .name("itemVariation1")
-            .priceMoney(Moneys.usd(1000))
+            .priceMoney(Moneys.createMoneyObject(1000))
             .build())
         .build();
 
@@ -53,7 +54,7 @@ public class ItemCloneUtilTest {
         "#variationID")
         .itemVariationData(new CatalogItemVariation.Builder()
             .name("itemVariation2")
-            .priceMoney(Moneys.usd(2000))
+            .priceMoney(Moneys.createMoneyObject(2000))
             .build())
         .build();
 
@@ -104,7 +105,7 @@ public class ItemCloneUtilTest {
         "#variationID")
         .itemVariationData(new CatalogItemVariation.Builder()
             .name("itemVariation1")
-            .priceMoney(Moneys.usd(1000))
+            .priceMoney(Moneys.createMoneyObject(1000))
             .build())
         .build();
 
@@ -113,7 +114,7 @@ public class ItemCloneUtilTest {
         "#variationID")
         .itemVariationData(new CatalogItemVariation.Builder()
             .name("itemVariation2")
-            .priceMoney(Moneys.usd(2000))
+            .priceMoney(Moneys.createMoneyObject(2000))
             .build())
         .build();
 
@@ -144,7 +145,7 @@ public class ItemCloneUtilTest {
         "#variationID")
         .itemVariationData(new CatalogItemVariation.Builder()
             .name("itemVariation1")
-            .priceMoney(Moneys.usd(1000))
+            .priceMoney(Moneys.createMoneyObject(1000))
             .build())
         .build();
 
@@ -153,7 +154,7 @@ public class ItemCloneUtilTest {
         "#variationID")
         .itemVariationData(new CatalogItemVariation.Builder()
             .name("itemVariation2")
-            .priceMoney(Moneys.usd(2000))
+            .priceMoney(Moneys.createMoneyObject(2000))
             .build())
         .build();
 

@@ -16,6 +16,7 @@
 package com.squareup.catalog.demo.example.clone;
 
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.models.CatalogModifier;
 import com.squareup.square.models.CatalogModifierList;
 import com.squareup.square.models.CatalogObject;
@@ -23,7 +24,7 @@ import com.squareup.square.models.Money;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.squareup.catalog.demo.util.Moneys.usd;
+import static com.squareup.catalog.demo.util.Moneys.createMoneyObject;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.Arrays;
@@ -35,6 +36,7 @@ public class ModifierListCloneUtilTest {
 
   @Before public void setUp() {
     this.cloneUtil = new ModifierListCloneUtil();
+    Moneys.setCurrency("CAD");
   }
 
   @Test public void encodeCatalogData() {
@@ -183,7 +185,7 @@ public class ModifierListCloneUtilTest {
   }
 
   private CatalogObject createModifier(String name, Long priceAmount) {
-    Money priceMoney = (priceAmount == null) ? null : usd(priceAmount);
+    Money priceMoney = (priceAmount == null) ? null : createMoneyObject(priceAmount);
     return new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "id")
         .modifierData(new CatalogModifier.Builder()
             .name(name)

@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
+import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.models.CatalogTax;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,7 @@ public class TaxCloneUtilTest {
 
   @Before public void setUp() {
     this.cloneUtil = new TaxCloneUtil();
+    Moneys.setCurrency("CAD");
   }
 
   @Test public void encodeCatalogData() {

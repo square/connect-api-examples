@@ -28,15 +28,18 @@ import com.squareup.catalog.demo.example.LocationSpecificPriceExample;
 import com.squareup.catalog.demo.example.RetrieveCatalogObjectExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
 import com.squareup.catalog.demo.example.clone.CloneCatalogExample;
+import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.SquareClient;
 import com.squareup.square.SquareClient.Builder;
 import com.squareup.square.Environment;
 import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.models.Location;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import java.util.Locale;
 
 import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
+import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
 
 public class Main {
 
@@ -169,15 +172,10 @@ public class Main {
         .accessToken(accessToken)
         .build();
 
-    // Configure OAuth2 access token for authorization: oauth2
-    // OAuth oauth2 = (OAuth) apiClient.getAuthentication("oauth2");
-    // oauth2.setAccessToken(accessToken);
-
-    // CatalogApi catalogApi = new CatalogApi(apiClient);
-    // LocationsApi locationsApi = new LocationsApi(apiClient);
-
     CatalogApi catalogApi = apiClient.getCatalogApi();
     LocationsApi locationsApi = apiClient.getLocationsApi();
+
+    setCurrencyAcrossApplication(locationsApi);
 
     executeExample(command, cleanup, catalogApi, locationsApi);
   }
@@ -239,5 +237,28 @@ public class Main {
       }
     }
     throw new IllegalArgumentException("Example " + exampleName + " not found");
+  }
+
+  /**
+   * Finds out the currency to be used across all examples
+   * Use join() because we can't proceed further until we have this information.
+   * @param locationsApi the LocationsApi utility
+   */
+  private void setCurrencyAcrossApplication(LocationsApi locationsApi) {
+    locationsApi.listLocationsAsync().thenAccept(result -> {
+        if (checkAndLogErrors(result.getErrors(), logger)) {
+            return;
+        }
+
+        // grab the first location for the user, and use that to determine currency.
+        if(result.getLocations() != null && result.getLocations().size() > 0) {
+            Location currentLocation = result.getLocations().get(0);
+            Moneys.setCurrency(currentLocation.getCurrency());
+        }
+    }).exceptionally(exception -> {
+        // Log exception, return null.
+        logger.error(exception.getMessage());
+        return null;
+    }).join();
   }
 }

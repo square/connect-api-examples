@@ -17,9 +17,6 @@ import static com.squareup.catalog.demo.util.Moneys.*;
 import static java.util.Collections.singletonList;
 import static java.util.Arrays.asList;
 
-
-import java.io.IOException;
-
 /**
  * This example creates a CatalogItemVariation with a location-specific price
  * that overrides its predefined global price. It then uploads the new objects
@@ -62,11 +59,11 @@ public class LocationSpecificPriceExample extends Example {
         CatalogItemVariation itemVariationData = new CatalogItemVariation.Builder()
             .name("Regular")
             .pricingType("FIXED_PRICING")
-            .priceMoney(usd(200))
+            .priceMoney(createMoneyObject(200))
             .locationOverrides(singletonList(
                 new ItemVariationLocationOverrides.Builder()
                     .locationId(locationId)
-                    .priceMoney(usd(250))
+                    .priceMoney(createMoneyObject(250))
                     .pricingType("FIXED_PRICING")
                     .build()
             ))
@@ -114,8 +111,7 @@ public class LocationSpecificPriceExample extends Example {
     });
 }
 
-  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException, IOException {
+  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
     cleanCatalogObjectsByName(catalogApi, CatalogObjectTypes.ITEM.toString(), "Soda");
   }
 }

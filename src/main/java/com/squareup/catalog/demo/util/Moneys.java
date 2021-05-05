@@ -24,12 +24,17 @@ import java.util.Locale;
 public class Moneys {
 
   /**
-   * Creates a Money object for the specified amount of cents in USD.
+   * Variable that holds the currency to be used across the application.
    */
-  public static Money usd(long cents) {
+  private static String currency;
+
+  /**
+   * Creates a Money object for the specified amount of cents in the currency provided earlier.
+   */
+  public static Money createMoneyObject(long cents) {
     return new Money.Builder()
         .amount(cents)
-        .currency("CAD")
+        .currency(currency)
         .build();
   }
 
@@ -74,6 +79,24 @@ public class Moneys {
       // US dollars.
       return formatter.format(moneyOrNull.getAmount() / 100.0);
     }
+  }
+
+  /**
+   * Sets the appropriate currency for the app.
+   *
+   * @param c the currency to be used.
+   */
+  public static void setCurrency(String c) {
+    currency = c;
+  }
+
+   /**
+   * Gets the appropriate currency for the app.
+   *
+   * @return the currency used across the app.
+   */
+  public static String getCurrency() {
+    return currency;
   }
 
   private Moneys() {

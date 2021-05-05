@@ -27,6 +27,7 @@ public class DiscountCloneUtilTest {
 
   @Before public void setUp() {
     this.cloneUtil = new DiscountCloneUtil(false);
+    Moneys.setCurrency("CAD");
   }
 
   @Test public void encodeCatalogData_fixedAmount() {
@@ -34,7 +35,7 @@ public class DiscountCloneUtilTest {
         .name("name")
         .discountType("FIXED_AMOUNT")
         .percentage(null)
-        .amountMoney(Moneys.usd(1000))
+        .amountMoney(Moneys.createMoneyObject(1000))
         .build();
     assertThat(cloneUtil.encodeCatalogData(discount)).isEqualTo(
         "name:::FIXED_AMOUNT:::null:::1000");

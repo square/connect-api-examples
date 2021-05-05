@@ -96,7 +96,7 @@ public class CatalogObjects {
         new CatalogItemVariation.Builder()
         .name(name)
         .pricingType("FIXED_PRICING")
-        .priceMoney(new Money(cents, "CAD"))
+        .priceMoney(new Money(cents, Moneys.getCurrency()))
         .build()
     )
     .build();

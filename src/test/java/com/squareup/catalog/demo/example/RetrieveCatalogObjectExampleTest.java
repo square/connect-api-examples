@@ -17,6 +17,7 @@ package com.squareup.catalog.demo.example;
 
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.models.CatalogCategory;
 import com.squareup.square.models.CatalogDiscount;
 import com.squareup.square.models.CatalogImage;
@@ -37,7 +38,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.squareup.catalog.demo.util.Moneys.usd;
+import static com.squareup.catalog.demo.util.Moneys.createMoneyObject;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -52,6 +53,7 @@ public class RetrieveCatalogObjectExampleTest {
     initMocks(this);
     this.logger = mock(Logger.class);
     this.example = new RetrieveCatalogObjectExample(logger);
+    Moneys.setCurrency("CAD");
   }
 
   @Test public void logCatalogObjectDetails_category() {
@@ -70,7 +72,7 @@ public class RetrieveCatalogObjectExampleTest {
         .discountData(
             new CatalogDiscount.Builder()
             .name("name")
-            .amountMoney(usd(1000))
+            .amountMoney(createMoneyObject(1000))
             .build())
         .build();
     example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
@@ -162,7 +164,7 @@ CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.DISCO
             .itemId("itemId")
             .name("name")
             .sku("sku")
-            .priceMoney(usd(1000)).build())
+            .priceMoney(createMoneyObject(1000)).build())
         .build();
 
     // Add the item as a related object.
@@ -195,7 +197,7 @@ CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.DISCO
                 new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "modifier1")
                     .modifierData(new CatalogModifier.Builder()
                         .name("modifier1_name")
-                        .priceMoney(usd(1000)).build()).build()
+                        .priceMoney(createMoneyObject(1000)).build()).build()
             )).build()).build();
     example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
     verify(logger).info(anyString());
