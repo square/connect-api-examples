@@ -117,6 +117,23 @@ public class MainTest {
     verifyUsageLogged();
   }
 
+  @Test public void processArgs_withProdEnv() throws ApiException {
+    main.processArgs(new String[] {"foo", "-token", "abcdef", "-env", "production"});
+    verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
+    verify(exampleFoo).execute(any(CatalogApi.class), any(LocationsApi.class));
+  }
+
+  @Test public void processArgs_withSandboxEnv() throws ApiException {
+    main.processArgs(new String[] {"foo", "-token", "abcdef", "-env", "sandbox"});
+    verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
+    verify(exampleFoo).execute(any(CatalogApi.class), any(LocationsApi.class));
+  }
+
+  @Test public void processArgs_unrecognizedEnv() throws ApiException {
+    main.processArgs(new String[] {"foo", "-token", "abcdef", "-env", "someEnv"});
+    verify(logger).error(anyString());
+  }
+
   private void verifyUsageLogged() throws ApiException {
     verify(logger).info(startsWith("USAGE"));
     verifyExamplesDidNotExecute();

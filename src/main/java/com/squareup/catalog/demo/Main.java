@@ -44,7 +44,7 @@ import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
 public class Main {
 
   private static final String USAGE = "USAGE:\n" +
-      "  Execute Example: java <example_name> [-token <accessToken>] [-cleanup]\n" +
+      "  Execute Example: java <example_name> [-token <accessToken>] [-cleanup] [-env <sandbox/production>]\n" +
       "  List Examples:   java -list-examples\n" +
       "  Print Usage:     java -usage";
 
@@ -73,6 +73,13 @@ public class Main {
    * Argument used to set the access token. Required when executing an example.
    */
   private static final String ARG_TOKEN = "-token";
+
+  /**
+   * Argument used to set environment.
+   * If set to sandbox, the APIs will hit the sandbox environment.
+   * If set to production, the APIs will hit the production environment.
+   */
+  private static final String ENV_FLAG = "-env";
 
   public static void main(String[] args) {
     Logger logger = new Logger.SystemLogger();
@@ -123,9 +130,9 @@ public class Main {
     // Process arguments associated with the example.
     String accessToken = null;
     boolean cleanup = false;
-    // ApiClient apiClient = Configuration.getDefaultApiClient();
+    String environment = null;
+    String customUrl = null;
 
-    Builder apiClientBuilder = new SquareClient.Builder();
     for (int i = 1; i < args.length; i++) {
       String arg = args[i].toLowerCase(Locale.US);
       switch (arg) {
@@ -134,8 +141,7 @@ public class Main {
             usage(ARG_BASE_URL + " specified without a url");
             return;
           }
-          // apiClient = new ApiClient().setBasePath(args[i + 1]);
-          apiClientBuilder.customUrl(args[i + 1]);
+          customUrl = args[i + 1];
           i++;
           break;
         case ARG_CLEANUP:
@@ -147,6 +153,14 @@ public class Main {
             return;
           }
           accessToken = args[i + 1];
+          i++;
+          break;
+        case ENV_FLAG:
+          if(i == args.length - 1) {
+            usage(ENV_FLAG + " specified without an environment");
+            return;
+          }
+          environment = args[i + 1];
           i++;
           break;
         default:
@@ -166,9 +180,33 @@ public class Main {
       return;
     }
 
+    Builder apiClientBuilder = new SquareClient.Builder();
+
+    if (environment != null && !environment.equalsIgnoreCase("sandbox") && !environment.equalsIgnoreCase("production")) {
+        // was set to something that we do not support.
+        logger.error("If you choose to use the -env flag, you must either specify \"sandbox\" or \"production\"");
+        return;
+    }
+
+    // Decide on environment.
+    // If both enviroment and base-url were set, the environment choice will override.
+    Environment env;
+    if(environment == null) {
+        // if environment was not set, check if base url was provided. If so, set environment to custom.
+        // Otherwise, set environment to be sandbox by default.
+        if(customUrl != null) {
+            env = Environment.CUSTOM;
+            apiClientBuilder.customUrl(customUrl);
+        } else {
+            env = Environment.SANDBOX;
+        }
+    } else {
+        env = environment.equalsIgnoreCase("sandbox") ? Environment.SANDBOX : Environment.PRODUCTION;
+    }
+
     // Build the client using the arguments provided
     SquareClient apiClient = apiClientBuilder
-        .environment(Environment.SANDBOX)
+        .environment(env)
         .accessToken(accessToken)
         .build();
 
