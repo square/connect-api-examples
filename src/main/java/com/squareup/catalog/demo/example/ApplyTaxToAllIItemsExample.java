@@ -154,7 +154,7 @@ public class ApplyTaxToAllIItemsExample extends Example {
           return;
         }
         List<CatalogObject> items = result.getObjects();
-        if (items.size() == 0) {
+        if (items == null || items.size() == 0) {
           if (cursor == null) {
             logger.info("No items found in catalog.");
             return;
@@ -200,8 +200,10 @@ public class ApplyTaxToAllIItemsExample extends Example {
     } while (cursor != null);
 
     // Log results.
-    long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
-    logger.info("Success! Applied " + tax.getTaxData().getName() + " to " + totalItemsApplied + " items out of "
-        + totalItemsVisited + " in " + elapsedTimeSeconds + " seconds");
+    if (totalItemsApplied > 0) {
+      long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
+      logger.info("Success! Applied " + tax.getTaxData().getName() + " to " + totalItemsApplied + " items out of "
+          + totalItemsVisited + " in " + elapsedTimeSeconds + " seconds");
+    }
   }
 }
