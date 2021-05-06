@@ -15,6 +15,11 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
+import static org.fest.assertions.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.models.CatalogItem;
@@ -23,157 +28,108 @@ import com.squareup.square.models.CatalogObject;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.fest.assertions.Assertions.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ItemCloneUtilTest {
 
   private ItemCloneUtil cloneUtil;
 
-  @Before public void setUp() {
+  @Before
+  public void setUp() {
     this.cloneUtil = new ItemCloneUtil();
     Moneys.setCurrency("CAD");
   }
 
-  @Test public void encodeCatalogData_withVariations() {
+  @Test
+  public void encodeCatalogData_withVariations() {
     List<CatalogObject> variations = new ArrayList<>();
 
-    CatalogObject itemVariation1 = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM_VARIATION.toString(),
+    CatalogObject itemVariation1 = new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(),
         "#variationID")
-        .itemVariationData(new CatalogItemVariation.Builder()
-            .name("itemVariation1")
-            .priceMoney(Moneys.createMoneyObject(1000))
-            .build())
-        .build();
+            .itemVariationData(new CatalogItemVariation.Builder().name("itemVariation1")
+                .priceMoney(Moneys.createMoneyObject(1000)).build())
+            .build();
 
-    CatalogObject itemVariation2 = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM_VARIATION.toString(),
+    CatalogObject itemVariation2 = new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(),
         "#variationID")
-        .itemVariationData(new CatalogItemVariation.Builder()
-            .name("itemVariation2")
-            .priceMoney(Moneys.createMoneyObject(2000))
-            .build())
-        .build();
+            .itemVariationData(new CatalogItemVariation.Builder().name("itemVariation2")
+                .priceMoney(Moneys.createMoneyObject(2000)).build())
+            .build();
 
     variations.add(itemVariation2);
     variations.add(itemVariation1);
 
+    CatalogItem item = new CatalogItem.Builder().name("itemName").description("some description about the item")
+        .variations(variations).build();
 
-    CatalogItem item = new CatalogItem.Builder()
-        .name("itemName")
-        .description("some description about the item")
-        .variations(variations)
-        .build();
+    CatalogObject object = new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "itemName").id("#id")
+        .itemData(item).build();
 
-    CatalogObject object = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM.toString(),
-        "itemName")
-        .id("#id")
-        .itemData(item)
-        .build();
-
-    assertThat(cloneUtil.encodeCatalogObject(object)).isEqualTo(
-        "itemName:::some description about the item:::itemVariation1::itemVariation2");
+    assertThat(cloneUtil.encodeCatalogObject(object))
+        .isEqualTo("itemName:::some description about the item:::itemVariation1::itemVariation2");
   }
 
-  @Test public void encodeCatalogData_noVariations() {
-    CatalogItem item = new CatalogItem.Builder()
-        .name("itemName")
-        .description("some description about the item")
-        .variations(null)
-        .build();
+  @Test
+  public void encodeCatalogData_noVariations() {
+    CatalogItem item = new CatalogItem.Builder().name("itemName").description("some description about the item")
+        .variations(null).build();
 
-    CatalogObject object = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM.toString(),
-        "itemName")
-        .id("#id")
-        .itemData(item)
-        .build();
+    CatalogObject object = new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "itemName").id("#id")
+        .itemData(item).build();
 
-    assertThat(cloneUtil.encodeCatalogObject(object)).isEqualTo(
-        "itemName:::some description about the item:::");
+    assertThat(cloneUtil.encodeCatalogObject(object)).isEqualTo("itemName:::some description about the item:::");
   }
 
-  @Test public void encodeCatalogData_noDescription() {
+  @Test
+  public void encodeCatalogData_noDescription() {
     List<CatalogObject> variations = new ArrayList<>();
 
-    CatalogObject itemVariation1 = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM_VARIATION.toString(),
+    CatalogObject itemVariation1 = new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(),
         "#variationID")
-        .itemVariationData(new CatalogItemVariation.Builder()
-            .name("itemVariation1")
-            .priceMoney(Moneys.createMoneyObject(1000))
-            .build())
-        .build();
+            .itemVariationData(new CatalogItemVariation.Builder().name("itemVariation1")
+                .priceMoney(Moneys.createMoneyObject(1000)).build())
+            .build();
 
-    CatalogObject itemVariation2 = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM_VARIATION.toString(),
+    CatalogObject itemVariation2 = new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(),
         "#variationID")
-        .itemVariationData(new CatalogItemVariation.Builder()
-            .name("itemVariation2")
-            .priceMoney(Moneys.createMoneyObject(2000))
-            .build())
-        .build();
+            .itemVariationData(new CatalogItemVariation.Builder().name("itemVariation2")
+                .priceMoney(Moneys.createMoneyObject(2000)).build())
+            .build();
 
     variations.add(itemVariation1);
     variations.add(itemVariation2);
 
-    CatalogItem item = new CatalogItem.Builder()
-        .name("itemName")
-        .variations(variations)
-        .build();
+    CatalogItem item = new CatalogItem.Builder().name("itemName").variations(variations).build();
 
-    CatalogObject object = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM.toString(),
-        "itemName")
-        .id("#id")
-        .itemData(item)
-        .build();
+    CatalogObject object = new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "itemName").id("#id")
+        .itemData(item).build();
 
-    assertThat(cloneUtil.encodeCatalogObject(object)).isEqualTo(
-        "itemName:::null:::itemVariation1::itemVariation2");
+    assertThat(cloneUtil.encodeCatalogObject(object)).isEqualTo("itemName:::null:::itemVariation1::itemVariation2");
   }
 
-  @Test public void removeSourceAccountMetaData() {
+  @Test
+  public void removeSourceAccountMetaData() {
     List<CatalogObject> variations = new ArrayList<>();
 
-    CatalogObject itemVariation1 = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM_VARIATION.toString(),
+    CatalogObject itemVariation1 = new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(),
         "#variationID")
-        .itemVariationData(new CatalogItemVariation.Builder()
-            .name("itemVariation1")
-            .priceMoney(Moneys.createMoneyObject(1000))
-            .build())
-        .build();
+            .itemVariationData(new CatalogItemVariation.Builder().name("itemVariation1")
+                .priceMoney(Moneys.createMoneyObject(1000)).build())
+            .build();
 
-    CatalogObject itemVariation2 = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM_VARIATION.toString(),
+    CatalogObject itemVariation2 = new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(),
         "#variationID")
-        .itemVariationData(new CatalogItemVariation.Builder()
-            .name("itemVariation2")
-            .priceMoney(Moneys.createMoneyObject(2000))
-            .build())
-        .build();
+            .itemVariationData(new CatalogItemVariation.Builder().name("itemVariation2")
+                .priceMoney(Moneys.createMoneyObject(2000)).build())
+            .build();
 
     variations.add(itemVariation2);
     variations.add(itemVariation1);
 
+    CatalogItem item = new CatalogItem.Builder().name("itemName").description("some description about the item")
+        .variations(variations).build();
 
-    CatalogItem item = new CatalogItem.Builder()
-        .name("itemName")
-        .description("some description about the item")
-        .variations(variations)
-        .build();
-
-    CatalogObject object = new CatalogObject.Builder(
-        CatalogObjectTypes.ITEM.toString(),
-        "itemName")
-        .id("#id")
-        .itemData(item)
-        .build();
+    CatalogObject object = new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "itemName").id("#id")
+        .itemData(item).build();
 
     CatalogObject result = cloneUtil.removeSourceAccountMetaData(object);
     assertThat(result.getPresentAtAllLocations()).isTrue();

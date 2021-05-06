@@ -15,14 +15,16 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
-import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.models.CatalogObject;
-import com.squareup.square.models.Money;
 import java.util.Collections;
 import java.util.UUID;
 
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.square.models.Money;
+
 /**
- * Defines utility methods used when cloning a CatalogObject from one merchant account to another.
+ * Defines utility methods used when cloning a CatalogObject from one merchant
+ * account to another.
  *
  * @param <T> The catalog object data type
  */
@@ -40,10 +42,11 @@ abstract class CatalogObjectCloneUtil<T> {
   abstract T getCatalogData(CatalogObject catalogObject);
 
   /**
-   * Encodes a subset of fields from the {@link CatalogObject} into a string, allowing
-   * CatalogObjects to be compared between merchant accounts for likeness. If the encoded string of
-   * a {@link CatalogObject} in the source account matches the encoded string of a {@link
-   * CatalogObject} in the target account, then the object is not cloned.
+   * Encodes a subset of fields from the {@link CatalogObject} into a string,
+   * allowing CatalogObjects to be compared between merchant accounts for
+   * likeness. If the encoded string of a {@link CatalogObject} in the source
+   * account matches the encoded string of a {@link CatalogObject} in the target
+   * account, then the object is not cloned.
    */
   final String encodeCatalogObject(CatalogObject catalogObject) {
     T catalogData = getCatalogData(catalogObject);
@@ -51,10 +54,11 @@ abstract class CatalogObjectCloneUtil<T> {
   }
 
   /**
-   * Encodes a subset of fields from the {@link CatalogObject} into a string, allowing
-   * CatalogObjects to be compared between merchant accounts for likeness. If the encoded string of
-   * a {@link CatalogObject} in the source account matches the encoded string of a {@link
-   * CatalogObject} in the target account, then the object is not cloned.
+   * Encodes a subset of fields from the {@link CatalogObject} into a string,
+   * allowing CatalogObjects to be compared between merchant accounts for
+   * likeness. If the encoded string of a {@link CatalogObject} in the source
+   * account matches the encoded string of a {@link CatalogObject} in the target
+   * account, then the object is not cloned.
    *
    * @param catalogData the data from the {@link CatalogObject}.
    */
@@ -71,8 +75,8 @@ abstract class CatalogObjectCloneUtil<T> {
   }
 
   /**
-   * Removes meta data from the {@link CatalogObject} that only applies to the source account, such
-   * as location IDs and version.
+   * Removes meta data from the {@link CatalogObject} that only applies to the
+   * source account, such as location IDs and version.
    *
    * @param catalogObject the {@link CatalogObject} to modify
    */
@@ -83,21 +87,21 @@ abstract class CatalogObjectCloneUtil<T> {
         // The V1 IDs from the source account do not apply to the target account.
         .catalogV1Ids(Collections.emptyList())
         // The location IDs from the source account do not apply to the target account.
-        .presentAtLocationIds(Collections.emptyList())
-        .absentAtLocationIds(Collections.emptyList())
+        .presentAtLocationIds(Collections.emptyList()).absentAtLocationIds(Collections.emptyList())
         // The server will assign a version.
         .version(null)
         // The server will update the timestamp.
-        .updatedAt(null)
-        .build();
+        .updatedAt(null).build();
   }
 
   /**
-   * Merges data from a {@link CatalogObject} from the source account into a {@link CatalogObject}
-   * from the target account when they have the same encoded string. This method can be used to
-   * merge two objects that have the same name, but slightly different attributes. For example, if a
-   * modifier list in the source account has the same name as a modifier list in the target account,
-   * this method is used to copy the modifiers from the source account to the target account.
+   * Merges data from a {@link CatalogObject} from the source account into a
+   * {@link CatalogObject} from the target account when they have the same encoded
+   * string. This method can be used to merge two objects that have the same name,
+   * but slightly different attributes. For example, if a modifier list in the
+   * source account has the same name as a modifier list in the target account,
+   * this method is used to copy the modifiers from the source account to the
+   * target account.
    *
    * @param sourceCatalogObject the {@link CatalogObject} from the source account
    * @param targetCatalogObject the {@link CatalogObject} from the target account

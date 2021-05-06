@@ -15,15 +15,15 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.square.models.CatalogModifier;
 import com.squareup.square.models.CatalogModifierList;
 import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.Money;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Utility methods used to clone a {@link CatalogModifierList}.
@@ -34,11 +34,13 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
     super(CatalogObjectTypes.MODIFIER_LIST);
   }
 
-  @Override CatalogModifierList getCatalogData(CatalogObject catalogObject) {
+  @Override
+  CatalogModifierList getCatalogData(CatalogObject catalogObject) {
     return catalogObject.getModifierListData();
   }
 
-  @Override public String encodeCatalogData(CatalogModifierList modifierList) {
+  @Override
+  public String encodeCatalogData(CatalogModifierList modifierList) {
     return modifierList.getName() + ":::" + modifierList.getSelectionType();
   }
 
@@ -56,13 +58,9 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
       updatedModifiers.add(removeSourceAccountMetaDataFromModifier(modifierObject, cleanObject));
     }
 
-    CatalogModifierList cleanModifierList = modifierList.toBuilder()
-        .modifiers(updatedModifiers)
-        .build();
+    CatalogModifierList cleanModifierList = modifierList.toBuilder().modifiers(updatedModifiers).build();
 
-
-    return cleanObject.toBuilder()
-            .modifierListData(cleanModifierList).build();
+    return cleanObject.toBuilder().modifierListData(cleanModifierList).build();
   }
 
   @Override
@@ -73,14 +71,16 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
     List<CatalogObject> cleanModifiers = new ArrayList<>();
     HashSet<String> targetModifiers = getEncodedModifiers(targetModifierList);
 
-    // Add modifiers from the source modifier list that are not already in the target list.
+    // Add modifiers from the source modifier list that are not already in the
+    // target list.
     boolean addedModifierToTarget = false;
     CatalogModifierList sourceModifierList = sourceCatalogObject.getModifierListData();
     for (CatalogObject modifierObject : sourceModifierList.getModifiers()) {
       String encodeModifier = encodeModifier(modifierObject);
       if (!targetModifiers.contains(encodeModifier)) {
         // Prepare the catalog object for the target account.
-        CatalogObject cleanModifierObject = removeSourceAccountMetaDataFromModifier(modifierObject, targetCatalogObject);
+        CatalogObject cleanModifierObject = removeSourceAccountMetaDataFromModifier(modifierObject,
+            targetCatalogObject);
 
         // Add the modifier to the target modifier list.
         cleanModifiers.add(cleanModifierObject);
@@ -93,8 +93,7 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
     cleanModifiers.addAll(targetModifierList.getModifiers());
 
     CatalogObject updatedObject = targetCatalogObject.toBuilder()
-        .modifierListData(targetModifierList.toBuilder().modifiers(cleanModifiers).build())
-        .build();
+        .modifierListData(targetModifierList.toBuilder().modifiers(cleanModifiers).build()).build();
 
     // Return the modifier target CatalogObject if it changed.
     return addedModifierToTarget ? updatedObject : null;
@@ -114,7 +113,8 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
   private String encodeModifier(CatalogObject modifierObject) {
     CatalogModifier modifier = modifierObject.getModifierData();
 
-    // If the price is null, coerece it to 0. A null price is the same as a $0 price.
+    // If the price is null, coerece it to 0. A null price is the same as a $0
+    // price.
     Money price = modifier.getPriceMoney();
     long amount = (price == null) ? 0 : price.getAmount();
 
@@ -122,16 +122,15 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
   }
 
   /**
-   * Removes meta data from the {@link CatalogObject} that only applies to the source account, such
-   * as location IDs and version. Also matches locations with the parent modifier list.
+   * Removes meta data from the {@link CatalogObject} that only applies to the
+   * source account, such as location IDs and version. Also matches locations with
+   * the parent modifier list.
    */
-  private CatalogObject removeSourceAccountMetaDataFromModifier(CatalogObject modifier,
-      CatalogObject modifierList) {
+  private CatalogObject removeSourceAccountMetaDataFromModifier(CatalogObject modifier, CatalogObject modifierList) {
     CatalogObject.Builder cleanModifierBuilder = super.removeSourceAccountMetaData(modifier).toBuilder();
 
     // Make the locations of the modifier match the locations of the modifier list.
-    return cleanModifierBuilder
-        .presentAtAllLocations(modifierList.getPresentAtAllLocations())
+    return cleanModifierBuilder.presentAtAllLocations(modifierList.getPresentAtAllLocations())
         .presentAtLocationIds(modifierList.getPresentAtLocationIds())
         .absentAtLocationIds(modifierList.getAbsentAtLocationIds())
         .build();

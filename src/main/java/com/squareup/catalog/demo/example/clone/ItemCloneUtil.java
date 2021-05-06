@@ -30,63 +30,55 @@ import com.squareup.square.models.CatalogObject;
  */
 public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
 
-    ItemCloneUtil() {
-        super(CatalogObjectTypes.ITEM);
+  ItemCloneUtil() {
+    super(CatalogObjectTypes.ITEM);
+  }
+
+  @Override
+  CatalogItem getCatalogData(CatalogObject catalogObject) {
+    return catalogObject.getItemData();
+  }
+
+  @Override
+  String encodeCatalogData(CatalogItem item) {
+    List<String> variationNames = new ArrayList<>();
+    if (item.getVariations() != null) {
+      for (CatalogObject variation : item.getVariations()) {
+        variationNames.add(variation.getItemVariationData().getName());
+      }
+
+      // Sort to keep order of variations consistent.
+      Collections.sort(variationNames);
     }
 
-    @Override
-    CatalogItem getCatalogData(CatalogObject catalogObject) {
-        return catalogObject.getItemData();
+    String encodedVariations = String.join("::", variationNames);
+    return item.getName() + ":::" + item.getDescription() + ":::" + encodedVariations;
+  }
+
+  @Override
+  CatalogObject removeSourceAccountMetaData(CatalogObject catalogObject) {
+    CatalogObject cleanObject = super.removeSourceAccountMetaData(catalogObject);
+    CatalogItem oldItemData = cleanObject.getItemData();
+
+    List<CatalogObject> oldVariations = oldItemData.getVariations();
+    List<CatalogObject> newVariations = new ArrayList<>();
+
+    // remove metadata for the item variation
+    for (CatalogObject oldVariation : oldVariations) {
+      // we want to remove item_id from the itemVariationData
+      CatalogItemVariation oldItemVariationData = oldVariation.getItemVariationData();
+      CatalogObject newVariation = super.removeSourceAccountMetaData(oldVariation).toBuilder()
+          .itemVariationData(oldItemVariationData.toBuilder().itemId(null).locationOverrides(null).build())
+          .build();
+      newVariations.add(newVariation);
     }
 
-    @Override
-    String encodeCatalogData(CatalogItem item) {
-        List<String> variationNames = new ArrayList<>();
-        if(item.getVariations() != null) {
-            for(CatalogObject variation : item.getVariations()) {
-                variationNames.add(variation.getItemVariationData().getName());
-            }
+    // set the new variations, reset the tax IDs
+    return cleanObject.toBuilder()
+        .itemData(oldItemData.toBuilder().variations(newVariations).taxIds(Collections.emptyList()).build())
+        .presentAtAllLocations(true)
+        .build();
 
-            // Sort to keep order of variations consistent.
-            Collections.sort(variationNames);
-        }
-
-        String encodedVariations = String.join("::", variationNames);
-        return item.getName()
-        + ":::"
-        + item.getDescription()
-        + ":::"
-        + encodedVariations;
-    }
-
-    @Override
-    CatalogObject removeSourceAccountMetaData(CatalogObject catalogObject) {
-        CatalogObject cleanObject = super.removeSourceAccountMetaData(catalogObject);
-        CatalogItem oldItemData = cleanObject.getItemData();
-
-        List<CatalogObject> oldVariations = oldItemData.getVariations();
-        List<CatalogObject> newVariations = new ArrayList<>();
-
-        // remove metadata for the item variation
-        for (CatalogObject oldVariation : oldVariations) {
-            // we want to remove item_id from the itemVariationData
-            CatalogItemVariation oldItemVariationData = oldVariation.getItemVariationData();
-            CatalogObject newVariation = super.removeSourceAccountMetaData(oldVariation).toBuilder()
-                .itemVariationData(oldItemVariationData.toBuilder().itemId(null).locationOverrides(null).build())
-                .build();
-            newVariations.add(newVariation);
-        }
-
-        // set the new variations, reset the tax IDs
-        return cleanObject.toBuilder()
-            .itemData(oldItemData.toBuilder()
-                .variations(newVariations)
-                .taxIds(Collections.emptyList())
-                .build())
-            .presentAtAllLocations(true)
-            .build();
-
-    }
-
+  }
 
 }

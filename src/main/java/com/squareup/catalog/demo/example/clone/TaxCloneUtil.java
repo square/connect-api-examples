@@ -15,10 +15,9 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.CatalogTax;
-
-import com.squareup.catalog.demo.util.CatalogObjectTypes;
 
 /**
  * Utility methods used to clone a {@link CatalogTax}.
@@ -29,11 +28,13 @@ class TaxCloneUtil extends CatalogObjectCloneUtil<CatalogTax> {
     super(CatalogObjectTypes.TAX);
   }
 
-  @Override CatalogTax getCatalogData(CatalogObject catalogObject) {
+  @Override
+  CatalogTax getCatalogData(CatalogObject catalogObject) {
     return catalogObject.getTaxData();
   }
 
-  @Override String encodeCatalogData(CatalogTax tax) {
+  @Override
+  String encodeCatalogData(CatalogTax tax) {
     return tax.getName() + ":::" + tax.getPercentage() + ":::" + tax.getInclusionType();
   }
 }

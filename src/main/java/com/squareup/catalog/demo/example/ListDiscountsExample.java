@@ -20,12 +20,11 @@ import java.util.List;
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.catalog.demo.util.DiscountTypes;
+import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.CatalogDiscount;
 import com.squareup.square.models.CatalogObject;
-import com.squareup.catalog.demo.util.Moneys;
-
 
 /**
  * This example lists all discounts in the catalog.
@@ -45,54 +44,54 @@ public class ListDiscountsExample extends Example {
     Long catalogVersion = null;
 
     do {
-        // Retrieve a page of discounts.
-        catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.DISCOUNT.toString(), catalogVersion).thenAccept(result -> {
-            if (checkAndLogErrors(result.getErrors())) {
-                return;
+      // Retrieve a page of discounts.
+      catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.DISCOUNT.toString(), catalogVersion).thenAccept(result -> {
+        if (checkAndLogErrors(result.getErrors())) {
+          return;
+        }
+
+        List<CatalogObject> discounts = result.getObjects();
+        if (discounts == null || discounts.size() == 0) {
+          if (cursor == null) {
+            logger.info("No discounts found.");
+            return;
+          }
+        } else {
+          for (CatalogObject discountObject : discounts) {
+            CatalogDiscount discount = discountObject.getDiscountData();
+            String amount = null;
+
+            // Determine which type of discount this is.
+            switch (DiscountTypes.valueOf(discount.getDiscountType())) {
+              case FIXED_AMOUNT:
+                amount = Moneys.format(discount.getAmountMoney());
+                break;
+              case FIXED_PERCENTAGE:
+                amount = discount.getPercentage() + "%";
+                break;
+              case VARIABLE_AMOUNT:
+                amount = "variable $";
+                break;
+              case VARIABLE_PERCENTAGE:
+                amount = "variable %";
+                break;
             }
 
-            List<CatalogObject> discounts = result.getObjects();
-            if (discounts == null || discounts.size() == 0) {
-                if (cursor == null) {
-                    logger.info("No discounts found.");
-                    return;
-                }
-            } else {
-                for (CatalogObject discountObject : discounts) {
-                    CatalogDiscount discount = discountObject.getDiscountData();
-                    String amount = null;
-
-                     // Determine which type of discount this is.
-                    switch (DiscountTypes.valueOf(discount.getDiscountType())) {
-                        case FIXED_AMOUNT:
-                            amount = Moneys.format(discount.getAmountMoney());
-                            break;
-                        case FIXED_PERCENTAGE:
-                            amount = discount.getPercentage() + "%";
-                            break;
-                        case VARIABLE_AMOUNT:
-                            amount = "variable $";
-                            break;
-                        case VARIABLE_PERCENTAGE:
-                            amount = "variable %";
-                            break;
-                    }
-
-                    // Log the name and amount of the discount.
-                    String logMessage = discount.getName();
-                    if (amount != null) {
-                        logMessage += " [" + amount + "]";
-                    }
-                    logMessage += " (" + discountObject.getId() + ")";
-                    logger.info(logMessage);
-                }
+            // Log the name and amount of the discount.
+            String logMessage = discount.getName();
+            if (amount != null) {
+              logMessage += " [" + amount + "]";
             }
-            cursor = result.getCursor();
-        }).exceptionally(exception -> {
-            // Log exception, return null.
-            logger.error(exception.getMessage());
-            return null;
-        }).join();
+            logMessage += " (" + discountObject.getId() + ")";
+            logger.info(logMessage);
+          }
+        }
+        cursor = result.getCursor();
+      }).exceptionally(exception -> {
+        // Log exception, return null.
+        logger.error(exception.getMessage());
+        return null;
+      }).join();
     } while (cursor != null);
   }
 }

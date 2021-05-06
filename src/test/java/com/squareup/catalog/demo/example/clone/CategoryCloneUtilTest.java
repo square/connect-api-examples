@@ -15,22 +15,26 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.models.CatalogCategory;
+
 import org.junit.Before;
 import org.junit.Test;
-import static org.fest.assertions.Assertions.assertThat;
 
 public class CategoryCloneUtilTest {
 
   private CategoryCloneUtil cloneUtil;
 
-  @Before public void setUp() {
+  @Before
+  public void setUp() {
     this.cloneUtil = new CategoryCloneUtil();
     Moneys.setCurrency("CAD");
   }
 
-  @Test public void encodeCatalogData() {
+  @Test
+  public void encodeCatalogData() {
     CatalogCategory category = new CatalogCategory("TestCategory");
     assertThat(cloneUtil.encodeCatalogData(category)).isEqualTo("TestCategory");
   }

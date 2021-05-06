@@ -15,14 +15,6 @@
  */
 package com.squareup.catalog.demo;
 
-import com.squareup.catalog.demo.example.Example;
-import com.squareup.square.exceptions.ApiException;
-import com.squareup.square.api.CatalogApi;
-import com.squareup.square.api.LocationsApi;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,14 +25,27 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import com.squareup.catalog.demo.example.Example;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.exceptions.ApiException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
 public class MainTest {
 
-  @Mock Logger logger;
-  @Mock Example exampleFoo;
-  @Mock Example exampleBar;
+  @Mock
+  Logger logger;
+  @Mock
+  Example exampleFoo;
+  @Mock
+  Example exampleBar;
   private Main main;
 
-  @Before public void setup() {
+  @Before
+  public void setup() {
     initMocks(this);
     when(exampleFoo.getName()).thenReturn("foo");
     when(exampleBar.getName()).thenReturn("bar");
@@ -48,7 +53,8 @@ public class MainTest {
     main = new Main(logger, exampleFoo, exampleBar);
   }
 
-  @Test public void processArgs_showUsage() {
+  @Test
+  public void processArgs_showUsage() {
     main.processArgs(null);
     verify(logger).info(startsWith("USAGE"));
     verify(logger, never()).error(anyString());
@@ -59,38 +65,42 @@ public class MainTest {
     verify(logger, never()).error(anyString());
     reset(logger);
 
-    main.processArgs(new String[] {"-usage"});
+    main.processArgs(new String[] { "-usage" });
     verify(logger).info(startsWith("USAGE"));
     verify(logger, never()).error(anyString());
     reset(logger);
 
-    main.processArgs(new String[] {"-USAGE"});
+    main.processArgs(new String[] { "-USAGE" });
     verify(logger).info(startsWith("USAGE"));
     verify(logger, never()).error(anyString());
     reset(logger);
   }
 
-  @Test public void processArgs_listExamples() {
-    main.processArgs(new String[] {"-list-examples"});
+  @Test
+  public void processArgs_listExamples() {
+    main.processArgs(new String[] { "-list-examples" });
     verify(logger).info(startsWith("Examples"));
     verify(logger, never()).error(anyString());
   }
 
-  @Test public void processArgs_executeExample() throws ApiException {
-    main.processArgs(new String[] {"foo", "-token", "abcdef"});
+  @Test
+  public void processArgs_executeExample() throws ApiException {
+    main.processArgs(new String[] { "foo", "-token", "abcdef" });
     verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
     verify(exampleFoo).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 
-  @Test public void processArgs_executeExampleWithBaseUrl() throws ApiException {
-    main.processArgs(new String[] {"foo", "-token", "abcdef", "-base-url", "http://squareup.com/baseurl"});
+  @Test
+  public void processArgs_executeExampleWithBaseUrl() throws ApiException {
+    main.processArgs(new String[] { "foo", "-token", "abcdef", "-base-url", "http://squareup.com/baseurl" });
     verify(exampleFoo).execute(any(CatalogApi.class), any(LocationsApi.class));
     verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 
-  @Test public void processArgs_exampleNotFound() throws ApiException {
+  @Test
+  public void processArgs_exampleNotFound() throws ApiException {
     try {
-      main.processArgs(new String[] {"bad_name", "-token", "abcdef"});
+      main.processArgs(new String[] { "bad_name", "-token", "abcdef" });
       fail("Expected IllegalArgumentException");
     } catch (IllegalArgumentException e) {
       // Expected.
@@ -98,39 +108,45 @@ public class MainTest {
     verifyExamplesDidNotExecute();
   }
 
-  @Test public void processArgs_exampleDanglingToken() throws ApiException {
-    main.processArgs(new String[] {"bad_name", "-token"});
+  @Test
+  public void processArgs_exampleDanglingToken() throws ApiException {
+    main.processArgs(new String[] { "bad_name", "-token" });
     verify(logger).error(anyString());
     verifyUsageLogged();
   }
 
-  @Test public void processArgs_cleanupExample() throws ApiException {
-    main.processArgs(new String[] {"foo", "-token", "abcdef", "-cleanup"});
+  @Test
+  public void processArgs_cleanupExample() throws ApiException {
+    main.processArgs(new String[] { "foo", "-token", "abcdef", "-cleanup" });
     verify(exampleFoo).cleanup(any(CatalogApi.class), any(LocationsApi.class));
     verify(exampleFoo, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
     verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 
-  @Test public void processArgs_unrecognizedArgument() throws ApiException {
-    main.processArgs(new String[] {"bad_name", "-token", "abcdef", "-unrecognized"});
+  @Test
+  public void processArgs_unrecognizedArgument() throws ApiException {
+    main.processArgs(new String[] { "bad_name", "-token", "abcdef", "-unrecognized" });
     verify(logger).error(startsWith("Unrecognized"));
     verifyUsageLogged();
   }
 
-  @Test public void processArgs_withProdEnv() throws ApiException {
-    main.processArgs(new String[] {"foo", "-token", "abcdef", "-env", "production"});
+  @Test
+  public void processArgs_withProdEnv() throws ApiException {
+    main.processArgs(new String[] { "foo", "-token", "abcdef", "-env", "production" });
     verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
     verify(exampleFoo).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 
-  @Test public void processArgs_withSandboxEnv() throws ApiException {
-    main.processArgs(new String[] {"foo", "-token", "abcdef", "-env", "sandbox"});
+  @Test
+  public void processArgs_withSandboxEnv() throws ApiException {
+    main.processArgs(new String[] { "foo", "-token", "abcdef", "-env", "sandbox" });
     verify(exampleBar, never()).execute(any(CatalogApi.class), any(LocationsApi.class));
     verify(exampleFoo).execute(any(CatalogApi.class), any(LocationsApi.class));
   }
 
-  @Test public void processArgs_unrecognizedEnv() throws ApiException {
-    main.processArgs(new String[] {"foo", "-token", "abcdef", "-env", "someEnv"});
+  @Test
+  public void processArgs_unrecognizedEnv() throws ApiException {
+    main.processArgs(new String[] { "foo", "-token", "abcdef", "-env", "someEnv" });
     verify(logger).error(anyString());
   }
 

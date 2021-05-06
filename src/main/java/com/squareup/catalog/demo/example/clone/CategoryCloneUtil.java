@@ -25,17 +25,17 @@ import com.squareup.square.models.CatalogObject;
  */
 public class CategoryCloneUtil extends CatalogObjectCloneUtil<CatalogCategory> {
 
-    CategoryCloneUtil() {
-        super(CatalogObjectTypes.CATEGORY);
-    }
+  CategoryCloneUtil() {
+    super(CatalogObjectTypes.CATEGORY);
+  }
 
-    @Override
-    CatalogCategory getCatalogData(CatalogObject catalogObject) {
-        return catalogObject.getCategoryData();
-    }
+  @Override
+  CatalogCategory getCatalogData(CatalogObject catalogObject) {
+    return catalogObject.getCategoryData();
+  }
 
-    @Override
-    String encodeCatalogData(CatalogCategory category) {
-        return category.getName();
-    }
+  @Override
+  String encodeCatalogData(CatalogCategory category) {
+    return category.getName();
+  }
 }

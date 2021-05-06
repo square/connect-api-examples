@@ -15,6 +15,13 @@
  */
 package com.squareup.catalog.demo.example;
 
+import static com.squareup.catalog.demo.util.CatalogObjects.item;
+import static com.squareup.catalog.demo.util.CatalogObjects.itemVariation;
+import static java.util.Collections.singletonList;
+
+import java.util.List;
+import java.util.UUID;
+
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.square.api.CatalogApi;
@@ -22,14 +29,6 @@ import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchUpsertCatalogObjectsRequest;
 import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.CatalogObjectBatch;
-
-import java.util.List;
-import java.util.UUID;
-
-import static com.squareup.catalog.demo.util.CatalogObjects.item;
-import static com.squareup.catalog.demo.util.CatalogObjects.itemVariation;
-import static java.util.Collections.singletonList;
-
 
 /**
  * This example creates a new CatalogItem called "Soda" with three
@@ -55,7 +54,8 @@ public class CreateItemExample extends Example {
     retrieveItem(catalogApi, newItem.getId());
   }
 
-  @Override public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) {
+  @Override
+  public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) {
     cleanCatalogObjectsByName(catalogApi, CatalogObjectTypes.ITEM.toString(), "Soda");
   }
 
@@ -67,52 +67,46 @@ public class CreateItemExample extends Example {
      * Build the request to create the new item.
      *
      * This function call creates a BatchUpsertCatalogObjectsRequest object
-     * (request) populated with four new CatalogObjects:
-     *   - a CatalogItem called "Soda" with ID "#SODA"
-     *   - a CatalogItemVariation child called "Small" with ID "#SODA-SMALL"
-     *   - a CatalogItemVariation child called "Medium" with ID "#SODA-MEDIUM"
-     *   - a CatalogItemVariation child called "Large" with ID "#SODA-LARGE"
+     * (request) populated with four new CatalogObjects: - a CatalogItem called
+     * "Soda" with ID "#SODA" - a CatalogItemVariation child called "Small" with ID
+     * "#SODA-SMALL" - a CatalogItemVariation child called "Medium" with ID
+     * "#SODA-MEDIUM" - a CatalogItemVariation child called "Large" with ID
+     * "#SODA-LARGE"
      *
-     * Note: this call only *creates* the new objects and packages them for
-     * upsert. Nothing has been uploaded to the server at this point.
+     * Note: this call only *creates* the new objects and packages them for upsert.
+     * Nothing has been uploaded to the server at this point.
      */
-    List<CatalogObject> objects = singletonList(
-        item("#SODA", "Soda", null,
-        itemVariation("#SODA-SMALL", "Small", 150),
-        itemVariation("#SODA-MEDIUM", "Medium", 175),
-        itemVariation("#SODA-LARGE", "Large", 200))
-    );
+    List<CatalogObject> objects = singletonList(item("#SODA", "Soda", null, itemVariation("#SODA-SMALL", "Small", 150),
+        itemVariation("#SODA-MEDIUM", "Medium", 175), itemVariation("#SODA-LARGE", "Large", 200)));
 
     CatalogObjectBatch batch = new CatalogObjectBatch(objects);
 
     BatchUpsertCatalogObjectsRequest request = new BatchUpsertCatalogObjectsRequest.Builder(
-        UUID.randomUUID().toString(),
-        singletonList(batch))
-        .build();
+        UUID.randomUUID().toString(), singletonList(batch)).build();
 
     /*
      * Post the batch upsert to insert the new item.
      *
-     * Use the BatchUpsertCatalogObjectsRequest object we just created to
-     * upsert the new CatalogObjects to the catalog associated with the
-     * access token included on the command line.
+     * Use the BatchUpsertCatalogObjectsRequest object we just created to upsert the
+     * new CatalogObjects to the catalog associated with the access token included
+     * on the command line.
      */
     logger.info("Creating new Soda item");
     return catalogApi.batchUpsertCatalogObjectsAsync(request).thenApply(result -> {
-        /*
-        * If the response is successful, we want to log the list of object IDs that
-        * were successfully created in the catalog (e.g., #SODA, #SODA-LARGE)
-        */
-        if (checkAndLogErrors(result.getErrors())) {
-            return null;
-        }
-        CatalogObject newItem = result.getObjects().get(0);
-        logger.info("Created item " + newItem.getId());
-        return newItem;
-    }).exceptionally(exception -> {
-        // Log excpetion, return null.
-        logger.error(exception.getMessage());
+      /*
+       * If the response is successful, we want to log the list of object IDs that
+       * were successfully created in the catalog (e.g., #SODA, #SODA-LARGE)
+       */
+      if (checkAndLogErrors(result.getErrors())) {
         return null;
+      }
+      CatalogObject newItem = result.getObjects().get(0);
+      logger.info("Created item " + newItem.getId());
+      return newItem;
+    }).exceptionally(exception -> {
+      // Log excpetion, return null.
+      logger.error(exception.getMessage());
+      return null;
     }).join();
   }
 
@@ -128,23 +122,19 @@ public class CreateItemExample extends Example {
     // Set optional parameter as null.
     Long catalogVersion = null;
     catalogApi.retrieveCatalogObjectAsync(itemId, false, catalogVersion).thenAccept(result -> {
-        if (checkAndLogErrors(result.getErrors())) {
-            return;
-        }
-        /*
-        * Otherwise, grab the name and object ID of the CatalogItem that was
-        * fetched from the catalog and print them to the screen.
-        */
-        CatalogObject retrieveditem = result.getObject();
-        logger.info("Retrieved Item "
-            + retrieveditem.getItemData().getName()
-            + " ("
-            + retrieveditem.getId()
-            + ")");
+      if (checkAndLogErrors(result.getErrors())) {
+        return;
+      }
+      /*
+       * Otherwise, grab the name and object ID of the CatalogItem that was fetched
+       * from the catalog and print them to the screen.
+       */
+      CatalogObject retrieveditem = result.getObject();
+      logger.info("Retrieved Item " + retrieveditem.getItemData().getName() + " (" + retrieveditem.getId() + ")");
     }).exceptionally(exception -> {
-        // Log exception, return null.
-        logger.error(exception.getMessage());
-        return null;
+      // Log exception, return null.
+      logger.error(exception.getMessage());
+      return null;
     });
   }
 }

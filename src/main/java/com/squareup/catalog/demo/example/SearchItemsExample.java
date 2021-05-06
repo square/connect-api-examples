@@ -15,6 +15,10 @@
  */
 package com.squareup.catalog.demo.example;
 
+import static java.util.Collections.singletonList;
+
+import java.util.List;
+
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.square.api.CatalogApi;
@@ -23,13 +27,10 @@ import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.CatalogQuery;
 import com.squareup.square.models.CatalogQueryExact;
 import com.squareup.square.models.SearchCatalogObjectsRequest;
-import java.util.List;
-
-import static java.util.Collections.singletonList;
 
 /**
- * This example searches for CatalogItems with the name "Soda" and prints
- * the names and IDs to the screen.
+ * This example searches for CatalogItems with the name "Soda" and prints the
+ * names and IDs to the screen.
  */
 public class SearchItemsExample extends Example {
 
@@ -42,9 +43,9 @@ public class SearchItemsExample extends Example {
     /*
      * Build the search request
      *
-     * This function call creates a SearchCatalogObjectsRequest object
-     * (request) configured to search across the catalog for any CatalogObject
-     * whose name exactly matches the string "Soda"
+     * This function call creates a SearchCatalogObjectsRequest object (request)
+     * configured to search across the catalog for any CatalogObject whose name
+     * exactly matches the string "Soda"
      *
      * Note: this call only packages the search request object. Nothing has been
      * queried at this point.
@@ -53,34 +54,31 @@ public class SearchItemsExample extends Example {
     // An Exact query searches for exact matches of the specified attribute.
     CatalogQuery query = new CatalogQuery.Builder()
         // Searching on the item name field, must exactly match "Soda".
-        .exactQuery(new CatalogQueryExact("name", "Soda"))
-        .build();
+        .exactQuery(new CatalogQueryExact("name", "Soda")).build();
 
     SearchCatalogObjectsRequest request = new SearchCatalogObjectsRequest.Builder()
-        .objectTypes(singletonList(CatalogObjectTypes.ITEM.toString()))
-        .query(query)
-        .build();
+        .objectTypes(singletonList(CatalogObjectTypes.ITEM.toString())).query(query).build();
 
     // Post the search request and log the results
     catalogApi.searchCatalogObjectsAsync(request).thenAccept(result -> {
-        if (checkAndLogErrors(result.getErrors())) {
-            return;
-        }
+      if (checkAndLogErrors(result.getErrors())) {
+        return;
+      }
 
-        if (result.getObjects() != null) {
-            List<CatalogObject> catalogObjects = result.getObjects();
-            logger.info("Found " + result.getObjects().size() + " results");
-            for (int i = 0; i < catalogObjects.size(); i++) {
-                CatalogObject item = catalogObjects.get(i);
-                logger.info((i + 1) + ": " + item.getItemData().getName() + " (" + item.getId() + ")");
-            }
-        } else {
-            logger.info("No items with the name \"Soda\" were found.");
+      if (result.getObjects() != null) {
+        List<CatalogObject> catalogObjects = result.getObjects();
+        logger.info("Found " + result.getObjects().size() + " results");
+        for (int i = 0; i < catalogObjects.size(); i++) {
+          CatalogObject item = catalogObjects.get(i);
+          logger.info((i + 1) + ": " + item.getItemData().getName() + " (" + item.getId() + ")");
         }
+      } else {
+        logger.info("No items with the name \"Soda\" were found.");
+      }
     }).exceptionally(exception -> {
-        // Log exception, return null.
-        logger.error(exception.getMessage());
-        return null;
+      // Log exception, return null.
+      logger.error(exception.getMessage());
+      return null;
     });
   }
 }

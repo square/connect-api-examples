@@ -9,6 +9,6 @@ class CloneCatalogException extends RuntimeException {
   }
 
   CloneCatalogException(Throwable t) {
-      super(t);
+    super(t);
   }
 }

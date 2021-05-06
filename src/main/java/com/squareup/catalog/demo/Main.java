@@ -15,6 +15,11 @@
  */
 package com.squareup.catalog.demo;
 
+import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
+import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
+
+import java.util.Locale;
+
 import com.squareup.catalog.demo.example.ApplyTaxToAllIItemsExample;
 import com.squareup.catalog.demo.example.CreateItemExample;
 import com.squareup.catalog.demo.example.DeduplicateTaxesExample;
@@ -29,23 +34,18 @@ import com.squareup.catalog.demo.example.RetrieveCatalogObjectExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
 import com.squareup.catalog.demo.example.clone.CloneCatalogExample;
 import com.squareup.catalog.demo.util.Moneys;
+import com.squareup.square.Environment;
 import com.squareup.square.SquareClient;
 import com.squareup.square.SquareClient.Builder;
-import com.squareup.square.Environment;
-import com.squareup.square.models.Location;
 import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
-import java.util.Locale;
-
-import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
-import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
+import com.squareup.square.models.Location;
 
 public class Main {
 
-  private static final String USAGE = "USAGE:\n" +
-      "  Execute Example: java <example_name> [-token <accessToken>] [-cleanup] [-env <sandbox/production>]\n" +
-      "  List Examples:   java -list-examples\n" +
-      "  Print Usage:     java -usage";
+  private static final String USAGE = "USAGE:\n"
+      + "  Execute Example: java <example_name> [-token <accessToken>] [-cleanup] [-env <sandbox/production>]\n"
+      + "  List Examples:   java -list-examples\n" + "  Print Usage:     java -usage";
 
   /**
    * Argument used to print usage information.
@@ -63,8 +63,8 @@ public class Main {
   private static final String ARG_BASE_URL = "-base-url";
 
   /**
-   * Optional argument used to specify that the example should be cleaned up instead of being
-   * executed.
+   * Optional argument used to specify that the example should be cleaned up
+   * instead of being executed.
    */
   private static final String ARG_CLEANUP = "-cleanup";
 
@@ -74,28 +74,19 @@ public class Main {
   private static final String ARG_TOKEN = "-token";
 
   /**
-   * Argument used to set environment.
-   * If set to sandbox, the APIs will hit the sandbox environment.
-   * If set to production, the APIs will hit the production environment.
+   * Argument used to set environment. If set to sandbox, the APIs will hit the
+   * sandbox environment. If set to production, the APIs will hit the production
+   * environment.
    */
   private static final String ENV_FLAG = "-env";
 
   public static void main(String[] args) {
     Logger logger = new Logger.SystemLogger();
-    Main main = new Main(logger,
-        new CreateItemExample(logger),
-        new DeleteAllItemsExample(logger),
-        new ApplyTaxToAllIItemsExample(logger),
-        new DeduplicateTaxesExample(logger),
-        new DeleteCategoryExample(logger),
-        new ListCategoriesExample(logger),
-        new ListDiscountsExample(logger),
-        new LocationSpecificPriceExample(logger),
-        new SearchItemsExample(logger),
-        new RetrieveCatalogObjectExample(logger),
-        new GloballyEnableAllItemsExample(logger),
-        new CloneCatalogExample(logger)
-       );
+    Main main = new Main(logger, new CreateItemExample(logger), new DeleteAllItemsExample(logger),
+        new ApplyTaxToAllIItemsExample(logger), new DeduplicateTaxesExample(logger), new DeleteCategoryExample(logger),
+        new ListCategoriesExample(logger), new ListDiscountsExample(logger), new LocationSpecificPriceExample(logger),
+        new SearchItemsExample(logger), new RetrieveCatalogObjectExample(logger),
+        new GloballyEnableAllItemsExample(logger), new CloneCatalogExample(logger));
     main.processArgs(args);
   }
 
@@ -155,7 +146,7 @@ public class Main {
           i++;
           break;
         case ENV_FLAG:
-          if(i == args.length - 1) {
+          if (i == args.length - 1) {
             usage(ENV_FLAG + " specified without an environment");
             return;
           }
@@ -181,33 +172,33 @@ public class Main {
 
     Builder apiClientBuilder = new SquareClient.Builder();
 
-    if (environment != null && !environment.equalsIgnoreCase("sandbox") && !environment.equalsIgnoreCase("production")) {
-        // was set to something that we do not support.
-        logger.error("If you choose to use the -env flag, you must either specify \"sandbox\" or \"production\"");
-        return;
+    if (environment != null && !environment.equalsIgnoreCase("sandbox")
+        && !environment.equalsIgnoreCase("production")) {
+      // was set to something that we do not support.
+      logger.error("If you choose to use the -env flag, you must either specify \"sandbox\" or \"production\"");
+      return;
     }
 
     // Decide on environment.
-    // If both enviroment and base-url were set, the environment choice will override.
+    // If both enviroment and base-url were set, the environment choice will
+    // override.
     Environment env;
-    if(environment == null) {
-        // if environment was not set, check if base url was provided. If so, set environment to custom.
-        // Otherwise, set environment to be sandbox by default.
-        if(customUrl != null) {
-            env = Environment.CUSTOM;
-            apiClientBuilder.customUrl(customUrl);
-        } else {
-            env = Environment.SANDBOX;
-        }
+    if (environment == null) {
+      // if environment was not set, check if base url was provided. If so, set
+      // environment to custom.
+      // Otherwise, set environment to be sandbox by default.
+      if (customUrl != null) {
+        env = Environment.CUSTOM;
+        apiClientBuilder.customUrl(customUrl);
+      } else {
+        env = Environment.SANDBOX;
+      }
     } else {
-        env = environment.equalsIgnoreCase("sandbox") ? Environment.SANDBOX : Environment.PRODUCTION;
+      env = environment.equalsIgnoreCase("sandbox") ? Environment.SANDBOX : Environment.PRODUCTION;
     }
 
     // Build the client using the arguments provided
-    SquareClient apiClient = apiClientBuilder
-        .environment(env)
-        .accessToken(accessToken)
-        .build();
+    SquareClient apiClient = apiClientBuilder.environment(env).accessToken(accessToken).build();
 
     CatalogApi catalogApi = apiClient.getCatalogApi();
     LocationsApi locationsApi = apiClient.getLocationsApi();
@@ -254,11 +245,10 @@ public class Main {
    * Executes a single example.
    *
    * @param exampleName the name of the example to execute
-   * @param cleanup if true, cleanup the example instead of executing it
-   * @param catalogApi the CatalogApi utility
+   * @param cleanup     if true, cleanup the example instead of executing it
+   * @param catalogApi  the CatalogApi utility
    */
-  private void executeExample(String exampleName, boolean cleanup, CatalogApi catalogApi,
-  LocationsApi locationsApi) {
+  private void executeExample(String exampleName, boolean cleanup, CatalogApi catalogApi, LocationsApi locationsApi) {
     for (Example example : examples) {
       if (example.getName().equalsIgnoreCase(exampleName)) {
         try {
@@ -268,7 +258,7 @@ public class Main {
             example.execute(catalogApi, locationsApi);
           }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+          throw new RuntimeException(e);
         }
         return;
       }
@@ -277,25 +267,26 @@ public class Main {
   }
 
   /**
-   * Finds out the currency to be used across all examples
-   * Use join() because we can't proceed further until we have this information.
+   * Finds out the currency to be used across all examples Use join() because we
+   * can't proceed further until we have this information.
+   *
    * @param locationsApi the LocationsApi utility
    */
   private void setCurrencyAcrossApplication(LocationsApi locationsApi) {
     locationsApi.listLocationsAsync().thenAccept(result -> {
-        if (checkAndLogErrors(result.getErrors(), logger)) {
-            return;
-        }
+      if (checkAndLogErrors(result.getErrors(), logger)) {
+        return;
+      }
 
-        // grab the first location for the user, and use that to determine currency.
-        if(result.getLocations() != null && result.getLocations().size() > 0) {
-            Location currentLocation = result.getLocations().get(0);
-            Moneys.setCurrency(currentLocation.getCurrency());
-        }
+      // grab the first location for the user, and use that to determine currency.
+      if (result.getLocations() != null && result.getLocations().size() > 0) {
+        Location currentLocation = result.getLocations().get(0);
+        Moneys.setCurrency(currentLocation.getCurrency());
+      }
     }).exceptionally(exception -> {
-        // Log exception, return null.
-        logger.error(exception.getMessage());
-        return null;
+      // Log exception, return null.
+      logger.error(exception.getMessage());
+      return null;
     }).join();
   }
 }

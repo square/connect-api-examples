@@ -15,29 +15,34 @@
  */
 package com.squareup.catalog.demo.example;
 
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import java.util.Arrays;
+
 import com.squareup.catalog.demo.Logger;
 import com.squareup.catalog.demo.example.DeduplicateTaxesExample.DuplicateTaxInfo;
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
 import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.models.CatalogObject;
-import java.util.Arrays;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.junit.Before;
-
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.fest.assertions.Assertions.assertThat;
 
 public class DeduplicateTaxesExampleTest {
 
-  @Mock Logger logger;
+  @Mock
+  Logger logger;
 
-  @Before public void setUp() {
+  @Before
+  public void setUp() {
     initMocks(this);
     Moneys.setCurrency("CAD");
   }
 
-  @Test public void mergeDuplicate_bothPresentAtAllLocations() {
+  @Test
+  public void mergeDuplicate_bothPresentAtAllLocations() {
     CatalogObject master = createCatalogObjectAbsentAtLocations("L1", "L2");
     CatalogObject dup = createCatalogObjectAbsentAtLocations("L2", "L3");
 
@@ -50,7 +55,8 @@ public class DeduplicateTaxesExampleTest {
     assertThat(result.getAbsentAtLocationIds()).containsExactly("L2");
   }
 
-  @Test public void mergeDuplicate_onlyDuplicatePresentAtAllLocations() {
+  @Test
+  public void mergeDuplicate_onlyDuplicatePresentAtAllLocations() {
     CatalogObject master = createCatalogObjectPresentAtLocations("L1", "L2");
     CatalogObject dup = createCatalogObjectAbsentAtLocations("L2", "L3");
 
@@ -63,7 +69,8 @@ public class DeduplicateTaxesExampleTest {
     assertThat(result.getAbsentAtLocationIds()).containsExactly("L3");
   }
 
-  @Test public void mergeDuplicate_onlyMasterPresentAtAllLocations() {
+  @Test
+  public void mergeDuplicate_onlyMasterPresentAtAllLocations() {
     CatalogObject master = createCatalogObjectAbsentAtLocations("L1", "L2");
     CatalogObject dup = createCatalogObjectPresentAtLocations("L2", "L3");
 
@@ -76,7 +83,8 @@ public class DeduplicateTaxesExampleTest {
     assertThat(result.getAbsentAtLocationIds()).containsExactly("L1");
   }
 
-  @Test public void mergeDuplicate_neitherPresentAtAllLocations() {
+  @Test
+  public void mergeDuplicate_neitherPresentAtAllLocations() {
     CatalogObject master = createCatalogObjectPresentAtLocations("L1", "L2");
     CatalogObject dup = createCatalogObjectPresentAtLocations("L2", "L3");
 
@@ -90,16 +98,12 @@ public class DeduplicateTaxesExampleTest {
   }
 
   private static CatalogObject createCatalogObjectPresentAtLocations(String... locationIds) {
-    return new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "id")
-        .presentAtAllLocations(false)
-        .presentAtLocationIds(Arrays.asList(locationIds))
-        .build();
+    return new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "id").presentAtAllLocations(false)
+        .presentAtLocationIds(Arrays.asList(locationIds)).build();
   }
 
   private static CatalogObject createCatalogObjectAbsentAtLocations(String... locationIds) {
-    return new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "id")
-        .presentAtAllLocations(true)
-        .absentAtLocationIds(Arrays.asList(locationIds))
-        .build();
+    return new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "id").presentAtAllLocations(true)
+        .absentAtLocationIds(Arrays.asList(locationIds)).build();
   }
 }

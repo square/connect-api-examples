@@ -15,28 +15,28 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.models.CatalogTax;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertThat;
 
 public class TaxCloneUtilTest {
 
   private TaxCloneUtil cloneUtil;
 
-  @Before public void setUp() {
+  @Before
+  public void setUp() {
     this.cloneUtil = new TaxCloneUtil();
     Moneys.setCurrency("CAD");
   }
 
-  @Test public void encodeCatalogData() {
-    CatalogTax tax = new CatalogTax.Builder()
-        .name("name")
-        .percentage("12.34")
-        .inclusionType("ADDITIVE")
-        .build();
+  @Test
+  public void encodeCatalogData() {
+    CatalogTax tax = new CatalogTax.Builder().name("name").percentage("12.34").inclusionType("ADDITIVE").build();
     assertThat(cloneUtil.encodeCatalogData(tax)).isEqualTo("name:::12.34:::ADDITIVE");
   }
 }
