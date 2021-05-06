@@ -15,10 +15,11 @@ Square. If you already have one, you can use it for this demo. If you don't
 already have one (or want to use a different one) you can generate a new access
 token:
 
-1. Visit the Application Dashboard at https://connect.squareup.com/apps
-2. Click "New Application".
+1. Visit the Developer Dashboard at https://developer.squareup.com/apps
+2. Click "+" under Applications to create a new application.
 3. Create an application with the name "Catalog API Demo".
-4. Copy the Personal Access Token that is generated and save it to an
+4. Click on the application you have just created, and navigate to "Credentials"
+4. Copy the Access Token on that page and save it to an
   environment variable:
    
    `export SQPAT={{ YOUR NEW ACCESS TOKEN }}`
@@ -57,6 +58,21 @@ For example:
 mvn -q exec:java "-Dexec.args=create_item -token $SQPAT"
 ```
 
+By default, the example will use the sandbox environment: https://connect.squareupsandbox.com/
+
+In order to explicitly use the sandbox environment, use the `-env` flag with the value `sandbox`:
+```
+mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -env sandbox"
+```
+
+In order to use the production environment, use the `-env` flag with the `production` argument:
+```
+mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -env production"
+```
+
+In order to use a different/custom URL, use the `-base-url` flag with your custom URL and omit the `-env` flag.
+
+
 ## Cleanup an Example
 
 Some examples create items and other catalog objects in your merchant catalog. You can
@@ -69,3 +85,8 @@ For example:
 ```
 mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -cleanup"
 ```
+
+
+## Exit an Example
+
+If you would like to exit a certain example that has completed already, you can use `ctrl + c` to terminate the process.
