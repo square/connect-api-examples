@@ -95,7 +95,7 @@ public class LocationSpecificPriceExample extends Example {
       // Log exception, return null.
       logger.error(exception.getMessage());
       return null;
-    });
+    }).join();
   }
 
   @Override

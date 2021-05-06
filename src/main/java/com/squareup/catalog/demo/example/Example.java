@@ -126,6 +126,6 @@ public abstract class Example {
       // Log excpetion, return null.
       logger.error(exception.getMessage());
       return null;
-    });
+    }).join();
   }
 }

@@ -206,6 +206,9 @@ public class Main {
     setCurrencyAcrossApplication(locationsApi);
 
     executeExample(command, cleanup, catalogApi, locationsApi);
+
+    // Necessary in order for the program not to hang (kill backround threads).
+    System.exit(0);
   }
 
   /**

@@ -165,6 +165,6 @@ public class DeleteCategoryExample extends Example {
       // Log excpetion, return null.
       logger.error(exception.getMessage());
       return null;
-    });
+    }).join();
   }
 }

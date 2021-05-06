@@ -79,6 +79,6 @@ public class SearchItemsExample extends Example {
       // Log exception, return null.
       logger.error(exception.getMessage());
       return null;
-    });
+    }).join();
   }
 }

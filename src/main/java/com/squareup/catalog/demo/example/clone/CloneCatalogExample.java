@@ -331,7 +331,7 @@ public class CloneCatalogExample extends Example {
     }).exceptionally(exception -> {
       // Rethrow.
       throw new CloneCatalogException(exception);
-    });
+    }).join();
   }
 
   /**

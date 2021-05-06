@@ -132,7 +132,6 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
     // Make the locations of the modifier match the locations of the modifier list.
     return cleanModifierBuilder.presentAtAllLocations(modifierList.getPresentAtAllLocations())
         .presentAtLocationIds(modifierList.getPresentAtLocationIds())
-        .absentAtLocationIds(modifierList.getAbsentAtLocationIds())
-        .build();
+        .absentAtLocationIds(modifierList.getAbsentAtLocationIds()).build();
   }
 }

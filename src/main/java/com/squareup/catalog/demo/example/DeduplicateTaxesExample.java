@@ -133,7 +133,7 @@ public class DeduplicateTaxesExample extends Example {
     }).exceptionally(exception -> {
       logger.error(exception.getMessage());
       return null;
-    });
+    }).join();
   }
 
   /**

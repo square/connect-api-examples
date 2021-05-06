@@ -1,6 +1,6 @@
 # Catalog API Demo App
 
-Demo app providing examples of common Catalog API interactions.
+This is a sample command line application providing examples of common Catalog API interactions.
 
 ## Assumptions
 
@@ -40,6 +40,24 @@ the available examples:
 
 ```
 mvn -q exec:java "-Dexec.args=-list-examples"
+```
+
+For simplicity, here is a list of available examples and their description:
+
+```
+Examples:
+  create_item                Create an item, then retrieve it.
+  delete_all_items           Delete ALL items. This is a destructive action and cannot be undone.
+  apply_tax_to_all_items     Applies a selected tax to all items.
+  deduplicate_taxes          Merge identical taxes (same name, percentage, and inclusion type)
+  delete_category            Create a category with three items, then delete the category and items.
+  list_categories            List all categories.
+  list_discounts             List all discounts.
+  location_specific_price    Create an item with a location-specific price
+  search_items               Search for items.
+  retrieve_catalog_object    Retrieve a catalog object by ID.
+  globally_enable_items      Make all items available at all locations.
+  clone_catalog              Clones catalog objects from one merchant account to another.
 ```
 
 ## Execute an Example
@@ -85,8 +103,3 @@ For example:
 ```
 mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -cleanup"
 ```
-
-
-## Exit an Example
-
-If you would like to exit a certain example that has completed already, you can use `ctrl + c` to terminate the process.

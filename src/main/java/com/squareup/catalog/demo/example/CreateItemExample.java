@@ -135,6 +135,6 @@ public class CreateItemExample extends Example {
       // Log exception, return null.
       logger.error(exception.getMessage());
       return null;
-    });
+    }).join();
   }
 }
