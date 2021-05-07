@@ -36,8 +36,16 @@ oauth_api = client.o_auth
 
 # Serves the link that merchants click to authorize your application
 get '/' do
-  "<a href=\"#{connect_host}/oauth2/authorize?client_id=#{application_id}\">Click here</a>
-            to authorize the application."
+  url = "#{connect_host}/oauth2/authorize?client_id=#{application_id}"
+  "
+  <link type='text/css' rel='stylesheet' href='style.css'>
+  <meta name='viewport' content='width=device-width'>
+  <div class='wrapper'>
+    <a class='btn'
+     href='#{url}'>
+       <strong>Authorize</strong>
+    </a>
+  </div>"
 end
 
 # Serves requsts from Square to your application's redirect URL
@@ -63,18 +71,51 @@ get '/callback' do
     # Extract the returned access token from the ObtainTokenResponse object
     if response.success?
 
-      # Here, instead of printing the access token, your application server should store it securely
+      # In production, instead of printing the access token, your application server should store it securely
       # and use it in subsequent requests to the Connect API on behalf of the merchant.
       puts 'Access token: ' + response.data.access_token
-      return 'Authorization succeeded!'
-
+      return "
+      <link type='text/css' rel='stylesheet' href='style.css'>
+      <meta name='viewport' content='width=device-width'>
+      <div class='wrapper'>
+        <div class='messages'>
+          <h1>Authorization Succeeded</h1>
+            <div style='color:rgba(204, 0, 35, 1)'><strong>Caution:</strong> NEVER store or share OAuth access tokens or refresh tokens in clear text.
+                Use a strong encryption standard such as AES to encrypt OAuth tokens. Ensure the production encryption key is not
+                accessible to anyone who does not need it.
+            </div>
+            <br/>
+            <div><strong>OAuth access token:</strong> #{response.data.access_token} </div>
+            <div><strong>OAuth access token expires at:</strong> #{response.data.expires_at} </div>
+            <div><strong>OAuth refresh token:</strong> #{response.data.refresh_token} </div>
+            <div><strong>Merchant Id:</strong> #{response.data.merchant_id} </div>
+            <div><p>You can use this OAuth access token to call Create Payment and other APIs that were authorized by this seller.</p>
+            <p>Try it out with <a href='https://developer.squareup.com/explorer/square/payments-api/create-payment' target='_blank'>API Explorer</a>.</p>
+          </div>
+        </div>
+      </div>
+      "
     # The response from the Obtain Token endpoint did not include an access token. Something went wrong.
     else
-      return 'Code exchange failed!'
+      return "
+      <link type='text/css' rel='stylesheet' href='style.css'>
+      <meta name='viewport' content='width=device-width'>
+      <div class='wrapper'>
+      <div class='messages'>
+        <h1>Code exchange failed</h1>
+      </div>
+    </div>"
     end
 
   # The request to the Redirect URL did not include an authorization code. Something went wrong.
   else
-    return 'Authorization failed!'
+    return "
+    <link type='text/css' rel='stylesheet' href='style.css'>
+    <meta name='viewport' content='width=device-width'>
+    <div class='wrapper'>
+    <div class='messages'>
+      <h1>Authorization failed</h1>
+    </div>
+  </div>"
   end
 end
