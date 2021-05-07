@@ -93,7 +93,7 @@ router.post('/process-payment', async (req, res) => {
   const { nonce } = req.body;
 
   // length of idempotency_key should be less than 46
-  const idempotencyKey = crypto.randomBytes(22).toString('hex');
+  const idempotencyKey = uuidv4();
 
   // Charge the customer's card
   const requestBody = {

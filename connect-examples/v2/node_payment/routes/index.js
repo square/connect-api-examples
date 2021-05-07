@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const crypto = require('crypto');
+const { v4: uuidv4 } = require("uuid");
 
 const app = express();
 const env = app.get('env');
@@ -21,7 +21,7 @@ router.post('/process-payment', async (req, res) => {
   const { nonce } = req.body;
 
   // length of idempotency_key should be less than 45
-  const idempotencyKey = crypto.randomBytes(22).toString('hex');
+  const idempotencyKey = uuidv4();
 
   // get the currency for the location
   const locationResponse = await locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID);
