@@ -17,8 +17,8 @@ limitations under the License.
 const express = require("express");
 const url = require("url");
 const {
-  randomBytes
-} = require("crypto");
+  v4: uuidv4
+} = require("uuid");
 const {
   squareApplicationId,
   retrieveOrderAndLocation,
@@ -124,7 +124,7 @@ router.get("/add-pickup-details", async (req, res, next) => {
       locationInfo,
       expectedPickUpTimes: new DeliveryPickUpTimes(),
       orderInfo,
-      idempotencyKey: randomBytes(45).toString("hex"),
+      idempotencyKey: uuidv4(),
     });
   } catch (error) {
     next(error);
@@ -240,7 +240,7 @@ router.get("/add-delivery-details", async (req, res, next) => {
       locationInfo,
       expectedDeliveryTimes: new DeliveryPickUpTimes(),
       orderInfo,
-      idempotencyKey: randomBytes(45).toString("hex"),
+      idempotencyKey: uuidv4(),
     });
   } catch (error) {
     next(error);
@@ -394,7 +394,7 @@ router.get("/payment", async (req, res, next) => {
       locationInfo,
       loyaltyRewardInfo,
       applicationId: squareApplicationId,
-      idempotencyKey: randomBytes(45).toString("hex").slice(0, 45), // Payments api has 45 max length limit on idempotencyKey
+      idempotencyKey: uuidv4(), // Payments api has 45 max length limit on idempotencyKey
     });
   } catch (error) {
     next(error);
