@@ -1,4 +1,10 @@
 <?php
+  $state = md5(time());
+  setcookie("Auth_State", $state, time() + 60);
+?>
+<link rel="stylesheet" href="public/style.css" type="text/css">
+<meta name="viewport" content="width=device-width">
+<?php
 require 'vendor/autoload.php';
 require_once('messages.php');
 
@@ -18,9 +24,6 @@ $permissions = urlencode(
 
 // Set the Auth_State cookie with a random md5 string to protect against cross-site request forgery.
 // Auth_State will expire in 60 seconds (1 mins) after the page is loaded.
-$state = md5(time());
-setcookie("Auth_State", $state, time() + 60);
-
 $application_id = getenv('SQ_APPLICATION_ID');    
 $environment =  getenv('SQ_ENVIRONMENT');
 
@@ -33,9 +36,14 @@ if ($environment == "sandbox") {
 }
 
 // Display the OAuth link.
-echo '<p><a href="' . $base_url . "/oauth2/authorize" .
+echo '
+<div class="wrapper">
+  <a class="btn"
+   href="' . $base_url . "/oauth2/authorize" .
      '?client_id=' . $application_id .
      '&scope=' . $permissions .
-     '&state=' . $state .
-     '">Authorize this application</a></p>';
+     '&state=' . $state .'">
+     <strong>Authorize</strong>
+  </a>
+</div>';
 ?>
