@@ -36,6 +36,7 @@ const md5 = require('md5');
 const { ApiError, Client, Environment } = require('square');
 const app = express();
 app.use(cookieParser());
+app.use(express.static(__dirname + '/public'));
 
 const {PORT, SQ_ENVIRONMENT, SQ_APPLICATION_ID, SQ_APPLICATION_SECRET } = process.env;
 
@@ -88,9 +89,14 @@ app.get("/request_token", (req, res) => {
     var state = md5(Date.now())
     var url = basePath + `/oauth2/authorize?client_id=${process.env.SQ_APPLICATION_ID}&` + `response_type=code&` + `scope=${scopes.join('+')}` + `&state=` + state
     res.cookie("Auth_State", state, {expire: Date.now() + 300000}).send(
-        `<p>
-            <a href='${url}'>Authorize this application</a>
-        </p>`
+      `
+      <link type="text/css" rel="stylesheet" href="style.css">
+      <div class="wrapper">
+        <a class="btn"
+         href="${url}">
+           <strong>Authorize</strong>
+        </a>
+      </div>`
     )
 });
 
@@ -113,14 +119,14 @@ app.get('/callback', async (req, res) => {
     }
 
     else if (req.query['error']) {
-        // Check to see if the seller clicked the Deny button and handle it as a special case.
-        if(("access_denied" === req.query['error']) && ("user_denied" === req.query["error_description"])) {
-            res.send(messages.displayError("Authorization denied", "You chose to deny access to the app."));
-        }
-        // Display the error and description for all other errors.
-        else {
-            res.send(messages.displayError(req.query["error"], req.query["error_description"]));
-        }
+      // Check to see if the seller clicked the Deny button and handle it as a special case.
+      if(("access_denied" === req.query['error']) && ("user_denied" === req.query["error_description"])) {
+        res.send(messages.displayError("Authorization denied", "You chose to deny access to the app."));
+      }
+      // Display the error and description for all other errors.
+      else {
+        res.send(messages.displayError(req.query["error"], req.query["error_description"]));
+      }
     }
     // When the response_type is "code", the seller clicked Allow
     // and the authorization page returned the auth tokens.
@@ -150,12 +156,12 @@ app.get('/callback', async (req, res) => {
             // In production, you should never write tokens to the page. You should encrypt the tokens and handle them securely.
             res.send(messages.writeTokensOnSuccess(accessToken, refreshToken, expiresAt, merchantId));
         } catch (error) {
-            // The response from the Obtain Token endpoint did not include an access token. Something went wrong.
-            if (error instanceof ApiError) {
-                res.send(messages.displayError('Exception', JSON.stringify(error.result)));
-            } else {
-                res.send(messages.displayError('Exception', JSON.stringify(error)));
-            }
+          // The response from the Obtain Token endpoint did not include an access token. Something went wrong.
+          if (error instanceof ApiError) {
+            res.send(messages.displayError('Exception', JSON.stringify(error.result)));
+          } else {
+            res.send(messages.displayError('Exception', JSON.stringify(error)));
+          }
         }
     }
     else {

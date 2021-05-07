@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="public/style.css" type="text/css">
 <?php
 require 'vendor/autoload.php';
 require_once('messages.php');
