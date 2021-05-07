@@ -1,3 +1,9 @@
+# Useful Links
+
+* [Node.js SDK Page](https://developer.squareup.com/docs/sdks/nodejs)
+* [Payments API Overview](https://developer.squareup.com/docs/payments)
+* [Payments in the API Reference](https://developer.squareup.com/reference/square/payments-api)
+
 # Payment processing example: Node JS
 
 There are two sections in this ReadMe.

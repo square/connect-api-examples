@@ -1,3 +1,9 @@
+# Useful Links
+
+* [PHP SDK Page](https://developer.squareup.com/docs/sdks/php)
+* [Payments API Overview](https://developer.squareup.com/docs/payments)
+* [Payments in the API Reference](https://developer.squareup.com/reference/square/payments-api)
+
 # Payment processing example: PHP
 
 This sample demonstrates processing card payments with Square Connect API, using the
