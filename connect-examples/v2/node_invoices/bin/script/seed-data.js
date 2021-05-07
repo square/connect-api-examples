@@ -18,7 +18,7 @@ limitations under the License.
 
 const { Client, Environment } = require("square");
 const readline = require("readline");
-const crypto = require("crypto");
+const { v4: uuidv4 } = require("uuid");
 const { program } = require("commander");
 require('dotenv').config()
 
@@ -43,7 +43,7 @@ async function addCustomers() {
   try {
     // Create first customer with card on file
     const { result : { customer } } = await customersApi.createCustomer({
-      idempotencyKey: crypto.randomBytes(32).toString("hex"),
+      idempotencyKey: uuidv4(),
       givenName: "Ryan",
       familyName: "Nakamura",
       emailAddress: "nakamura710@square-example.com" // it is a fake email
@@ -55,7 +55,7 @@ async function addCustomers() {
 
     // create second customer with no card on file
     await customersApi.createCustomer({
-      idempotencyKey: crypto.randomBytes(32).toString("hex"),
+      idempotencyKey: uuidv4(),
       givenName: "Kaitlyn",
       familyName: "Spindel",
       emailAddress: "kaitlyn@square-example.com" // it is a fake email

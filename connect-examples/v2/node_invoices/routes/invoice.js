@@ -16,8 +16,8 @@ limitations under the License.
 
 const express = require("express");
 const {
-  randomBytes
-} = require("crypto");
+  v4: uuidv4
+} = require("uuid");
 const {
   ordersApi,
   invoicesApi,
@@ -55,7 +55,7 @@ router.get("/view/:locationId/:customerId/:invoiceId", async (req, res, next) =>
       locationId,
       customerId,
       invoice,
-      idempotencyKey: randomBytes(45).toString("hex"),
+      idempotencyKey: uuidv4(),
     });
   } catch (error) {
     next(error);
