@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="public/style.css" type="text/css">
+<meta name="viewport" content="width=device-width">
 <?php
   // The following functions are display helpers and should only be used in Sandbox applications.
 

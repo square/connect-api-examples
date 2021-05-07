@@ -91,6 +91,7 @@ app.get("/request_token", (req, res) => {
     res.cookie("Auth_State", state, {expire: Date.now() + 300000}).send(
       `
       <link type="text/css" rel="stylesheet" href="style.css">
+      <meta name="viewport" content="width=device-width">
       <div class="wrapper">
         <a class="btn"
          href="${url}">

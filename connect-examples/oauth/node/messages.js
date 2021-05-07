@@ -20,6 +20,7 @@ function writeTokensOnSuccess(access_token, refresh_token, expires_at, merchant_
     return (
     `
     <link type="text/css" rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width">
     <div class="wrapper">
       <div class="messages">
         <h1>Authorization Succeeded</h1>
@@ -46,6 +47,7 @@ function displayStateError() {
     return (
     ` 
       <link type="text/css" rel="stylesheet" href="style.css">
+      <meta name="viewport" content="width=device-width">
       <div class="wrapper">
         <div class="messages">
           <h1>Authorization failed</h1>
@@ -62,6 +64,7 @@ function displayError(error, error_description) {
   return (
   `
   <link type="text/css" rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width">
   <div class="wrapper">
     <div class="messages">
       <h1>Authorization failed</h1>
