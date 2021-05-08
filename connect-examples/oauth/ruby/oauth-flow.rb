@@ -37,7 +37,7 @@ oauth_api = client.o_auth
 # Serves the link that merchants click to authorize your application
 get '/' do
   url = "#{connect_host}/oauth2/authorize?client_id=#{application_id}"
-  "
+  content = "
   <link type='text/css' rel='stylesheet' href='style.css'>
   <meta name='viewport' content='width=device-width'>
   <div class='wrapper'>
@@ -46,6 +46,7 @@ get '/' do
        <strong>Authorize</strong>
     </a>
   </div>"
+  erb :base, :locals => {:content => content}
 end
 
 # Serves requsts from Square to your application's redirect URL
@@ -74,9 +75,7 @@ get '/callback' do
       # In production, instead of printing the access token, your application server should store it securely
       # and use it in subsequent requests to the Connect API on behalf of the merchant.
       puts 'Access token: ' + response.data.access_token
-      return "
-      <link type='text/css' rel='stylesheet' href='style.css'>
-      <meta name='viewport' content='width=device-width'>
+      content = "
       <div class='wrapper'>
         <div class='messages'>
           <h1>Authorization Succeeded</h1>
@@ -97,7 +96,7 @@ get '/callback' do
       "
     # The response from the Obtain Token endpoint did not include an access token. Something went wrong.
     else
-      return "
+      content = "
       <link type='text/css' rel='stylesheet' href='style.css'>
       <meta name='viewport' content='width=device-width'>
       <div class='wrapper'>
@@ -106,10 +105,9 @@ get '/callback' do
       </div>
     </div>"
     end
-
   # The request to the Redirect URL did not include an authorization code. Something went wrong.
   else
-    return "
+    content = "
     <link type='text/css' rel='stylesheet' href='style.css'>
     <meta name='viewport' content='width=device-width'>
     <div class='wrapper'>
@@ -118,4 +116,5 @@ get '/callback' do
     </div>
   </div>"
   end
+  return erb :base, :locals => {:content => content}
 end
