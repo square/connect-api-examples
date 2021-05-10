@@ -7,13 +7,19 @@ const env = app.get('env');
 const { paymentsApi, locationsApi } = require('../util/square-client');
 
 /* GET home page. */
-router.get('/', function (req, res) {
-  // Set the app and location ids for sqpaymentform.js to use
+router.get('/', async function (req, res) {
+  const locationResponse = await locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID);
+  const currency = locationResponse.result.location.currency;
+  const country = locationResponse.result.location.country;
+
+  // Set the app and location ids for Payment Web SDK to use
   res.render('index', {
     env,
     title: 'Make Payment',
     squareApplicationId: process.env.SQUARE_APPLICATION_ID,
-    squareLocationId: process.env.SQUARE_LOCATION_ID
+    squareLocationId: process.env.SQUARE_LOCATION_ID,
+    squareAccountCountry: country,
+    squareAccountCurrency: currency,
   });
 });
 
