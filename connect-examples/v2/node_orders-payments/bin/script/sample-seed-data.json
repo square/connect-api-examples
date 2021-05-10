@@ -60,7 +60,7 @@
             "pricingType": "FIXED_PRICING",
             "priceMoney": {
               "amount": 995,
-              "currency": "USD"
+              "currency": "CURRENCY"
             }
           }
         }],
@@ -95,7 +95,7 @@
             "pricingType": "FIXED_PRICING",
             "priceMoney": {
               "amount": 675,
-              "currency": "USD"
+              "currency": "CURRENCY"
             }
           }
         }],
@@ -131,7 +131,7 @@
               "pricingType": "FIXED_PRICING",
               "priceMoney": {
                 "amount": 495,
-                "currency": "USD"
+                "currency": "CURRENCY"
               }
             }
           }
@@ -168,7 +168,7 @@
               "pricingType": "FIXED_PRICING",
               "priceMoney": {
                 "amount": 1195,
-                "currency": "USD"
+                "currency": "CURRENCY"
               }
             }
           }
@@ -204,7 +204,7 @@
             "pricingType": "FIXED_PRICING",
             "priceMoney": {
               "amount": 895,
-              "currency": "USD"
+              "currency": "CURRENCY"
             }
           }
         }],
@@ -240,7 +240,7 @@
               "pricingType": "FIXED_PRICING",
               "priceMoney": {
                 "amount": 695,
-                "currency": "USD"
+                "currency": "CURRENCY"
               }
             }
           }
@@ -276,7 +276,7 @@
             "pricingType": "FIXED_PRICING",
             "priceMoney": {
               "amount": 495,
-              "currency": "USD"
+              "currency": "CURRENCY"
             }
           }
         }],
@@ -312,7 +312,7 @@
               "pricingType": "FIXED_PRICING",
               "priceMoney": {
                 "amount": 495,
-                "currency": "USD"
+                "currency": "CURRENCY"
               }
             }
           }
@@ -349,7 +349,7 @@
               "pricingType": "FIXED_PRICING",
               "priceMoney": {
                 "amount": 995,
-                "currency": "USD"
+                "currency": "CURRENCY"
               }
             }
           }
@@ -386,7 +386,7 @@
               "pricingType": "FIXED_PRICING",
               "priceMoney": {
                 "amount": 1495,
-                "currency": "USD"
+                "currency": "CURRENCY"
               }
             }
           }
@@ -423,7 +423,7 @@
               "pricingType": "FIXED_PRICING",
               "priceMoney": {
                 "amount": 695,
-                "currency": "USD"
+                "currency": "CURRENCY"
               }
             }
           }
@@ -459,7 +459,7 @@
               "pricingType": "FIXED_PRICING",
               "priceMoney": {
                 "amount": 695,
-                "currency": "USD"
+                "currency": "CURRENCY"
               }
             }
           }
