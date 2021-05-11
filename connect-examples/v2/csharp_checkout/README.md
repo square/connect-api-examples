@@ -1,12 +1,14 @@
-﻿# Website Payment Processing Using the Square Checkout API: Csharp
+﻿# Useful Links
+
+* [C# (.NET) SDK Page](https://developer.squareup.com/docs/sdks/dotnet)
+* [Checkout API Overview](https://developer.squareup.com/docs/checkout-api/what-it-does)
+* [Checkout in the API Reference](https://developer.squareup.com/reference/square/checkout-api)
+
+# Website Payment Processing Using the Square Checkout API: Csharp
 
 This is a simple example application that utilizes Square's Checkout API 
 using ASP.NET Core Razor. This examples assumes you are familiar with C# development. 
 
-For more information about the Checkout API, see:
-* [What It Does](https://developer.squareup.com/docs/checkout-api/what-it-does)
-* [CreateCheckout - API Reference](https://developer.squareup.com/docs/api/connect/v2#endpoint-checkout-createcheckout)
-* [CreateCheckout - Connect C# SDK](https://github.com/square/connect-csharp-sdk/blob/master/docs/CheckoutApi.md) 
 
 There are two sections in this ReadMe.
 * [Setup](#setup) - Provides instructions for you to download and run the app.

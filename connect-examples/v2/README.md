@@ -13,3 +13,6 @@ to take a custom payment.
 form.
 * __python_payment__: a simple Python server implementation with an accompanying payment
 form.
+
+
+**For more information, visit the Square SDK page: https://developer.squareup.com/docs/sdks**

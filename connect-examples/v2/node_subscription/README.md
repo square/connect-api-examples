@@ -1,3 +1,10 @@
+# Useful Links
+
+* [Node.js SDK Page](https://developer.squareup.com/docs/sdks/nodejs)
+* [Subscriptions API Overview](https://developer.squareup.com/docs/subscriptions/overview)
+* [Catalog API Overview](https://developer.squareup.com/docs/catalog-api/what-it-does)
+* [Customers API Overview](https://developer.squareup.com/docs/customers-groups-segments/what-they-are)
+
 # Subscriptions API Sample App
 
   - [Overview](#overview)

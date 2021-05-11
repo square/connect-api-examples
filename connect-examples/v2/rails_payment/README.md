@@ -1,3 +1,9 @@
+# Useful Links
+
+* [Ruby SDK Page](https://developer.squareup.com/docs/sdks/ruby)
+* [Payments API Overview](https://developer.squareup.com/docs/payments)
+* [Payments in the API Reference](https://developer.squareup.com/reference/square/payments-api)
+
 # Payment processing example: Ruby On Rails
 
 
