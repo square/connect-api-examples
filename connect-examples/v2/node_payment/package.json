@@ -15,6 +15,7 @@
     "morgan": "*",
     "pug": "^3.0.2",
     "serve-favicon": "*",
-    "square": "^10.0.0"
+    "square": "^10.0.0",
+    "uuid": "^8.3.0"
   }
 }

@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 const express = require("express");
-const { randomBytes } = require("crypto");
+const { v4: uuidv4 } = require("uuid");
 const {
   catalogApi,
   locationsApi,
@@ -51,7 +51,7 @@ router.get("/", async (req, res, next) => {
     const { result: { locations } } = await locationsApi.listLocations();
     // Get CatalogItem and CatalogImage object
     const { result: { objects } } = await catalogApi.listCatalog(undefined, types);
-    
+
     // Renders index view, with catalog and location information
     res.render("index", {
       items: new CatalogList(objects).items,
@@ -86,7 +86,7 @@ router.post("/create-order", async (req, res, next) => {
   } = req.body;
   try {
     const orderRequestBody = {
-      idempotencyKey: randomBytes(45).toString("hex"), // Unique identifier for request
+      idempotencyKey: uuidv4(), // Unique identifier for request
       order: {
         locationId,
         lineItems: [{
