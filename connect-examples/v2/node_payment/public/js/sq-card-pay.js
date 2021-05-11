@@ -1,7 +1,7 @@
 async function CardPay(formSelector, buttonEl) {
   const payments = Square.payments(applicationId, locationId);
 
-    // Create a card payment object and attach to page
+  // Create a card payment object and attach to page
   const card = await payments.card({
     style: {
       '.input-container.is-focus': {
@@ -20,10 +20,7 @@ async function CardPay(formSelector, buttonEl) {
       const result = await card.tokenize();
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);
-
-        // Submit the payment form with the nonce
-        document.getElementById('card-nonce').value = result.token;
-        document.getElementById('fast-checkout').submit();
+        createPayment(result.token);
       }
     } catch (e) {
       console.error(e);

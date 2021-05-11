@@ -18,6 +18,7 @@ async function ACHPay(buttonEl) {
       const result = ach.tokenize({ accountHolderName: "John Wick" });
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);
+        createPayment(result.token);
       }
     } catch (e) {
       console.error(e);

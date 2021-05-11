@@ -15,9 +15,27 @@ async function SquarePaymentForm() {
   // Create ACH payment
   ACHPay(document.querySelector('#ach-button'));
 
-  // Create gift card object and attach to page
-  GiftCardPay('#gift-card-container', document.getElementById('gift-card-button'));
+}
 
+async function createPayment(token) {
+  // Submit the payment form with the nonce
+  document.getElementById('card-nonce').value = token;
+  const formData = new FormData(document.getElementById('fast-checkout'));
+  const plainFormData = Object.fromEntries(formData.entries());
+  const formDataJsonString = JSON.stringify(plainFormData);
+
+  await fetch('process-payment', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: formDataJsonString
+  })
+  .catch(console.error)
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('message').innerHTML = data.title;
+  });
 }
 
 // Hardcoded for testing purpose, only uses for Apple Pay and Google Pay

@@ -24,7 +24,7 @@ router.get('/', async function (req, res) {
 });
 
 router.post('/process-payment', async (req, res) => {
-  const { nonce } = req.body;
+  const nonce = req.body.nonce;
 
   // length of idempotency_key should be less than 45
   const idempotencyKey = crypto.randomBytes(22).toString('hex');
@@ -48,19 +48,18 @@ router.post('/process-payment', async (req, res) => {
     const result = JSON.stringify(payment, (key, value) => {
       return typeof value === "bigint" ? parseInt(value) : value;
     }, 4);
-
-    res.render('process-payment', {
-      result,
-      'title': 'Payment Successful'
+    res.json({
+      title: 'Payment Successful',
+      result
     });
   } catch (error) {
     let result = JSON.stringify(error, null, 4);
     if (error.errors) {
       result = JSON.stringify(error.errors, null, 4);
     }
-    res.render('process-payment', {
-      result,
-      'title': 'Payment Failure'
+    res.json({
+      message: 'Payment Failure',
+      result
     });
   }
 });

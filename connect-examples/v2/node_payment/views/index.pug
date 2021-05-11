@@ -7,7 +7,7 @@ block content
     window.currency="#{squareAccountCurrency}";
     window.country="#{squareAccountCountry}";
 
-  form(class="payment-form" id="fast-checkout" action="/process-payment" method="POST")
+  form(class="payment-form" id="fast-checkout")
     div(class="wrapper")
       button(id="apple-pay-button" alt="apple-pay")
         image(src="images/Apple Pay.svg")
@@ -27,21 +27,10 @@ block content
       div(id="card-container")
       button(id="card-button" type="button").
         Pay with Card
-
-      div(class="border")
-        span().
-          OR
-
-      div(id="gift-card-container")
-      button(id="gift-card-button").
-        Pay with Gift Card
+      span(id="message")
       
     input(type="hidden" id="card-nonce" name="nonce")
-  
-
   script(type="text/javascript" src="/js/sq-ach.js")
   script(type="text/javascript" src="/js/sq-apple-pay.js")
-  script(type="text/javascript" src="/js/sq-gift-card-pay.js")
   script(type="text/javascript" src="/js/sq-google-pay.js")
   script(type="text/javascript" src="/js/sq-card-pay.js")
-  script(type="text/javascript" src="/js/sq-payment-flow.js")
