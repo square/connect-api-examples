@@ -15,7 +15,7 @@ async function ApplePay(buttonEl, showApplePayElements) {
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);
         // Use global method from sq-payment-flow.js
-        createPayment(result.token);
+        window.createPayment(result.token);
       }
     } catch (e) {
       console.error(e);
