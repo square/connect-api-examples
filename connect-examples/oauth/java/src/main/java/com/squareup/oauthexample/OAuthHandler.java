@@ -136,17 +136,20 @@ public class OAuthHandler {
         bodyScopes.add(scope);
       }
 
+      // Create obtain token request body
       ObtainTokenRequest body = new ObtainTokenRequest.Builder(
         APPLICATION_ID,
         APPLICATION_SECRET,
         "authorization_code")
       .code(authorizationCode)
       .scopes(bodyScopes)
-      .redirectUri("http://localhost:8000/callback")
       .build();
 
       OAuthApi oAuthApi = client.getOAuthApi();
 
+      // Call obtain token API and print the results on success
+      // In production, you should never write tokens to the page. 
+      // You should encrypt the tokens and handle them securely. 
       oAuthApi.obtainTokenAsync(body).thenAccept(result -> {     
         if (result != null) {
           System.out.println("Access token: " + result.getAccessToken());
