@@ -58,20 +58,18 @@ public abstract class Example {
    * Executes the example.
    *
    * @param catalogApi   the API abstraction used to interact with the Catalog API
-   * @param locationsApi the API abstraction used to interact with merchant
-   *                     locations
+   * @param locationsApi the API abstraction used to interact with merchant locations
    */
   public abstract void execute(CatalogApi catalogApi, LocationsApi locationsApi);
 
   /**
    * Cleans up {@link CatalogObject}s created by this example.
-   *
-   * Note that this is a destructive operation and may delete items by name, which
-   * may include items that were not created by this example.
+   * <p>
+   * Note that this is a destructive operation and may delete items by name, which may include items
+   * that were not created by this example.
    *
    * @param catalogApi   the API abstraction used to interact with the Catalog API
-   * @param locationsApi the API abstraction used to interact with merchant
-   *                     locations
+   * @param locationsApi the API abstraction used to interact with merchant locations
    */
   public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) {
     logger.info("Nothing to cleanup");
@@ -98,10 +96,13 @@ public abstract class Example {
     // Search for objects by name and type.
     logger.info("Search for " + type + " named " + name);
 
+    CatalogQuery query = new CatalogQuery.Builder()
+        // An Exact query searches for exact matches of the specified attribute.
+        .exactQuery(new CatalogQueryExact("name", name))
+        .build();
+
     SearchCatalogObjectsRequest searchRequest = new SearchCatalogObjectsRequest.Builder()
-        .objectTypes(singletonList(type)).query(new CatalogQuery.Builder()
-            // An Exact query searches for exact matches of the specified attribute.
-            .exactQuery(new CatalogQueryExact("name", name)).build())
+        .objectTypes(singletonList(type)).query(query)
         .build();
 
     catalogApi.searchCatalogObjectsAsync(searchRequest).thenAccept(result -> {
@@ -123,7 +124,7 @@ public abstract class Example {
         catalogApi.batchDeleteCatalogObjectsAsync(deleteRequest);
       }
     }).exceptionally(exception -> {
-      // Log excpetion, return null.
+      // Log exception, return null.
       logger.error(exception.getMessage());
       return null;
     }).join();

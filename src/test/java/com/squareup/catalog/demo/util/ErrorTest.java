@@ -40,7 +40,8 @@ public class ErrorTest {
 
   @Test
   public void checkAndLogErrors_hasCodeAndCategory() {
-    List<Error> errors = Collections.singletonList(new Error.Builder("CATEGORY", "code").detail("detail").build());
+    List<Error> errors =
+        Collections.singletonList(new Error.Builder("CATEGORY", "code").detail("detail").build());
 
     Errors.checkAndLogErrors(errors, logger);
     verify(logger).error("[CATEGORY:code] detail");
@@ -48,21 +49,24 @@ public class ErrorTest {
 
   @Test
   public void checkAndLogErrors_hasCodeOnly() {
-    List<Error> errors = Collections.singletonList(new Error.Builder(null, "BAD REQUEST").detail("detail").build());
+    List<Error> errors =
+        Collections.singletonList(new Error.Builder(null, "BAD REQUEST").detail("detail").build());
     Errors.checkAndLogErrors(errors, logger);
     verify(logger).error("[BAD REQUEST] detail");
   }
 
   @Test
   public void checkAndLogErrors_hasCategoryOnly() {
-    List<Error> errors = Collections.singletonList(new Error.Builder("INVALID REQUEST", null).detail("detail").build());
+    List<Error> errors = Collections.singletonList(
+        new Error.Builder("INVALID REQUEST", null).detail("detail").build());
     Errors.checkAndLogErrors(errors, logger);
     verify(logger).error("[INVALID REQUEST] detail");
   }
 
   @Test
   public void checkAndLogErrors_noCodeOrCategory() {
-    List<Error> errors = Collections.singletonList(new Error.Builder(null, null).detail("detail").build());
+    List<Error> errors =
+        Collections.singletonList(new Error.Builder(null, null).detail("detail").build());
     Errors.checkAndLogErrors(errors, logger);
     verify(logger).error("detail");
   }

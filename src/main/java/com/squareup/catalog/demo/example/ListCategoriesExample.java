@@ -43,30 +43,31 @@ public class ListCategoriesExample extends Example {
 
     do {
       // Retrieve a page of categories.
-      catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.CATEGORY.toString(), catalogVersion).thenAccept(result -> {
-        if (checkAndLogErrors(result.getErrors())) {
-          return;
-        }
+      catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.CATEGORY.toString(), catalogVersion)
+          .thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+              return;
+            }
 
-        List<CatalogObject> categories = result.getObjects();
-        if (categories == null || categories.size() == 0) {
-          if (cursor == null) {
-            logger.info("No categories found.");
-            return;
-          }
-        } else {
-          for (CatalogObject categoryObject : categories) {
-            CatalogCategory category = categoryObject.getCategoryData();
-            logger.info(category.getName() + " (" + categoryObject.getId() + ")");
-          }
-        }
-        // Move to the next page.
-        cursor = result.getCursor();
-      }).exceptionally(exception -> {
-        // Log exception, return null.
-        logger.error(exception.getMessage());
-        return null;
-      }).join();
+            List<CatalogObject> categories = result.getObjects();
+            if (categories == null || categories.size() == 0) {
+              if (cursor == null) {
+                logger.info("No categories found.");
+                return;
+              }
+            } else {
+              for (CatalogObject categoryObject : categories) {
+                CatalogCategory category = categoryObject.getCategoryData();
+                logger.info(category.getName() + " (" + categoryObject.getId() + ")");
+              }
+            }
+            // Move to the next page.
+            cursor = result.getCursor();
+          }).exceptionally(exception -> {
+            // Log exception, return null.
+            logger.error(exception.getMessage());
+            return null;
+          }).join();
     } while (cursor != null);
   }
 }

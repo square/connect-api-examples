@@ -59,24 +59,30 @@ public class RetrieveCatalogObjectExampleTest {
 
   @Test
   public void logCatalogObjectDetails_category() {
-    CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.CATEGORY.toString(), "id")
-        .categoryData(new CatalogCategory.Builder().name("name").build()).build();
+    CatalogObject catalogObject =
+        new CatalogObject.Builder(CatalogObjectTypes.CATEGORY.toString(), "id")
+            .categoryData(new CatalogCategory.Builder().name("name").build()).build();
     example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
     verify(logger).info(anyString());
   }
 
   @Test
   public void logCatalogObjectDetails_discountAmount() {
-    CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.DISCOUNT.toString(), "id")
-        .discountData(new CatalogDiscount.Builder().name("name").amountMoney(createMoneyObject(1000)).build()).build();
+    CatalogObject catalogObject =
+        new CatalogObject.Builder(CatalogObjectTypes.DISCOUNT.toString(), "id")
+            .discountData(new CatalogDiscount.Builder().name("name")
+                .amountMoney(createMoneyObject(1000))
+                .build()).build();
     example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
     verify(logger).info(anyString());
   }
 
   @Test
   public void logCatalogObjectDetails_discountPercentage() {
-    CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.DISCOUNT.toString(), "id")
-        .discountData(new CatalogDiscount.Builder().name("name").percentage("10").build()).build();
+    CatalogObject catalogObject =
+        new CatalogObject.Builder(CatalogObjectTypes.DISCOUNT.toString(), "id")
+            .discountData(new CatalogDiscount.Builder().name("name").percentage("10").build())
+            .build();
     example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
     verify(logger).info(anyString());
   }
@@ -95,24 +101,31 @@ public class RetrieveCatalogObjectExampleTest {
 
     modifiers.add(new CatalogItemModifierListInfo.Builder("modlist1").enabled(false).build());
 
-    CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "id")
-        .itemData(new CatalogItem.Builder().name("name").categoryId("category0")
-            .taxIds(Arrays.asList(new String[] { "tax0", "tax1" })).variations(variations).modifierListInfo(modifiers)
-            .build())
-        .build();
+    CatalogObject catalogObject =
+        new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "id")
+            .itemData(new CatalogItem.Builder().name("name")
+                .categoryId("category0")
+                .taxIds(Arrays.asList("tax0", "tax1"))
+                .variations(variations)
+                .modifierListInfo(modifiers)
+                .build())
+            .build();
 
     HashMap<String, CatalogObject> relatedObjects = new HashMap<>();
-    relatedObjects.put("category0", new CatalogObject.Builder(CatalogObjectTypes.CATEGORY.toString(), "category0")
-        .categoryData(new CatalogCategory.Builder().name("category0_name").build()).build());
+    relatedObjects.put("category0",
+        new CatalogObject.Builder(CatalogObjectTypes.CATEGORY.toString(), "category0")
+            .categoryData(new CatalogCategory.Builder().name("category0_name").build()).build());
     relatedObjects.put("tax0", new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "tax0")
         .taxData(new CatalogTax.Builder().name("tax0").percentage("10").build()).build());
     relatedObjects.put("tax1", new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "tax1")
         .taxData(new CatalogTax.Builder().name("tax1").percentage("3").build()).build());
 
-    relatedObjects.put("modlist0", new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "modlist0")
-        .modifierListData(new CatalogModifierList.Builder().name("name").build()).build());
-    relatedObjects.put("modlist1", new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "modlist1")
-        .modifierListData(new CatalogModifierList.Builder().name("name").build()).build());
+    relatedObjects.put("modlist0",
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "modlist0")
+            .modifierListData(new CatalogModifierList.Builder().name("name").build()).build());
+    relatedObjects.put("modlist1",
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "modlist1")
+            .modifierListData(new CatalogModifierList.Builder().name("name").build()).build());
 
     example.logCatalogObjectDetails(catalogObject, relatedObjects);
     verify(logger).info(anyString());
@@ -121,11 +134,15 @@ public class RetrieveCatalogObjectExampleTest {
   @Test
   public void logCatalogObjectDetails_itemWithoutRelatedObjects() {
     List<CatalogObject> variations = new ArrayList<>();
-    variations.add(new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(), "variation0")
-        .itemVariationData(new CatalogItemVariation.Builder().name("variation0_name").build()).build());
+    variations.add(
+        new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(), "variation0")
+            .itemVariationData(new CatalogItemVariation.Builder().name("variation0_name").build())
+            .build());
 
-    CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "id")
-        .itemData(new CatalogItem.Builder().name("name").variations(variations).build()).build();
+    CatalogObject catalogObject =
+        new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "id")
+            .itemData(new CatalogItem.Builder().name("name").variations(variations).build())
+            .build();
 
     example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
     verify(logger).info(anyString());
@@ -133,15 +150,18 @@ public class RetrieveCatalogObjectExampleTest {
 
   @Test
   public void logCatalogObjectDetails_itemVariation() {
-    CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(), "id")
-        .itemVariationData(new CatalogItemVariation.Builder().itemId("itemId").name("name").sku("sku")
-            .priceMoney(createMoneyObject(1000)).build())
-        .build();
+    CatalogObject catalogObject =
+        new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(), "id")
+            .itemVariationData(
+                new CatalogItemVariation.Builder().itemId("itemId").name("name").sku("sku")
+                    .priceMoney(createMoneyObject(1000)).build())
+            .build();
 
     // Add the item as a related object.
     HashMap<String, CatalogObject> relatedObjects = new HashMap<>();
-    relatedObjects.put("itemId", new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "itemId")
-        .itemData(new CatalogItem.Builder().name("item_name").build()).build());
+    relatedObjects.put("itemId",
+        new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), "itemId")
+            .itemData(new CatalogItem.Builder().name("item_name").build()).build());
 
     example.logCatalogObjectDetails(catalogObject, relatedObjects);
     verify(logger).info(anyString());
@@ -149,24 +169,30 @@ public class RetrieveCatalogObjectExampleTest {
 
   @Test
   public void logCatalogObjectDetails_modifier() {
-    CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "id")
-        .modifierData(new CatalogModifier.Builder().name("name").build()).build();
+    CatalogObject catalogObject =
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "id")
+            .modifierData(new CatalogModifier.Builder().name("name").build()).build();
     example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
     verify(logger).info(anyString());
   }
 
   @Test
   public void logCatalogObjectDetails_modifierList() {
-    CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
-        .modifierListData(new CatalogModifierList.Builder().name("name").selectionType("SINGLE")
-            .modifiers(Arrays.asList(
-                new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "modifier0")
-                    .modifierData(new CatalogModifier.Builder().name("modifier0_name").build()).build(),
-                new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "modifier1").modifierData(
-                    new CatalogModifier.Builder().name("modifier1_name").priceMoney(createMoneyObject(1000)).build())
-                    .build()))
-            .build())
-        .build();
+    CatalogObject catalogObject =
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
+            .modifierListData(new CatalogModifierList.Builder().name("name").selectionType("SINGLE")
+                .modifiers(Arrays.asList(
+                    new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "modifier0")
+                        .modifierData(new CatalogModifier.Builder().name("modifier0_name").build())
+                        .build(),
+                    new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(),
+                        "modifier1").modifierData(
+                        new CatalogModifier.Builder().name("modifier1_name")
+                            .priceMoney(createMoneyObject(1000))
+                            .build())
+                        .build()))
+                .build())
+            .build();
     example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
     verify(logger).info(anyString());
   }
@@ -181,8 +207,12 @@ public class RetrieveCatalogObjectExampleTest {
 
   @Test
   public void logCatalogObjectDetails_image() {
-    CatalogObject catalogObject = new CatalogObject.Builder(CatalogObjectTypes.IMAGE.toString(), "id")
-        .imageData(new CatalogImage.Builder().name("name").url("www.example.com").caption("caption").build()).build();
+    CatalogObject catalogObject =
+        new CatalogObject.Builder(CatalogObjectTypes.IMAGE.toString(), "id")
+            .imageData(new CatalogImage.Builder().name("name")
+                .url("www.example.com")
+                .caption("caption")
+                .build()).build();
     example.logCatalogObjectDetails(catalogObject, Collections.emptyMap());
     verify(logger).info(anyString());
   }

@@ -29,8 +29,8 @@ import com.squareup.square.models.CatalogQueryExact;
 import com.squareup.square.models.SearchCatalogObjectsRequest;
 
 /**
- * This example searches for CatalogItems with the name "Soda" and prints the
- * names and IDs to the screen.
+ * This example searches for CatalogItems with the name "Soda" and prints the names and IDs to the
+ * screen.
  */
 public class SearchItemsExample extends Example {
 
@@ -70,7 +70,12 @@ public class SearchItemsExample extends Example {
         logger.info("Found " + result.getObjects().size() + " results");
         for (int i = 0; i < catalogObjects.size(); i++) {
           CatalogObject item = catalogObjects.get(i);
-          logger.info((i + 1) + ": " + item.getItemData().getName() + " (" + item.getId() + ")");
+          logger.info((i + 1)
+              + ": "
+              + item.getItemData().getName()
+              + " ("
+              + item.getId()
+              + ")");
         }
       } else {
         logger.info("No items with the name \"Soda\" were found.");

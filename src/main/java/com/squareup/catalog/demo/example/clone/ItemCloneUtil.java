@@ -52,7 +52,11 @@ public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
     }
 
     String encodedVariations = String.join("::", variationNames);
-    return item.getName() + ":::" + item.getDescription() + ":::" + encodedVariations;
+    return item.getName()
+        + ":::"
+        + item.getDescription()
+        + ":::"
+        + encodedVariations;
   }
 
   @Override
@@ -68,17 +72,20 @@ public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
       // we want to remove item_id from the itemVariationData
       CatalogItemVariation oldItemVariationData = oldVariation.getItemVariationData();
       CatalogObject newVariation = super.removeSourceAccountMetaData(oldVariation).toBuilder()
-          .itemVariationData(oldItemVariationData.toBuilder().itemId(null).locationOverrides(null).build())
+          .itemVariationData(
+              oldItemVariationData.toBuilder().itemId(null).locationOverrides(null).build()
+          )
           .build();
       newVariations.add(newVariation);
     }
 
     // set the new variations, reset the tax IDs
     return cleanObject.toBuilder()
-        .itemData(oldItemData.toBuilder().variations(newVariations).taxIds(Collections.emptyList()).build())
+        .itemData(oldItemData.toBuilder()
+            .variations(newVariations)
+            .taxIds(Collections.emptyList())
+            .build())
         .presentAtAllLocations(true)
         .build();
-
   }
-
 }

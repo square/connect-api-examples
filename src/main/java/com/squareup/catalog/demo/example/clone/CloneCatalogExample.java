@@ -36,9 +36,9 @@ import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.CatalogObjectBatch;
 
 /**
- * This example clones catalog objects from one merchant account to another. The
- * accessToken specified when the script is executed is assumed to be the source
- * account from which catalog objects are copied.
+ * This example clones catalog objects from one merchant account to another. The accessToken
+ * specified when the script is executed is assumed to be the source account from which catalog
+ * objects are copied.
  */
 public class CloneCatalogExample extends Example {
 
@@ -56,7 +56,8 @@ public class CloneCatalogExample extends Example {
     Config config = promptForConfigurationOptions();
 
     // Create a CatalogApi to access the target account.
-    CatalogApi targetCatalogApi = createTargetCatalogApi(sourceCatalogApi, config.targetAccessToken);
+    CatalogApi targetCatalogApi =
+        createTargetCatalogApi(sourceCatalogApi, config.targetAccessToken);
 
     try {
       /*
@@ -114,7 +115,6 @@ public class CloneCatalogExample extends Example {
       if (config.itemCloneUtil != null) {
         cloneCatalogObjectType(sourceCatalogApi, targetCatalogApi, config.itemCloneUtil);
       }
-
     } catch (CloneCatalogException e) {
       if (e.getMessage() != null) {
         logger.error(e.getMessage());
@@ -160,8 +160,7 @@ public class CloneCatalogExample extends Example {
   /**
    * Create a CatalogApi instance to access the target account.
    *
-   * @param sourceCatalogApi  the {@link CatalogApi} instance used to access the
-   *                          source account
+   * @param sourceCatalogApi  the {@link CatalogApi} instance used to access the source account
    * @param targetAccessToken the access token of the target account
    * @return a {@link CatalogApi} for the target account
    */
@@ -174,30 +173,26 @@ public class CloneCatalogExample extends Example {
 
   /**
    * Clones all catalog objects of a single type.
+   * <p>
+   * The basic approach for cloning catalog objects is the same for all types other than items. 1)
+   * Fetch all the catalog objects of the specified type from the target account 2) For each object
+   * in the target account, generate a unique identifier based on certain field values. For example,
+   * for taxes we compare name, percentage, and inclusion type. 3) Store all unqiue identifiers in a
+   * HashSet 4) Fetch all the catalog objects of the specified type from the target account 5) For
+   * each object in the source account, generate a unique identifier using the same method and check
+   * to see if it exists in the HashSet. If it does not, then add it to the target account.
    *
-   * The basic approach for cloning catalog objects is the same for all types
-   * other than items. 1) Fetch all the catalog objects of the specified type from
-   * the target account 2) For each object in the target account, generate a
-   * unique identifier based on certain field values. For example, for taxes we
-   * compare name, percentage, and inclusion type. 3) Store all unqiue identifiers
-   * in a HashSet 4) Fetch all the catalog objects of the specified type from the
-   * target account 5) For each object in the source account, generate a unique
-   * identifier using the same method and check to see if it exists in the
-   * HashSet. If it does not, then add it to the target account.
-   *
-   * @param sourceCatalogApi the API used to access the catalog of the source
-   *                         account
-   * @param targetCatalogApi the API used to access the catalog of the target
-   *                         account
-   * @param cloneUtil        the clone utility methods for the specified catalog
-   *                         object type
+   * @param sourceCatalogApi the API used to access the catalog of the source account
+   * @param targetCatalogApi the API used to access the catalog of the target account
+   * @param cloneUtil        the clone utility methods for the specified catalog object type
    */
   private void cloneCatalogObjectType(CatalogApi sourceCatalogApi, CatalogApi targetCatalogApi,
       CatalogObjectCloneUtil<?> cloneUtil) {
     logger.info("\nCloning " + cloneUtil.type.toString());
 
     // Retrieve identifiers from the target account.
-    HashMap<String, CatalogObject> targetCatalogObjects = retrieveTargetCatalogObjects(targetCatalogApi, cloneUtil);
+    HashMap<String, CatalogObject> targetCatalogObjects =
+        retrieveTargetCatalogObjects(targetCatalogApi, cloneUtil);
 
     // Retrieve catalog objects from the source account.
     logger.info("  Retrieving " + cloneUtil.type.toString() + " from source account");
@@ -209,68 +204,74 @@ public class CloneCatalogExample extends Example {
       List<CatalogObject> catalogObjectsToUpsert = new ArrayList<>();
 
       // Retrieve a page of catalog objects from the source account.
-      sourceCatalogApi.listCatalogAsync(cursor, cloneUtil.type.toString(), catalogVersion).thenAccept(result -> {
-        if (checkAndLogErrors(result.getErrors())) {
-          return;
-        }
-
-        // Log and return if no objects are found.
-        if (result.getObjects() == null && cursor == null) {
-          logger.info("No " + cloneUtil.type.toString().toLowerCase(Locale.US) + " found in source account.");
-          return;
-        }
-
-        for (CatalogObject sourceCatalogObject : result.getObjects()) {
-          String encodedString = cloneUtil.encodeCatalogObject(sourceCatalogObject);
-
-          // Check if a similar catalog object already exists in the target account.
-          CatalogObject targetCatalogObject = targetCatalogObjects.get(encodedString);
-          if (targetCatalogObject == null) {
-            // Clone this CatalogObject into the target account.
-            CatalogObject cleanCatalogObject = cloneUtil.removeSourceAccountMetaData(sourceCatalogObject);
-            catalogObjectsToUpsert.add(cleanCatalogObject);
-          } else {
-            // If a similar CatalogObject already exists in the target account, attempt to
-            // merge the
-            // source CatalogObject into the existing target CatalogObject.
-            CatalogObject modifiedTargetCatalogObject = cloneUtil
-                .mergeSourceCatalogObjectIntoTarget(sourceCatalogObject, targetCatalogObject);
-
-            // If something changed in the target catalog object, upsert it into the target
-            // account.
-            if (modifiedTargetCatalogObject != null) {
-              catalogObjectsToUpsert.add(modifiedTargetCatalogObject);
+      sourceCatalogApi.listCatalogAsync(cursor, cloneUtil.type.toString(), catalogVersion)
+          .thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+              return;
             }
-          }
-        }
 
-        // Upsert the catalog objects into the target account.
-        if (catalogObjectsToUpsert.size() > 0) {
-          upsertCatalogObjectsIntoTargetAccount(targetCatalogApi, catalogObjectsToUpsert);
-        }
+            // Log and return if no objects are found.
+            if (result.getObjects() == null && cursor == null) {
+              logger.info("No "
+                  + cloneUtil.type.toString().toLowerCase(Locale.US)
+                  + " found in source account.");
+              return;
+            }
 
-        // Log the number of objects cloned.
-        logger.info("    Cloned " + catalogObjectsToUpsert.size() + " out of " + result.getObjects().size());
+            for (CatalogObject sourceCatalogObject : result.getObjects()) {
+              String encodedString = cloneUtil.encodeCatalogObject(sourceCatalogObject);
 
-        // Move to the next page.
-        cursor = result.getCursor();
-      }).exceptionally(exception -> {
-        // Rethrow.
-        throw new CloneCatalogException(exception);
-      }).join();
+              // Check if a similar catalog object already exists in the target account.
+              CatalogObject targetCatalogObject = targetCatalogObjects.get(encodedString);
+              if (targetCatalogObject == null) {
+                // Clone this CatalogObject into the target account.
+                CatalogObject cleanCatalogObject =
+                    cloneUtil.removeSourceAccountMetaData(sourceCatalogObject);
+                catalogObjectsToUpsert.add(cleanCatalogObject);
+              } else {
+                // If a similar CatalogObject already exists in the target account, attempt to
+                // merge the source CatalogObject into the existing target CatalogObject.
+                CatalogObject modifiedTargetCatalogObject = cloneUtil
+                    .mergeSourceCatalogObjectIntoTarget(sourceCatalogObject, targetCatalogObject);
+
+                // If something changed in the target catalog object, upsert it into the target
+                // account.
+                if (modifiedTargetCatalogObject != null) {
+                  catalogObjectsToUpsert.add(modifiedTargetCatalogObject);
+                }
+              }
+            }
+
+            // Upsert the catalog objects into the target account.
+            if (catalogObjectsToUpsert.size() > 0) {
+              upsertCatalogObjectsIntoTargetAccount(targetCatalogApi, catalogObjectsToUpsert);
+            }
+
+            // Log the number of objects cloned.
+            logger.info(
+                "    Cloned "
+                    + catalogObjectsToUpsert.size()
+                    + " out of "
+                    + result.getObjects().size());
+
+            // Move to the next page.
+            cursor = result.getCursor();
+          })
+          .exceptionally(exception -> {
+            // Rethrow.
+            throw new CloneCatalogException(exception);
+          })
+          .join();
     } while (cursor != null);
   }
 
   /**
-   * Retrieves all of the CatalogObjects of the specified type from the target
-   * account and return them in a HashSet keyed by the encoded string.
+   * Retrieves all of the CatalogObjects of the specified type from the target account and return
+   * them in a HashSet keyed by the encoded string.
    *
-   * @param targetCatalogApi the API used to access the catalog of the target
-   *                         account
-   * @param cloneUtil        the clone utility methods for the specified catalog
-   *                         object type
-   * @return a map of the encoded string to the {@link CatalogObject} in the
-   *         target account
+   * @param targetCatalogApi the API used to access the catalog of the target account
+   * @param cloneUtil        the clone utility methods for the specified catalog object type
+   * @return a map of the encoded string to the {@link CatalogObject} in the target account
    */
   private HashMap<String, CatalogObject> retrieveTargetCatalogObjects(CatalogApi targetCatalogApi,
       CatalogObjectCloneUtil<?> cloneUtil) {
@@ -279,33 +280,34 @@ public class CloneCatalogExample extends Example {
     Long catalogVersion = null;
 
     do {
-      targetCatalogApi.listCatalogAsync(cursor, cloneUtil.type.toString(), catalogVersion).thenAccept(result -> {
-        if (checkAndLogErrors(result.getErrors())) {
-          return;
-        }
+      targetCatalogApi.listCatalogAsync(cursor, cloneUtil.type.toString(), catalogVersion)
+          .thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+              return;
+            }
 
-        List<CatalogObject> items = result.getObjects();
-        if (items == null || items.size() == 0) {
-          if (cursor == null) {
-            logger.info("No items found. Item Library was already empty.");
-            return;
-          }
-        } else {
-          // Generate an encoded string for each object and add it to the hash map.
-          for (CatalogObject catalogObject : items) {
-            String encodedString = cloneUtil.encodeCatalogObject(catalogObject);
-            identifierToCatalogObject.put(encodedString, catalogObject);
-          }
+            List<CatalogObject> items = result.getObjects();
+            if (items == null || items.size() == 0) {
+              if (cursor == null) {
+                logger.info("No items found. Item Library was already empty.");
+                return;
+              }
+            } else {
+              // Generate an encoded string for each object and add it to the hash map.
+              for (CatalogObject catalogObject : items) {
+                String encodedString = cloneUtil.encodeCatalogObject(catalogObject);
+                identifierToCatalogObject.put(encodedString, catalogObject);
+              }
 
-          // Move to the next page.
-          count += result.getObjects().size();
-          logger.info("    Retrieved " + count + " total");
-        }
-        cursor = result.getCursor();
-      }).exceptionally(exception -> {
-        // Rethrow.
-        throw new CloneCatalogException(exception);
-      }).join();
+              // Move to the next page.
+              count += result.getObjects().size();
+              logger.info("    Retrieved " + count + " total");
+            }
+            cursor = result.getCursor();
+          }).exceptionally(exception -> {
+            // Rethrow.
+            throw new CloneCatalogException(exception);
+          }).join();
     } while (cursor != null);
 
     return identifierToCatalogObject;
@@ -314,15 +316,16 @@ public class CloneCatalogExample extends Example {
   /**
    * Inserts or updates catalog objects into the target account.
    *
-   * @param targetCatalogApi       the API used to access the catalog of the
-   *                               target account
+   * @param targetCatalogApi       the API used to access the catalog of the target account
    * @param catalogObjectsToUpsert the CatalogObjects to insert or update
    */
 
   private void upsertCatalogObjectsIntoTargetAccount(CatalogApi targetCatalogApi,
       List<CatalogObject> catalogObjectsToUpsert) {
-    BatchUpsertCatalogObjectsRequest batchUpsertRequest = new BatchUpsertCatalogObjectsRequest.Builder(
-        UUID.randomUUID().toString(), singletonList(new CatalogObjectBatch(catalogObjectsToUpsert))).build();
+    BatchUpsertCatalogObjectsRequest batchUpsertRequest =
+        new BatchUpsertCatalogObjectsRequest.Builder(
+            UUID.randomUUID().toString(),
+            singletonList(new CatalogObjectBatch(catalogObjectsToUpsert))).build();
 
     targetCatalogApi.batchUpsertCatalogObjectsAsync(batchUpsertRequest).thenAccept(result -> {
       if (checkAndLogErrors(result.getErrors())) {

@@ -40,9 +40,9 @@ public class CatalogObjects {
   public static CatalogObject category(String clientId, String name) {
     // Categories are always available at all locations
     return new CatalogObject.Builder(CatalogObjectTypes.CATEGORY.toString(), clientId)
-      .presentAtAllLocations(true)
-      .categoryData(new CatalogCategory(name))
-      .build();
+        .presentAtAllLocations(true)
+        .categoryData(new CatalogCategory(name))
+        .build();
   }
 
   /**
@@ -55,7 +55,8 @@ public class CatalogObjects {
    * @return the new {@link CatalogObject} that wraps the item variation
    */
   public static CatalogObject item(String clientId, String name, String categoryId, long cents) {
-    return item(clientId, name, categoryId, itemVariation("#" + UUID.randomUUID().toString(), "Regular", cents));
+    return item(clientId, name, categoryId,
+        itemVariation("#" + UUID.randomUUID().toString(), "Regular", cents));
   }
 
   /**
@@ -67,10 +68,16 @@ public class CatalogObjects {
    * @param itemVariations the item variations in the item
    * @return the new {@link CatalogObject} that wraps the item variation
    */
-  public static CatalogObject item(String clientId, String name, String categoryId, CatalogObject... itemVariations) {
-    return new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(), clientId).presentAtAllLocations(true)
+  public static CatalogObject item(String clientId, String name, String categoryId,
+      CatalogObject... itemVariations) {
+    return new CatalogObject.Builder(CatalogObjectTypes.ITEM.toString(),
+        clientId).presentAtAllLocations(true)
         .itemData(
-            new CatalogItem.Builder().name(name).categoryId(categoryId).variations(asList(itemVariations)).build())
+            new CatalogItem.Builder().name(name)
+                .categoryId(categoryId)
+                .variations(asList(itemVariations))
+                .build()
+        )
         .build();
   }
 
@@ -83,9 +90,11 @@ public class CatalogObjects {
    * @return the new {@link CatalogObject} that wraps the item variation
    */
   public static CatalogObject itemVariation(String clientId, String name, long cents) {
-    return new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(), clientId).presentAtAllLocations(true)
-        .itemVariationData(new CatalogItemVariation.Builder().name(name).pricingType("FIXED_PRICING")
-            .priceMoney(new Money(cents, Moneys.getCurrency())).build())
+    return new CatalogObject.Builder(CatalogObjectTypes.ITEM_VARIATION.toString(),
+        clientId).presentAtAllLocations(true)
+        .itemVariationData(
+            new CatalogItemVariation.Builder().name(name).pricingType("FIXED_PRICING")
+                .priceMoney(new Money(cents, Moneys.getCurrency())).build())
         .build();
   }
 

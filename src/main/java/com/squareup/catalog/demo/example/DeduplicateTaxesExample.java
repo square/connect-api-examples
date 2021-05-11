@@ -39,22 +39,21 @@ import com.squareup.square.models.CatalogObjectBatch;
 import com.squareup.square.models.CatalogTax;
 
 /**
- * This example merges identical taxes (same name, percentage, and inclusion
- * type).
+ * This example merges identical taxes (same name, percentage, and inclusion type).
  */
 public class DeduplicateTaxesExample extends Example {
 
   private String cursor = null;
 
   public DeduplicateTaxesExample(Logger logger) {
-    super("deduplicate_taxes", "Merge identical taxes (same name, percentage, and inclusion type)", logger);
+    super("deduplicate_taxes", "Merge identical taxes (same name, percentage, and inclusion type).",
+        logger);
   }
 
   @Override
   public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
 
-    // A map that allows us to look up a tax based on his name, percentage, and
-    // inclusion type.
+    // A map that allows us to look up a tax based on his name, percentage, and inclusion type.
     Map<String, DuplicateTaxInfo> taxInfoMap = new HashMap<>();
     // The list of taxes that we need to update.
     List<CatalogObject> taxesToUpdate = new ArrayList<>();
@@ -64,54 +63,60 @@ public class DeduplicateTaxesExample extends Example {
     Long catalogVersion = null;
 
     do {
-      catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.TAX.toString(), catalogVersion).thenAccept(result -> {
-        if (checkAndLogErrors(result.getErrors())) {
-          return;
-        }
-        List<CatalogObject> taxes = result.getObjects() == null ? new ArrayList<>() : result.getObjects();
-        for (CatalogObject tax : taxes) {
-          String key = createTaxKey(tax);
-          DuplicateTaxInfo duplicateTaxInfo;
-          if (!taxInfoMap.containsKey(key)) {
-            // If this is the first time we've seen this tax, add it to the map.
-            duplicateTaxInfo = new DuplicateTaxInfo(tax);
-            taxInfoMap.put(key, duplicateTaxInfo);
-          } else {
-            // Otherwise, merge this tax into the first occurrence of the tax. The first
-            // time we find
-            // a duplicate, we add the tax to list of taxes that need to be updated.
-            duplicateTaxInfo = taxInfoMap.get(key);
-            duplicateTaxInfo.mergeDuplicate(tax, logger);
-            if (!duplicateTaxInfo.foundDuplicate) {
-              duplicateTaxInfo.markObjectAsDuplicate();
-              taxesToUpdate.add(duplicateTaxInfo.masterTax);
+      catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.TAX.toString(), catalogVersion)
+          .thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+              return;
             }
-            taxIdsToDelete.add(tax.getId());
-          }
-        }
-        // Move to the next page.
-        cursor = result.getCursor();
-      }).exceptionally(exception -> {
-        // Log exception, return null.
-        logger.error(exception.getMessage());
-        return null;
+            List<CatalogObject> taxes =
+                result.getObjects() == null ? new ArrayList<>() : result.getObjects();
+            for (CatalogObject tax : taxes) {
+              String key = createTaxKey(tax);
+              DuplicateTaxInfo duplicateTaxInfo;
+              if (!taxInfoMap.containsKey(key)) {
+                // If this is the first time we've seen this tax, add it to the map.
+                duplicateTaxInfo = new DuplicateTaxInfo(tax);
+                taxInfoMap.put(key, duplicateTaxInfo);
+              } else {
+                // Otherwise, merge this tax into the first occurrence of the tax. The first
+                // time we find a duplicate, we add the tax to list of taxes that need to be updated.
+                duplicateTaxInfo = taxInfoMap.get(key);
+                duplicateTaxInfo.mergeDuplicate(tax, logger);
+                if (!duplicateTaxInfo.foundDuplicate) {
+                  duplicateTaxInfo.markObjectAsDuplicate();
+                  taxesToUpdate.add(duplicateTaxInfo.masterTax);
+                }
+                taxIdsToDelete.add(tax.getId());
+              }
+            }
+            // Move to the next page.
+            cursor = result.getCursor();
+          }).exceptionally(exception -> {
+            // Log exception, return null.
+            logger.error(exception.getMessage());
+            return null;
       }).join();
     } while (cursor != null);
 
-    CompletableFuture<BatchUpsertCatalogObjectsResponse> updateResponseFuture = CompletableFuture.completedFuture(null);
-    CompletableFuture<BatchDeleteCatalogObjectsResponse> deleteResponseFuture = CompletableFuture.completedFuture(null);
+    CompletableFuture<BatchUpsertCatalogObjectsResponse> updateResponseFuture =
+        CompletableFuture.completedFuture(null);
+    CompletableFuture<BatchDeleteCatalogObjectsResponse> deleteResponseFuture =
+        CompletableFuture.completedFuture(null);
     // Batch update taxes.
     if (taxesToUpdate.size() > 0) {
-      BatchUpsertCatalogObjectsRequest batchUpsertRequest = new BatchUpsertCatalogObjectsRequest.Builder(
-          UUID.randomUUID().toString(), singletonList(new CatalogObjectBatch(taxesToUpdate))).build();
+      BatchUpsertCatalogObjectsRequest batchUpsertRequest =
+          new BatchUpsertCatalogObjectsRequest.Builder(
+              UUID.randomUUID().toString(),
+              singletonList(new CatalogObjectBatch(taxesToUpdate))).build();
 
       updateResponseFuture = catalogApi.batchUpsertCatalogObjectsAsync(batchUpsertRequest);
     }
 
     // Batch delete taxes.
     if (taxIdsToDelete.size() > 0) {
-      BatchDeleteCatalogObjectsRequest deleteTaxRequest = new BatchDeleteCatalogObjectsRequest.Builder()
-          .objectIds(taxIdsToDelete).build();
+      BatchDeleteCatalogObjectsRequest deleteTaxRequest =
+          new BatchDeleteCatalogObjectsRequest.Builder()
+              .objectIds(taxIdsToDelete).build();
 
       deleteResponseFuture = catalogApi.batchDeleteCatalogObjectsAsync(deleteTaxRequest);
     }
@@ -150,14 +155,13 @@ public class DeduplicateTaxesExample extends Example {
   static class DuplicateTaxInfo {
 
     /**
-     * The first occurrence our unique tax is treated as the master. Additional
-     * dentical taxes will be merged into this one.
+     * The first occurrence our unique tax is treated as the master. Additional identical taxes will
+     * be merged into this one.
      */
     private CatalogObject masterTax;
 
     /**
-     * boolean indicating whether or not we have found a duplicate tax matching the
-     * master.
+     * boolean indicating whether or not we have found a duplicate tax matching the master.
      */
     private boolean foundDuplicate = false;
 
@@ -177,53 +181,78 @@ public class DeduplicateTaxesExample extends Example {
       if (duplicateTax.getPresentAtAllLocations()) {
         if (masterTax.getPresentAtAllLocations()) {
           // Both the master tax and the duplicate tax are present at all locations.
-          List<String> absentAtMaster = masterTax.getAbsentAtLocationIds() == null ? new ArrayList<>()
-              : masterTax.getAbsentAtLocationIds();
-          List<String> absentAtDuplicate = duplicateTax.getAbsentAtLocationIds() == null ? new ArrayList<>()
-              : duplicateTax.getAbsentAtLocationIds();
+          List<String> absentAtMaster =
+              masterTax.getAbsentAtLocationIds() == null ? new ArrayList<>()
+                  : masterTax.getAbsentAtLocationIds();
+          List<String> absentAtDuplicate =
+              duplicateTax.getAbsentAtLocationIds() == null ? new ArrayList<>()
+                  : duplicateTax.getAbsentAtLocationIds();
           Set<String> absentAtLocationIds = new HashSet<>(absentAtMaster);
           absentAtLocationIds.retainAll(absentAtDuplicate);
+
           masterTax = new CatalogObject.Builder(masterTax.getType(), masterTax.getId())
-              .absentAtLocationIds(new ArrayList<>(absentAtLocationIds)).presentAtLocationIds(new ArrayList<>())
-              .presentAtAllLocations(masterTax.getPresentAtAllLocations()).taxData(masterTax.getTaxData())
-              .version(masterTax.getVersion()).build();
+              .absentAtLocationIds(new ArrayList<>(absentAtLocationIds))
+              .presentAtLocationIds(new ArrayList<>())
+              .presentAtAllLocations(masterTax.getPresentAtAllLocations())
+              .taxData(masterTax.getTaxData())
+              .version(masterTax.getVersion())
+              .build();
         } else {
           // The duplicate tax is present at all locations, the master is not.
-          List<String> presentAtMaster = masterTax.getPresentAtLocationIds() == null ? new ArrayList<>()
-              : masterTax.getPresentAtLocationIds();
-          List<String> absentAtDuplicate = duplicateTax.getAbsentAtLocationIds() == null ? new ArrayList<>()
-              : duplicateTax.getAbsentAtLocationIds();
+          List<String> presentAtMaster =
+              masterTax.getPresentAtLocationIds() == null ? new ArrayList<>()
+                  : masterTax.getPresentAtLocationIds();
+          List<String> absentAtDuplicate =
+              duplicateTax.getAbsentAtLocationIds() == null ? new ArrayList<>()
+                  : duplicateTax.getAbsentAtLocationIds();
           Set<String> absentAtLocationIds = new HashSet<>(absentAtDuplicate);
           absentAtLocationIds.removeAll(presentAtMaster);
+
           masterTax = new CatalogObject.Builder(masterTax.getType(), masterTax.getId())
-              .absentAtLocationIds(new ArrayList<>(absentAtLocationIds)).presentAtLocationIds(new ArrayList<>())
-              .presentAtAllLocations(true).taxData(masterTax.getTaxData()).version(masterTax.getVersion()).build();
+              .absentAtLocationIds(new ArrayList<>(absentAtLocationIds))
+              .presentAtLocationIds(new ArrayList<>())
+              .presentAtAllLocations(true)
+              .taxData(masterTax.getTaxData())
+              .version(masterTax.getVersion())
+              .build();
         }
       } else {
         if (masterTax.getPresentAtAllLocations()) {
           // The master tax is present at all locations but the duplicate tax is not.
-          List<String> absentAtMaster = masterTax.getAbsentAtLocationIds() == null ? new ArrayList<>()
-              : masterTax.getAbsentAtLocationIds();
-          List<String> presentAtDuplicate = duplicateTax.getPresentAtLocationIds() == null ? new ArrayList<>()
-              : duplicateTax.getPresentAtLocationIds();
+          List<String> absentAtMaster =
+              masterTax.getAbsentAtLocationIds() == null ? new ArrayList<>()
+                  : masterTax.getAbsentAtLocationIds();
+          List<String> presentAtDuplicate =
+              duplicateTax.getPresentAtLocationIds() == null ? new ArrayList<>()
+                  : duplicateTax.getPresentAtLocationIds();
           Set<String> absentAtLocationIds = new HashSet<>(absentAtMaster);
           absentAtLocationIds.removeAll(presentAtDuplicate);
+
           masterTax = new CatalogObject.Builder(masterTax.getType(), masterTax.getId())
-              .absentAtLocationIds(new ArrayList<>(absentAtLocationIds)).presentAtLocationIds(new ArrayList<>())
-              .presentAtAllLocations(masterTax.getPresentAtAllLocations()).taxData(masterTax.getTaxData())
-              .version(masterTax.getVersion()).build();
+              .absentAtLocationIds(new ArrayList<>(absentAtLocationIds))
+              .presentAtLocationIds(new ArrayList<>())
+              .presentAtAllLocations(masterTax.getPresentAtAllLocations())
+              .taxData(masterTax.getTaxData())
+              .version(masterTax.getVersion())
+              .build();
         } else {
           // Neither the master tax nor the duplicate tax are present at all locations.
-          List<String> presentAtMaster = masterTax.getPresentAtLocationIds() == null ? new ArrayList<>()
-              : masterTax.getPresentAtLocationIds();
-          List<String> presentAtDuplicate = duplicateTax.getPresentAtLocationIds() == null ? new ArrayList<>()
-              : duplicateTax.getPresentAtLocationIds();
+          List<String> presentAtMaster =
+              masterTax.getPresentAtLocationIds() == null ? new ArrayList<>()
+                  : masterTax.getPresentAtLocationIds();
+          List<String> presentAtDuplicate =
+              duplicateTax.getPresentAtLocationIds() == null ? new ArrayList<>()
+                  : duplicateTax.getPresentAtLocationIds();
           Set<String> presentAtLocationIds = new HashSet<>(presentAtMaster);
           presentAtLocationIds.addAll(presentAtDuplicate);
+
           masterTax = new CatalogObject.Builder(masterTax.getType(), masterTax.getId())
-              .absentAtLocationIds(new ArrayList<>()).presentAtLocationIds(new ArrayList<>(presentAtLocationIds))
-              .presentAtAllLocations(masterTax.getPresentAtAllLocations()).taxData(masterTax.getTaxData())
-              .version(masterTax.getVersion()).build();
+              .absentAtLocationIds(new ArrayList<>())
+              .presentAtLocationIds(new ArrayList<>(presentAtLocationIds))
+              .presentAtAllLocations(masterTax.getPresentAtAllLocations())
+              .taxData(masterTax.getTaxData())
+              .version(masterTax.getVersion())
+              .build();
         }
       }
     }

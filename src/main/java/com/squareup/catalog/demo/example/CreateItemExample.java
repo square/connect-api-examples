@@ -31,10 +31,9 @@ import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.CatalogObjectBatch;
 
 /**
- * This example creates a new CatalogItem called "Soda" with three
- * CatalogItemVariations: Small, Medium, and Large. It then uploads the new
- * objects, retrieves the newly creted CatalogItem from the server, and prints
- * the name and ID to the screen.
+ * This example creates a new CatalogItem called "Soda" with three CatalogItemVariations: Small,
+ * Medium, and Large. It then uploads the new objects, retrieves the newly created CatalogItem from
+ * the server, and prints the name and ID to the screen.
  **/
 public class CreateItemExample extends Example {
 
@@ -67,17 +66,19 @@ public class CreateItemExample extends Example {
      * Build the request to create the new item.
      *
      * This function call creates a BatchUpsertCatalogObjectsRequest object
-     * (request) populated with four new CatalogObjects: - a CatalogItem called
-     * "Soda" with ID "#SODA" - a CatalogItemVariation child called "Small" with ID
-     * "#SODA-SMALL" - a CatalogItemVariation child called "Medium" with ID
-     * "#SODA-MEDIUM" - a CatalogItemVariation child called "Large" with ID
-     * "#SODA-LARGE"
+     * (request) populated with four new CatalogObjects:
+     * - a CatalogItem called "Soda" with ID "#SODA"
+     * - a CatalogItemVariation child called "Small" with ID "#SODA-SMALL"
+     * - a CatalogItemVariation child called "Medium" with ID "#SODA-MEDIUM"
+     * - a CatalogItemVariation child called "Large" with ID "#SODA-LARGE"
      *
      * Note: this call only *creates* the new objects and packages them for upsert.
      * Nothing has been uploaded to the server at this point.
      */
-    List<CatalogObject> objects = singletonList(item("#SODA", "Soda", null, itemVariation("#SODA-SMALL", "Small", 150),
-        itemVariation("#SODA-MEDIUM", "Medium", 175), itemVariation("#SODA-LARGE", "Large", 200)));
+    List<CatalogObject> objects = singletonList(item("#SODA", "Soda", null,
+        itemVariation("#SODA-SMALL", "Small", 150),
+        itemVariation("#SODA-MEDIUM", "Medium", 175),
+        itemVariation("#SODA-LARGE", "Large", 200)));
 
     CatalogObjectBatch batch = new CatalogObjectBatch(objects);
 
@@ -104,7 +105,7 @@ public class CreateItemExample extends Example {
       logger.info("Created item " + newItem.getId());
       return newItem;
     }).exceptionally(exception -> {
-      // Log excpetion, return null.
+      // Log exception, return null.
       logger.error(exception.getMessage());
       return null;
     }).join();
@@ -129,8 +130,12 @@ public class CreateItemExample extends Example {
        * Otherwise, grab the name and object ID of the CatalogItem that was fetched
        * from the catalog and print them to the screen.
        */
-      CatalogObject retrieveditem = result.getObject();
-      logger.info("Retrieved Item " + retrieveditem.getItemData().getName() + " (" + retrieveditem.getId() + ")");
+      CatalogObject retrievedItem = result.getObject();
+      logger.info("Retrieved Item "
+          + retrievedItem.getItemData().getName()
+          + " ("
+          + retrievedItem.getId()
+          + ")");
     }).exceptionally(exception -> {
       // Log exception, return null.
       logger.error(exception.getMessage());

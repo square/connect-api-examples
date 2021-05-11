@@ -41,12 +41,15 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
 
   @Override
   public String encodeCatalogData(CatalogModifierList modifierList) {
-    return modifierList.getName() + ":::" + modifierList.getSelectionType();
+    return modifierList.getName()
+        + ":::"
+        + modifierList.getSelectionType();
   }
 
   @Override
   CatalogObject removeSourceAccountMetaData(CatalogObject catalogObject) {
-    CatalogObject.Builder cleanObjectBuilder = super.removeSourceAccountMetaData(catalogObject).toBuilder();
+    CatalogObject.Builder cleanObjectBuilder =
+        super.removeSourceAccountMetaData(catalogObject).toBuilder();
 
     // Make modifier lists available at all locations by default.
     CatalogObject cleanObject = cleanObjectBuilder.presentAtAllLocations(true).build();
@@ -58,7 +61,8 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
       updatedModifiers.add(removeSourceAccountMetaDataFromModifier(modifierObject, cleanObject));
     }
 
-    CatalogModifierList cleanModifierList = modifierList.toBuilder().modifiers(updatedModifiers).build();
+    CatalogModifierList cleanModifierList =
+        modifierList.toBuilder().modifiers(updatedModifiers).build();
 
     return cleanObject.toBuilder().modifierListData(cleanModifierList).build();
   }
@@ -113,25 +117,29 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
   private String encodeModifier(CatalogObject modifierObject) {
     CatalogModifier modifier = modifierObject.getModifierData();
 
-    // If the price is null, coerece it to 0. A null price is the same as a $0
-    // price.
+    // If the price is null, coerece it to 0. A null price is the same as a $0 price.
     Money price = modifier.getPriceMoney();
     long amount = (price == null) ? 0 : price.getAmount();
 
-    return modifier.getName() + ":::" + amount;
+    return modifier.getName()
+        + ":::"
+        + amount;
   }
 
   /**
-   * Removes meta data from the {@link CatalogObject} that only applies to the
-   * source account, such as location IDs and version. Also matches locations with
-   * the parent modifier list.
+   * Removes meta data from the {@link CatalogObject} that only applies to the source account, such
+   * as location IDs and version. Also matches locations with the parent modifier list.
    */
-  private CatalogObject removeSourceAccountMetaDataFromModifier(CatalogObject modifier, CatalogObject modifierList) {
-    CatalogObject.Builder cleanModifierBuilder = super.removeSourceAccountMetaData(modifier).toBuilder();
+  private CatalogObject removeSourceAccountMetaDataFromModifier(CatalogObject modifier,
+      CatalogObject modifierList) {
+    CatalogObject.Builder cleanModifierBuilder =
+        super.removeSourceAccountMetaData(modifier).toBuilder();
 
     // Make the locations of the modifier match the locations of the modifier list.
-    return cleanModifierBuilder.presentAtAllLocations(modifierList.getPresentAtAllLocations())
+    return cleanModifierBuilder
+        .presentAtAllLocations(modifierList.getPresentAtAllLocations())
         .presentAtLocationIds(modifierList.getPresentAtLocationIds())
-        .absentAtLocationIds(modifierList.getAbsentAtLocationIds()).build();
+        .absentAtLocationIds(modifierList.getAbsentAtLocationIds())
+        .build();
   }
 }

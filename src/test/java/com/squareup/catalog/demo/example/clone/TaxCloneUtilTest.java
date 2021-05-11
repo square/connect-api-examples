@@ -22,6 +22,7 @@ import com.squareup.square.models.CatalogTax;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.assertThat;
 
 public class TaxCloneUtilTest {
@@ -36,7 +37,8 @@ public class TaxCloneUtilTest {
 
   @Test
   public void encodeCatalogData() {
-    CatalogTax tax = new CatalogTax.Builder().name("name").percentage("12.34").inclusionType("ADDITIVE").build();
+    CatalogTax tax =
+        new CatalogTax.Builder().name("name").percentage("12.34").inclusionType("ADDITIVE").build();
     assertThat(cloneUtil.encodeCatalogData(tax)).isEqualTo("name:::12.34:::ADDITIVE");
   }
 }

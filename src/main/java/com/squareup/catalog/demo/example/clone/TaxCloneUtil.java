@@ -35,6 +35,10 @@ class TaxCloneUtil extends CatalogObjectCloneUtil<CatalogTax> {
 
   @Override
   String encodeCatalogData(CatalogTax tax) {
-    return tax.getName() + ":::" + tax.getPercentage() + ":::" + tax.getInclusionType();
+    return tax.getName()
+        + ":::"
+        + tax.getPercentage()
+        + ":::"
+        + tax.getInclusionType();
   }
 }

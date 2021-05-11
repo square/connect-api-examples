@@ -38,13 +38,19 @@ class DiscountCloneUtil extends CatalogObjectCloneUtil<CatalogDiscount> {
 
   @Override
   String encodeCatalogData(CatalogDiscount discount) {
-    return discount.getName() + ":::" + discount.getDiscountType() + ":::" + discount.getPercentage() + ":::"
+    return discount.getName()
+        + ":::"
+        + discount.getDiscountType()
+        + ":::"
+        + discount.getPercentage()
+        + ":::"
         + amountOrNull(discount.getAmountMoney());
   }
 
   @Override
   CatalogObject removeSourceAccountMetaData(CatalogObject catalogObject) {
-    CatalogObject.Builder cleanObjectBuilder = super.removeSourceAccountMetaData(catalogObject).toBuilder();
+    CatalogObject.Builder cleanObjectBuilder =
+        super.removeSourceAccountMetaData(catalogObject).toBuilder();
     if (presentAtAllLocationsByDefault) {
       cleanObjectBuilder.presentAtAllLocations(presentAtAllLocationsByDefault);
     }

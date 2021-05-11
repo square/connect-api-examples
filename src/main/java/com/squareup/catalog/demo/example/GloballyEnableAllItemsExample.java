@@ -55,90 +55,118 @@ public class GloballyEnableAllItemsExample extends Example {
     final long startTimeMillis = System.currentTimeMillis();
     do {
       // Retrieve a page of items.
-      catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.ITEM.toString(), catalogVersion).thenAccept(result -> {
-        if (checkAndLogErrors(result.getErrors())) {
-          return;
-        }
-
-        List<CatalogObject> items = result.getObjects();
-        if (items == null || items.size() == 0) {
-          if (cursor == null) {
-            logger.info("No items found in catalog.");
-            return;
-          }
-        } else {
-          // Iterate over the items, enabling them at all locations.
-          List<CatalogObject> itemsToUpdate = new ArrayList<>();
-          for (CatalogObject itemObject : items) {
-            CatalogItem item = itemObject.getItemData();
-            String productType = item.getProductType();
-            boolean isRegularItem = productType == null || productType.equals("REGULAR");
-            boolean isGloballyEnabled = itemObject.getPresentAtAllLocations()
-                && (itemObject.getPresentAtLocationIds() == null || itemObject.getPresentAtLocationIds().isEmpty())
-                && (itemObject.getAbsentAtLocationIds() == null || itemObject.getAbsentAtLocationIds().isEmpty());
-
-            // Ignore items that are not REGULAR or are already globally enabled.
-            if (isRegularItem && !isGloballyEnabled) {
-              // Globally enable the item.
-              // Newer SDKs don't have a setter for fields, so we need to reconstruct the
-              // object with
-              // the information we need.
-              List<CatalogObject> variationClones = new ArrayList<>();
-              // Update each variation's location settings to match the locations of the
-              // parent item.
-              for (CatalogObject variation : item.getVariations()) {
-                CatalogObject variationClone = new CatalogObject.Builder(variation.getType(), variation.getId())
-                    .itemVariationData(variation.getItemVariationData()).presentAtAllLocations(true)
-                    .presentAtLocationIds(emptyList()).absentAtLocationIds(emptyList()).version(variation.getVersion())
-                    .build();
-
-                variationClones.add(variationClone);
-              }
-              CatalogItem itemClone = new CatalogItem.Builder().name(item.getName()).productType(item.getProductType())
-                  .variations(variationClones).taxIds(item.getTaxIds()).categoryId(item.getCategoryId()).build();
-
-              CatalogObject objectClone = new CatalogObject.Builder(itemObject.getType(), itemObject.getId())
-                  .itemData(itemClone).presentAtAllLocations(true).presentAtLocationIds(emptyList())
-                  .absentAtLocationIds(emptyList()).version(itemObject.getVersion()).build();
-
-              // Add this item to the list of items to update.
-              itemsToUpdate.add(objectClone);
+      catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.ITEM.toString(), catalogVersion)
+          .thenAccept(result -> {
+            if (checkAndLogErrors(result.getErrors())) {
+              return;
             }
-          }
 
-          // Send a batch upsert request to apply the new location settings to the items.
-          if (itemsToUpdate.size() > 0) {
-            BatchUpsertCatalogObjectsRequest batchUpsertRequest = new BatchUpsertCatalogObjectsRequest.Builder(
-                UUID.randomUUID().toString(), singletonList(new CatalogObjectBatch(itemsToUpdate))).build();
-
-            catalogApi.batchUpsertCatalogObjectsAsync(batchUpsertRequest).thenAccept(upsertResponse -> {
-              if (checkAndLogErrors(upsertResponse.getErrors())) {
+            List<CatalogObject> items = result.getObjects();
+            if (items == null || items.size() == 0) {
+              if (cursor == null) {
+                logger.info("No items found in catalog.");
                 return;
               }
+            } else {
+              // Iterate over the items, enabling them at all locations.
+              List<CatalogObject> itemsToUpdate = new ArrayList<>();
+              for (CatalogObject itemObject : items) {
+                CatalogItem item = itemObject.getItemData();
+                String productType = item.getProductType();
+                boolean isRegularItem = productType == null || productType.equals("REGULAR");
+                boolean isGloballyEnabled = itemObject.getPresentAtAllLocations()
+                    && (itemObject.getPresentAtLocationIds() == null
+                    || itemObject.getPresentAtLocationIds().isEmpty())
+                    && (itemObject.getAbsentAtLocationIds() == null
+                    || itemObject.getAbsentAtLocationIds().isEmpty());
 
-              // Add the updated item count to the total number of updated items.
-              totalItemsUpdated += itemsToUpdate.size();
-            }).join();
-          }
-          // Log info about this page of items we just updated.
-          long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
-          totalItemsVisited += items.size();
-          logger.info("Updated " + itemsToUpdate.size() + " items (" + totalItemsVisited + " total items processed in "
-              + elapsedTimeSeconds + " seconds)");
+                // Ignore items that are not REGULAR or are already globally enabled.
+                if (isRegularItem && !isGloballyEnabled) {
+                  // Globally enable the item.
+                  // Newer SDKs don't have a setter for fields, so we need to reconstruct the
+                  // object with the information we need.
+                  List<CatalogObject> variationClones = new ArrayList<>();
+                  // Update each variation's location settings to match the locations of the
+                  // parent item.
+                  for (CatalogObject variation : item.getVariations()) {
+                    CatalogObject variationClone =
+                        new CatalogObject.Builder(variation.getType(), variation.getId())
+                            .itemVariationData(variation.getItemVariationData())
+                            .presentAtAllLocations(true)
+                            .presentAtLocationIds(emptyList())
+                            .absentAtLocationIds(emptyList())
+                            .version(variation.getVersion())
+                            .build();
 
-        }
+                    variationClones.add(variationClone);
+                  }
 
-        // Move to the next page.
-        cursor = result.getCursor();
-      }).exceptionally(exception -> {
-        // Log exception, return null.
-        logger.error(exception.getMessage());
-        return null;
-      }).join();
+                  CatalogItem itemClone = new CatalogItem.Builder()
+                      .name(item.getName())
+                      .productType(item.getProductType())
+                      .variations(variationClones)
+                      .taxIds(item.getTaxIds())
+                      .categoryId(item.getCategoryId())
+                      .build();
+
+                  CatalogObject objectClone =
+                      new CatalogObject.Builder(itemObject.getType(), itemObject.getId())
+                          .itemData(itemClone)
+                          .presentAtAllLocations(true)
+                          .presentAtLocationIds(emptyList())
+                          .absentAtLocationIds(emptyList())
+                          .version(itemObject.getVersion())
+                          .build();
+
+                  // Add this item to the list of items to update.
+                  itemsToUpdate.add(objectClone);
+                }
+              }
+
+              // Send a batch upsert request to apply the new location settings to the items.
+              if (itemsToUpdate.size() > 0) {
+                BatchUpsertCatalogObjectsRequest batchUpsertRequest =
+                    new BatchUpsertCatalogObjectsRequest.Builder(
+                        UUID.randomUUID().toString(),
+                        singletonList(new CatalogObjectBatch(itemsToUpdate))).build();
+
+                catalogApi.batchUpsertCatalogObjectsAsync(batchUpsertRequest)
+                    .thenAccept(upsertResponse -> {
+                      if (checkAndLogErrors(upsertResponse.getErrors())) {
+                        return;
+                      }
+
+                      // Add the updated item count to the total number of updated items.
+                      totalItemsUpdated += itemsToUpdate.size();
+                    }).join();
+              }
+              // Log info about this page of items we just updated.
+              long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
+              totalItemsVisited += items.size();
+              logger.info("Updated "
+                  + itemsToUpdate.size()
+                  + " items ("
+                  + totalItemsVisited
+                  + " total items processed in "
+                  + elapsedTimeSeconds
+                  + " seconds)");
+            }
+
+            // Move to the next page.
+            cursor = result.getCursor();
+          }).exceptionally(exception -> {
+            // Log exception, return null.
+            logger.error(exception.getMessage());
+            return null;
+          }).join();
     } while (cursor != null);
 
     // Log overall results.
     long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
-    logger.info("Success! Updated " + totalItemsUpdated + " total items in " + elapsedTimeSeconds + " seconds");
+    logger.info("Success! Updated "
+        + totalItemsUpdated
+        + " total items in "
+        + elapsedTimeSeconds
+        + " seconds");
   }
 }

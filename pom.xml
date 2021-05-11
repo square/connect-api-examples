@@ -40,7 +40,7 @@
       <artifactId>gson</artifactId>
       <version>${gson.version}</version>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>square</artifactId>
       <version>${square.version}</version>

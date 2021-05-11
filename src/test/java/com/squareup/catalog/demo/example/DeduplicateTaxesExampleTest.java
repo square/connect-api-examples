@@ -98,12 +98,16 @@ public class DeduplicateTaxesExampleTest {
   }
 
   private static CatalogObject createCatalogObjectPresentAtLocations(String... locationIds) {
-    return new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "id").presentAtAllLocations(false)
-        .presentAtLocationIds(Arrays.asList(locationIds)).build();
+    return new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "id")
+        .presentAtAllLocations(false)
+        .presentAtLocationIds(Arrays.asList(locationIds))
+        .build();
   }
 
   private static CatalogObject createCatalogObjectAbsentAtLocations(String... locationIds) {
-    return new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "id").presentAtAllLocations(true)
-        .absentAtLocationIds(Arrays.asList(locationIds)).build();
+    return new CatalogObject.Builder(CatalogObjectTypes.TAX.toString(), "id")
+        .presentAtAllLocations(true)
+        .absentAtLocationIds(Arrays.asList(locationIds))
+        .build();
   }
 }

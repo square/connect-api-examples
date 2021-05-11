@@ -45,7 +45,8 @@ public class Main {
 
   private static final String USAGE = "USAGE:\n"
       + "  Execute Example: java <example_name> [-token <accessToken>] [-cleanup] [-env <sandbox/production>]\n"
-      + "  List Examples:   java -list-examples\n" + "  Print Usage:     java -usage";
+      + "  List Examples:   java -list-examples\n"
+      + "  Print Usage:     java -usage";
 
   /**
    * Argument used to print usage information.
@@ -82,11 +83,19 @@ public class Main {
 
   public static void main(String[] args) {
     Logger logger = new Logger.SystemLogger();
-    Main main = new Main(logger, new CreateItemExample(logger), new DeleteAllItemsExample(logger),
-        new ApplyTaxToAllIItemsExample(logger), new DeduplicateTaxesExample(logger), new DeleteCategoryExample(logger),
-        new ListCategoriesExample(logger), new ListDiscountsExample(logger), new LocationSpecificPriceExample(logger),
-        new SearchItemsExample(logger), new RetrieveCatalogObjectExample(logger),
-        new GloballyEnableAllItemsExample(logger), new CloneCatalogExample(logger));
+    Main main = new Main(logger,
+        new CreateItemExample(logger),
+        new DeleteAllItemsExample(logger),
+        new ApplyTaxToAllIItemsExample(logger),
+        new DeduplicateTaxesExample(logger),
+        new DeleteCategoryExample(logger),
+        new ListCategoriesExample(logger),
+        new ListDiscountsExample(logger),
+        new LocationSpecificPriceExample(logger),
+        new SearchItemsExample(logger),
+        new RetrieveCatalogObjectExample(logger),
+        new GloballyEnableAllItemsExample(logger),
+        new CloneCatalogExample(logger));
     main.processArgs(args);
   }
 
@@ -180,13 +189,11 @@ public class Main {
     }
 
     // Decide on environment.
-    // If both enviroment and base-url were set, the environment choice will
-    // override.
+    // If both environment and base-url were set, the environment choice will override.
     Environment env;
     if (environment == null) {
       // if environment was not set, check if base url was provided. If so, set
-      // environment to custom.
-      // Otherwise, set environment to be sandbox by default.
+      // environment to custom. Otherwise, set environment to be sandbox by default.
       if (customUrl != null) {
         env = Environment.CUSTOM;
         apiClientBuilder.customUrl(customUrl);
@@ -207,7 +214,7 @@ public class Main {
 
     executeExample(command, cleanup, catalogApi, locationsApi);
 
-    // Necessary in order for the program not to hang (kill backround threads).
+    // Necessary in order for the program not to hang (kill background threads).
     System.exit(0);
   }
 
@@ -261,7 +268,9 @@ public class Main {
             example.execute(catalogApi, locationsApi);
           }
         } catch (Exception e) {
-          throw new RuntimeException(e);
+          // This is bad practice. In a real app, you'd want to handle this exception and
+          // take action according to what went wrong.
+          System.exit(1);
         }
         return;
       }
@@ -270,8 +279,11 @@ public class Main {
   }
 
   /**
-   * Finds out the currency to be used across all examples Use join() because we
-   * can't proceed further until we have this information.
+   * Finds out the currency to be used across all examples. The listLocation api call will block,
+   * as we need the currency information in order to proceed with processing the examples.
+   * NOTE: This step can be avoided if you know what currency you will be using.
+   * In that case, you can simply comment out the below function, and call
+   * 'Moneys.setCurrency(<YOUR APP CURRENCY>);' with values such as CAD, USD, EUR, GBP, etc.
    *
    * @param locationsApi the LocationsApi utility
    */
@@ -287,8 +299,10 @@ public class Main {
         Moneys.setCurrency(currentLocation.getCurrency());
       }
     }).exceptionally(exception -> {
-      // Log exception, return null.
-      logger.error(exception.getMessage());
+      // Log exception, exit application as this step is necessary.
+      logger.error("Currency could not be retrieved. "
+          + "Please verify that your access token is correct.");
+      System.exit(1);
       return null;
     }).join();
   }

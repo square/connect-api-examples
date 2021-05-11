@@ -19,7 +19,7 @@ token:
 2. Click "+" under Applications to create a new application.
 3. Create an application with the name "Catalog API Demo".
 4. Click on the application you have just created, and navigate to "Credentials"
-4. Copy the Access Token on that page and save it to an
+5. Copy the Access Token on that page and save it to an
   environment variable:
    
    `export SQPAT={{ YOUR NEW ACCESS TOKEN }}`
@@ -29,7 +29,7 @@ token:
 The `src` directory should contain everything you need to compile and run the
 demo app. To build `catalog-api-demo`:
 
-```
+```bash
 mvn compile
 ```
 
@@ -38,27 +38,27 @@ mvn compile
 To confirm the demo is runnable, use the `-list-examples` flag to see all
 the available examples:
 
-```
+```bash
 mvn -q exec:java "-Dexec.args=-list-examples"
 ```
 
 For simplicity, here is a list of available examples and their description:
 
-```
-Examples:
-  create_item                Create an item, then retrieve it.
-  delete_all_items           Delete ALL items. This is a destructive action and cannot be undone.
-  apply_tax_to_all_items     Applies a selected tax to all items.
-  deduplicate_taxes          Merge identical taxes (same name, percentage, and inclusion type)
-  delete_category            Create a category with three items, then delete the category and items.
-  list_categories            List all categories.
-  list_discounts             List all discounts.
-  location_specific_price    Create an item with a location-specific price
-  search_items               Search for items.
-  retrieve_catalog_object    Retrieve a catalog object by ID.
-  globally_enable_items      Make all items available at all locations.
-  clone_catalog              Clones catalog objects from one merchant account to another.
-```
+| Example Name  | Description |
+| ------------- | ------------- |
+| create_item  | Create an item, then retrieve it  |
+| delete_all_items  | Delete ALL items. This is a destructive action and cannot be undone  |
+| apply_tax_to_all_items   | Applies a selected tax to all items  |
+| deduplicate_taxes  | Merge identical taxes (same name, percentage, and inclusion type)  |
+| delete_category  | Create a category with three items, then delete the category and items  |
+| list_categories  | List all categories  |
+| list_discounts  | List all discounts  |
+| location_specific_price  | Create an item with a location-specific price. Must have at least 2 locations to run this example  |
+| search_items  | Search for items  |
+| retrieve_catalog_object  | Retrieve a catalog object by ID  |
+| globally_enable_items  | Make all items available at all locations |
+| clone_catalog  | Clones catalog objects from one merchant account to another  |
+
 
 ## Execute an Example
 
@@ -67,24 +67,19 @@ Source code for each of the examples is listed under
 
 Running an example has the following syntax:
 
-```
+```bash
 mvn -q exec:java "-Dexec.args={{ example name }} -token {{ accessToken }}"
 ```
 
 For example:
-```
+```bash
 mvn -q exec:java "-Dexec.args=create_item -token $SQPAT"
 ```
 
 By default, the example will use the sandbox environment: https://connect.squareupsandbox.com/
 
-In order to explicitly use the sandbox environment, use the `-env` flag with the value `sandbox`:
-```
-mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -env sandbox"
-```
-
 In order to use the production environment, use the `-env` flag with the `production` argument:
-```
+```bash
 mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -env production"
 ```
 
@@ -100,6 +95,6 @@ Note that the cleanup code will delete items and other objects by name, and as s
 delete items with the same name that were not created by the example. 
 
 For example:
-```
+```bash
 mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -cleanup"
 ```

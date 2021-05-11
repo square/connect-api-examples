@@ -43,7 +43,8 @@ public class ModifierListCloneUtilTest {
 
   @Test
   public void encodeCatalogData() {
-    CatalogModifierList modifierList = new CatalogModifierList.Builder().name("name").selectionType("MULTIPLE").build();
+    CatalogModifierList modifierList =
+        new CatalogModifierList.Builder().name("name").selectionType("MULTIPLE").build();
     assertThat(cloneUtil.encodeCatalogData(modifierList)).isEqualTo("name:::MULTIPLE");
   }
 
@@ -57,7 +58,8 @@ public class ModifierListCloneUtilTest {
     modifier1 = modifier1.toBuilder().presentAtAllLocations(false)
         .presentAtLocationIds(Arrays.asList("sourceLocation1")).build();
 
-    CatalogObject modifierList = new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id").build();
+    CatalogObject modifierList =
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id").build();
 
     List<CatalogObject> modifiers = Arrays.asList(modifier0, modifier1);
 
@@ -68,38 +70,45 @@ public class ModifierListCloneUtilTest {
     CatalogObject result = cloneUtil.removeSourceAccountMetaData(modifierList);
     assertThat(result.getPresentAtAllLocations()).isTrue();
     assertThat(result.getPresentAtLocationIds()).isEmpty();
-    assertThat(result.getModifierListData().getModifiers().get(0).getPresentAtAllLocations()).isTrue();
-    assertThat(result.getModifierListData().getModifiers().get(0).getPresentAtLocationIds()).isEmpty();
-    assertThat(result.getModifierListData().getModifiers().get(1).getPresentAtAllLocations()).isTrue();
-    assertThat(result.getModifierListData().getModifiers().get(1).getPresentAtLocationIds()).isEmpty();
+    assertThat(
+        result.getModifierListData().getModifiers().get(0).getPresentAtAllLocations()).isTrue();
+    assertThat(
+        result.getModifierListData().getModifiers().get(0).getPresentAtLocationIds()).isEmpty();
+    assertThat(
+        result.getModifierListData().getModifiers().get(1).getPresentAtAllLocations()).isTrue();
+    assertThat(
+        result.getModifierListData().getModifiers().get(1).getPresentAtLocationIds()).isEmpty();
   }
 
   @Test
   public void mergeSourceCatalogObjectIntoTarget_appendsNewModifiers() {
-    CatalogObject sourceModifierList = new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
-        .presentAtAllLocations(false).presentAtLocationIds(Arrays.asList("sourceLocation1"))
-        .modifierListData(new CatalogModifierList.Builder().modifiers(Arrays.asList(
-            createModifier("foo", null).toBuilder().presentAtAllLocations(false)
-                .presentAtLocationIds(Arrays.asList("sourceLocation1")).build(),
-            createModifier("bar", null).toBuilder().presentAtAllLocations(false)
-                .presentAtLocationIds(Arrays.asList("sourceLocation1")).build()))
-            .build())
-        .build();
+    CatalogObject sourceModifierList =
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
+            .presentAtAllLocations(false).presentAtLocationIds(Arrays.asList("sourceLocation1"))
+            .modifierListData(new CatalogModifierList.Builder().modifiers(Arrays.asList(
+                createModifier("foo", null).toBuilder().presentAtAllLocations(false)
+                    .presentAtLocationIds(Arrays.asList("sourceLocation1")).build(),
+                createModifier("bar", null).toBuilder().presentAtAllLocations(false)
+                    .presentAtLocationIds(Arrays.asList("sourceLocation1")).build()))
+                .build())
+            .build();
 
-    CatalogObject targetModifierList = new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
-        .presentAtAllLocations(true).presentAtLocationIds(Arrays.asList("targetLocation1"))
-        .absentAtLocationIds(Arrays.asList("targetLocation2"))
-        .modifierListData(new CatalogModifierList.Builder().modifiers(Arrays.asList(
-            createModifier("bar", null).toBuilder().presentAtAllLocations(true)
-                .presentAtLocationIds(Arrays.asList("targetLocation1"))
-                .absentAtLocationIds(Arrays.asList("targetLocation2")).build(),
-            createModifier("baz", null).toBuilder().presentAtAllLocations(true)
-                .presentAtLocationIds(Arrays.asList("targetLocation1"))
-                .absentAtLocationIds(Arrays.asList("targetLocation2")).build()))
-            .build())
-        .build();
+    CatalogObject targetModifierList =
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
+            .presentAtAllLocations(true).presentAtLocationIds(Arrays.asList("targetLocation1"))
+            .absentAtLocationIds(Arrays.asList("targetLocation2"))
+            .modifierListData(new CatalogModifierList.Builder().modifiers(Arrays.asList(
+                createModifier("bar", null).toBuilder().presentAtAllLocations(true)
+                    .presentAtLocationIds(Arrays.asList("targetLocation1"))
+                    .absentAtLocationIds(Arrays.asList("targetLocation2")).build(),
+                createModifier("baz", null).toBuilder().presentAtAllLocations(true)
+                    .presentAtLocationIds(Arrays.asList("targetLocation1"))
+                    .absentAtLocationIds(Arrays.asList("targetLocation2")).build()))
+                .build())
+            .build();
 
-    CatalogObject resultObject = cloneUtil.mergeSourceCatalogObjectIntoTarget(sourceModifierList, targetModifierList);
+    CatalogObject resultObject =
+        cloneUtil.mergeSourceCatalogObjectIntoTarget(sourceModifierList, targetModifierList);
     assertThat(resultObject.getPresentAtAllLocations()).isTrue();
     assertThat(resultObject.getPresentAtLocationIds()).containsExactly("targetLocation1");
     assertThat(resultObject.getAbsentAtLocationIds()).containsExactly("targetLocation2");
@@ -126,33 +135,43 @@ public class ModifierListCloneUtilTest {
 
   @Test
   public void mergeSourceCatalogObjectIntoTarget_coercesNullAmountToZero() {
-    CatalogObject sourceModifierList = new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id1")
-        .modifierListData(
-            new CatalogModifierList.Builder().modifiers(Arrays.asList(createModifier("name", null))).build())
-        .build();
+    CatalogObject sourceModifierList =
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id1")
+            .modifierListData(
+                new CatalogModifierList.Builder().modifiers(
+                    Arrays.asList(createModifier("name", null))).build())
+            .build();
 
-    CatalogObject targetModifierList = new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id2")
-        .modifierListData(
-            new CatalogModifierList.Builder().modifiers(Arrays.asList(createModifier("name", 0L))).build())
-        .build();
+    CatalogObject targetModifierList =
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id2")
+            .modifierListData(
+                new CatalogModifierList.Builder().modifiers(
+                    Arrays.asList(createModifier("name", 0L))).build())
+            .build();
 
-    CatalogObject resultObject = cloneUtil.mergeSourceCatalogObjectIntoTarget(sourceModifierList, targetModifierList);
+    CatalogObject resultObject =
+        cloneUtil.mergeSourceCatalogObjectIntoTarget(sourceModifierList, targetModifierList);
     assertThat(resultObject).isNull();
   }
 
   @Test
   public void mergeSourceCatalogObjectIntoTarget_addsModifierIfPriceDifferent() {
-    CatalogObject sourceModifierList = new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
-        .modifierListData(
-            new CatalogModifierList.Builder().modifiers(Arrays.asList(createModifier("name", 0L))).build())
-        .build();
+    CatalogObject sourceModifierList =
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
+            .modifierListData(
+                new CatalogModifierList.Builder().modifiers(
+                    Arrays.asList(createModifier("name", 0L))).build())
+            .build();
 
-    CatalogObject targetModifierList = new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
-        .modifierListData(
-            new CatalogModifierList.Builder().modifiers(Arrays.asList(createModifier("name", 100L))).build())
-        .build();
+    CatalogObject targetModifierList =
+        new CatalogObject.Builder(CatalogObjectTypes.MODIFIER_LIST.toString(), "id")
+            .modifierListData(
+                new CatalogModifierList.Builder().modifiers(
+                    Arrays.asList(createModifier("name", 100L))).build())
+            .build();
 
-    CatalogObject resultObject = cloneUtil.mergeSourceCatalogObjectIntoTarget(sourceModifierList, targetModifierList);
+    CatalogObject resultObject =
+        cloneUtil.mergeSourceCatalogObjectIntoTarget(sourceModifierList, targetModifierList);
     CatalogModifierList resultModifierList = resultObject.getModifierListData();
     assertThat(resultModifierList.getModifiers()).hasSize(2);
 
@@ -167,6 +186,7 @@ public class ModifierListCloneUtilTest {
   private CatalogObject createModifier(String name, Long priceAmount) {
     Money priceMoney = (priceAmount == null) ? null : createMoneyObject(priceAmount);
     return new CatalogObject.Builder(CatalogObjectTypes.MODIFIER.toString(), "id")
-        .modifierData(new CatalogModifier.Builder().name(name).priceMoney(priceMoney).build()).build();
+        .modifierData(new CatalogModifier.Builder().name(name).priceMoney(priceMoney).build())
+        .build();
   }
 }
