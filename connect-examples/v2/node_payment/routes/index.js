@@ -55,7 +55,7 @@ router.post('/process-payment', async (req, res) => {
     */
 
     res.json({
-      title: 'Payment Successful'
+      title: 'Payment Successful!'
     });
   } catch (error) {
     let result = JSON.stringify(error, null, 4);
@@ -63,7 +63,7 @@ router.post('/process-payment', async (req, res) => {
       result = JSON.stringify(error.errors, null, 4);
     }
     res.json({
-      title: 'Payment Failure'
+      title: 'Payment Failure.'
     });
   }
 });

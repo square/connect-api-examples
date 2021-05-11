@@ -1,45 +1,45 @@
 async function SquarePaymentForm() {
   
   // Create card payment object and attach to page
-  CardPay('#card-container', document.getElementById('card-button'));
+  CardPay(document.getElementById('card-container'));
 
   // Create Apple pay instance
-  const ApplePayButton = document.querySelector('#apple-pay-button');
+  const ApplePayButton = document.getElementById('apple-pay-button');
   ApplePay(ApplePayButton, () => {
     ApplePayButton.style.display = 'flex';
   });
 
   // Create Google pay instance
-  GooglePay(document.querySelector('#google-pay-button'));
+  GooglePay(document.getElementById('google-pay-button'));
 
   // Create ACH payment
-  ACHPay(document.querySelector('#ach-button'));
+  ACHPay(document.getElementById('ach-button'));
 
 }
 
-async function createPayment(token) {
-  // Submit the payment form with the nonce
-  document.getElementById('card-nonce').value = token;
-  const formData = new FormData(document.getElementById('fast-checkout'));
-  const plainFormData = Object.fromEntries(formData.entries());
-  const formDataJsonString = JSON.stringify(plainFormData);
+window.createPayment = async function createPayment(token) {
+  const dataJsonString = JSON.stringify({
+    nonce: token
+  });
 
-  await fetch('process-payment', {
+  fetch('process-payment', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: formDataJsonString
+    body: dataJsonString
   })
-  .catch(console.error)
   .then(response => response.json())
   .then(data => {
     document.getElementById('message').innerHTML = data.title;
+  })
+  .catch((error) => {
+    console.error('Error:', error);
   });
 }
 
 // Hardcoded for testing purpose, only uses for Apple Pay and Google Pay
-function getPaymentRequest() {
+window.getPaymentRequest = function() {
   return {
     countryCode: country,
     currencyCode: currency,

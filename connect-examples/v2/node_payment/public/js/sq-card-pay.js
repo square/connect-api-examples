@@ -1,4 +1,4 @@
-async function CardPay(formSelector, buttonEl) {
+async function CardPay(formEl) {
   const payments = Square.payments(applicationId, locationId);
 
   // Create a card payment object and attach to page
@@ -12,7 +12,7 @@ async function CardPay(formSelector, buttonEl) {
       }
     }
   });
-  await card.attach(formSelector);
+  await card.attach(formEl);
 
   async function eventHandler(event) {
     event.preventDefault();
@@ -20,13 +20,14 @@ async function CardPay(formSelector, buttonEl) {
       const result = await card.tokenize();
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);
+        // Use global method from sq-payment-flow.js
         createPayment(result.token);
       }
     } catch (e) {
       console.error(e);
     }
   };
-  const cardButton = buttonEl;
 
+  const cardButton = document.getElementById('card-button');
   cardButton.addEventListener('click', eventHandler);
 }
