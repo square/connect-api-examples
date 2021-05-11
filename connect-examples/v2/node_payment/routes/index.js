@@ -58,7 +58,7 @@ router.post('/process-payment', async (req, res) => {
       result = JSON.stringify(error.errors, null, 4);
     }
     res.json({
-      message: 'Payment Failure',
+      title: 'Payment Failure',
       result
     });
   }
