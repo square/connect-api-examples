@@ -18,6 +18,11 @@ block content
           OR
 
       div(id="ach-wrapper")
+        label(for="ach-first-name")
+        input(id="ach-first-name" type="text" placeholder="First Name" name="account-holder-first-name")
+        label(for="ach-last-name")
+        input(id="ach-last-name" type="text" placeholder="Last Name" name="account-holder-last-name")
+        span(id="ach-message")
         button(id="ach-button").
           Pay with Bank Account
         div(class="border")

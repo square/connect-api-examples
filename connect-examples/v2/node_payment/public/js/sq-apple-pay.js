@@ -13,7 +13,7 @@ async function ApplePay(buttonEl, showApplePayElements) {
       const result = await applePay.tokenize();
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);
-        createPayment();
+        createPayment(result.token);
       }
     } catch (e) {
       console.error(e);

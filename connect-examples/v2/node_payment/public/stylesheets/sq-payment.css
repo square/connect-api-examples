@@ -58,9 +58,7 @@
 }
 
 #fast-checkout input {
-  background: rgba(255,255,255,0.05);
   border-radius: 6px;
-  color: white;
   position: relative;
 }
 
@@ -156,4 +154,23 @@
 #fast-checkout p.warning {
   text-align: center;
   color: rgba(0, 0, 0, 0.4);
+}
+
+#ach-wrapper input:first-of-type {
+  margin-bottom: 10px;
+}
+
+#ach-message {
+  width: 100%;
+  margin-top: 11px;
+  margin-bottom: 11px;
+  font-family: "Square Market",Arial,sans-serif;
+  font-size: 14px;
+  display: inline-block;
+  color: #BF0020;
+}
+
+#ach-message:empty:before {
+  content: "\200b";
+
 }
