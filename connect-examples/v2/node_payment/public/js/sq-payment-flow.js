@@ -1,4 +1,4 @@
-async function SquarePaymentForm() {
+async function SquarePaymentFlow() {
   
   // Create card payment object and attach to page
   CardPay(document.getElementById('card-container'));
@@ -68,4 +68,4 @@ window.getPaymentRequest = function() {
   };
 };
 
-SquarePaymentForm();
+SquarePaymentFlow();
