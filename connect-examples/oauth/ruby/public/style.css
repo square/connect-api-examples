@@ -1,0 +1,127 @@
+@font-face {
+	font-display: swap;
+	font-family: "Square Market";
+	font-weight: 300;
+	font-style: normal;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-light-b61b564a07d65d68488de3231bd0ac7b.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-light-5cb2f5f8f691834beba1bfc2ec90b2d2.woff) format("woff")
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Square Market";
+	font-weight: 300;
+	font-style: italic;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-light-italic-ecd38219bc03bfcec03e0c041c2b6036.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-light-italic-9457b0534d03b93e1cdd78f7dccc8c63.woff) format("woff")
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Square Market";
+	font-weight: 400;
+	font-style: normal;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-regular-84eba500a4ec29ccfadf1e9bff16b67f.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-regular-9ad7ff5c9923221c0bb0cb3bb07fe118.woff) format("woff")
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Square Market";
+	font-weight: 400;
+	font-style: italic;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-regular-italic-acd95aa5e04a7ef2eeaacc6034354d68.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-regular-italic-49bc07c0498062dce2bfbb0a5728e328.woff) format("woff")
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Square Market";
+	font-weight: 500;
+	font-style: normal;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-medium-2344124773c71bf4fa4ad407e7c3a467.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-medium-87fe9beef569bb03cb3845a1e478abac.woff) format("woff")
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Square Market";
+	font-weight: 500;
+	font-style: italic;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-medium-italic-8fb572c8d91a409f5b0a113fea4225b9.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/sqmarket-medium-italic-a30c187aa93ef2d140b4e8796162258f.woff) format("woff")
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Roboto Mono";
+	font-weight: 400;
+	font-style: normal;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/robotomono-regular-608bba1cd36d8adf4aaa4fac946df3db.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/robotomono-regular-2b672f0eafb496a00a7fe8a32790f72e.woff) format("woff")
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Roboto Mono";
+	font-weight: 600;
+	font-style: bold;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/robotomono-bold-8f798852f4b39b8250cd416963df1952.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/robotomono-bold-77106546c8c8a7ec5289a2a0b9cbe7c0.woff) format("woff")
+}
+
+@font-face {
+	font-display: swap;
+	font-family: Roboto;
+	font-weight: 400;
+	font-style: normal;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/roboto-regular-20fc6d9b68d397a5f60b8607d05c2dca.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/roboto-regular-ece4ca3c4fda346f98adc6184df6ed73.woff) format("woff")
+}
+
+@font-face {
+	font-display: swap;
+	font-family: Roboto;
+	font-weight: 500;
+	font-style: bold;
+	src: url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/roboto-medium-a6d6531b28ed13dee1295f82389a3526.woff2) format("woff2"), url(https://sq-connect-web-production-f.squarecdn.com/square/forge-core/fonts/roboto-medium-715829cbe4bc43e24373673931e699bf.woff) format("woff")
+}
+
+html {
+	color: #151c1f;
+	font-family: "Square Market", "Helvetica Neue", Helvetica, sans-serif;
+	font-size: 16px;
+	line-height: 24px;
+	-webkit-font-smoothing: antialiased
+}
+
+h1 {
+  color: rgba(0, 95, 229, 1);
+}
+
+a {
+  color: rgba(0, 106, 255, 1);
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgba(0, 95, 229, 1);
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.messages {
+  max-width: 700px;
+  padding: 40px;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.btn {
+  background-color: rgba(0, 106, 255, 1);
+  color: white;
+  border-radius: 6px;
+  padding: 20px 16px 20px 16px;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+.btn:hover {
+  background-color: rgba(0, 85, 204, 1);
+  color: white;
+}
