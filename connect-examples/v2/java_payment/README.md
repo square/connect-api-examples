@@ -1,3 +1,9 @@
+# Useful Links
+
+* [Java SDK Page](https://developer.squareup.com/docs/sdks/java)
+* [Payments API Overview](https://developer.squareup.com/docs/payments)
+* [Payments in the API Reference](https://developer.squareup.com/reference/square/payments-api)
+
 # Java Payment Form Example
 
 This example hosts a payment form in Java. It is a Spring Boot app and requires Java 8 or newer. There are two sections in this ReadMe.

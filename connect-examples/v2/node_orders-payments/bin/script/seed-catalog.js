@@ -17,6 +17,7 @@ limitations under the License.
 /* eslint no-console: 0 */
 
 const { Client, Environment, FileWrapper } = require("square");
+const { v4: uuidv4 } = require("uuid");
 const sampleData = require("./sample-seed-data.json");
 const fs = require("fs");
 const readline = require("readline");
@@ -42,7 +43,7 @@ const { catalogApi } = new Client(config);
 const addImages = async (image, catalogObjectId, success) => {
   // Create JSON request with required image information requirements.
   const request = {
-    idempotencyKey: require("crypto").randomBytes(64).toString("hex"),
+    idempotencyKey: uuidv4(),
     objectId: catalogObjectId,
     image: {
       id: image.id,
@@ -80,7 +81,7 @@ const addItems = async () => {
   }];
   const batchUpsertCatalogRequest = {
     // Each request needs a unique idempotency key.
-    idempotencyKey: require("crypto").randomBytes(64).toString("hex"),
+    idempotencyKey: uuidv4(),
     batches: batches,
   };
 

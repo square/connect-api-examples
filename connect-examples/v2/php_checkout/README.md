@@ -1,3 +1,9 @@
+# Useful Links
+
+* [PHP SDK Page](https://developer.squareup.com/docs/sdks/php)
+* [Checkout API Overview](https://developer.squareup.com/docs/checkout-api/what-it-does)
+* [Checkout in the API Reference](https://developer.squareup.com/reference/square/checkout-api)
+
 Square Checkout Demo
 =========================
 

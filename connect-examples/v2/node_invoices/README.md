@@ -1,3 +1,9 @@
+# Useful Links
+
+* [Node.js SDK Page](https://developer.squareup.com/docs/sdks/nodejs)
+* [Invoices API Overview](https://developer.squareup.com/docs/invoices-api/overview)
+* [Invoices in the API Reference](https://developer.squareup.com/reference/square/invoices-api)
+
 # Invoice API Sample App
 
   - [Setup](#setup)

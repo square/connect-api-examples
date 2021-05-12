@@ -4,7 +4,7 @@ This example demonstrates a bare-bones Java implementation of the Square Connect
 OAuth flow. The application links merchants to the OAuth Permissions form and
 handles the result of the authorization, which is sent to the application's Redirect URL.
 
-For more information, see [OAuth Overview](https://docs.connect.squareup.com/api/oauth#oauth-overview),
+For more information, see [OAuth Overview](https://developer.squareup.com/docs/oauth-api/overview),
 along with the comments included in `OAuthHandler.java`.
 
 ## Setup
@@ -35,17 +35,20 @@ allowed for `localhost` URLs to simplify the development process.
 
 In order for the sample to work, you must specify the following fields in `OAuthHandler.java`:
 
+* Set the value of `ENVIRONMENT` to one of `Environment.SANDBOX`, `Environment.PRODUCTION` or `Environment.CUSTOM`
+
+* For sandbox testing, set the value of `CONNECT_HOST` to `https://connect.squareupsandbox.com`.
+Otherwise, use `https://connect.squareup.com`
+
 * Replace the value of `APPLICATION_ID` with your application's ID, available on your
 [application dashboard](https://connect.squareup.com/apps).
 
-* Replace the value of `APPLICATION_SECRET` with your application's secret, also
-available on your application dashboard.
+* Replace the value of `APPLICATION_SECRET` with the application secret, available from the OAuth tab in the Developer Dashboard
 
-* (OPTIONAL) Set the value of `SCOPES` to the [permission set](../OAuthPermissions.md) you
+* (OPTIONAL) Change the values in the list `SCOPES` to the [permission set](../OAuthPermissions.md) you
 want to authorize the account to get authorization for. If you do not set this value,
 `MERCHANT_PROFILE_READ PAYMENTS_READ SETTLEMENTS_READ BANK_ACCOUNTS_READ` are applied.
-* For sandbox testing, set the value of `CONNECT_HOST` to `https://connect.squareupsandbox.com`.
-Otherwise, use `https://connect.squareup.com`
+
 
 ### Compile with Maven
 

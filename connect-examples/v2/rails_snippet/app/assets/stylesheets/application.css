@@ -1,0 +1,189 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: normal;
+  font-weight: 400;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-regular.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: italic;
+  font-weight: 400;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-regular-italic.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: normal;
+  font-weight: 500;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-medium.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: italic;
+  font-weight: 500;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-medium-italic.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: normal;
+  font-weight: 600;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-medium.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: italic;
+  font-weight: 600;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-medium-italic.woff") format("woff");
+  font-display: fallback;
+}
+
+body {
+  font-family: 'Square Market';
+  margin: 0;
+  background: #FFFFFF;
+}
+
+.header {
+  height: 60px;
+  padding: 0;
+  box-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.05);
+  display: flex;
+}
+
+.header .icon {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  margin: auto;
+}
+
+.subheading {
+  font-family: SQ Market;
+  font-size: 12px;
+  line-height: 20px;
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.heading {
+  margin: 0;
+  font-family: SQ Market;
+  font-size: 24px;
+  line-height: 32px;
+  /* identical to box height, or 133% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.003em;
+}
+.main {
+  min-height: 100vh;
+  display: flex;
+}
+
+.landing {
+  display:flex;
+  width: 60%;
+  margin: auto;
+  justify-content: space-between;
+}
+
+.headers {
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  color: #fff;
+  text-decoration:none;
+  font-weight: bold;
+  position: static;
+  width: 96px;
+  height: 48px;
+  right: 0px;
+  top: 0px;
+
+  background: #006AFF;
+  border-radius: 6px;
+}
+
+.cursor-form {
+  margin: auto;
+  margin-top: 30px;
+}
+
+.cursor-form .heading  {
+  margin-top: 25px;
+}
+
+.option-list {
+  list-style: none;
+  padding: 0;
+}
+
+.option-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.05);
+  height: 50px;
+}
+
+.option-list button {
+  border: 0;
+  padding: 0;
+  background: 0;
+}
+
+.option-list a, input, button {
+  cursor: pointer;
+}
+
+.remove-cursor {
+  background: 0;
+  font-family: 'Square Market';
+  font-weight: bold;
+  height: 48px;
+  color: #CC0023;
+  border-style: none;
+}
+
+.action-list {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 30px;
+}
