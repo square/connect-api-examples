@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SnippetSample</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <div class='header'>
+    <div class='icon'>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 17C10.4286 17 9.21978 16.125 8.4945 14.875C7.76923 16.125 6.43956 17 4.98901 17C2.81319 17 1 15.125 1 12.875V12.125L2.93407 8H20.8242L23 12.125V12.875C23 15.125 21.1868 17 19.011 17C17.4396 17 16.2308 16.125 15.5055 14.875C14.7802 16.125 13.5714 17 12 17ZM12 17V22M3 17V23H21V17.1463M7 17V22M10 8L9 11M14 8L15 11M3 8V4M21 8C21 7 21 5 21 5M1 3L23 5M15 4V2C15 1.4 15.4 1 16 1H18C18.6 1 19 1.4 19 2V4" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    </div>
+    <div class='main'>
+      <%= yield %>
+    </div>
+  </body>
+</html>
