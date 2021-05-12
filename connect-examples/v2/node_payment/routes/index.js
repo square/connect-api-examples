@@ -45,16 +45,16 @@ router.post('/process-payment', async (req, res) => {
 
   try {
     const { result: { payment } } = await paymentsApi.createPayment(requestBody);
-    
+
     const result = JSON.stringify(payment, (key, value) => {
       return typeof value === "bigint" ? parseInt(value) : value;
     }, 4);
-    
-    res.status(200).json({
+
+    res.json({
       result
     });
   } catch (error) {
-    res.status(500).json(error.result);
+    res.json(error.result);
   }
 });
 

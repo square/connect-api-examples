@@ -1,8 +1,6 @@
-async function CardPay(formEl) {
-  const payments = Square.payments(window.applicationId, window.locationId);
-
+async function CardPay(fieldEl, buttonEl) {
   // Create a card payment object and attach to page
-  const card = await payments.card({
+  const card = await window.payments.card({
     style: {
       '.input-container.is-focus': {
         borderColor: '#006AFF'
@@ -12,22 +10,26 @@ async function CardPay(formEl) {
       }
     }
   });
-  await card.attach(formEl);
+  await card.attach(fieldEl);
 
   async function eventHandler(event) {
+    // Clear any existing messages
+    window.paymentFlowMessageEl.innerText = '';
+
     try {
-      document.getElementById('message').innerHTML = '';
       const result = await card.tokenize();
       if (result.status === 'OK') {
-        console.log(`Payment token is ${result.token}`);
         // Use global method from sq-payment-flow.js
         window.createPayment(result.token);
       }
     } catch (e) {
-      console.error(e);
+      if (e.message) {
+        window.showError(`Error: ${e.message}`);
+      } else {
+        window.showError('Something went wrong');
+      }
     }
   };
 
-  const cardButton = document.getElementById('card-button');
-  cardButton.addEventListener('click', eventHandler);
+  buttonEl.addEventListener('click', eventHandler);
 }
