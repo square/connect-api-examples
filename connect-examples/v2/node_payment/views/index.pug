@@ -1,6 +1,9 @@
 extends layout
 block content
-  script(type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js")
+  - let productionUrl = "https://web.squarecdn.com/v1/square.js";
+  - let sandBoxUrl = "https://sandbox.web.squarecdn.com/v1/square.js";
+  - let paymentFormSrc = process.env.NODE_ENV === "sandbox" ? sandBoxUrl : productionUrl;
+  script(type="text/javascript" src=paymentFormSrc)
   script(type="text/javascript").
     window.applicationId="#{squareApplicationId}";
     window.locationId="#{squareLocationId}";
