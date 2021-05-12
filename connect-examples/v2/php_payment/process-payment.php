@@ -34,30 +34,26 @@ $payments_api = $square_client->getSquareClient()->getPaymentsApi();
 // (https://developer.squareup.com/docs/payments-api/overview).
 
 $money = new Money();
-  // Monetary amounts are specified in the smallest unit of the applicable currency.
-  // This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
+// Monetary amounts are specified in the smallest unit of the applicable currency.
+// This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
 $money->setAmount(100);
-  // Set currency to the currency for the location
+// Set currency to the currency for the location
 $money->setCurrency($square_client->getCurrency());
 
-  // Every payment you process with the SDK must have a unique idempotency key.
-  // If you're unsure whether a particular payment succeeded, you can reattempt
-  // it with the same idempotency key without worrying about double charging
-  // the buyer.
+// Every payment you process with the SDK must have a unique idempotency key.
+// If you're unsure whether a particular payment succeeded, you can reattempt
+// it with the same idempotency key without worrying about double charging
+// the buyer.
 $create_payment_request = new CreatePaymentRequest($token, uniqid(), $money);
 
 // The SDK throws an exception if a Connect endpoint responds with anything besides
 // a 200-level HTTP code. This block catches any exceptions that occur from the request.
 #header('Content-type: application/json');
-try {
-  $response = $payments_api->createPayment($create_payment_request);
-  // If there was an error with the request we will
-  // print them to the browser screen here
-  if ($response->isSuccess()) {
-    echo json_encode($response->getResult());
-  } else {
-    echo json_encode($response->getErrors());
-  }
-} catch (ApiException $e) {
-  echo json_encode(array('errors' => $e));
+$payments_api->createPayment($create_payment_request);
+// If there was an error with the request we will
+// print them to the browser screen here
+if ($response->isSuccess()) {
+  echo json_encode($response->getResult());
+} else {
+  echo json_encode($response->getErrors());
 }

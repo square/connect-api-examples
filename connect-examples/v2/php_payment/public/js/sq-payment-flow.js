@@ -45,11 +45,9 @@ window.createPayment = async function(token) {
 
     const data = await response.json();
     
-    if (data.errors) {
-      if (data.errors.length > 0 && data.errors[0].detail) {
+    if (data.errors && data.errors.length > 0) {
+      if (data.errors[0].detail) {
         window.showError(data.errors[0].detail);
-      } else if (data.errors.message) { 
-        window.showError(data.errors.message);
       } else {
         window.showError('Payment Failed.');
       }
