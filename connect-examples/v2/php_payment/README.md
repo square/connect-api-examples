@@ -33,7 +33,7 @@ php composer.phar install
 
 ### Specify your application credentials
 
-In order for the example to work, you must edit the file called `.env` with your application credentials and environment configuration.
+Create a `.env` file in the root directory of this example, `.env.example` is an example of what your `.env` file should look like. Fill in values for SQUARE_APPLICATION_ID & SQUARE_ACCESS_TOKEN & SQUARE_LOCATION_ID with your sandbox or production credentials.
 
 Open your [application dashboard](https://developer.squareup.com/). Now supply either production, sandbox, or both credentials. Open this file and update the following variables:
 * WARNING: never upload .env with your credential/access_token
