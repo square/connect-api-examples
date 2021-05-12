@@ -36,6 +36,5 @@ async function ACHPay(buttonEl) {
     }
   }
 
-  const achButton = buttonEl;
-  achButton.addEventListener('click', eventHandler);
+  buttonEl.addEventListener('click', eventHandler);
 }
