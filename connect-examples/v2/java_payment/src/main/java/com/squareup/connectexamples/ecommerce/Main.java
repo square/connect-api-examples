@@ -101,8 +101,8 @@ public class Main {
     return "index";
   }
 
-  @PostMapping("/charge")
-  @ResponseBody ResponseEntity<PaymentResult> charge(@RequestBody TokenWrapper tokenObject)
+  @PostMapping("/process-payment")
+  @ResponseBody ResponseEntity<PaymentResult> processPayment(@RequestBody TokenWrapper tokenObject)
       throws InterruptedException, ExecutionException {
     // To learn more about splitting payments with additional recipients,
     // see the Payments API documentation on our [developer site]
