@@ -39,7 +39,7 @@ for more information on the API sandbox.
 
 From the sample's root directory, run:
 
-    python payment-app.py
+    uvicorn main:app --reload
 
 You can then visit `localhost:8000` in your browser to see the card form.
 
