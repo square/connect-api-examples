@@ -19,10 +19,9 @@ block content
           OR
 
       div(id="ach-wrapper")
-        label(for="ach-first-name")
-        input(id="ach-first-name" type="text" placeholder="First Name" name="account-holder-first-name")
-        label(for="ach-last-name")
-        input(id="ach-last-name" type="text" placeholder="Last Name" name="account-holder-last-name")
+        label(for="ach-account-holder-name").
+          Full Name
+        input(id="ach-account-holder-name" type="text" placeholder="Jane Doe" name="ach-account-holder-name" autocomplete="name")
         span(id="ach-message")
         button(id="ach-button" type="button").
           Pay with Bank Account

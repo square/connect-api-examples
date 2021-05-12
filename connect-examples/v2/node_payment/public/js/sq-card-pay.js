@@ -1,5 +1,5 @@
 async function CardPay(formEl) {
-  const payments = Square.payments(applicationId, locationId);
+  const payments = Square.payments(window.applicationId, window.locationId);
 
   // Create a card payment object and attach to page
   const card = await payments.card({
