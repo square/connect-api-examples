@@ -1,7 +1,7 @@
 async function GooglePay(buttonEl) {
   const payments = await Square.payments(applicationId, locationId);
   // Use global method from sq-payment-flow.js
-  const paymentRequest = getPaymentRequest();
+  const paymentRequest = window.getPaymentRequest();
   const req = await payments.paymentRequest(paymentRequest);
   const googlePay = await payments.googlePay(req);
   const googlePayButton = buttonEl;

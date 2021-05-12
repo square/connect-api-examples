@@ -1,5 +1,8 @@
 package com.squareup.connectexamples.ecommerce;
 
+/**
+ * PaymentResult is an object representing the response back to the front end.
+ */
 public class PaymentResult {
 
   private String title;

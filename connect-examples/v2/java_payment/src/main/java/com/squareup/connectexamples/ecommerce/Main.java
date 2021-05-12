@@ -131,6 +131,12 @@ public class Main {
         }).join();
     }
 
+    /**
+     * Helper method that makes a retrieveLocation API call using the configured locationId
+     * and returns the future containing the response
+     * @param squareClient
+     * @return a future that holds the retrieveLocation response
+     */
     private CompletableFuture<RetrieveLocationResponse> getLocationInformation(
         SquareClient squareClient) {
         return squareClient.getLocationsApi().retrieveLocationAsync(squareLocationId)
