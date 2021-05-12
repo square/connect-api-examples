@@ -157,15 +157,12 @@ class Server(BaseHTTPRequestHandler):
                     "utf-8"
                 )  # Gets the data itself
 
-                # length of idempotency_key should be less than 45
-                idempotency_key = str(uuid.uuid4())[:45]
-
                 logging.info("Charging payment")
                 # Charge the customer's card
                 create_payment_response = client.payments.create_payment(
                     body={
                         "source_id": json.loads(body)["token"],
-                        "idempotency_key": idempotency_key,
+                        "idempotency_key": str(uuid.uuid4()),
                         "amount_money": {
                             "amount": 100,  # $1.00 charge
                             "currency": ACCOUNT_CURRENCY,
