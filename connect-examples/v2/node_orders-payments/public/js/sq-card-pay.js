@@ -1,4 +1,4 @@
-window.CardPay = async function(htmlEl) {
+window.CardPay = async function(htmlEl, buttonEl) {
   const payments = Square.payments(window.applicationId, window.locationId);
 
   // Create a card payment object and attach to page
@@ -24,6 +24,5 @@ window.CardPay = async function(htmlEl) {
     }
   };
 
-  const cardButton = document.getElementById('sq-creditcard');
-  cardButton.addEventListener('click', eventHandler);
+  buttonEl.addEventListener('click', eventHandler);
 }

@@ -1,13 +1,13 @@
 async function SquarePaymentFlow() {
   // Create card payment object and attach to page
-  window.CardPay(document.getElementById('card-container'));
+  window.CardPay(document.getElementById('card-container'), document.getElementById('sq-creditcard'));
 }
 
 window.createPayment = async function createPayment(token) {
   const locationId = document.getElementById('locationId').value;
   const orderId = document.getElementById('orderId').value;
   const idempotencyKey = document.getElementById('idempotencyKey').value;
-  
+
   const dataJsonString = JSON.stringify({
     token,
     locationId,
@@ -33,7 +33,7 @@ window.createPayment = async function createPayment(token) {
     } else {
       window.location.href = `/order-confirmation?orderId=${orderId}&locationId=${locationId}`;
     }
-  } catch(error) {
+  } catch (error) {
     console.error('Error:', error);
   };
 }
