@@ -37,7 +37,7 @@ ACCOUNT_COUNTRY = client.locations.retrieve_location(location_id=LOCATION_ID).bo
 ]["country"]
 
 # print out the entire Web SDK web page
-html = (
+INDEX_HTML = (
     """<!DOCTYPE html>
 <html>
   <head>
@@ -125,7 +125,7 @@ class Server(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
-            self.wfile.write(html.encode("utf-8"))
+            self.wfile.write(INDEX_HTML.encode("utf-8"))
         else:
             try:
                 with open("./static" + self.path, "rb") as f:
