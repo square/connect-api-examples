@@ -1,102 +1,116 @@
 #!/usr/bin/env python
 # coding: utf-8
 import configparser
+import logging
+
+from square.client import Client
 
 # To read your secret credentials
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read("config.ini")
 
 
 # Retrive credentials based on is_prod
 config_type = config.get("DEFAULT", "environment").upper()
-payment_form_url = "https://js.squareup.com/v2/paymentform" if config_type == "PRODUCTION" else "https://js.squareupsandbox.com/v2/paymentform";
-app_id = config.get(config_type, "square_application_id")
+payment_form_url = (
+    "https://web.squarecdn.com/v1/square.js"
+    if config_type == "PRODUCTION"
+    else "https://sandbox.web.squarecdn.com/v1/square.js"
+)
+application_id = config.get(config_type, "square_application_id")
 location_id = config.get(config_type, "square_location_id")
+access_token = config.get(config_type, "square_access_token")
 
-# print out the entire SqPaymentForm web page
-html = """<!DOCTYPE html>
+client = Client(
+    access_token=access_token,
+    environment=config.get("DEFAULT", "environment"),
+)
+
+account_currency = client.locations.retrieve_location(location_id=location_id).body[
+    "location"
+]["currency"]
+account_country = client.locations.retrieve_location(location_id=location_id).body[
+    "location"
+]["country"]
+
+# print out the entire Web SDK web page
+html = (
+    """<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Sample Payment Form</title>
+    <title>Make Payment</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- link to the SqPaymentForm library -->
-    <script type="text/javascript" src=""" + payment_form_url + """></script>
+    <!-- link to the Web SDK library -->
+    <script type="text/javascript" src="""
+    + payment_form_url
+    + """></script>
 
     <script type="application/javascript">
-        window.applicationId = '""" + app_id + """';
-        window.locationId = '""" + location_id + """';
+        window.applicationId = '"""
+    + application_id
+    + """';
+        window.locationId = '"""
+    + location_id
+    + """';
+        window.currency = '"""
+    + account_currency
+    + """';
+        window.country = '"""
+    + account_country
+    + """';
     </script>
 
-    <!-- link to the local SqPaymentForm initialization -->
-    <script type="text/javascript" src="/sq-payment-form.js"></script>
-
-    <!-- link to the custom styles for SqPaymentForm -->
-    <link rel="stylesheet" type="text/css" href="/sq-payment-form.css">
+    <!-- link to the custom styles for Web SDK -->
+    <link rel='stylesheet', href='/public/stylesheets/sq-payment.css' />
+    <link rel='stylesheet', href='/public/stylesheets/style.css' />
   </head>
 
   <body>
-    <!-- Begin Payment Form -->
-    <div class="sq-payment-form">
-      <!--
-        Square's JS will automatically hide these buttons if they are unsupported
-        by the current device.
-      -->
-      <div id="sq-walletbox">
-        <button id="sq-google-pay" class="button-google-pay"></button>
-        <button id="sq-apple-pay" class="sq-apple-pay"></button>
-        <button id="sq-masterpass" class="sq-masterpass"></button>
-        <div class="sq-wallet-divider">
-          <span class="sq-wallet-divider__text">Or</span>
+    <form class="payment-form" id="fast-checkout">
+      <div class="wrapper">
+        <div id="apple-pay-button" alt="apple-pay" type="button"></div>
+        <div id="google-pay-button" alt="google-pay" type="button"></div>
+        <div class="border">
+          <span>OR</span>
         </div>
-      </div>
-      <div id="sq-ccbox">
-        <!--
-          You should replace the action attribute of the form with the path of
-          the URL you want to POST the nonce to (for example, "/process-card").
 
-          You need to then make a "Charge" request to Square's Payments API with
-          this nonce to securely charge the customer.
+        <div id="ach-wrapper">
+          <label for="ach-account-holder-name">Full Name</label>
+          <input
+            id="ach-account-holder-name"
+            type="text"
+            placeholder="Jane Doe"
+            name="ach-account-holder-name"
+            autocomplete="name"
+          />
+          <span id="ach-message"></span>
+          <button id="ach-button" type="button">
+            Pay with Bank Account
+          </button>
+          <div class="border">
+            <span>OR</span>
+          </div>
+        </div>
 
-          Learn more about how to setup the server component of the payment form here:
-          https://developer.squareup.com/docs/payments-api/overview
-        -->
-        <form id="nonce-form" novalidate action="process_card.py">
-          <div class="sq-field">
-            <label class="sq-label">Card Number</label>
-            <div id="sq-card-number"></div>
-          </div>
-          <div class="sq-field-wrapper">
-            <div class="sq-field sq-field--in-wrapper">
-              <label class="sq-label">CVV</label>
-              <div id="sq-cvv"></div>
-            </div>
-            <div class="sq-field sq-field--in-wrapper">
-              <label class="sq-label">Expiration</label>
-              <div id="sq-expiration-date"></div>
-            </div>
-            <div class="sq-field sq-field--in-wrapper">
-              <label class="sq-label">Postal</label>
-              <div id="sq-postal-code"></div>
-            </div>
-          </div>
-          <div class="sq-field">
-            <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
-              Pay $1.00 Now
-            </button>
-          </div>
-          <!--
-            After a nonce is generated it will be assigned to this hidden input field.
-          -->
-          <div id="error"></div>
-          <input type="hidden" id="card-nonce" name="nonce">
-        </form>
+        <div id="card-container"></div>
+        <button id="card-button" type="button">
+          Pay with Card
+        </button>
+        <span id="payment-flow-message">
       </div>
-    </div>
-    <!-- End Payment Form -->
-</body>
+    </form>
+    <script type="text/javascript" src="/public/js/sq-ach.js"></script>
+    <script type="text/javascript" src="/public/js/sq-apple-pay.js"></script>
+    <script type="text/javascript" src="/public/js/sq-google-pay.js"></script>
+    <script type="text/javascript" src="/public/js/sq-card-pay.js"></script>
+  </body>
+
+  <!-- link to the local Web SDK initialization -->
+  <script type="text/javascript" src="/public/js/sq-payment-flow.js"></script>
 </html>
 """
+)
 print(html)
