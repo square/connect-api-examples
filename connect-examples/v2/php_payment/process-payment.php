@@ -3,26 +3,16 @@
 // Note this line needs to change if you don't use Composer:
 // require('square-php-sdk/autoload.php');
 require 'vendor/autoload.php';
+include 'utils/square-client.php';
 
 use Dotenv\Dotenv;
 use Square\Models\Money;
 use Square\Models\CreatePaymentRequest;
 use Square\Exceptions\ApiException;
-use Square\SquareClient;
 
 // dotenv is used to read from the '.env' file created for credentials
 $dotenv = Dotenv::create(__DIR__);
 $dotenv->load();
-
-// The access token to use in all Connect API requests.
-// Set your environment as *sandbox* if you're just testing things out.
-$access_token =  getenv('SQUARE_ACCESS_TOKEN');    
-
-// Initialize the Square client.
-$client = new SquareClient([
-  'accessToken' => $access_token,  
-  'environment' => getenv('ENVIRONMENT')
-]);
 
 // Helps ensure this code has been reached via form submission
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
@@ -32,15 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
   return;
 }
 
-// Fail if the card form didn't send a value for `nonce` to the server
-$nonce = $_POST['nonce'];
-if (is_null($nonce)) {
-  echo 'Invalid card data';
-  http_response_code(422);
-  return;
-}
+$json = file_get_contents('php://input');
+$data = json_decode($json);
+$token = $data->token;
 
-$payments_api = $client->getPaymentsApi();
+// square_cliet is from utils/square-client.php
+$payments_api = $square_client->getSquareClient()->getPaymentsApi();
 
 // To learn more about splitting payments with additional recipients,
 // see the Payments API documentation on our [developer site]
@@ -51,39 +38,26 @@ $money = new Money();
   // This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
 $money->setAmount(100);
   // Set currency to the currency for the location
-$currency = $client->getLocationsApi()->retrieveLocation(getenv('SQUARE_LOCATION_ID'))->getResult()->getLocation()->getCurrency();
-$money->setCurrency($currency);
+$money->setCurrency($square_client->getCurrency());
 
   // Every payment you process with the SDK must have a unique idempotency key.
   // If you're unsure whether a particular payment succeeded, you can reattempt
   // it with the same idempotency key without worrying about double charging
   // the buyer.
-$create_payment_request = new CreatePaymentRequest($nonce, uniqid(), $money);
+$create_payment_request = new CreatePaymentRequest($token, uniqid(), $money);
 
 // The SDK throws an exception if a Connect endpoint responds with anything besides
 // a 200-level HTTP code. This block catches any exceptions that occur from the request.
+#header('Content-type: application/json');
 try {
   $response = $payments_api->createPayment($create_payment_request);
   // If there was an error with the request we will
   // print them to the browser screen here
-  if ($response->isError()) {
-    echo 'Api response has Errors';
-    $errors = $response->getErrors();
-    echo '<ul>';
-    foreach ($errors as $error) {
-        echo '<li>❌ ' . $error->getDetail() . '</li>';
-    }
-    echo '</ul>';
-    exit();
+  if ($response->isSuccess()) {
+    echo json_encode($response->getResult());
+  } else {
+    echo json_encode($response->getErrors());
   }
-  echo '<pre>';
-  print_r($response);
-  echo '</pre>';
 } catch (ApiException $e) {
-  echo 'Caught exception!<br/>';
-  echo('<strong>Response body:</strong><br/>');
-  echo '<pre>'; var_dump($e->getResponseBody()); echo '</pre>';
-  echo '<br/><strong>Context:</strong><br/>';
-  echo '<pre>'; var_dump($e->getContext()); echo '</pre>';
-  exit();
+  echo json_encode(array('errors' => $e));
 }
