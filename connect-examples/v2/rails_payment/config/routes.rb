@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  post 'charges/charge_card'
+  post 'process-payment' => 'payments#process_payment'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
