@@ -5,7 +5,7 @@ async function CardPay(formEl) {
   const card = await payments.card({
     style: {
       '.input-container.is-focus': {
-        borderColor: '#006AFF',
+        borderColor: '#006AFF'
       },
       '.message-text.is-error': {
         color: '#BF0020'

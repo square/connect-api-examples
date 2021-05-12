@@ -4,6 +4,8 @@ async function GooglePay(buttonEl) {
   const paymentRequest = window.getPaymentRequest();
   const req = await payments.paymentRequest(paymentRequest);
   const googlePay = await payments.googlePay(req);
+
+  await googlePay.attach('#google-pay-button'); 
   const googlePayButton = buttonEl;
 
   async function eventHandler(event) {

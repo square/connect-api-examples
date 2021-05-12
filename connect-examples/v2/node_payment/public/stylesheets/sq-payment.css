@@ -44,15 +44,7 @@
 }
 
 #fast-checkout button {
-  background: rgba(0, 106, 255, 1);
   width: 100%;
-  font-size: 16px;
-  line-height: 18px;
-  padding: 15px;
-  border-radius: 6px;
-  border: none;
-  display: block;
-  color: white;
 }
 
 #fast-checkout button#apple-pay-button {
@@ -64,15 +56,6 @@
   padding: 13px;
 }
 
-#fast-checkout button#google-pay-button {
-  background: black;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: #555;
-  display: flex;
-  justify-content: center;
-  line-height: 18px;
-  padding: 13px;
-}
 
 #fast-checkout .border {
   color: rgba(0, 0, 0, 0.55);
@@ -92,31 +75,6 @@
   background: #FAFAFA;
   padding: 0 10px;
   left: calc(50% - 1em - 5px);
-}
-
-
-#fast-checkout .fail,
-#fast-checkout .success {
-  background: #FAFAFA;
-  color: black;
-}
-
-#fast-checkout .fail h2,
-#fast-checkout .success h2 {
-  color: rgba(0, 0, 0, 0.55);
-}
-
-#fast-checkout .fail button,
-#fast-checkout .success button {
-  background: #006AFF;
-  border-radius: 6px;
-  border: none;
-  color: white;
-}
-
-#fast-checkout p.warning {
-  text-align: center;
-  color: rgba(0, 0, 0, 0.4);
 }
 
 #ach-wrapper input:first-of-type {

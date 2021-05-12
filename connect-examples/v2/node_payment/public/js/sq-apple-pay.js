@@ -7,6 +7,7 @@ async function ApplePay(buttonEl, showApplePayElements) {
   let applePay;
   try {
     applePay = await payments.applePay(req);
+    await applePay.attach('#apple-pay-button');
   } catch (error) {
     if (error.name === 'PaymentMethodUnsupportedError') {
       document.getElementById('apple-pay-button').style.display = 'none';
