@@ -119,32 +119,33 @@ INDEX_HTML = (
 
 
 class Server(BaseHTTPRequestHandler):
+    # Helper for responding to requests
+    def _close_response(self, status_code, content_type=None, message=None):
+        self.send_response(status_code)
+        if content_type != None:
+            self.send_header("Content-type", content_type)
+        self.end_headers()
+        self.wfile.write(message)
+
     def do_GET(self):
         # Serve the index.html, else a static file
         if self.path == "" or self.path == "/":
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            self.wfile.write(INDEX_HTML.encode("utf-8"))
+            self._close_response(
+                status_code=200,
+                content_type="text/html",
+                message=INDEX_HTML.encode("utf-8"),
+            )
         else:
             try:
                 with open("./static" + self.path, "rb") as f:
                     data = f.read()
-                self.send_response(200)
-                self.end_headers()
-                self.wfile.write(data)
+                self._close_response(status_code=200, message=data)
             except FileNotFoundError:
-                self.send_response(404)
-                self.end_headers()
-                self.wfile.write(b"not found")
+                self._close_response(status_code=404, message=b"not found")
             except PermissionError:
-                self.send_response(403)
-                self.end_headers()
-                self.wfile.write(b"no permission")
+                self._close_response(status_code=403, message=b"no permission")
             except Exception:
-                self.send_response(500)
-                self.end_headers()
-                self.wfile.write(b"error")
+                self._close_response(status_code=500, message=b"error")
 
     def do_POST(self):
         if self.path == "/process-payment":
@@ -156,16 +157,15 @@ class Server(BaseHTTPRequestHandler):
                     "utf-8"
                 )  # Gets the data itself
 
-                token = json.loads(body)["token"]
                 # length of idempotency_key should be less than 45
-                idempotency_key = uuid.uuid4()
+                idempotency_key = str(uuid.uuid4())[:45]
 
                 logging.info("Charging payment")
                 # Charge the customer's card
                 create_payment_response = client.payments.create_payment(
                     body={
-                        "source_id": token,
-                        "idempotency_key": str(idempotency_key),
+                        "source_id": json.loads(body)["token"],
+                        "idempotency_key": idempotency_key,
                         "amount_money": {
                             "amount": 100,  # $1.00 charge
                             "currency": ACCOUNT_CURRENCY,
@@ -181,19 +181,16 @@ class Server(BaseHTTPRequestHandler):
                 else:
                     raise Exception("create_payment is neither a success or has errors")
 
-                self.send_response(200)
-                self.send_header("Content-type", "application/json")
-                self.end_headers()
-                self.wfile.write(response_body.encode("utf-8"))
+                self._close_response(
+                    status_code=200,
+                    content_type="application/json",
+                    message=response_body.encode("utf-8"),
+                )
 
             except Exception:
-                self.send_response(500)
-                self.end_headers()
-                self.wfile.write(b"error")
+                self._close_response(status_code=500, message=b"error")
         else:
-            self.send_response(404)
-            self.end_headers()
-            self.wfile.write(b"not found")
+            self._close_response(status_code=404, message=b"not found")
 
 
 def run(port=8000):
