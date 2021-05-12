@@ -46,24 +46,20 @@ router.post('/process-payment', async (req, res) => {
   try {
     const { result: { payment } } = await paymentsApi.createPayment(requestBody);
     
-    // You can uncomment the follow code and perform further processing
-    // on the result
-    /*
     const result = JSON.stringify(payment, (key, value) => {
       return typeof value === "bigint" ? parseInt(value) : value;
     }, 4);
-    */
-
-    res.json({
-      title: 'Payment Successful!'
+    
+    res.status(200).json({
+      result: result
     });
   } catch (error) {
     let result = JSON.stringify(error, null, 4);
     if (error.errors) {
       result = JSON.stringify(error.errors, null, 4);
     }
-    res.json({
-      title: 'Payment Failure.'
+    res.status(500).json({
+      errors: result
     });
   }
 });

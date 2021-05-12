@@ -31,7 +31,12 @@ window.createPayment = async function createPayment(token) {
   })
   .then(response => response.json())
   .then(data => {
-    document.getElementById('message').innerHTML = data.title;
+    if (data.errors) {
+      document.getElementById('message').innerHTML = data.errors[0].detail;
+    } else {
+      document.getElementById('message').innerHTML = 'Payment Successful!';
+    }
+    
   })
   .catch((error) => {
     console.error('Error:', error);
