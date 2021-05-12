@@ -1,5 +1,5 @@
-async function ApplePay(htmlEl) {
-  const paymentRequest = await payments.paymentRequest(
+async function ApplePay(buttonEl) {
+  const paymentRequest = payments.paymentRequest(
     // Use global method from sq-payment-flow.js
     window.getPaymentRequest()
   );
@@ -31,6 +31,5 @@ async function ApplePay(htmlEl) {
     }
   }
 
-  htmlEl.addEventListener('click', eventHandler);
+  buttonEl.addEventListener('click', eventHandler);
 }
-

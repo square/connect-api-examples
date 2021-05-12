@@ -1,4 +1,4 @@
-async function CardPay(htmlEl, buttonEl) {
+async function CardPay(fieldEl, buttonEl) {
   // Create a card payment object and attach to page
   const card = await window.payments.card({
     style: {
@@ -10,7 +10,7 @@ async function CardPay(htmlEl, buttonEl) {
       }
     }
   });
-  await card.attach(htmlEl);
+  await card.attach(fieldEl);
 
   async function eventHandler(event) {
     // Clear any existing messages

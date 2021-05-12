@@ -1,10 +1,10 @@
-async function GooglePay(htmlEl) {
-  const paymentRequest = await window.payments.paymentRequest(
+async function GooglePay(buttonEl) {
+  const paymentRequest = window.payments.paymentRequest(
     // Use global method from sq-payment-flow.js
     window.getPaymentRequest()
   );
   const googlePay = await payments.googlePay(paymentRequest);
-  await googlePay.attach(htmlEl);
+  await googlePay.attach(buttonEl);
 
   async function eventHandler(event) {
     // Clear any existing messages
@@ -25,6 +25,5 @@ async function GooglePay(htmlEl) {
     }
   }
 
-  htmlEl.addEventListener('click', eventHandler);
+  buttonEl.addEventListener('click', eventHandler);
 }
-
