@@ -23,40 +23,39 @@
 
 <body>
 <!-- Begin Payment Form -->
-<form class="payment-form" id="fast-checkout">
-  <div class="wrapper">
-    <button id="apple-pay-button" alt="apple-pay">
-      <img src="images/Apple Pay.svg">
-    </button>
-    <button id="google-pay-button" alt="google-pay">
-      <img src="images/GPay.svg">
-    </button>
-    <div class="border"><span>
-        OR
-        </span></div>
-    <div id="ach-wrapper">
-      <label for="ach-first-name"></label>
-      <input id="ach-first-name" type="text" placeholder="First Name"
-             name="account-holder-first-name"/>
-      <label for="ach-last-name"></label>
-      <input id="ach-last-name" type="text" placeholder="Last Name"
-             name="account-holder-last-name"/><span id="ach-message"></span>
-      <button id="ach-button">Pay with Bank Account</button>
-      <div class="border"><span>
-          OR
-          </span></div>
+  <form class="payment-form" id="fast-checkout">
+    <div class="wrapper">
+      <div id="apple-pay-button" alt="apple-pay" type="button"></div>
+      <div id="google-pay-button" alt="google-pay" type="button"></div>
+      <div class="border">
+        <span>OR</span>
+      </div>
+      <div id="ach-wrapper">
+        <label for="ach-account-holder-name"> Full Name</label>
+        <input
+            id="ach-account-holder-name"
+            type="text"
+            placeholder="Jane Doe"
+            name="ach-account-holder-name"
+            autocomplete="name"
+        />
+        <span id="ach-message"></span>
+        <button id="ach-button" type="button">Pay with Bank Account</button>
+        <div class="border">
+          <span>OR</span>
+        </div>
+      </div>
+      <div id="card-container"></div>
+      <button id="card-button" type="button">Pay with Card</button>
+      <span id="payment-flow-message"></span>
     </div>
-    <div id="card-container"></div>
-    <button id="card-button" type="button">Pay with Card</button>
-    <span id="message"></span>
-  </div>
-</form>
-<!-- End Payment Form -->
-<script src="js/sq-ach.js"></script>
-<script src="js/sq-apple-pay.js"></script>
-<script src="js/sq-google-pay.js"></script>
-<script src="js/sq-card-pay.js"></script>
-<script src="js/sq-payment-flow.js"></script>
+  </form>
+  <!-- End Payment Form -->
+  <script src="js/sq-ach.js"></script>
+  <script src="js/sq-apple-pay.js"></script>
+  <script src="js/sq-google-pay.js"></script>
+  <script src="js/sq-card-pay.js"></script>
+  <script src="js/sq-payment-flow.js"></script>
 </body>
 
 </html>

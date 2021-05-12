@@ -1,46 +1,50 @@
 async function ACHPay(buttonEl) {
-  const payments = await Square.payments(applicationId, locationId);
-  const firstName = document.getElementById('ach-first-name');
-  const lastName = document.getElementById('ach-last-name');
-  let supported = true;
+  const accountHolderNameEl = document.getElementById('ach-account-holder-name');
+  const achMessageEl = document.getElementById("ach-message");
+  const achWrapperEl = document.getElementById("ach-wrapper");
+
+  let ach;
   try {
-    const ach = await payments.ach();
+    ach = await window.payments.ach();
+    achWrapperEl.style.display = 'block';
   } catch (e) {
     // If the ACH payment method is not supported by your account then
-    // do not show the ACH components
+    // do not enable the #ach-account-holder-name input field
     if (e.name === 'PaymentMethodUnsupportedError') {
-      document.getElementById("ach-message").innerHTML = "ACH payment is not supported by your account";
-      supported = false;
-      firstName.disabled = true;
-      lastName.disabled = true;
+      achMessageEl.innerText = "ACH payment is not supported by your account";
+      accountHolderNameEl.disabled = true;
     }
+
+    // if we can't load ACH, we shouldn't bind events for the button
+    return;
   }
 
   async function eventHandler(event) {
-    event.preventDefault();
-    if (!supported) {
+    const accountHolderName = accountHolderNameEl.value.trim()
+    if (accountHolderName === '') {
+      achMessageEl.innerText = "Please input full name";
       return;
     }
 
-    if (firstName.value == "" || lastName.value == "") {
-      document.getElementById("ach-message").innerHTML = "Please input full name";
-      return;
-    }
-
-    let accountHolderName = `${firstName.value} ${lastName.value}`;
+    // Clear any existing messages
+    window.paymentFlowMessageEl.innerText = '';
 
     try {
-      const result = ach.tokenize({ accountHolderName: accountHolderName });
+      const result = await ach.tokenize({
+        accountHolderName,
+      });
       if (result.status === 'OK') {
-        console.log(`Payment token is ${result.token}`);
         // Use global method from sq-payment-flow.js
         window.createPayment(result.token);
       }
     } catch (e) {
-      console.error(e);
+      if (e.message) {
+        window.showError(`Error: ${e.message}`);
+      } else {
+        window.showError('Something went wrong');
+      }
     }
   }
 
-  const achButton = buttonEl;
-  achButton.addEventListener('click', eventHandler);
+  buttonEl.addEventListener('click', eventHandler);
 }

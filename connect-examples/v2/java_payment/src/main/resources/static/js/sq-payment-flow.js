@@ -1,48 +1,66 @@
-async function SquarePaymentForm() {
+async function SquarePaymentFlow() {
 
   // Create card payment object and attach to page
-  CardPay(document.getElementById('card-container'));
+  CardPay(document.getElementById('card-container'), document.getElementById('card-button'));
 
   // Create Apple pay instance
-  const ApplePayButton = document.getElementById('apple-pay-button');
-  ApplePay(ApplePayButton, () => {
-    ApplePayButton.style.display = 'flex';
-  });
+  ApplePay(document.getElementById('apple-pay-button'));
 
   // Create Google pay instance
   GooglePay(document.getElementById('google-pay-button'));
 
   // Create ACH payment
   ACHPay(document.getElementById('ach-button'));
+}
 
+window.payments = Square.payments(window.applicationId, window.locationId);
+
+window.paymentFlowMessageEl = document.getElementById('payment-flow-message');
+
+window.showSuccess = function(message) {
+  window.paymentFlowMessageEl.classList.add('success');
+  window.paymentFlowMessageEl.classList.remove('error');
+  window.paymentFlowMessageEl.innerText = message;
+}
+
+window.showError = function(message) {
+  window.paymentFlowMessageEl.classList.add('error');
+  window.paymentFlowMessageEl.classList.remove('success');
+  window.paymentFlowMessageEl.innerText = message;
 }
 
 window.createPayment = async function createPayment(token) {
   const dataJsonString = JSON.stringify({
-    nonce: token
+    token
   });
 
-  fetch('charge', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: dataJsonString
-  })
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById('message').innerHTML = data.title;
-  })
-  .catch((error) => {
+  try {
+    const response = await fetch('charge', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: dataJsonString
+    });
+
+    const data = await response.json();
+    const status = response.status;
+
+    if (status !== 200) {
+      window.showError(data.title);
+    } else {
+      window.showSuccess(data.title);
+    }
+  } catch (error) {
     console.error('Error:', error);
-  });
+  }
 }
 
 // Hardcoded for testing purpose, only uses for Apple Pay and Google Pay
 window.getPaymentRequest = function() {
   return {
-    countryCode: country,
-    currencyCode: currency,
+    countryCode: window.country,
+    currencyCode: window.currency,
     lineItems: [
       { amount: '1.23', label: 'Cat', pending: false },
       { amount: '4.56', label: 'Dog', pending: false },
@@ -68,4 +86,4 @@ window.getPaymentRequest = function() {
   };
 };
 
-SquarePaymentForm();
+SquarePaymentFlow();

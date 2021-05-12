@@ -18,7 +18,6 @@ package com.squareup.connectexamples.ecommerce;
 
 import com.squareup.square.Environment;
 import com.squareup.square.api.PaymentsApi;
-import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.*;
 import com.squareup.square.SquareClient;
 import com.squareup.square.exceptions.ApiException;
@@ -29,6 +28,8 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,115 +39,121 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @SpringBootApplication
 public class Main {
-    // The environment variable containing a Square Personal Access Token.
-    // This must be set in order for the application to start.
-    private static final String SQUARE_ACCESS_TOKEN_ENV_VAR = "SQUARE_ACCESS_TOKEN";
+  // The environment variable containing a Square Personal Access Token.
+  // This must be set in order for the application to start.
+  private static final String SQUARE_ACCESS_TOKEN_ENV_VAR = "SQUARE_ACCESS_TOKEN";
 
-    // The environment variable containing a Square application ID.
-    // This must be set in order for the application to start.
-    private static final String SQUARE_APP_ID_ENV_VAR = "SQUARE_APPLICATION_ID";
+  // The environment variable containing a Square application ID.
+  // This must be set in order for the application to start.
+  private static final String SQUARE_APP_ID_ENV_VAR = "SQUARE_APPLICATION_ID";
 
-    // The environment variable containing a Square location ID.
-    // This must be set in order for the application to start.
-    private static final String SQUARE_LOCATION_ID_ENV_VAR = "SQUARE_LOCATION_ID";
+  // The environment variable containing a Square location ID.
+  // This must be set in order for the application to start.
+  private static final String SQUARE_LOCATION_ID_ENV_VAR = "SQUARE_LOCATION_ID";
 
-    // The environment variable indicate the square environment - sandbox or
-    // production.
-    // This must be set in order for the application to start.
-    private static final String SQUARE_ENV_ENV_VAR = "ENVIRONMENT";
+  // The environment variable indicate the square environment - sandbox or
+  // production.
+  // This must be set in order for the application to start.
+  private static final String SQUARE_ENV_ENV_VAR = "ENVIRONMENT";
 
-    private final SquareClient squareClient;
-    private final String squareLocationId;
-    private final String squareAppId;
-    private final String squareEnvironment;
+  private final SquareClient squareClient;
+  private final String squareLocationId;
+  private final String squareAppId;
+  private final String squareEnvironment;
 
-    public Main() throws ApiException {
-        squareEnvironment = mustLoadEnvironmentVariable(SQUARE_ENV_ENV_VAR);
-        squareAppId = mustLoadEnvironmentVariable(SQUARE_APP_ID_ENV_VAR);
-        squareLocationId = mustLoadEnvironmentVariable(SQUARE_LOCATION_ID_ENV_VAR);
+  public Main() throws ApiException {
+    squareEnvironment = mustLoadEnvironmentVariable(SQUARE_ENV_ENV_VAR);
+    squareAppId = mustLoadEnvironmentVariable(SQUARE_APP_ID_ENV_VAR);
+    squareLocationId = mustLoadEnvironmentVariable(SQUARE_LOCATION_ID_ENV_VAR);
 
-        squareClient = new SquareClient.Builder()
-            .environment(Environment.fromString(squareEnvironment))
-            .accessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR)).build();
+    squareClient = new SquareClient.Builder()
+        .environment(Environment.fromString(squareEnvironment))
+        .accessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR)).build();
+  }
+
+  public static void main(String[] args) throws Exception {
+    SpringApplication.run(Main.class, args);
+  }
+
+  private String mustLoadEnvironmentVariable(String name) {
+    String value = System.getenv(name);
+    if (value == null || value.length() == 0) {
+      throw new IllegalStateException(
+          String.format("The %s environment variable must be set", name));
     }
 
-    public static void main(String[] args) throws Exception {
-        SpringApplication.run(Main.class, args);
-    }
+    return value;
+  }
 
-    private String mustLoadEnvironmentVariable(String name) {
-        String value = System.getenv(name);
-        if (value == null || value.length() == 0) {
-            throw new IllegalStateException(String.format("The %s environment variable must be set", name));
-        }
+  @RequestMapping("/")
+  String index(Map<String, Object> model) throws InterruptedException, ExecutionException {
 
-        return value;
-    }
+    // Get currency and country for location
+    RetrieveLocationResponse locationResponse = getLocationInformation(squareClient).get();
+    model.put("paymentFormUrl",
+        squareEnvironment.equals("sandbox") ? "https://sandbox.web.squarecdn.com/v1/square.js"
+            : "https://web.squarecdn.com/v1/square.js");
+    model.put("locationId", squareLocationId);
+    model.put("appId", squareAppId);
+    model.put("currency", locationResponse.getLocation().getCurrency());
+    model.put("country", locationResponse.getLocation().getCountry());
 
-    @RequestMapping("/")
-    String index(Map<String, Object> model) throws InterruptedException, ExecutionException {
+    return "index";
+  }
 
-        // Get currency and country for location
-        RetrieveLocationResponse locationResponse = getLocationInformation(squareClient).get();
-        model.put("paymentFormUrl",
-                squareEnvironment.equals("sandbox") ? "https://sandbox.web.squarecdn.com/v1/square.js"
-                        : "https://web.squarecdn.com/v1/square.js");
-        model.put("locationId", squareLocationId);
-        model.put("appId", squareAppId);
-        model.put("currency", locationResponse.getLocation().getCurrency());
-        model.put("country", locationResponse.getLocation().getCountry());
+  @PostMapping("/charge")
+  @ResponseBody ResponseEntity<PaymentResult> charge(@RequestBody TokenWrapper tokenObject)
+      throws InterruptedException, ExecutionException {
+    // To learn more about splitting payments with additional recipients,
+    // see the Payments API documentation on our [developer site]
+    // (https://developer.squareup.com/docs/payments-api/overview).
 
-        return "index";
-    }
+    // Get currency for location
+    RetrieveLocationResponse locationResponse = getLocationInformation(squareClient).get();
+    String currency = locationResponse.getLocation().getCurrency();
 
-    @PostMapping("/charge")
-    @ResponseBody PaymentResult charge(@RequestBody NonceWrapper nonceObject) throws InterruptedException, ExecutionException {
-        // To learn more about splitting payments with additional recipients,
-        // see the Payments API documentation on our [developer site]
-        // (https://developer.squareup.com/docs/payments-api/overview).
+    Money bodyAmountMoney = new Money.Builder()
+        .amount(100L)
+        .currency(currency)
+        .build();
 
-        // Get currency for location
-        RetrieveLocationResponse locationResponse = getLocationInformation(squareClient).get();
-        String currency = locationResponse.getLocation().getCurrency();
+    CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
+        tokenObject.getToken(),
+        UUID.randomUUID().toString(),
+        bodyAmountMoney)
+        .autocomplete(true)
+        .note("From a Square sample Java app")
+        .build();
 
-        Money bodyAmountMoney = new Money.Builder()
-            .amount(100L)
-            .currency(currency)
-            .build();
-        CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
-                nonceObject.getNonce(),
-                UUID.randomUUID().toString(),
-                bodyAmountMoney)
-            .autocomplete(true)
-            .note("From a Square sample Java app")
-            .build();
+    PaymentsApi paymentsApi = squareClient.getPaymentsApi();
+    return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
+      return new ResponseEntity<>(new PaymentResult("Payment Successful!"), HttpStatus.OK);
+    }).exceptionally(exception -> {
+      System.out.println("Failed to make the request");
+      System.out.printf("Exception: %s%n", exception.getMessage());
+      // NOTE: this is for demo purposes only. You might want to return a different status code
+      // based on your application logic.
+      return new ResponseEntity<>(new PaymentResult("Payment Failure!"), HttpStatus.BAD_REQUEST);
+    }).join();
+  }
 
-        PaymentsApi paymentsApi = squareClient.getPaymentsApi();
-        return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
-            return new PaymentResult("Payment Successful!");
-        }).exceptionally(exception -> {
-            System.out.println("Failed to make the request");
-            System.out.printf("Exception: %s%n", exception.getMessage());
-            return new PaymentResult("Payment Failure.");
-        }).join();
-    }
-
-    /**
-     * Helper method that makes a retrieveLocation API call using the configured locationId
-     * and returns the future containing the response
-     * @param squareClient
-     * @return a future that holds the retrieveLocation response
-     */
-    private CompletableFuture<RetrieveLocationResponse> getLocationInformation(
-        SquareClient squareClient) {
-        return squareClient.getLocationsApi().retrieveLocationAsync(squareLocationId)
-            .thenApply(result -> {
-                return result;
-            })
-            .exceptionally(exception -> {
-                System.out.println("Failed to make the request");
-                System.out.printf("Exception: %s%n", exception.getMessage());
-                return null;
-            });
-    }
+  /**
+   * Helper method that makes a retrieveLocation API call using the configured locationId and
+   * returns the future containing the response
+   *
+   * @param squareClient the API client
+   * @return a future that holds the retrieveLocation response
+   */
+  private CompletableFuture<RetrieveLocationResponse> getLocationInformation(
+      SquareClient squareClient) {
+    return squareClient.getLocationsApi().retrieveLocationAsync(squareLocationId)
+        .thenApply(result -> {
+          return result;
+        })
+        .exceptionally(exception -> {
+          System.out.println("Failed to make the request");
+          System.out.printf("Exception: %s%n", exception.getMessage());
+          return null;
+        });
+  }
 }
