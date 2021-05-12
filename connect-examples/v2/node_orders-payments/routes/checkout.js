@@ -460,10 +460,10 @@ router.post("/payment", async (req, res, next) => {
         const result = JSON.stringify(payment, (key, value) => {
           return typeof value === "bigint" ? parseInt(value) : value;
         }, 4);
-        res.json(result);
+        res.status(200).json(result);
 
       } catch (error) {
-        res.json(error.result);
+        res.status(500).json(error.result);
       }
     }
   } catch (error) {
