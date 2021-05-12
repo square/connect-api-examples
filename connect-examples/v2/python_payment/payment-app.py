@@ -6,7 +6,6 @@ import logging
 import uuid
 import json
 
-
 from square.client import Client
 
 # To read your secret credentials
@@ -15,25 +14,25 @@ config.read("config.ini")
 
 
 # Retrieve credentials based on is_prod
-config_type = config.get("DEFAULT", "environment").upper()
-payment_form_url = (
+CONFIG_TYPE = config.get("DEFAULT", "environment").upper()
+PAYMENT_FORM_URL = (
     "https://web.squarecdn.com/v1/square.js"
-    if config_type == "PRODUCTION"
+    if CONFIG_TYPE == "PRODUCTION"
     else "https://sandbox.web.squarecdn.com/v1/square.js"
 )
-application_id = config.get(config_type, "square_application_id")
-location_id = config.get(config_type, "square_location_id")
-access_token = config.get(config_type, "square_access_token")
+APPLICATION_ID = config.get(CONFIG_TYPE, "square_application_id")
+LOCATION_ID = config.get(CONFIG_TYPE, "square_location_id")
+ACCESS_TOKEN = config.get(CONFIG_TYPE, "square_access_token")
 
 client = Client(
-    access_token=access_token,
+    access_token=ACCESS_TOKEN,
     environment=config.get("DEFAULT", "environment"),
 )
 
-account_currency = client.locations.retrieve_location(location_id=location_id).body[
+ACCOUNT_CURRENCY = client.locations.retrieve_location(location_id=LOCATION_ID).body[
     "location"
 ]["currency"]
-account_country = client.locations.retrieve_location(location_id=location_id).body[
+ACCOUNT_COUNTRY = client.locations.retrieve_location(location_id=LOCATION_ID).body[
     "location"
 ]["country"]
 
@@ -49,21 +48,21 @@ html = (
 
     <!-- link to the Web SDK library -->
     <script type="text/javascript" src="""
-    + payment_form_url
+    + PAYMENT_FORM_URL
     + """></script>
 
     <script type="application/javascript">
         window.applicationId = '"""
-    + application_id
+    + APPLICATION_ID
     + """';
         window.locationId = '"""
-    + location_id
+    + LOCATION_ID
     + """';
         window.currency = '"""
-    + account_currency
+    + ACCOUNT_CURRENCY
     + """';
         window.country = '"""
-    + account_country
+    + ACCOUNT_COUNTRY
     + """';
     </script>
 
@@ -117,12 +116,11 @@ html = (
 </html>
 """
 )
-# print(html)
 
 
 class Server(BaseHTTPRequestHandler):
     def do_GET(self):
-        # Server the index.html, else a static file
+        # Serve the index.html, else a static file
         if self.path == "" or self.path == "/":
             self.send_response(200)
             self.send_header("Content-type", "text/html")
@@ -153,10 +151,10 @@ class Server(BaseHTTPRequestHandler):
             try:
                 content_length = int(
                     self.headers["Content-Length"]
-                )  # <--- Gets the size of data
+                )  # Gets the size of data
                 body = self.rfile.read(content_length).decode(
                     "utf-8"
-                )  # <--- Gets the data itself
+                )  # Gets the data itself
 
                 token = json.loads(body)["token"]
                 # length of idempotency_key should be less than 45
@@ -170,7 +168,7 @@ class Server(BaseHTTPRequestHandler):
                         "idempotency_key": str(idempotency_key),
                         "amount_money": {
                             "amount": 100,  # $1.00 charge
-                            "currency": account_currency,
+                            "currency": ACCOUNT_CURRENCY,
                         },
                     }
                 )
@@ -181,9 +179,7 @@ class Server(BaseHTTPRequestHandler):
                 elif create_payment_response.is_error():
                     response_body = json.dumps(create_payment_response.errors)
                 else:
-                    raise Exception(
-                        "create_payment returned neither a response or errors"
-                    )
+                    raise Exception("create_payment is neither a success or has errors")
 
                 self.send_response(200)
                 self.send_header("Content-type", "application/json")
@@ -200,10 +196,10 @@ class Server(BaseHTTPRequestHandler):
             self.wfile.write(b"not found")
 
 
-def run(server_class=HTTPServer, handler_class=Server, port=8000):
+def run(port=8000):
     logging.basicConfig(level=logging.INFO)
     server_address = ("", port)
-    httpd = server_class(server_address, handler_class)
+    httpd = HTTPServer(server_address, Server)
     logging.info("Starting server at http://localhost:" + str(port) + " ...\n")
     try:
         httpd.serve_forever()
