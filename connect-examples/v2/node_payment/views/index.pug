@@ -1,6 +1,9 @@
 extends layout
 block content
-  script(type="text/javascript" src="https://sandbox.web.squarecdn.com/v1/square.js")
+  - let productionUrl = "https://web.squarecdn.com/v1/square.js";
+  - let sandBoxUrl = "https://sandbox.web.squarecdn.com/v1/square.js";
+  - let paymentFormSrc = process.env.NODE_ENV === "sandbox" ? sandBoxUrl : productionUrl;
+  script(type="text/javascript" src=paymentFormSrc)
   script(type="text/javascript").
     window.applicationId="#{squareApplicationId}";
     window.locationId="#{squareLocationId}";
@@ -9,21 +12,18 @@ block content
 
   form(class="payment-form" id="fast-checkout")
     div(class="wrapper")
-      button(id="apple-pay-button" alt="apple-pay")
-        image(src="images/Apple Pay.svg")
-      button(id="google-pay-button" alt="google-pay")
-        image(src="images/GPay.svg")
+      div(id="apple-pay-button" alt="apple-pay" type="button")
+      div(id="google-pay-button" alt="google-pay" type="button")
       div(class="border")
         span().
           OR
 
       div(id="ach-wrapper")
-        label(for="ach-first-name")
-        input(id="ach-first-name" type="text" placeholder="First Name" name="account-holder-first-name")
-        label(for="ach-last-name")
-        input(id="ach-last-name" type="text" placeholder="Last Name" name="account-holder-last-name")
+        label(for="ach-account-holder-name").
+          Full Name
+        input(id="ach-account-holder-name" type="text" placeholder="Jane Doe" name="ach-account-holder-name" autocomplete="name")
         span(id="ach-message")
-        button(id="ach-button").
+        button(id="ach-button" type="button").
           Pay with Bank Account
         div(class="border")
           span().

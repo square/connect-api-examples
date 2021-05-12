@@ -1,7 +1,6 @@
 async function ACHPay(buttonEl) {
-  const payments = await Square.payments(applicationId, locationId);
-  const firstName = document.getElementById('ach-first-name');
-  const lastName = document.getElementById('ach-last-name');
+  const payments = await Square.payments(window.applicationId, window.locationId);
+  const accountHolderName = document.getElementById('ach-account-holder-name');
   let ach;
   let supported = true;
   try {
@@ -12,26 +11,23 @@ async function ACHPay(buttonEl) {
     if (e.name === 'PaymentMethodUnsupportedError') {
       document.getElementById("ach-message").innerHTML = "ACH payment is not supported by your account";
       supported = false;
-      firstName.disabled = true;
-      lastName.disabled = true;
+      accountHolderName.disabled = true;
     }
   }
   
   async function eventHandler(event) {
-    event.preventDefault();
     if (!supported) {
       return;
     }
 
-    if (firstName.value == "" || lastName.value == "") {
+    if (accountHolderName == '') {
       document.getElementById("ach-message").innerHTML = "Please input full name";
       return;
     }
-    
-    let accountHolderName = `${firstName.value} ${lastName.value}`;
 
     try {
-      const result = ach.tokenize({ accountHolderName: accountHolderName });
+      document.getElementById('message').innerHTML = '';
+      const result = ach.tokenize({ accountHolderName: accountHolderName.value });
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);
         // Use global method from sq-payment-flow.js

@@ -1,11 +1,11 @@
 async function CardPay(formEl) {
-  const payments = Square.payments(applicationId, locationId);
+  const payments = Square.payments(window.applicationId, window.locationId);
 
   // Create a card payment object and attach to page
   const card = await payments.card({
     style: {
       '.input-container.is-focus': {
-        borderColor: '#006AFF',
+        borderColor: '#006AFF'
       },
       '.message-text.is-error': {
         color: '#BF0020'
@@ -15,8 +15,8 @@ async function CardPay(formEl) {
   await card.attach(formEl);
 
   async function eventHandler(event) {
-    event.preventDefault();
     try {
+      document.getElementById('message').innerHTML = '';
       const result = await card.tokenize();
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);

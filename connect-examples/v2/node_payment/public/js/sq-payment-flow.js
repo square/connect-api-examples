@@ -19,23 +19,30 @@ async function SquarePaymentFlow() {
 
 window.createPayment = async function createPayment(token) {
   const dataJsonString = JSON.stringify({
-    nonce: token
+    token: token
   });
 
-  fetch('process-payment', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: dataJsonString
-  })
-  .then(response => response.json())
-  .then(data => {
-    document.getElementById('message').innerHTML = data.title;
-  })
-  .catch((error) => {
+  try {
+    const response = await fetch('process-payment', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: dataJsonString
+    });
+    const data = await response.json();
+    if (data.errors && data.error.length > 0) {
+      if (data.errors[0].detail) {
+        document.getElementById('message').innerHTML = data.errors[0].detail;
+      } else {
+        document.getElementById('message').innerHTML = 'Payment failed.'
+      }
+    } else {
+      document.getElementById('message').innerHTML = 'Payment Successful!';
+    }
+  } catch(error) {
     console.error('Error:', error);
-  });
+  }
 }
 
 // Hardcoded for testing purpose, only uses for Apple Pay and Google Pay
