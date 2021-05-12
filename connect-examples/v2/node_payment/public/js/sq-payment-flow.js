@@ -4,22 +4,32 @@ async function SquarePaymentFlow() {
   CardPay(document.getElementById('card-container'), document.getElementById('card-button'));
 
   // Create Apple pay instance
-  const applePayButton = document.getElementById('apple-pay-button');
-  ApplePay(applePayButton, () => {
-    applePayButton.style.display = 'flex';
-  });
+  ApplePay(document.getElementById('apple-pay-button'));
 
   // Create Google pay instance
   GooglePay(document.getElementById('google-pay-button'));
 
   // Create ACH payment
   ACHPay(document.getElementById('ach-button'));
-
 }
 
 window.payments = Square.payments(window.applicationId, window.locationId);
 
-window.createPayment = async function createPayment(token) {
+window.paymentFlowMessageEl = document.getElementById('payment-flow-message');
+
+window.showSuccess = function(message) {
+  window.paymentFlowMessageEl.classList.add('success');
+  window.paymentFlowMessageEl.classList.remove('error');
+  window.paymentFlowMessageEl.innerText = message;
+}
+
+window.showError = function(message) {
+  window.paymentFlowMessageEl.classList.add('error');
+  window.paymentFlowMessageEl.classList.remove('success');
+  window.paymentFlowMessageEl.innerText = message;
+}
+
+window.createPayment = async function(token) {
   const dataJsonString = JSON.stringify({
     token
   });
@@ -34,15 +44,15 @@ window.createPayment = async function createPayment(token) {
     });
 
     const data = await response.json();
-    const messageEl = document.getElementById('message');
+    
     if (data.errors && data.error.length > 0) {
       if (data.errors[0].detail) {
-        messageEl.innerHTML = data.errors[0].detail;
+        window.showError(data.errors[0].detail);
       } else {
-        messageEl.innerHTML = 'Payment Failed.'
+        window.showError('Payment Failed.');
       }
     } else {
-      messageEl.innerHTML = 'Payment Successful!';
+      window.showSuccess('Payment Successful!');
     }
   } catch (error) {
     console.error('Error:', error);
@@ -50,7 +60,7 @@ window.createPayment = async function createPayment(token) {
 }
 
 // Hardcoded for testing purpose, only uses for Apple Pay and Google Pay
-window.getPaymentRequest = function () {
+window.getPaymentRequest = function() {
   return {
     countryCode: window.country,
     currencyCode: window.currency,

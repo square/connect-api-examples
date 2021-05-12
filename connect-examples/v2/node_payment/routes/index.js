@@ -25,7 +25,6 @@ router.get('/', async function (req, res) {
 
 router.post('/process-payment', async (req, res) => {
   const token = req.body.token;
-  console.log(token);
 
   // length of idempotency_key should be less than 45
   const idempotencyKey = crypto.randomBytes(22).toString('hex');
@@ -46,16 +45,16 @@ router.post('/process-payment', async (req, res) => {
 
   try {
     const { result: { payment } } = await paymentsApi.createPayment(requestBody);
-    
+
     const result = JSON.stringify(payment, (key, value) => {
       return typeof value === "bigint" ? parseInt(value) : value;
     }, 4);
-    
-    res.status(200).json({
+
+    res.json({
       result
     });
   } catch (error) {
-    res.status(500).json(error.result);
+    res.json(error.result);
   }
 });
 

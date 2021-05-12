@@ -1,38 +1,44 @@
 async function ACHPay(buttonEl) {
-  const accountHolderName = document.getElementById('ach-account-holder-name').value.trim();
+  const accountHolderNameEl = document.getElementById('ach-account-holder-name');
+  const achMessageEl = document.getElementById("ach-message");
   let ach;
   let supported = true;
   try {
     ach = await window.payments.ach();
   } catch (e) {
     // If the ACH payment method is not supported by your account then 
-    // do not show the ACH components
+    // do not enable the #ach-account-holder-name input field
     if (e.name === 'PaymentMethodUnsupportedError') {
-      document.getElementById("ach-message").innerHTML = "ACH payment is not supported by your account";
+      achMessageEl.innerText = "ACH payment is not supported by your account";
       supported = false;
-      accountHolderName.disabled = true;
-      return;
+      accountHolderNameEl.disabled = true;
     }
   }
-  
+
   async function eventHandler(event) {
+    const accountHolderName = accountHolderNameEl.value.trim()
     if (accountHolderName === '') {
-      document.getElementById("ach-message").innerHTML = "Please input full name";
+      achMessageEl.innerText = "Please input full name";
       return;
     }
 
+    // Clear any existing messages
+    window.paymentFlowMessageEl.innerText = '';
+
     try {
-      document.getElementById('message').innerHTML = '';
-      const result = ach.tokenize({ 
+      const result = ach.tokenize({
         accountHolderName,
       });
       if (result.status === 'OK') {
-        console.log(`Payment token is ${result.token}`);
         // Use global method from sq-payment-flow.js
         window.createPayment(result.token);
       }
     } catch (e) {
-      console.error(e);
+      if (e.message) {
+        window.showError(`Error: ${e.message}`);
+      } else {
+        window.showError('Something went wrong');
+      }
     }
   }
 

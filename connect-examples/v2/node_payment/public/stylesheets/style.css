@@ -1,9 +1,9 @@
 html {
-	color: #151c1f;
-	font-family: "Helvetica Neue", Helvetica, sans-serif;
-	font-size: 16px;
-	line-height: 24px;
-	-webkit-font-smoothing: antialiased
+  color: #151c1f;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
@@ -11,7 +11,7 @@ body {
   width: 100%;
   margin: 0;
 
-  background: #FFFFFF;
+  background: #ffffff;
   color: rgba(0, 0, 0, 0.55);
   font-family: "Helvetica Neue";
 }
@@ -29,9 +29,9 @@ form {
 button {
   font-family: "Helvetica Neue";
   margin: 0 auto 20px auto;
-  background-color: #3374FF;
+  background-color: #3374ff;
   padding: 12px 16px;
-  color: #FFF;
+  color: #fff;
   border-radius: 8px;
   border: none;
 }

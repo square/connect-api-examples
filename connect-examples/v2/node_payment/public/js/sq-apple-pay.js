@@ -1,4 +1,4 @@
-async function ApplePay(htmlEl, showApplePayElements) {  
+async function ApplePay(htmlEl) {
   const paymentRequest = await payments.paymentRequest(
     // Use global method from sq-payment-flow.js
     window.getPaymentRequest()
@@ -12,18 +12,22 @@ async function ApplePay(htmlEl, showApplePayElements) {
     return;
   }
 
-  showApplePayElements();
   async function eventHandler(event) {
+    // Clear any existing messages
+    window.paymentFlowMessageEl.innerText = '';
+
     try {
-      document.getElementById('message').innerHTML = '';
       const result = await applePay.tokenize();
       if (result.status === 'OK') {
-        console.log(`Payment token is ${result.token}`);
         // Use global method from sq-payment-flow.js
         window.createPayment(result.token);
       }
     } catch (e) {
-      console.error(e);
+      if (e.message) {
+        window.showError(`Error: ${e.message}`);
+      } else {
+        window.showError('Something went wrong');
+      }
     }
   }
 

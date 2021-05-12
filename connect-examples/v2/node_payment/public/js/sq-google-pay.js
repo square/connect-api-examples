@@ -4,20 +4,24 @@ async function GooglePay(htmlEl) {
     window.getPaymentRequest()
   );
   const googlePay = await payments.googlePay(paymentRequest);
-
   await googlePay.attach(htmlEl);
 
   async function eventHandler(event) {
+    // Clear any existing messages
+    window.paymentFlowMessageEl.innerText = '';
+
     try {
-      document.getElementById('message').innerHTML = '';
       const result = await googlePay.tokenize();
       if (result.status === 'OK') {
-        console.log(`Payment token is ${result.token}`);
         // Use global method from sq-payment-flow.js
         window.createPayment(result.token);
       }
     } catch (e) {
-      console.error(e);
+      if (e.message) {
+        window.showError(`Error: ${e.message}`);
+      } else {
+        window.showError('Something went wrong');
+      }
     }
   }
 
