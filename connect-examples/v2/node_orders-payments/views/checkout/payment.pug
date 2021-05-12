@@ -17,7 +17,6 @@ block append styles
     link(rel='stylesheet', href='../stylesheets/checkout.css')
     link(rel='stylesheet', href='/stylesheets/sq-payment.css')
 block append scripts
-    //- TODO: replace with production URL
     - let productionUrl = "https://web.squarecdn.com/v1/square.js";
     - let sandBoxUrl = "https://sandbox.web.squarecdn.com/v1/square.js";
     - let paymentFormSrc = process.env.NODE_ENV === "sandbox" ? sandBoxUrl : productionUrl;
