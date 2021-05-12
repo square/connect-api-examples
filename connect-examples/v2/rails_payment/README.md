@@ -16,7 +16,7 @@ There are two sections in this ReadMe.
 
 The root page has the selections for the different implementations.
 
-Ruby version: 2.5.1
+Ruby version: 2.7.2
 
 Rails version: 5.2.0
 
