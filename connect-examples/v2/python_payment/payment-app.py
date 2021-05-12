@@ -12,7 +12,6 @@ from square.client import Client
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-
 # Retrieve credentials based on is_prod
 CONFIG_TYPE = config.get("DEFAULT", "environment").upper()
 PAYMENT_FORM_URL = (
@@ -29,12 +28,11 @@ client = Client(
     environment=config.get("DEFAULT", "environment"),
 )
 
-ACCOUNT_CURRENCY = client.locations.retrieve_location(location_id=LOCATION_ID).body[
+location = client.locations.retrieve_location(location_id=LOCATION_ID).body[
     "location"
-]["currency"]
-ACCOUNT_COUNTRY = client.locations.retrieve_location(location_id=LOCATION_ID).body[
-    "location"
-]["country"]
+]
+ACCOUNT_CURRENCY =location["currency"]
+ACCOUNT_COUNTRY = location["country"]
 
 # print out the entire Web SDK web page
 INDEX_HTML = (
@@ -157,7 +155,7 @@ class Server(BaseHTTPRequestHandler):
                     "utf-8"
                 )  # Gets the data itself
 
-                logging.info("Charging payment")
+                logging.info("Creating payment")
                 # Charge the customer's card
                 create_payment_response = client.payments.create_payment(
                     body={
@@ -170,7 +168,7 @@ class Server(BaseHTTPRequestHandler):
                     }
                 )
 
-                logging.info("Charged")
+                logging.info("Payment created")
                 if create_payment_response.is_success():
                     response_body = json.dumps(create_payment_response.body)
                 elif create_payment_response.is_error():
