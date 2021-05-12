@@ -85,6 +85,10 @@
   left: calc(50% - 1em - 5px);
 }
 
+#ach-wrapper {
+  display: none;
+}
+
 #ach-wrapper input:first-of-type {
   margin-bottom: 10px;
 }
