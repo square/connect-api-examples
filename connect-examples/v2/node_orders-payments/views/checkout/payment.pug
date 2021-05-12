@@ -34,7 +34,7 @@ block content
             form(id="payment-form" action='/checkout/payment', method='post')
               div(class="panel panel-left")
                 h4(class="panel-title") Payment Details
-                div(id="card-container" class="sq-field")
+                div(id="card-container")
                 input(name='orderId', id='orderId', type='hidden', value=orderInfo.orderId)
                 input(name='locationId', id='locationId', type='hidden', value=orderInfo.locationId)
                 input(name='idempotencyKey', id='idempotencyKey', type='hidden', value=idempotencyKey)

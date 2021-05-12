@@ -13,15 +13,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-.sq-field {
+#card-container {
   margin: 24px 0px;
   width: 100%;
 }
 
-.sq-field:first-child {
+#card-container:first-child {
   margin-left: 0;
 }
 
-.sq-field:last-child {
+#card-container:last-child {
   margin-right: 0;
 }
