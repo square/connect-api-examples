@@ -14,7 +14,7 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 
-# Retrive credentials based on is_prod
+# Retrieve credentials based on is_prod
 config_type = config.get("DEFAULT", "environment").upper()
 payment_form_url = (
     "https://web.squarecdn.com/v1/square.js"
@@ -175,7 +175,7 @@ class Server(BaseHTTPRequestHandler):
                     }
                 )
 
-                logging.debug("Charged")
+                logging.info("Charged")
                 if create_payment_response.is_success():
                     response_body = json.dumps(create_payment_response.body)
                 elif create_payment_response.is_error():
@@ -201,16 +201,16 @@ class Server(BaseHTTPRequestHandler):
 
 
 def run(server_class=HTTPServer, handler_class=Server, port=8000):
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     server_address = ("", port)
     httpd = server_class(server_address, handler_class)
-    logging.info("Starting httpd at http://localhost:" + str(port) + " ...\n")
+    logging.info("Starting server at http://localhost:" + str(port) + " ...\n")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
     httpd.server_close()
-    logging.info("Stopping httpd...\n")
+    logging.info("Stopping server...\n")
 
 
 if __name__ == "__main__":
