@@ -218,3 +218,19 @@ input[type=radio]:checked + .time-option{
     width: 100%;
     margin-bottom: 8px;
 }
+
+#message {
+  width: 100%;
+  margin-top: 11px;
+  margin-bottom: 11px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: inline-block;
+  color: #BF0020;
+  text-align: center;
+}
+
+#message:empty:before {
+  content: "\200b";
+
+}
