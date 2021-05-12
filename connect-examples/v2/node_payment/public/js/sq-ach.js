@@ -1,5 +1,5 @@
 async function ACHPay(buttonEl) {
-  const payments = await Square.payments(window.applicationId, window.locationId);
+  const payments = Square.payments(window.applicationId, window.locationId);
   const accountHolderName = document.getElementById('ach-account-holder-name');
   let ach;
   let supported = true;
