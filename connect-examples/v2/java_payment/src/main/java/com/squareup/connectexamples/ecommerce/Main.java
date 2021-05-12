@@ -23,7 +23,6 @@ import com.squareup.square.models.*;
 import com.squareup.square.SquareClient;
 import com.squareup.square.exceptions.ApiException;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.Map;
 import java.util.UUID;
@@ -31,9 +30,10 @@ import java.util.concurrent.CompletableFuture;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @SpringBootApplication
@@ -84,41 +84,37 @@ public class Main {
     }
 
     @RequestMapping("/")
-    String index(Map<String, Object> model) throws ApiException {
+    String index(Map<String, Object> model) throws InterruptedException, ExecutionException {
+
+        // Get currency and country for location
+        RetrieveLocationResponse locationResponse = getLocationInformation(squareClient).get();
         model.put("paymentFormUrl",
-                squareEnvironment.equals("sandbox") ? "https://js.squareupsandbox.com/v2/paymentform"
-                        : "https://js.squareup.com/v2/paymentform");
+                squareEnvironment.equals("sandbox") ? "https://sandbox.web.squarecdn.com/v1/square.js"
+                        : "https://web.squarecdn.com/v1/square.js");
         model.put("locationId", squareLocationId);
         model.put("appId", squareAppId);
+        model.put("currency", locationResponse.getLocation().getCurrency());
+        model.put("country", locationResponse.getLocation().getCountry());
 
         return "index";
     }
 
     @PostMapping("/charge")
-    String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException, IOException, InterruptedException, ExecutionException {
+    @ResponseBody PaymentResult charge(@RequestBody NonceWrapper nonceObject) throws InterruptedException, ExecutionException {
         // To learn more about splitting payments with additional recipients,
         // see the Payments API documentation on our [developer site]
         // (https://developer.squareup.com/docs/payments-api/overview).
 
         // Get currency for location
-        LocationsApi locationsApi = squareClient.getLocationsApi();
-        CompletableFuture<RetrieveLocationResponse> locationResponse = locationsApi.retrieveLocationAsync("main")
-        .thenApply(result -> {
-          return result;
-        })
-        .exceptionally(exception -> {
-          System.out.println("Failed to make the request");
-          System.out.println(String.format("Exception: %s", exception.getMessage()));
-          return null;
-        });
-        String currency = locationResponse.get().getLocation().getCurrency();
+        RetrieveLocationResponse locationResponse = getLocationInformation(squareClient).get();
+        String currency = locationResponse.getLocation().getCurrency();
 
         Money bodyAmountMoney = new Money.Builder()
             .amount(100L)
             .currency(currency)
             .build();
         CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
-                form.getNonce(),
+                nonceObject.getNonce(),
                 UUID.randomUUID().toString(),
                 bodyAmountMoney)
             .autocomplete(true)
@@ -126,16 +122,25 @@ public class Main {
             .build();
 
         PaymentsApi paymentsApi = squareClient.getPaymentsApi();
+        return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
+            return new PaymentResult("Payment Successful!");
+        }).exceptionally(exception -> {
+            System.out.println("Failed to make the request");
+            System.out.printf("Exception: %s%n", exception.getMessage());
+            return new PaymentResult("Payment Failure.");
+        }).join();
+    }
 
-        try{
-            CreatePaymentResponse response = paymentsApi.createPayment(createPaymentRequest);
-            model.put("payment", response.getPayment());
-
-            return "charge";
-        } catch (ApiException except) {
-            model.put("error", except.getErrors().get(0));
-
-            return "error";
-        }
+    private CompletableFuture<RetrieveLocationResponse> getLocationInformation(
+        SquareClient squareClient) {
+        return squareClient.getLocationsApi().retrieveLocationAsync(squareLocationId)
+            .thenApply(result -> {
+                return result;
+            })
+            .exceptionally(exception -> {
+                System.out.println("Failed to make the request");
+                System.out.printf("Exception: %s%n", exception.getMessage());
+                return null;
+            });
     }
 }

@@ -3,7 +3,7 @@ package com.squareup.connectexamples.ecommerce;
 /**
  * NonceForm is a model object representing the payment form submission.
  */
-public class NonceForm {
+public class NonceWrapper {
     private String nonce;
 
     public String getNonce() {
