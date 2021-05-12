@@ -3,7 +3,7 @@ async function CardPay(fieldEl, buttonEl) {
   const card = await window.payments.card({
     style: {
       '.input-container.is-focus': {
-        borderColor: '#006AFF',
+        borderColor: '#006AFF'
       },
       '.message-text.is-error': {
         color: '#BF0020'
@@ -29,7 +29,7 @@ async function CardPay(fieldEl, buttonEl) {
         window.showError('Something went wrong');
       }
     }
-  }
+  };
 
   buttonEl.addEventListener('click', eventHandler);
 }

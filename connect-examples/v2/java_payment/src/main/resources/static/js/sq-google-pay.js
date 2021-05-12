@@ -3,7 +3,7 @@ async function GooglePay(buttonEl) {
       // Use global method from sq-payment-flow.js
       window.getPaymentRequest()
   );
-  const googlePay = await window.payments.googlePay(paymentRequest);
+  const googlePay = await payments.googlePay(paymentRequest);
   await googlePay.attach(buttonEl);
 
   async function eventHandler(event) {

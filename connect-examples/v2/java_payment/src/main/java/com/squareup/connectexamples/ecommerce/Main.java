@@ -22,6 +22,7 @@ import com.squareup.square.models.*;
 import com.squareup.square.SquareClient;
 import com.squareup.square.exceptions.ApiException;
 
+import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import java.util.Map;
 import java.util.UUID;
@@ -102,7 +103,7 @@ public class Main {
   }
 
   @PostMapping("/process-payment")
-  @ResponseBody ResponseEntity<PaymentResult> processPayment(@RequestBody TokenWrapper tokenObject)
+  @ResponseBody PaymentResult processPayment(@RequestBody TokenWrapper tokenObject)
       throws InterruptedException, ExecutionException {
     // To learn more about splitting payments with additional recipients,
     // see the Payments API documentation on our [developer site]
@@ -121,19 +122,17 @@ public class Main {
         tokenObject.getToken(),
         UUID.randomUUID().toString(),
         bodyAmountMoney)
-        .autocomplete(true)
-        .note("From a Square sample Java app")
         .build();
 
     PaymentsApi paymentsApi = squareClient.getPaymentsApi();
     return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
-      return new ResponseEntity<>(new PaymentResult("Payment Successful!"), HttpStatus.OK);
+      return new PaymentResult("SUCCESS", null);
     }).exceptionally(exception -> {
       System.out.println("Failed to make the request");
       System.out.printf("Exception: %s%n", exception.getMessage());
-      // NOTE: this is for demo purposes only. You might want to return a different status code
-      // based on your application logic.
-      return new ResponseEntity<>(new PaymentResult("Payment Failure!"), HttpStatus.BAD_REQUEST);
+      // NOTE: Can pass in error messages to be presented in the front end. For simplicity,
+      // we just hardcoded a simple string for now.
+      return new PaymentResult("FAILURE", Collections.singletonList("errorMessage"));
     }).join();
   }
 

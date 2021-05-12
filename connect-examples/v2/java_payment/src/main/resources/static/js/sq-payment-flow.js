@@ -29,7 +29,7 @@ window.showError = function(message) {
   window.paymentFlowMessageEl.innerText = message;
 }
 
-window.createPayment = async function createPayment(token) {
+window.createPayment = async function(token) {
   const dataJsonString = JSON.stringify({
     token
   });
@@ -44,12 +44,15 @@ window.createPayment = async function createPayment(token) {
     });
 
     const data = await response.json();
-    const status = response.status;
 
-    if (status !== 200) {
-      window.showError(data.title);
+    if (data.errors && data.errors.length > 0) {
+      if (data.errors[0].detail) {
+        window.showError(data.errors[0].detail);
+      } else {
+        window.showError('Payment Failed.');
+      }
     } else {
-      window.showSuccess(data.title);
+      window.showSuccess('Payment Successful!');
     }
   } catch (error) {
     console.error('Error:', error);
