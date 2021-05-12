@@ -1,6 +1,5 @@
 package com.squareup.connectexamples.ecommerce;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
