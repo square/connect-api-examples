@@ -12,7 +12,6 @@ window.CardPay = async function(formEl) {
   await card.attach(formEl);
 
   async function eventHandler(event) {
-    event.preventDefault();
     try {
       const result = await card.tokenize();
       if (result.status === 'OK') {
