@@ -177,7 +177,10 @@ class Server(BaseHTTPRequestHandler):
                 if create_payment_response.is_success():
                     response_body = json.dumps(create_payment_response.body)
                 elif create_payment_response.is_error():
-                    response_body = json.dumps(create_payment_response.errors)
+                    logging.debug(create_payment_response.errors)
+                    response_body = json.dumps(
+                        {"errors": create_payment_response.errors}
+                    )
                 else:
                     raise Exception("create_payment is neither a success or has errors")
 
