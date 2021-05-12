@@ -7,9 +7,8 @@ async function GooglePay(buttonEl) {
   const googlePayButton = buttonEl;
 
   async function eventHandler(event) {
-    event.preventDefault();
-
     try {
+      document.getElementById('message').innerHTML = '';
       const result = await googlePay.tokenize();
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);

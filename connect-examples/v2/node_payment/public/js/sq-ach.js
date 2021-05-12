@@ -18,7 +18,6 @@ async function ACHPay(buttonEl) {
   }
   
   async function eventHandler(event) {
-    event.preventDefault();
     if (!supported) {
       return;
     }
@@ -31,6 +30,7 @@ async function ACHPay(buttonEl) {
     let accountHolderName = `${firstName.value} ${lastName.value}`;
 
     try {
+      document.getElementById('message').innerHTML = '';
       const result = ach.tokenize({ accountHolderName: accountHolderName });
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);

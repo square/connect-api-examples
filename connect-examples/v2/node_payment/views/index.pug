@@ -12,9 +12,9 @@ block content
 
   form(class="payment-form" id="fast-checkout")
     div(class="wrapper")
-      button(id="apple-pay-button" alt="apple-pay")
+      button(id="apple-pay-button" alt="apple-pay" type="button")
         image(src="images/Apple Pay.svg")
-      button(id="google-pay-button" alt="google-pay")
+      button(id="google-pay-button" alt="google-pay" type="button")
         image(src="images/GPay.svg")
       div(class="border")
         span().
@@ -26,7 +26,7 @@ block content
         label(for="ach-last-name")
         input(id="ach-last-name" type="text" placeholder="Last Name" name="account-holder-last-name")
         span(id="ach-message")
-        button(id="ach-button").
+        button(id="ach-button" type="button").
           Pay with Bank Account
         div(class="border")
           span().

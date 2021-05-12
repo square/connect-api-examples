@@ -24,7 +24,7 @@ router.get('/', async function (req, res) {
 });
 
 router.post('/process-payment', async (req, res) => {
-  const nonce = req.body.nonce;
+  const token = req.body.token;
 
   // length of idempotency_key should be less than 45
   const idempotencyKey = crypto.randomBytes(22).toString('hex');
@@ -36,7 +36,7 @@ router.post('/process-payment', async (req, res) => {
   // Charge the customer's card
   const requestBody = {
     idempotencyKey: idempotencyKey,
-    sourceId: nonce,
+    sourceId: token,
     amountMoney: {
       amount: 100, // $1.00 charge
       currency: currency
@@ -51,16 +51,10 @@ router.post('/process-payment', async (req, res) => {
     }, 4);
     
     res.status(200).json({
-      result: result
+      result
     });
   } catch (error) {
-    let result = JSON.stringify(error, null, 4);
-    if (error.errors) {
-      result = JSON.stringify(error.errors, null, 4);
-    }
-    res.status(500).json({
-      errors: result
-    });
+    res.status(500).json(error.result);
   }
 });
 

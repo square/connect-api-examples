@@ -4,13 +4,20 @@ async function ApplePay(buttonEl, showApplePayElements) {
   const paymentRequest = window.getPaymentRequest();
   const req = await payments.paymentRequest(paymentRequest);
   const applePayButton = buttonEl;
-  const applePay = await payments.applePay(req);
+  let applePay;
+  try {
+    applePay = await payments.applePay(req);
+  } catch (error) {
+    if (error.name === 'PaymentMethodUnsupportedError') {
+      document.getElementById('apple-pay-button').style.display = 'none';
+    }
+    return;
+  }
+
   showApplePayElements();
-
   async function eventHandler(event) {
-    event.preventDefault(result.token);
-
     try {
+      document.getElementById('message').innerHTML = '';
       const result = await applePay.tokenize();
       if (result.status === 'OK') {
         console.log(`Payment token is ${result.token}`);
