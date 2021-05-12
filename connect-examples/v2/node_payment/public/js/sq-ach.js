@@ -30,7 +30,7 @@ async function ACHPay(buttonEl) {
     window.paymentFlowMessageEl.innerText = '';
 
     try {
-      const result = ach.tokenize({
+      const result = await ach.tokenize({
         accountHolderName,
       });
       if (result.status === 'OK') {
