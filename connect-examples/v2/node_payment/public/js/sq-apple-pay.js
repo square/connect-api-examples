@@ -1,17 +1,14 @@
-async function ApplePay(buttonEl, showApplePayElements) {
-  const payments = Square.payments(window.applicationId, window.locationId);
-  // Use global method from sq-payment-flow.js
-  const paymentRequest = window.getPaymentRequest();
-  const req = await payments.paymentRequest(paymentRequest);
-  const applePayButton = buttonEl;
+async function ApplePay(htmlEl, showApplePayElements) {  
+  const paymentRequest = await payments.paymentRequest(
+    // Use global method from sq-payment-flow.js
+    window.getPaymentRequest()
+  );
+
   let applePay;
   try {
-    applePay = await payments.applePay(req);
-    await applePay.attach('#apple-pay-button');
-  } catch (error) {
-    if (error.name === 'PaymentMethodUnsupportedError') {
-      document.getElementById('apple-pay-button').style.display = 'none';
-    }
+    applePay = await window.payments.applePay(paymentRequest);
+  } catch (e) {
+    console.error(e)
     return;
   }
 
@@ -30,6 +27,6 @@ async function ApplePay(buttonEl, showApplePayElements) {
     }
   }
 
-  applePayButton.addEventListener('click', eventHandler);
+  htmlEl.addEventListener('click', eventHandler);
 }
 

@@ -1,7 +1,7 @@
 async function SquarePaymentFlow() {
-  
+
   // Create card payment object and attach to page
-  CardPay(document.getElementById('card-container'));
+  CardPay(document.getElementById('card-container'), document.getElementById('card-button'));
 
   // Create Apple pay instance
   const ApplePayButton = document.getElementById('apple-pay-button');
@@ -17,9 +17,11 @@ async function SquarePaymentFlow() {
 
 }
 
+window.payments = Square.payments(window.applicationId, window.locationId);
+
 window.createPayment = async function createPayment(token) {
   const dataJsonString = JSON.stringify({
-    token: token
+    token
   });
 
   try {
@@ -30,26 +32,28 @@ window.createPayment = async function createPayment(token) {
       },
       body: dataJsonString
     });
+
     const data = await response.json();
+    const messageEl = document.getElementById('message');
     if (data.errors && data.error.length > 0) {
       if (data.errors[0].detail) {
-        document.getElementById('message').innerHTML = data.errors[0].detail;
+        messageEl.innerHTML = data.errors[0].detail;
       } else {
-        document.getElementById('message').innerHTML = 'Payment failed.'
+        messageEl.innerHTML = 'Payment Failed.'
       }
     } else {
-      document.getElementById('message').innerHTML = 'Payment Successful!';
+      messageEl.innerHTML = 'Payment Successful!';
     }
-  } catch(error) {
+  } catch (error) {
     console.error('Error:', error);
   }
 }
 
 // Hardcoded for testing purpose, only uses for Apple Pay and Google Pay
-window.getPaymentRequest = function() {
+window.getPaymentRequest = function () {
   return {
-    countryCode: country,
-    currencyCode: currency,
+    countryCode: window.country,
+    currencyCode: window.currency,
     lineItems: [
       { amount: '1.23', label: 'Cat', pending: false },
       { amount: '4.56', label: 'Dog', pending: false },

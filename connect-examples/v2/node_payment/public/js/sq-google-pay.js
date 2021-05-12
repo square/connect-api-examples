@@ -1,12 +1,11 @@
-async function GooglePay(buttonEl) {
-  const payments = Square.payments(window.applicationId, window.locationId);
-  // Use global method from sq-payment-flow.js
-  const paymentRequest = window.getPaymentRequest();
-  const req = await payments.paymentRequest(paymentRequest);
-  const googlePay = await payments.googlePay(req);
+async function GooglePay(htmlEl) {
+  const paymentRequest = await window.payments.paymentRequest(
+    // Use global method from sq-payment-flow.js
+    window.getPaymentRequest()
+  );
+  const googlePay = await payments.googlePay(paymentRequest);
 
-  await googlePay.attach('#google-pay-button'); 
-  const googlePayButton = buttonEl;
+  await googlePay.attach(htmlEl);
 
   async function eventHandler(event) {
     try {
@@ -22,6 +21,6 @@ async function GooglePay(buttonEl) {
     }
   }
 
-  googlePayButton.addEventListener('click', eventHandler);
+  htmlEl.addEventListener('click', eventHandler);
 }
 

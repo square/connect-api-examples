@@ -25,6 +25,7 @@ router.get('/', async function (req, res) {
 
 router.post('/process-payment', async (req, res) => {
   const token = req.body.token;
+  console.log(token);
 
   // length of idempotency_key should be less than 45
   const idempotencyKey = crypto.randomBytes(22).toString('hex');

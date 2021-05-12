@@ -1,4 +1,4 @@
-.payment-form, .messages {
+.payment-form {
   height: 800px;
   width: 100%;
   max-width: 1000px;
@@ -13,7 +13,7 @@
 }
 
 @media (max-width: 1050px) {
-  .payment-form, .messages {
+  .payment-form {
       border-radius: 0;
       margin: 0;
       height: 110vh;
@@ -22,10 +22,19 @@
 }
 
 @media (max-width: 600px) {
-  .payment-form, .messages {
+  .payment-form {
       padding: 30px;
       box-sizing: border-box;
   }
+}
+
+#apple-pay-button {
+  height: 48px;
+  width: 100%;
+  display: inline-block;
+  -webkit-appearance: -apple-pay-button;
+  -apple-pay-button-type: plain;
+  -apple-pay-button-style: black;
 }
 
 #fast-checkout {
@@ -85,7 +94,6 @@
   width: 100%;
   margin-top: 11px;
   margin-bottom: 11px;
-  font-family: "Square Market",Arial,sans-serif;
   font-size: 14px;
   display: inline-block;
   color: #BF0020;

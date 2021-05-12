@@ -1,8 +1,6 @@
-async function CardPay(htmlEl) {
-  const payments = Square.payments(window.applicationId, window.locationId);
-
+async function CardPay(htmlEl, buttonEl) {
   // Create a card payment object and attach to page
-  const card = await payments.card({
+  const card = await window.payments.card({
     style: {
       '.input-container.is-focus': {
         borderColor: '#006AFF'
@@ -28,6 +26,5 @@ async function CardPay(htmlEl) {
     }
   };
 
-  const cardButton = document.getElementById('card-button');
-  cardButton.addEventListener('click', eventHandler);
+  buttonEl.addEventListener('click', eventHandler);
 }
