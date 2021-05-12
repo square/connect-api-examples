@@ -9,10 +9,10 @@ window.createPayment = async function createPayment(token) {
   const idempotencyKey = document.getElementById('idempotencyKey').value;
   
   const dataJsonString = JSON.stringify({
-    token: token,
-    locationId: locationId,
-    orderId: orderId,
-    idempotencyKey: idempotencyKey,
+    token,
+    locationId,
+    orderId,
+    idempotencyKey,
   });
 
   try {
@@ -24,7 +24,6 @@ window.createPayment = async function createPayment(token) {
       body: dataJsonString
     });
     const data = await response.json();
-    console.log(data);
     if (data.errors && data.errors.length > 0) {
       if (data.errors[0].detail) {
         document.getElementById('message').innerHTML = data.errors[0].detail;
