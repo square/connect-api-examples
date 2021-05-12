@@ -422,7 +422,7 @@ router.post("/payment", async (req, res, next) => {
     orderId,
     locationId,
     idempotencyKey,
-    nonce,
+    token,
   } = req.body;
 
   try {
@@ -436,7 +436,7 @@ router.post("/payment", async (req, res, next) => {
       try {
         // Payment can only be made when order amount is greater than 0
         const { result: { payment } } = await paymentsApi.createPayment({
-          sourceId: nonce, // Card nonce created by the payment form
+          sourceId: token, // Card nonce created by the payment form
           idempotencyKey,
           amountMoney: order.totalMoney, // Provides total amount of money and currency to charge for the order.
           orderId: order.id, // Order that is associated with the payment

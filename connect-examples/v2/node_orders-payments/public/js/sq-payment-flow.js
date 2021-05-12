@@ -4,11 +4,15 @@ async function SquarePaymentFlow() {
 }
 
 window.createPayment = async function createPayment(token) {
+  const locationId = document.getElementById('locationId').value;
+  const orderId = document.getElementById('orderId').value;
+  const idempotencyKey = document.getElementById('idempotencyKey').value;
+  
   const dataJsonString = JSON.stringify({
-    nonce: token,
-    locationId: document.getElementById('locationId').value,
-    orderId: document.getElementById('orderId').value,
-    idempotencyKey: document.getElementById('idempotencyKey').value
+    token: token,
+    locationId: locationId,
+    orderId: orderId,
+    idempotencyKey: idempotencyKey,
   });
 
   try {
@@ -28,7 +32,7 @@ window.createPayment = async function createPayment(token) {
         document.getElementById('message').innerHTML = 'Payment failed.'
       }
     } else {
-      window.location.href = `/order-confirmation?orderId=${document.getElementById('orderId').value}&locationId=${document.getElementById('locationId').value}`;
+      window.location.href = `/order-confirmation?orderId=${orderId}&locationId=${locationId}`;
     }
   } catch(error) {
     console.error('Error:', error);
