@@ -4,9 +4,9 @@ async function SquarePaymentFlow() {
   CardPay(document.getElementById('card-container'), document.getElementById('card-button'));
 
   // Create Apple pay instance
-  const ApplePayButton = document.getElementById('apple-pay-button');
-  ApplePay(ApplePayButton, () => {
-    ApplePayButton.style.display = 'flex';
+  const applePayButton = document.getElementById('apple-pay-button');
+  ApplePay(applePayButton, () => {
+    applePayButton.style.display = 'flex';
   });
 
   // Create Google pay instance
