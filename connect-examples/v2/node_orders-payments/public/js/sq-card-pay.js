@@ -1,4 +1,4 @@
-window.CardPay = async function(htmlEl, buttonEl) {
+window.CardPay = async function(fieldEl, buttonEl) {
   const payments = Square.payments(window.applicationId, window.locationId);
 
   // Create a card payment object and attach to page
@@ -9,13 +9,12 @@ window.CardPay = async function(htmlEl, buttonEl) {
       }
     }
   });
-  await card.attach(htmlEl);
+  await card.attach(fieldEl);
 
   async function eventHandler(event) {
     try {
       const result = await card.tokenize();
       if (result.status === 'OK') {
-        console.log(`Payment token is ${result.token}`);
         // Use global method from sq-payment-flow.js
         window.createPayment(result.token);
       }
