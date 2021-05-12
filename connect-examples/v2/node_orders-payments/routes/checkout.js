@@ -424,6 +424,7 @@ router.post("/payment", async (req, res, next) => {
     idempotencyKey,
     nonce,
   } = req.body;
+
   try {
     // get the latest order information in case the price is changed from a different session
     const { result: { orders } } = await ordersApi.batchRetrieveOrders({
@@ -432,24 +433,39 @@ router.post("/payment", async (req, res, next) => {
     });
     const order = orders[0];
     if (order.totalMoney.amount > 0) {
-      // Payment can only be made when order amount is greater than 0
-      await paymentsApi.createPayment({
-        sourceId: nonce, // Card nonce created by the payment form
-        idempotencyKey,
-        amountMoney: order.totalMoney, // Provides total amount of money and currency to charge for the order.
-        orderId: order.id, // Order that is associated with the payment
-      });
-    } else {
-      // Settle an order with a total of 0.
-      await ordersApi.payOrder(orderId, {
-        idempotencyKey
-      });
-    }
+      try {
+        // Payment can only be made when order amount is greater than 0
+        const { result: { payment } } = await paymentsApi.createPayment({
+          sourceId: nonce, // Card nonce created by the payment form
+          idempotencyKey,
+          amountMoney: order.totalMoney, // Provides total amount of money and currency to charge for the order.
+          orderId: order.id, // Order that is associated with the payment
+        });
+    
+        const result = JSON.stringify(payment, (key, value) => {
+          return typeof value === "bigint" ? parseInt(value) : value;
+        }, 4);
+        res.json(result);
 
-    // redirect to order confirmation page once the order is paid
-    res.redirect(
-      `/order-confirmation?orderId=${order.id}&locationId=${order.locationId}`
-    );
+      } catch (error) {
+        res.json(error.result);
+      }
+    } else {
+      try{
+        // Settle an order with a total of 0.
+        const { result: { payment } } = await ordersApi.payOrder(orderId, {
+          idempotencyKey
+        });
+
+        const result = JSON.stringify(payment, (key, value) => {
+          return typeof value === "bigint" ? parseInt(value) : value;
+        }, 4);
+        res.json(result);
+
+      } catch (error) {
+        res.json(error.result);
+      }
+    }
   } catch (error) {
     next(error);
   }
