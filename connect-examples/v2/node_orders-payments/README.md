@@ -1,6 +1,6 @@
 # Useful Links
 
-* [Square Node.js SDK Page](https://developer.squareup.com/docs/sdks/nodejs)
+* [Square Node.js SDK](https://developer.squareup.com/docs/sdks/nodejs)
 * [Orders API - Order Ahead Overview](https://developer.squareup.com/docs/orders-api/order-ahead-usecase)
 * [Catalog API Overview](https://developer.squareup.com/docs/catalog-api/what-it-does)
 * [Payments API Overview](https://developer.squareup.com/docs/payments)
