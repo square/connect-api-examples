@@ -1,6 +1,6 @@
 # Useful Links
 
-- [Python SDK Page](https://developer.squareup.com/docs/sdks/python)
+- [Square Python SDK](https://developer.squareup.com/docs/sdks/python)
 - [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
 - [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
 - [Payments API Overview](https://developer.squareup.com/docs/payments)
@@ -48,12 +48,12 @@ You can then visit `localhost:8000` in your browser to see the card form.
 If you're using your sandbox credentials, you can test a valid credit card
 transaction by providing the following card information in the form:
 
-- Card Number 4111 1111 1111 1111
-- Card CVV 111
-- Card Expiration (Any time in the future)
-- Card Postal Code (Any valid US postal code)
+- Card Number: `4111 1111 1111 1111`
+- Card CVV: `111`
+- Card Expiration: `12/24` (Any time in the future)
+- Card Postal Code: `12345` (Any valid US postal code)
 
-You can find more testing values in this [article](https://docs.connect.squareup.com/articles/using-sandbox)
+You can find more testing values in this [article](https://developer.squareup.com/docs/testing/test-values)
 
 **Note that if you are _not_ using your sandbox credentials and you enter _real_
 credit card information, YOU WILL CHARGE THE CARD.**
@@ -64,12 +64,12 @@ This Python application implements the Square Online payment solution to charge 
 
 Square Online payment solution is a 2-step process:
 
-1. Generate a token - Using the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) you accept payment source information and generate a secure payment token.
+1. Generate a token - Use the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) to accept payment source information and generate a secure payment token.
 
    NOTE: The Web Payments SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
 2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2
-   **Payments** API, you charge the payment source using the sure payment token.
+   **Payments** API, you charge the payment source using the secure payment token.
 
 The following sections describe how the Python sample implements these steps.
 
@@ -85,7 +85,7 @@ def read_root():
 
 which downloads and executes the following scripts:
 
-**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareupstaging.com/reference/sdks/web/payments).
+**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments).
 
 **sq-payment-flow.js** - This code provides two things:
 
@@ -132,7 +132,7 @@ which downloads and executes the following scripts:
 
 ### Step 2: Charge the Payment Source Using the Token
 
-All the remaining actions take place in the **main.py** file. This server-side component uses the Square Python SDK library to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
+All the remaining actions take place in the **main.py** file. This server-side component uses the [Square Python SDK](https://developer.squareup.com/docs/sdks/python) to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
 
 ```python
 ...
