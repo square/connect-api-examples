@@ -17,6 +17,7 @@ package com.squareup.catalog.demo.example;
 
 import static java.util.Collections.singletonList;
 
+import com.squareup.square.models.ListCatalogResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,8 +44,6 @@ import com.squareup.square.models.CatalogTax;
  */
 public class DeduplicateTaxesExample extends Example {
 
-  private String cursor = null;
-
   public DeduplicateTaxesExample(Logger logger) {
     super("deduplicate_taxes", "Merge identical taxes (same name, percentage, and inclusion type).",
         logger);
@@ -53,6 +52,7 @@ public class DeduplicateTaxesExample extends Example {
   @Override
   public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
 
+    String cursor = null;
     // A map that allows us to look up a tax based on his name, percentage, and inclusion type.
     Map<String, DuplicateTaxInfo> taxInfoMap = new HashMap<>();
     // The list of taxes that we need to update.
@@ -63,39 +63,36 @@ public class DeduplicateTaxesExample extends Example {
     Long catalogVersion = null;
 
     do {
-      catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.TAX.toString(), catalogVersion)
-          .thenAccept(result -> {
-            if (checkAndLogErrors(result.getErrors())) {
-              return;
-            }
-            List<CatalogObject> taxes =
-                result.getObjects() == null ? new ArrayList<>() : result.getObjects();
-            for (CatalogObject tax : taxes) {
-              String key = createTaxKey(tax);
-              DuplicateTaxInfo duplicateTaxInfo;
-              if (!taxInfoMap.containsKey(key)) {
-                // If this is the first time we've seen this tax, add it to the map.
-                duplicateTaxInfo = new DuplicateTaxInfo(tax);
-                taxInfoMap.put(key, duplicateTaxInfo);
-              } else {
-                // Otherwise, merge this tax into the first occurrence of the tax. The first
-                // time we find a duplicate, we add the tax to list of taxes that need to be updated.
-                duplicateTaxInfo = taxInfoMap.get(key);
-                duplicateTaxInfo.mergeDuplicate(tax, logger);
-                if (!duplicateTaxInfo.foundDuplicate) {
-                  duplicateTaxInfo.markObjectAsDuplicate();
-                  taxesToUpdate.add(duplicateTaxInfo.masterTax);
-                }
-                taxIdsToDelete.add(tax.getId());
-              }
-            }
-            // Move to the next page.
-            cursor = result.getCursor();
-          }).exceptionally(exception -> {
-            // Log exception, return null.
-            logger.error(exception.getMessage());
-            return null;
-      }).join();
+      ListCatalogResponse result =
+          catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.TAX.toString(), catalogVersion)
+              .join();
+      if (checkAndLogErrors(result.getErrors())) {
+        return;
+      }
+
+      List<CatalogObject> taxes =
+          result.getObjects() == null ? new ArrayList<>() : result.getObjects();
+      for (CatalogObject tax : taxes) {
+        String key = createTaxKey(tax);
+        DuplicateTaxInfo duplicateTaxInfo;
+        if (!taxInfoMap.containsKey(key)) {
+          // If this is the first time we've seen this tax, add it to the map.
+          duplicateTaxInfo = new DuplicateTaxInfo(tax);
+          taxInfoMap.put(key, duplicateTaxInfo);
+        } else {
+          // Otherwise, merge this tax into the first occurrence of the tax. The first
+          // time we find a duplicate, we add the tax to list of taxes that need to be updated.
+          duplicateTaxInfo = taxInfoMap.get(key);
+          duplicateTaxInfo.mergeDuplicate(tax, logger);
+          if (!duplicateTaxInfo.foundDuplicate) {
+            duplicateTaxInfo.markObjectAsDuplicate();
+            taxesToUpdate.add(duplicateTaxInfo.masterTax);
+          }
+          taxIdsToDelete.add(tax.getId());
+        }
+      }
+      // Move to the next page.
+      cursor = result.getCursor();
     } while (cursor != null);
 
     CompletableFuture<BatchUpsertCatalogObjectsResponse> updateResponseFuture =
