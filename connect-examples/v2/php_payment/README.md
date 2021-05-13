@@ -55,7 +55,7 @@ From the sample's root directory, run:
 
     php -S localhost:8000
 
-You can then visit `localhost:8000` in your browser to see the payment form.
+You can then visit [`localhost:8000`](http://localhost:8000) in your browser to see the payment form.
 
 If you're using your sandbox credentials, you can test a valid credit card
 payment by providing the following card information in the form:
@@ -165,6 +165,5 @@ if ($response->isSuccess()) {
 }
 ...
 ```
-
 
 
