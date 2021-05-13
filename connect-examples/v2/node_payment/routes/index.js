@@ -35,11 +35,11 @@ router.post('/process-payment', async (req, res) => {
 
   // Charge the customer's card
   const requestBody = {
-    idempotencyKey: idempotencyKey,
+    idempotencyKey,
     sourceId: token,
     amountMoney: {
       amount: 100, // $1.00 charge
-      currency: currency
+      currency
     }
   };
 
