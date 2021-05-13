@@ -34,7 +34,7 @@ Do not use quotes around the strings in the `config.ini` file.
 
 If you're just testing things out, it's recommended that you use your _sandbox_
 credentials for now. See
-[this article](https://docs.connect.squareup.com/articles/using-sandbox/)
+[this article](https://developer.squareup.com/docs/testing/sandbox)
 for more information on the API sandbox.
 
 ## Running the sample
