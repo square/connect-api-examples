@@ -1,7 +1,7 @@
 # Demonstrates a Sinatra server listening for webhook notifications from the Square Connect API
 #
 # See Webhooks Overview for more information:
-# https://docs.connect.squareup.com/api/connect/v1/#webhooks-overview
+# https://developer.squareup.com/docs/webhooks-api/v1-tech-ref
 #
 # This sample requires the following gems:
 #   sinatra (http://www.sinatrarb.com/)
@@ -36,10 +36,10 @@ REQUEST_HEADERS = { 'Authorization' => 'Bearer ' + ACCESS_TOKEN,
 # Retrieves payments by the IDs provided in webhook notifications.
 #
 # Note that you need to set your application's webhook URL from your application dashboard
-# to receive these notifications. In this sample, if your host's base URL is 
+# to receive these notifications. In this sample, if your host's base URL is
 # http://example.com, you'd set your webhook URL to http://example.com/events.
 post '/events' do
-  
+
   # Get the JSON body and HMAC-SHA1 signature of the incoming POST request
   callback_body = request.body.string
   callback_signature = request.env['HTTP_X_SQUARE_SIGNATURE']
@@ -76,7 +76,7 @@ end
 
 # Validates HMAC-SHA1 signatures included in webhook notifications to ensure notifications came from Square
 def is_valid_callback(callback_body, callback_signature)
-  
+
   # Combine your webhook notification URL and the JSON body of the incoming request into a single string
   string_to_sign = WEBHOOK_URL + callback_body
 

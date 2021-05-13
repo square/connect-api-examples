@@ -55,6 +55,6 @@ This will start the server on `localhost:8888`, which you can navigate to in you
 
 
 For more information about Checkout please visit:
-* https://docs.connect.squareup.com/payments/checkout/overview
-* https://docs.connect.squareup.com/api/connect/v2#navsection-checkout
+* https://developer.squareup.com/docs/checkout-api-overview
+* https://developer.squareup.com/reference/square/checkout-api
 * https://github.com/square/square-php-sdk/blob/master/docs/Api/CheckoutApi.md

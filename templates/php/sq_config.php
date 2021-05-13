@@ -4,7 +4,7 @@
  *
  * This template provides useful constants and skeleton functions that can make
  * working with Connect SDKs easier. You can find more information on how to
- * use these templates at [docs.connect.squareup.com]
+ * use these templates at [developer.squareup.com/docs]
  */
 
 /**

@@ -3,7 +3,7 @@
 # Demonstrates a server listening for webhook notifications from the Square Connect API
 #
 # See Webhooks Overview for more information:
-# https://docs.connect.squareup.com/api/connect/v1/#webhooks-overview
+# https://developer.squareup.com/docs/webhooks-api/v1-tech-ref
 #
 # To install Python on Windows:
 # https://www.python.org/download/
