@@ -6,16 +6,16 @@ require 'vendor/autoload.php';
 include 'utils/location-info.php';
 
 use Dotenv\Dotenv;
+use Square\SquareClient;
 use Square\Models\Money;
 use Square\Models\CreatePaymentRequest;
-use Square\SquareClient;
+use Square\Exceptions\ApiException;
 use Ramsey\Uuid\Uuid;
 
 // dotenv is used to read from the '.env' file created for credentials
 $dotenv = Dotenv::create(__DIR__);
 $dotenv->load();
 
-// Helps ensure this code has been reached via form submission
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
   error_log('Received a non-POST request');
   echo 'Request not allowed';
@@ -45,20 +45,20 @@ $money->setAmount(100);
 // Set currency to the currency for the location
 $money->setCurrency($location_info->getCurrency());
 
+try {
 // Every payment you process with the SDK must have a unique idempotency key.
 // If you're unsure whether a particular payment succeeded, you can reattempt
 // it with the same idempotency key without worrying about double charging
 // the buyer.
-$create_payment_request = new CreatePaymentRequest($token, Uuid::uuid4(), $money);
+  $create_payment_request = new CreatePaymentRequest($token, Uuid::uuid4(), $money);
 
-// The SDK throws an exception if a Connect endpoint responds with anything besides
-// a 200-level HTTP code. This block catches any exceptions that occur from the request.
-#header('Content-type: application/json');
-$response = $payments_api->createPayment($create_payment_request);
-// If there was an error with the request we will
-// print them to the browser screen here
-if ($response->isSuccess()) {
-  echo json_encode($response->getResult());
-} else {
-  echo json_encode($response->getErrors());
+  $response = $payments_api->createPayment($create_payment_request);
+
+  if ($response->isSuccess()) {
+    echo json_encode($response->getResult());
+  } else {
+    echo json_encode($response->getErrors());
+  }
+} catch (ApiException $e) {
+  echo json_encode(array('errors' => $e));
 }
