@@ -4,7 +4,7 @@
     ViewData["Title"] = "Check Out";
 }
 @section Scripts {
-    <!-- link to the SqPaymentForm library -->
+    <!-- link to the Web Payment SDK library -->
     <script type="text/javascript" src="@Model.WebPaymentsSdkUrl"></script>
     <script type="text/javascript">
         window.applicationId = "@Model.ApplicationId";
@@ -12,7 +12,7 @@
         window.country = "@Model.Country";
         window.currency = "@Model.Currency";
     </script>
-    <!-- link to the local SqPaymentForm initialization -->
+    <!-- link to the local Web Payment SDK initialization -->
     <script type="text/javascript" src="~/js/sq-ach.js"></script>
     <script type="text/javascript" src="~/js/sq-apple-pay.js"></script>
     <script type="text/javascript" src="~/js/sq-google-pay.js"></script>
@@ -20,7 +20,7 @@
     <script type="text/javascript" src="~/js/sq-payment-flow.js"></script>
 }
 @section Styles {
-  <!-- link to the local SqPaymentForm style customization -->
+  <!-- link to the local css style customization -->
     <link rel="stylesheet" href="~/css/style.css" />
     <link rel="stylesheet" href="~/css/sq-payment.css" />
 }
@@ -45,9 +45,8 @@
         <span>OR</span>
       </div>
     </div>
-    <div id="card-container">
-      <button id="card-button" type="button">Pay with Card</button>
-      <span id="payment-flow-message"></span>
-    </div>
+    <div id="card-container"></div>
+    <button id="card-button" type="button">Pay with Card</button>
+    <span id="payment-flow-message"></span>
   </div>
 </form>
