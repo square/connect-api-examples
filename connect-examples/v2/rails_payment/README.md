@@ -56,7 +56,7 @@ The following sections describe how the Ruby on Rails sample implements these st
 
 When the page loads it renders the form defined in the **app/views/welcome/index.html.erb** file. The page also downloads and executes the following scripts:
 
-**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments).
+**Square Web Payments SDK** - It is a library that provides the Payment objects you use in sq-payment-flow.js. For more information about the library, see [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments).
 
 **sq-payment-flow.js** - This code provides two things:
 
