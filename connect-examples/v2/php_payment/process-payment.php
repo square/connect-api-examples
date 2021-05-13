@@ -60,5 +60,5 @@ try {
     echo json_encode($response->getErrors());
   }
 } catch (ApiException $e) {
-  echo json_encode(array('errors' => array($e)));
+  echo json_encode(array('errors' => $e));
 }
