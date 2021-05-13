@@ -1,6 +1,6 @@
 # Useful Links
 
-* [PHP SDK Page](https://developer.squareup.com/docs/sdks/php)
+* [Square PHP SDK](https://developer.squareup.com/docs/sdks/php)
 - [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
 - [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
 - [Payments API Reference](https://developer.squareup.com/reference/square/payments-api)
@@ -165,4 +165,3 @@ if ($response->isSuccess()) {
 }
 ...
 ```
-
