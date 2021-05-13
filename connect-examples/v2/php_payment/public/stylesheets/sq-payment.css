@@ -1,0 +1,125 @@
+.payment-form {
+  padding: 50px 0px 50px 0px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  border-radius: 20px;
+}
+
+.payment-form {
+  align-items: center;
+}
+
+@media (max-width: 1050px) {
+  .payment-form {
+    border-radius: 0;
+    margin: 0;
+    height: 110vh;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .payment-form {
+    padding: 30px;
+    box-sizing: border-box;
+  }
+}
+
+#apple-pay-button {
+  height: 48px;
+  width: 100%;
+  display: inline-block;
+  -webkit-appearance: -apple-pay-button;
+  -apple-pay-button-type: plain;
+  -apple-pay-button-style: black;
+}
+
+#fast-checkout {
+  background: #fafafa;
+  color: black;
+}
+
+#fast-checkout input {
+  border-radius: 6px;
+  position: relative;
+}
+
+#fast-checkout .wrapper {
+  max-width: 343px;
+  position: relative;
+}
+
+#fast-checkout button {
+  width: 100%;
+}
+
+#fast-checkout button#apple-pay-button {
+  background: white;
+  color: black;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  line-height: 18px;
+  padding: 13px;
+}
+
+#fast-checkout .border {
+  color: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.1);
+  height: 1px;
+  width: 100%;
+  margin: 30px 0;
+  font-size: 12px;
+  line-height: 20px;
+  text-transform: uppercase;
+  position: relative;
+}
+
+#fast-checkout .border span {
+  position: absolute;
+  top: -10px;
+  background: #fafafa;
+  padding: 0 10px;
+  left: calc(50% - 1em - 5px);
+}
+
+#ach-wrapper {
+  display: none;
+}
+
+#ach-wrapper input:first-of-type {
+  margin-bottom: 10px;
+}
+
+#ach-message {
+  width: 100%;
+  margin-top: 11px;
+  margin-bottom: 11px;
+  font-size: 14px;
+  display: inline-block;
+  color: #bf0020;
+}
+
+#ach-message:empty:before, #message:empty:before {
+  content: "\200b";
+}
+
+#payment-flow-message {
+  width: 100%;
+  margin-top: 11px;
+  margin-bottom: 11px;
+  height: 100px;
+  display: block;
+}
+
+#payment-flow-message.error {
+  color: #bf0020;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+#payment-flow-message.success {
+  color: #3374ff;
+}

@@ -4,75 +4,49 @@
     ViewData["Title"] = "Check Out";
 }
 @section Scripts {
-    <!-- link to the SqPaymentForm library -->
-    <script type="text/javascript" src="@Model.PaymentFormUrl"></script>
+    <!-- link to the Web Payment SDK library -->
+    <script type="text/javascript" src="@Model.WebPaymentsSdkUrl"></script>
     <script type="text/javascript">
         window.applicationId = "@Model.ApplicationId";
         window.locationId = "@Model.LocationId";
+        window.country = "@Model.Country";
+        window.currency = "@Model.Currency";
     </script>
-    <!-- link to the local SqPaymentForm initialization -->
-    <script type="text/javascript" src="~/js/sq-payment-form.js"></script>
+    <!-- link to the local Web Payment SDK initialization -->
+    <script type="text/javascript" src="~/js/sq-ach.js"></script>
+    <script type="text/javascript" src="~/js/sq-apple-pay.js"></script>
+    <script type="text/javascript" src="~/js/sq-google-pay.js"></script>
+    <script type="text/javascript" src="~/js/sq-card-pay.js"></script>
+    <script type="text/javascript" src="~/js/sq-payment-flow.js"></script>
 }
 @section Styles {
-  <!-- link to the local SqPaymentForm style customization -->
-    <link rel="stylesheet" href="~/css/sq-payment-form.css" />
+  <!-- link to the local css style customization -->
+    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/sq-payment.css" />
 }
 
-<!-- Begin Payment Form -->
-<div class="sq-payment-form">
-  <!--
-    Square's JS will automatically hide these buttons if they are unsupported
-    by the current device.
-  -->
-  <div id="sq-walletbox">
-    <button id="sq-google-pay" class="button-google-pay"></button>
-    <button id="sq-apple-pay" class="sq-apple-pay"></button>
-    <button id="sq-masterpass" class="sq-masterpass"></button>
-    <div class="sq-wallet-divider">
-      <span class="sq-wallet-divider__text">Or</span>
+<form class="payment-form" id="fast-checkout">
+  <div class="wrapper">
+    <div id="apple-pay-button" alt="apple-pay" type="button"></div>
+    <div id="google-pay-button" alt="google-pay" type="button"></div>
+    <div class="border">
+      <span>OR</span>
     </div>
+    <div id="ach-wrapper">
+      <label for="ach-account-holder-name">
+        Full Name
+      </label>
+      <input id="ach-account-holder-name" type="text" placeholder="Jane Doe" name="ach-account-holder-name" autocomplete="name" />
+      <span id="ach-message"></span>
+      <button id="ach-button" type="button">
+        Pay with Bank Account
+      </button>
+      <div class="border">
+        <span>OR</span>
+      </div>
+    </div>
+    <div id="card-container"></div>
+    <button id="card-button" type="button">Pay with Card</button>
+    <span id="payment-flow-message"></span>
   </div>
-  <div id="sq-ccbox">
-    <!--
-      You should replace the action attribute of the form with the path of
-      the URL you want to POST the nonce to (for example, "/process-card").
-
-      You need to then make a "Charge" request to Square's transaction API with
-      this nonce to securely charge the customer.
-
-      Learn more about how to setup the server component of the payment form here:
-      https://docs.connect.squareup.com/payments/transactions/processing-payment-rest
-    -->
-    <form id="nonce-form" novalidate action="ProcessPayment" method="post">
-      <div class="sq-field">
-        <label class="sq-label">Card Number</label>
-        <div id="sq-card-number"></div>
-      </div>
-      <div class="sq-field-wrapper">
-        <div class="sq-field sq-field--in-wrapper">
-          <label class="sq-label">CVV</label>
-          <div id="sq-cvv"></div>
-        </div>
-        <div class="sq-field sq-field--in-wrapper">
-          <label class="sq-label">Expiration</label>
-          <div id="sq-expiration-date"></div>
-        </div>
-        <div class="sq-field sq-field--in-wrapper">
-          <label class="sq-label">Postal</label>
-          <div id="sq-postal-code"></div>
-        </div>
-      </div>
-      <div class="sq-field">
-        <button id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)">
-          Pay $1.00 Now
-        </button>
-      </div>
-      <!--
-        After a nonce is generated it will be assigned to this hidden input field.
-      -->
-      <div id="error"></div>
-      <input type="hidden" id="card-nonce" name="nonce">
-    </form>
-  </div>
-</div>
-<!-- End Payment Form -->
+</form>

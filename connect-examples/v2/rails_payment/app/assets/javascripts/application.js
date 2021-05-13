@@ -12,3 +12,8 @@
 //
 //= require turbolinks
 
+//= require sq-ach.js
+//= require sq-apple-pay.js
+//= require sq-card-pay.js
+//= require sq-google-pay.js
+//= require sq-payment-flow.js

@@ -15,7 +15,7 @@ Square Connect API and templates to simplify use of our SDKs and APIs.
 ## Getting help
 
 Complete documentation for Square APIs is available at
-[docs.connect.squareup.com].
+[developer.squareup.com/docs].
 
 If you have questions about Square Connect API features or implementation,
 you can ask for help on [Stack Overflow] or in our [Slack community].
@@ -53,4 +53,4 @@ application's behavior in the `v1` directory.
 [SDK blog post]: https://medium.com/square-corner-blog/announcing-our-new-versions-of-our-client-sdks-1336d26e8099
 [Stack Overflow]: https://stackoverflow.com/questions/tagged/square-connect
 [Slack community]: https://squ.re/2Hks3YE
-[docs.connect.squareup.com]: https://docs.connect.squareup.com
+[developer.squareup.com/docs]: https://developer.squareup.com/docs

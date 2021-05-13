@@ -1,142 +1,152 @@
 # Useful Links
 
-* [C# (.NET) SDK Page](https://developer.squareup.com/docs/sdks/dotnet)
-* [Payments API Overview](https://developer.squareup.com/docs/payments)
-* [Payments in the API Reference](https://developer.squareup.com/reference/square/payments-api)
+* [Square .NET SDK](https://developer.squareup.com/docs/sdks/dotnet)
+- [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
+- [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
+- [Payments API Reference](https://developer.squareup.com/reference/square/payments-api)
 
-# Payment processing example: Csharp
+# Payment processing example: .NET
 
-This sample demonstrates processing card payments with Square Connect API, using the
-Square Connect C# client library and dotnet core. There are two sections in this ReadMe.
+There are two sections in this ReadMe.
 * [Setup](#setup) - Provides instructions for you to download and run the app.
 * [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the ASP.NET app.
 
 ## Setup
 
-### Requirements
+1. Open `./appsettings.json`. Specify `Environment`, and replace `AccessToken`, `LocationId`, and `ApplicationId` with your sandbox or production credentials. You can get your credentials from your Square application created at [Square Developer Portal](https://developer.squareup.com/apps).
+<b>WARNING</b>: never upload `appsettings.json` with your credentials or access token.
 
-* Download and install [.net core 2.0](https://www.microsoft.com/net/download/macos)
-* Signup a Square account from [Square website](https://squareup.com/signup)
-* You have learned the basics from [Square Developer Docs](https://docs.connect.squareup.com/)
+1. Esure you have `dotnet` instealled (`dotnet --version` in your terminal). If not, please download [.net core 2.0+](https://www.microsoft.com/net/download/)
 
-### Setup your square account
+1. Open your terminal, and run the following to build the app:
 
-1. Login to [Square Dashboard](https://squareup.com/dashboard/)
-2. Create some items from [Items Tab](https://squareup.com/dashboard/items/library)
-3. Go to [Square Developer Portal](https://connect.squareup.com/apps) and create a new application.
+    ```
+    dotnet buid
+    ```
 
-### Build the project
+1. Then, to run the server:
 
-After cloning this sample project to local, open command line tool, and from the project root directory run:
-
-    dotnet build
-
-### Provide required credentials
-
-Open `./appsettings.json`, specify "Environment" and replace "AccessToken", "LocationId" and "ApplicationId" with the ids you get from your square application created in [Square Developer Portal](https://connect.squareup.com/apps).
-<b>WARNING</b>: never upload `appsettings.json` with your credentials/access_token.
-
-If you're just testing things out, it's recommended that you use your _sandbox_
-credentials for now. See
-[this article](https://docs.connect.squareup.com/articles/using-sandbox/)
-for more information on the API sandbox.
-
-## Running the sample
-
-Run the command from the project root directory:
-
+    ```
     dotnet run
+    ```
 
-Then you can visit:
+1. Open a browser and navigate to [localhost:5000](http://localhost:5000)
 
-    http://localhost:5000
+1. Test with different payment options. For more information on testing in sandbox mode, follow the guide: [Testing using the API sandbox](https://developer.squareup.com/docs/testing/sandbox)
 
-* You'll see a simple payment form that will charge $1.00.
-* You can test a valid credit card transaction by providing the following card information in the form:
-
-    * Card Number 4532 7597 3454 5858
-    * Card CVV 111
-    * Card Expiration (Any time in the future)
-    * Card Postal Code (Any valid US postal code)
-
-You can find more testing values in this [article](https://docs.connect.squareup.com/articles/using-sandbox)
-
-**Note that if you are _not_ using your sandbox credentials and you enter _real_
-credit card information, YOU WILL CHARGE THE CARD.**
 
 ## Application Flow
 
-This is an ASP.NET Core Razor application. The web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
+This ASP.NET Core Razor application implements the Square Online payment solution to charge a payment source (debit card, credit card, ACH transfers, and digital wallet payment methods).
 
-Square Online payment solution is a 2-step process: 
+Square Online payment solution is a 2-step process:
 
-1. Generate a nonce -  Using a Square Payment Form (a client-side JavaScript library 
-called the **SqPaymentForm**) you accept payment source information and generate a secure payment token (nonce).
+1. Generate a token - Use the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) to accept payment source information and generate a secure payment token.
 
-    NOTE: The SqPaymentForm library renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token (nonce). For more information, see https://docs.connect.squareup.com/payments/sqpaymentform/what-it-does.
 
-    After embeded the Square Payment form in your web application, it will look similar to the following screenshot:
+   NOTE: The Web Payments SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
-    <img src="./PaymentFormExample.png" width="300"/>
 
-2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 Payments API, you charge the payment source using the nonce.
+2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2
+   **Payments** API, you charge the payment source using the secure payment token.
 
-### Step 1: Generate a Nonce
+The following sections describe how the C# sample implements these steps.
 
-When the webpage loads it renders the Square Payment form defined in the **index.cshtml**  file. The page also downloads and executes the following scripts defined in the view file:
+### Step 1: Generate a Token
 
-The **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
+When the page loads it renders the form defined in the **Pages/index.cshtml** file. The page also downloads and executes the following scripts:
 
-**sq-payment-form.js** - This code provides two things:
+**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments).
 
-* Initializes the **SqPaymentForm** object by initializing various 
-[configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail). For example,
+**sq-payment-flow.js** - This code provides two things:
 
-    * Maps the **SqPaymentForm.cardNumber** configuration field to corresponding form field:  
+- Initializes objects for various supported payment methods including card payments, bank payments, and digital wallet payments. Each of the following files handles unique client logic for a specific payment method to generate a payment token:
 
-        ```javascript
-        cardNumber: {
-            elementId: 'sq-card-number',               
-            placeholder: '•••• •••• •••• ••••'
+  - `sq-card-pay.js`
+  - `sq-ach.js`
+  - `sq-google-pay.js`
+  - `sq-apple-pay.js`
+
+- Provides the global method that fires a `fetch` request to the server after receiving the payment token.
+  ```javascript
+  window.createPayment = async function(token) {
+    const dataJsonString = JSON.stringify({
+      token
+    });
+
+    try {
+      const response = await fetch('process-payment', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: dataJsonString
+      });
+
+      const data = await response.json();
+
+      if (data.errors && data.errors.length > 0) {
+        if (data.errors[0].detail) {
+          window.showError(data.errors[0].detail);
+        } else {
+          window.showError('Payment Failed.');
         }
-        ```
-    * **SqPaymentForm.cardNonceResponseReceived** is one of the callbacks the code provides implementation for. 
+      } else {
+        window.showSuccess('Payment Successful!');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  ```
 
-* Provides the **onGetCardNonce** event handler code that executes after you choose click **Pay $1.00 Now**.
+### Step 2: Charge the Payment Source Using the Token
 
-After the buyer enters their information in the form and clicks **Pay $1 Now**, the application does the following: 
+All the remaining actions take place in the **Pages/ProcessPayment.cshtml.cs** file. This server-side component uses the Square .NET SDK library to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
 
-* The **onGetCardNonce** event handler executes. It first generates a nonce by calling the **SqPaymentForm.requestCardNonce** function.
-* **SqPaymentForm.requestCardNonce** invokes **SqPaymentForm.cardNonceResponseReceived** callback. This callback  assigns the nonce to a form field and posts the form to the payment processing page:
-
-    ```javascript
-    document.getElementById('card-nonce').value = nonce;
-    document.getElementById('nonce-form').submit();  
-    ```
-
-    This invokes the form action **ProcessPayment**, described in next step.
-
-### Step 2: Charge the Payment Source Using the Nonce 
+### Step 2: Charge the Payment Source Using the Nonce
 All the remaining actions take place in the **ProcessPayment.cshtml.cs**.  This server-side component uses the Square .NET SDK C# wrapper library to call the Connect V2 **Payments** API to charge the payment source using the nonce.
 ```csharp
-public void OnPost()
+public async Task<IActionResult> OnPostAsync()
 {
-    string nonce = Request.Form["nonce"];
-    IPaymentsApi paymentsApi = new PaymentsApi(this.BasePath);
-    paymentsApi.Configuration.AccessToken = this.AccessToken;
-
+    var request = JObject.Parse(await new StreamReader(Request.Body).ReadToEndAsync());
+    var token = (String)request["token"];
+    var PaymentsApi = client.PaymentsApi;
+    // Every payment you process with the SDK must have a unique idempotency key.
+    // If you're unsure whether a particular payment succeeded, you can reattempt
+    // it with the same idempotency key without worrying about double charging
+    // the buyer.
     string uuid = NewIdempotencyKey();
-    Money amount = new Money(100, "USD");
 
-    CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest(AmountMoney: amount, IdempotencyKey: uuid, SourceId: nonce);
+    // Get the currency for the location
+    var retrieveLocationResponse = await client.LocationsApi.RetrieveLocationAsync(locationId: locationId);
+    var currency = retrieveLocationResponse.Location.Currency;
+
+    // Monetary amounts are specified in the smallest unit of the applicable currency.
+    // This amount is in cents. It's also hard-coded for $1.00,
+    // which isn't very useful.
+    var amount = new Money.Builder()
+        .Amount(100L)
+        .Currency(currency)
+        .Build();
+
+    // To learn more about splitting payments with additional recipients,
+    // see the Payments API documentation on our [developer site]
+    // (https://developer.squareup.com/docs/payments-api/overview).
+    var createPaymentRequest = new CreatePaymentRequest.Builder(
+        sourceId: token,
+        idempotencyKey: uuid,
+        amountMoney: amount)
+        .Build();
+
     try
     {
-        var response = paymentsApi.CreatePayment(createPaymentRequest);
-        this.ResultMessage = "Payment complete! " + response.ToJson();
+        var response = await PaymentsApi.CreatePaymentAsync(createPaymentRequest);
+        return new JsonResult(new { payment = response.Payment });
     }
     catch (ApiException e)
     {
-        this.ResultMessage = e.Message;
+        return new JsonResult(new { errors = e.Errors });
     }
 }
 ```
@@ -158,4 +168,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-

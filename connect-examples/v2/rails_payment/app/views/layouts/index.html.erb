@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>RailsPayment</title>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-  <script type="text/javascript">
-    window.applicationId = '<%=Rails.application.secrets.square_application_id %>';
-    window.locationId = '<%=Rails.application.secrets.square_location_id %>';
-  </script>
-  <% if ENV['ENVIRONMENT'] == 'production' %>
-    <%= javascript_include_tag 'application', "https://js.squareup.com/v2/paymentform", 'data-turbolinks-track' => true%>
-  <% else %>
-    <%= javascript_include_tag 'application', "https://js.squareupsandbox.com/v2/paymentform", 'data-turbolinks-track' => true%>
-  <% end %>
-  <%= stylesheet_link_tag 'application', 'sq-payment-form', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'sq-payment-form', 'data-turbolinks-track' => true %>
-</head>
-<body>
+  <head>
+    <title>RailsPayment</title>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+    <script type="text/javascript">
+      window.applicationId = '<%=Rails.application.secrets.square_application_id %>';
+      window.locationId = '<%=Rails.application.secrets.square_location_id %>';
+    </script>
+    <%= stylesheet_link_tag 'application', 'data-turbolinks-track' => true %>
+  </head>
+  <body>
 
-<%= yield %>
+    <%= yield %>
 
-</body>
+    <!-- Load JS in a non-blocking way -->
+    <% if ENV['ENVIRONMENT'] == 'production' %>
+      <%= javascript_include_tag 'https://web.squarecdn.com/v1/square.js', 'application', 'data-turbolinks-track' => true%>
+    <% else %>
+      <%= javascript_include_tag 'https://sandbox.web.squarecdn.com/v1/square.js', 'application', 'data-turbolinks-track' => true%>
+    <% end %>
+  </body>
 </html>

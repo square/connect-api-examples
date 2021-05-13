@@ -1,0 +1,60 @@
+<div class='cursor-form'>
+  <h2 class='heading'>Square Site</h2>
+  <ul class='option-list'>
+    <% @sites.each do |site| %>
+      <li>
+        <h3 class='site-heading'><%= site['site_title'] %></h3>
+        <a href="<%= site_path(site['id']) %>"> 
+          <input type="radio" name="site-id" value="<%= site['id'] %>" <%= 'checked' if site['id'] == @site['id'] %> /> 
+        </a>
+      </li>
+    <% end %>
+  </ul>
+
+  <h2 class='heading'>Cursor Selection</h2>
+  <p>This sets the cursor visitors see when using your online store.</p>
+  <ul class='option-list'>
+    <li>
+      <h2 class='site-heading'>👉</h2>
+      <%= button_to site_snippets_path(@site['id']), params: {snippet: {emoji: "👉"}}, :method => :post do %> 
+        <input onclick="this.form.submit()" type="radio" name="emoji" value="👉" <%= 'checked' if @emoji == '👉' %> />
+      <% end %>
+    </li>
+    <li>
+      <h2 class='site-heading'>😁</h2>
+      <%= button_to site_snippets_path(@site['id']), params: {snippet: {emoji: "😁"}}, :method => :post do %> 
+        <input onclick="this.form.submit()" type="radio" name="emoji" value="😁" <%= 'checked' if @emoji == '😁' %> />
+      <% end %>
+    </li>
+    <li>
+      <h2 class='site-heading'>👻</h2>
+      <%= button_to site_snippets_path(@site['id']), params: {snippet: {emoji: "👻"}}, :method => :post do %> 
+        <input onclick="this.form.submit()" type="radio" name="emoji" value="👻" <%= 'checked' if @emoji == '👻' %> />
+      <% end %>
+    </li>
+    <li>
+      <h2 class='site-heading'>💯</h2>
+      <%= button_to site_snippets_path(@site['id']),  params: {snippet: {emoji: "💯"}}, :method => :post do %> 
+        <input onclick="this.form.submit()" type="radio" name="emoji" value="💯" <%= 'checked' if @emoji == '💯' %> />
+      <% end %>
+    </li>
+    <li>
+      <h2 class='site-heading'>🚀</h2>
+      <%= button_to site_snippets_path(@site['id']), params: {snippet: {emoji: "🚀"}}, :method => :post do %> 
+        <input onclick="this.form.submit()" type="radio" name="emoji" value="🚀" <%= 'checked' if @emoji == '🚀' %> />
+      <% end %>
+    </li>
+    <li>
+      <h2 class='site-heading'>🥕</h2>
+      <%= button_to site_snippets_path(@site['id']), params: {snippet: {emoji: "🥕"}}, :method => :post do %> 
+        <input onclick="this.form.submit()" type="radio" name="emoji" value="🥕" <%= 'checked' if @emoji == '🥕' %> />
+      <% end %>
+    </li>
+  </ul>
+  
+  <% if @snippet %> 
+    <div class='action-list'>
+      <%= button_to "Remove Custom Cursor", site_snippet_path(@snippet['site_id'], @snippet['id']), :class => 'remove-cursor', :method => :delete %> </p>
+    </div>
+  <% end %>
+</div>
