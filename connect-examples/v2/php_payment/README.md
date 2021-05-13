@@ -27,9 +27,9 @@ file. To install the client library:
 
 2. Run the following command from the directory containing `composer.json`:
 
-```
-php composer.phar install
-```
+    ```
+    php composer.phar install
+    ```
 
 ### Specify your application credentials
 

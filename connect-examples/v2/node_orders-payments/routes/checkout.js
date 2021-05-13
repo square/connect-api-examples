@@ -445,10 +445,10 @@ router.post("/payment", async (req, res, next) => {
         const result = JSON.stringify(payment, (key, value) => {
           return typeof value === "bigint" ? parseInt(value) : value;
         }, 4);
-        res.status(200).json(result);
+        res.json(result);
 
       } catch (error) {
-        res.status(500).json(error.result);
+        res.json(error.result);
       }
     } else {
       try{
@@ -460,10 +460,10 @@ router.post("/payment", async (req, res, next) => {
         const result = JSON.stringify(payment, (key, value) => {
           return typeof value === "bigint" ? parseInt(value) : value;
         }, 4);
-        res.status(200).json(result);
+        res.json(result);
 
       } catch (error) {
-        res.status(500).json(error.result);
+        res.json(error.result);
       }
     }
   } catch (error) {
