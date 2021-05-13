@@ -1,142 +1,157 @@
 # Useful Links
 
-* [Node.js SDK Page](https://developer.squareup.com/docs/sdks/nodejs)
-* [Payments API Overview](https://developer.squareup.com/docs/payments)
-* [Payments in the API Reference](https://developer.squareup.com/reference/square/payments-api)
+- [Node.js SDK Page](https://developer.squareup.com/docs/sdks/nodejs)
+- [Web Payment SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
+- [Web Payment SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
+- [Payments API Reference](https://developer.squareup.com/reference/square/payments-api)
 
 # Payment processing example: Node JS
 
 There are two sections in this ReadMe.
 
-* [Setup](#setup) - Provides instructions for you to download and run the app.
-* [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the Node.js example.
+- [Setup](#setup) - Provides instructions for you to download and run the app.
+- [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the Node.js example.
 
 ## Setup
 
-* Create a `.env` file in the root directory of this example, `.env.example` is an example of what your `.env` file should look like. Fill in values for SQUARE_APPLICATION_ID & SQUARE_ACCESS_TOKEN & SQUARE_LOCATION_ID with your sandbox or production credentials.
-<b>WARNING</b>: never save your credentials in your code.
+1. Create a file named `.env` in the root directory of this example. `.env.example` is an example of what the `.env` file should look like. Fill in values for `SQUARE_APPLICATION_ID`, `SQUARE_ACCESS_TOKEN`, and `SQUARE_LOCATION_ID` with your sandbox or production credentials.
+   <b>WARNING</b>: never save your credentials in your code.
 
-* Ensure you have npm installed (`npm -v` in your terminal). If not please follow the instructions for your OS: https://www.npmjs.com/get-npm
+1. Ensure you have npm installed (`npm -v` in your terminal). If not please follow the instructions for your OS: https://www.npmjs.com/get-npm
 
-* Open your terminal and type the following to install the packages:
-```
-npm install
-```
+1. Open your terminal and type the following to install the packages:
 
-* Then to run the server in production mode:
-```
-npm start
-```
-Or to run in sandbox mode:
-```
-npm test
-```
+   ```
+   npm install
+   ```
 
-* Open a browser and navigate to [localhost:3000](localhost:3000)
+1. Then to run the server in _production_ mode:
 
-* [Testing using the API sandbox](https://developer.squareup.com/docs/testing/sandbox)
+   ```
+   npm start
+   ```
+
+   Or to run in _sandbox_ mode:
+
+   ```
+   npm test
+   ```
+
+1. Open a browser and navigate to [localhost:3000](localhost:3000)
+
+1. Test with different payment options. For more information on testing in sandbox mode, follow the guide: [Testing using the API sandbox](https://developer.squareup.com/docs/testing/sandbox)
 
 ## Application Flow
 
-The Node JS web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
+This Node.js web application implements the Square Online payment solution to charge a payment source (debit card, credit card, ACH transfers, and digital wallet payment methods).
 
-Square Online payment solution is a 2-step process: 
+Square Online payment solution is a 2-step process:
 
-1. Generate a nonce -  Using a Square Payment Form (a client-side JavaScript library 
-called the **SqPaymentForm**) you accept payment source information and generate a secure payment token (nonce).
+1. Generate a token - Using the [Square Payments Web SDK](https://developer.squareup.com/reference/sdks/web/payments) you accept payment source information and generate a secure payment token.
 
-    NOTE: The SqPaymentForm library renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token (nonce). For more information, see https://docs.connect.squareup.com/payments/sqpaymentform/what-it-does.
+   NOTE: The Payments Web SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see https://developer.squareup.com/docs/web-payments/overview.
 
-    After embedding the Square Payment form in your web application, it will look similar to the following screenshot:
-
-    <img src="./PaymentFormExampleNode.png" width="300"/> 
-
-2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
-**Payments** API, you charge the payment source using the nonce.
+2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2
+   **Payments** API, you charge the payment source using the sure payment token.
 
 The following sections describe how the Node JS sample implements these steps.
 
-### Step 1: Generate a Nonce
+### Step 1: Generate a Token
 
-When the page loads it renders the form defined in the **views/index.pug** file. The page also downloads and executes the following scripts defined in the file:
+When the page loads it renders the form defined in the **views/index.pug** file. The page also downloads and executes the following scripts:
 
- **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform) It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://developer.squareup.com/docs/api/paymentform#navsection-paymentform). 
+**Square Payment Web SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Payments Web SDK Reference](https://developer.squareupstaging.com/reference/sdks/web/payments).
 
-**sq-payment-form.js** - This code provides two things:
+**sq-payment-flow.js** - This code provides two things:
 
-* Initializes the **SqPaymentForm** object by initializing various 
-[configuration fields](https://developer.squareup.com/docs/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://developer.squareup.com/docs/api/paymentform#_callbackfunctions_detail). For example,
+- Initializes objects for various supported payment methods including `card payment`, `bank payment`, and `digital wallet payment`. Each of the following files handles unique client logic for a specific payment method to generate a payment token:
 
-    * Maps the **SqPaymentForm.cardNumber** configuration field to corresponding form field:  
+  - sq-card-pay.js
+  - sq-ach.js
+  - sq-google-pay.js
+  - sq-apple-pay.js
 
-        ```javascript
-        cardNumber: {
-            elementId: 'sq-card-number',
-            placeholder: '•••• •••• •••• ••••'
+- Provides the global method that fires a `fetch` request to the server after receiving the payment token.
+  ```javascript
+  window.createPayment = async function(token) {
+    const dataJsonString = JSON.stringify({
+      token
+    });
+
+    try {
+      const response = await fetch('process-payment', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: dataJsonString
+      });
+
+      const data = await response.json();
+
+      if (data.errors && data.errors.length > 0) {
+        if (data.errors[0].detail) {
+          window.showError(data.errors[0].detail);
+        } else {
+          window.showError('Payment Failed.');
         }
-        ```
-    * **SqPaymentForm.cardNonceResponseReceived** is one of the callbacks the code provides implementation for. 
+      } else {
+        window.showSuccess('Payment Successful!');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  ```
 
-* Provides the **onGetCardNonce** event handler code that executes after you click **Pay $1.00 Now**.
+### Step 2: Charge the Payment Source Using the Token
 
-After the buyer enters their information in the form and clicks **Pay $1.00 Now**, the application does the following: 
+All the remaining actions take place in the **routes/index.js** file. This server-side component uses the Square Node JS SDK library to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
 
-* The **onGetCardNonce** event handler executes. It first generates a nonce by calling the **SqPaymentForm.requestCardNonce** function.
-* **SqPaymentForm.requestCardNonce** invokes **SqPaymentForm.cardNonceResponseReceived** callback. This callback  assigns the nonce to a form field and posts the form to the payment processing page:
-
-    ```javascript
-    document.getElementById('card-nonce').value = nonce;
-    document.getElementById('nonce-form').submit();  
-    ```
-
-    This invokes the form action **process-payment**, described in next step.
-
-### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **routes/index.js**.  This server-side component uses the Square Node JS SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
 ```javascript
 ...
 router.post('/process-payment', async (req, res) => {
-  const { nonce } = req.body;
+  const token = req.body.token;
 
-  // length of idempotency_key should be less than 46
+  // length of idempotency_key should be less than 45
   const idempotencyKey = uuidv4();
+
+  // get the currency for the location
+  const locationResponse = await locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID);
+  const currency = locationResponse.result.location.currency;
 
   // Charge the customer's card
   const requestBody = {
-    idempotencyKey,
-    sourceId: nonce,
+    idempotencyKey: idempotencyKey,
+    sourceId: token,
     amountMoney: {
       amount: 100, // $1.00 charge
-      currency: 'USD'
+      currency: currency
     }
   };
 
   try {
     const { result: { payment } } = await paymentsApi.createPayment(requestBody);
-    const result = JSON.stringify(payment, null, 4);
 
-    res.render('process-payment', {
-      result,
-      'title': 'Payment Successful'
+    const result = JSON.stringify(payment, (key, value) => {
+      return typeof value === "bigint" ? parseInt(value) : value;
+    }, 4);
+
+    res.json({
+      result
     });
   } catch (error) {
-    let result = JSON.stringify(error, null, 4);
-    if (error.errors) {
-      result = JSON.stringify(error.errors, null, 4);
-    }
-    res.render('process-payment', {
-      result,
-      'title': 'Payment Failure'
-    });
+    res.json(error.result);
   }
 });
 ...
-```	
+```
 
 # License
 
 Copyright 2021 Square, Inc.
 ​
+
 ```
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
