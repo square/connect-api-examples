@@ -288,14 +288,14 @@ public class Main {
    * @param locationsApi the LocationsApi utility
    */
   private void setCurrencyAcrossApplication(LocationsApi locationsApi) {
-    locationsApi.listLocationsAsync().thenAccept(result -> {
+    locationsApi.retrieveLocationAsync("main").thenAccept(result -> {
       if (checkAndLogErrors(result.getErrors(), logger)) {
         return;
       }
 
       // grab the first location for the user, and use that to determine currency.
-      if (result.getLocations() != null && result.getLocations().size() > 0) {
-        Location currentLocation = result.getLocations().get(0);
+      if (result.getLocation() != null) {
+        Location currentLocation = result.getLocation();
         Moneys.setCurrency(currentLocation.getCurrency());
       }
     }).exceptionally(exception -> {
