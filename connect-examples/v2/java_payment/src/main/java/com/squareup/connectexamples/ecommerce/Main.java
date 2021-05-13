@@ -126,11 +126,10 @@ public class Main {
     return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
       return new PaymentResult("SUCCESS", null);
     }).exceptionally(exception -> {
+      ApiException e = (ApiException) exception.getCause();
       System.out.println("Failed to make the request");
-      System.out.printf("Exception: %s%n", exception.getMessage());
-      // NOTE: Can pass in error messages to be presented in the front end. For simplicity,
-      // we just hardcoded a simple string for now.
-      return new PaymentResult("FAILURE", Collections.singletonList("errorMessage"));
+      System.out.printf("Exception: %s%n", e.getMessage());
+      return new PaymentResult("FAILURE", e.getErrors());
     }).join();
   }
 

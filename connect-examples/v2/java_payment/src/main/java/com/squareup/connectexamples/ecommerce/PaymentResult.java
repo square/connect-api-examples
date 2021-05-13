@@ -9,9 +9,9 @@ public class PaymentResult {
 
   private String title;
 
-  private List<String> errors;
+  private List<com.squareup.square.models.Error> errors;
 
-  public PaymentResult(String t, List<String> errorMessages) {
+  public PaymentResult(String t, List<com.squareup.square.models.Error> errorMessages) {
     this.title = t;
     this.errors = errorMessages;
   }
@@ -24,11 +24,11 @@ public class PaymentResult {
     return this.title;
   }
 
-  public void setErrors(List<String> errors) {
+  public void setErrors(List<com.squareup.square.models.Error> errors) {
     this.errors = errors;
   }
 
-  public List<String> getErrors() {
+  public List<com.squareup.square.models.Error> getErrors() {
     return this.errors;
   }
 }
