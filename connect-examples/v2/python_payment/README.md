@@ -85,7 +85,7 @@ def read_root():
 
 which downloads and executes the following scripts:
 
-**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments).
+**Square Web Payments SDK** - It is a library that provides the Payment objects you use in sq-payment-flow.js. For more information about the library, see [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments).
 
 **sq-payment-flow.js** - This code provides two things:
 
