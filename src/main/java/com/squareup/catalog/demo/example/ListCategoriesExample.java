@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.square.models.ListCatalogResponse;
 import java.util.List;
 
 import com.squareup.catalog.demo.Logger;
@@ -29,8 +30,6 @@ import com.squareup.square.models.CatalogObject;
  */
 public class ListCategoriesExample extends Example {
 
-  private String cursor = null;
-
   public ListCategoriesExample(Logger logger) {
     super("list_categories", "List all categories.", logger);
   }
@@ -41,33 +40,31 @@ public class ListCategoriesExample extends Example {
     // Optional parameters can be set to null.
     Long catalogVersion = null;
 
+    String cursor = null;
+
     do {
       // Retrieve a page of categories.
-      catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.CATEGORY.toString(), catalogVersion)
-          .thenAccept(result -> {
-            if (checkAndLogErrors(result.getErrors())) {
-              return;
-            }
+      ListCatalogResponse result =
+          catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.CATEGORY.toString(),
+              catalogVersion).join();
+      if (checkAndLogErrors(result.getErrors())) {
+        return;
+      }
 
-            List<CatalogObject> categories = result.getObjects();
-            if (categories == null || categories.size() == 0) {
-              if (cursor == null) {
-                logger.info("No categories found.");
-                return;
-              }
-            } else {
-              for (CatalogObject categoryObject : categories) {
-                CatalogCategory category = categoryObject.getCategoryData();
-                logger.info(category.getName() + " (" + categoryObject.getId() + ")");
-              }
-            }
-            // Move to the next page.
-            cursor = result.getCursor();
-          }).exceptionally(exception -> {
-            // Log exception, return null.
-            logger.error(exception.getMessage());
-            return null;
-          }).join();
+      List<CatalogObject> categories = result.getObjects();
+      if (categories == null || categories.size() == 0) {
+        if (cursor == null) {
+          logger.info("No categories found.");
+          return;
+        }
+      } else {
+        for (CatalogObject categoryObject : categories) {
+          CatalogCategory category = categoryObject.getCategoryData();
+          logger.info(category.getName() + " (" + categoryObject.getId() + ")");
+        }
+      }
+      // Move to the next page.
+      cursor = result.getCursor();
     } while (cursor != null);
   }
 }

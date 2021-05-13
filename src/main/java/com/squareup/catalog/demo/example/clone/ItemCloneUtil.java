@@ -79,13 +79,14 @@ public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
       newVariations.add(newVariation);
     }
 
-    // set the new variations, reset the tax IDs
+    // set the new variations, reset the tax IDs, image IDs
     return cleanObject.toBuilder()
         .itemData(oldItemData.toBuilder()
             .variations(newVariations)
             .taxIds(Collections.emptyList())
             .build())
         .presentAtAllLocations(true)
+        .imageId(null)
         .build();
   }
 }
