@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.squareup.connectexamples</groupId>
   <artifactId>connect-v2-payment-example</artifactId>
@@ -28,7 +26,7 @@
     <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>square</artifactId>
-      <version>10.0.0.20210421</version>
+      <version>11.0.0.20210513</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>

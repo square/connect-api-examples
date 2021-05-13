@@ -164,7 +164,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    square.rb (10.0.0.202104217)
+    square.rb (11.0.0.20210513)
       certifi (~> 2018.1, >= 2018.01.18)
       faraday (~> 1.0, >= 1.0.1)
       faraday-http-cache (~> 2.2)
@@ -194,7 +194,7 @@ DEPENDENCIES
   rails_12factor
   sass-rails (~> 6.0)
   spring
-  square.rb (~> 10.0.0.20210421)
+  square.rb (~> 11.0.0.20210513)
   turbolinks
   uglifier (>= 1.3.0)
 
