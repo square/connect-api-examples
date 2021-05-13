@@ -102,8 +102,7 @@
   color: #bf0020;
 }
 
-#ach-message:empty:before,
-#message:empty:before {
+#ach-message:empty:before, #message:empty:before {
   content: "\200b";
 }
 

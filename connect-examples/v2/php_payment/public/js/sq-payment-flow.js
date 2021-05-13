@@ -35,7 +35,7 @@ window.createPayment = async function(token) {
   });
 
   try {
-    const response = await fetch('process-payment.php', {
+    const response = await fetch('process-payment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ window.createPayment = async function(token) {
     });
 
     const data = await response.json();
-    
+
     if (data.errors && data.errors.length > 0) {
       if (data.errors[0].detail) {
         window.showError(data.errors[0].detail);
@@ -59,7 +59,7 @@ window.createPayment = async function(token) {
   }
 }
 
-// Hardcoded for testing purpose, only uses for Apple Pay and Google Pay
+// Hardcoded for testing purpose, only used for Apple Pay and Google Pay
 window.getPaymentRequest = function() {
   return {
     countryCode: window.country,

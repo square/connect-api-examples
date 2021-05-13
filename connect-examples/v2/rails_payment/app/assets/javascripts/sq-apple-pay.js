@@ -1,5 +1,5 @@
 async function ApplePay(buttonEl) {
-  const paymentRequest = payments.paymentRequest(
+  const paymentRequest = window.payments.paymentRequest(
     // Use global method from sq-payment-flow.js
     window.getPaymentRequest()
   );

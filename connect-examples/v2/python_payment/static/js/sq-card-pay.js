@@ -29,7 +29,7 @@ async function CardPay(fieldEl, buttonEl) {
         window.showError('Something went wrong');
       }
     }
-  };
+  }
 
   buttonEl.addEventListener('click', eventHandler);
 }

@@ -59,7 +59,7 @@ window.createPayment = async function(token) {
   }
 }
 
-// Hardcoded for testing purpose, only uses for Apple Pay and Google Pay
+// Hardcoded for testing purpose, only used for Apple Pay and Google Pay
 window.getPaymentRequest = function() {
   return {
     countryCode: window.country,
