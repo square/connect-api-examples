@@ -38,7 +38,7 @@ Create a file named `.env` in the root directory of this example. `.env.example`
    <b>WARNING</b>: never save your credentials in your code.
 
 
-Open your [application dashboard](https://developer.squareup.com/). Now supply either production, sandbox, or both credentials. Open this file and update the following variables:
+Open your [application dashboard](https://developer.squareup.com/apps). Now supply either production, sandbox, or both credentials. Open this file and update the following variables:
 * WARNING: never upload .env with your credential/access_token
 
 | Variable               |  Type    |   Description   |
@@ -165,5 +165,4 @@ if ($response->isSuccess()) {
 }
 ...
 ```
-
 
