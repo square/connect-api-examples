@@ -1,8 +1,8 @@
 # Useful Links
 
 - [Square Node.js SDK](https://developer.squareup.com/docs/sdks/nodejs)
-- [Web Payment SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
-- [Web Payment SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
+- [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
+- [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
 - [Payments API Reference](https://developer.squareup.com/reference/square/payments-api)
 
 # Payment processing example: Node JS
@@ -47,9 +47,9 @@ This Node.js web application implements the Square Online payment solution to ch
 
 Square Online payment solution is a 2-step process:
 
-1. Generate a token - Using the [Square Payments Web SDK](https://developer.squareup.com/reference/sdks/web/payments) you accept payment source information and generate a secure payment token.
+1. Generate a token - Using the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) you accept payment source information and generate a secure payment token.
 
-   NOTE: The Payments Web SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
+   NOTE: The Web Payments SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
 2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2
    **Payments** API, you charge the payment source using the sure payment token.
@@ -60,7 +60,7 @@ The following sections describe how the Node JS sample implements these steps.
 
 When the page loads it renders the form defined in the **views/index.pug** file. The page also downloads and executes the following scripts:
 
-**Square Payment Web SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareupstaging.com/reference/sdks/web/payments).
+**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareupstaging.com/reference/sdks/web/payments).
 
 **sq-payment-flow.js** - This code provides two things:
 
