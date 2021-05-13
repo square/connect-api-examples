@@ -5,12 +5,12 @@
 - [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
 - [Payments API Reference](https://developer.squareup.com/reference/square/payments-api)
 
-# Payment processing example: Node JS
+# Payment processing example: Node.js
 
-There are two sections in this ReadMe.
+There are two sections in this README.
 
 - [Setup](#setup) - Provides instructions for you to download and run the app.
-- [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the Node.js example.
+- [Application Flow](#application-flow) - Provides an overview of how the Square Web Payments SDK integrates in the Node.js example.
 
 ## Setup
 
@@ -39,7 +39,10 @@ There are two sections in this ReadMe.
 
 1. Open a browser and navigate to [localhost:3000](localhost:3000)
 
-1. Test with different payment options. For more information on testing in sandbox mode, follow the guide: [Testing using the API sandbox](https://developer.squareup.com/docs/testing/sandbox)
+1. Test with different payment options. For more information on testing in sandbox mode, follow the guide: [Testing using the API sandbox](https://developer.squareup.com/docs/testing/sandbox). You can find more testing values in this [article](https://developer.squareup.com/docs/testing/test-values).
+
+    **Note that if you are _not_ using your sandbox credentials and you enter _real_
+    credit card information, YOU WILL CHARGE THE CARD.**
 
 ## Application Flow
 
@@ -47,12 +50,12 @@ This Node.js web application implements the Square Online payment solution to ch
 
 Square Online payment solution is a 2-step process:
 
-1. Generate a token - Using the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) you accept payment source information and generate a secure payment token.
+1. Generate a token - Use the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) to accept payment source information and generate a secure payment token.
 
    NOTE: The Web Payments SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
 2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2
-   **Payments** API, you charge the payment source using the sure payment token.
+   **Payments** API, you charge the payment source using the secure payment token.
 
 The following sections describe how the Node JS sample implements these steps.
 
@@ -60,7 +63,7 @@ The following sections describe how the Node JS sample implements these steps.
 
 When the page loads it renders the form defined in the **views/index.pug** file. The page also downloads and executes the following scripts:
 
-**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareupstaging.com/reference/sdks/web/payments).
+**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments).
 
 **sq-payment-flow.js** - This code provides two things:
 
@@ -106,7 +109,7 @@ When the page loads it renders the form defined in the **views/index.pug** file.
 
 ### Step 2: Charge the Payment Source Using the Token
 
-All the remaining actions take place in the **routes/index.js** file. This server-side component uses the Square Node JS SDK library to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
+All the remaining actions take place in the **routes/index.js** file. This server-side component uses the [Square Node.js SDK](https://developer.squareup.com/docs/sdks/nodejs) library to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
 
 ```javascript
 ...
