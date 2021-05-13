@@ -1,130 +1,144 @@
 # Useful Links
 
-* [Java SDK Page](https://developer.squareup.com/docs/sdks/java)
-* [Payments API Overview](https://developer.squareup.com/docs/payments)
-* [Payments in the API Reference](https://developer.squareup.com/reference/square/payments-api)
+- [Square Java SDK](https://developer.squareup.com/docs/sdks/java)
+- [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
+- [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
+- [Payments API Reference](https://developer.squareup.com/reference/square/payments-api)
 
 # Java Payment Form Example
 
 This example hosts a payment form in Java. It is a Spring Boot app and requires Java 8 or newer. There are two sections in this ReadMe.
 
-* [Setup](#setup) - Provides instructions for you to download and run the app.
-* [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the Java example.
+- [Setup](#setup) - Provides instructions for you to download and run the app.
+- [Application Flow](#application-flow) - Provides an overview of how the Web Payments SDK integrates in the Java example.
 
 ## Setup
 
-First, you'll need to have created a Square application. If you haven't done this yet, you can quickly
-set on up in the [Square Developer Portal](https://developer.squareup.com/apps).
+1. Create a Square application. If you haven't done this yet, you can quickly set one up in the [Developer Dashboard](https://developer.squareup.com/apps).
 
-Once you've created an Square application, you'll need both the Application ID and the
-Personal Access Token for it. These are available in the Square Developer Portal as well.
+1. This app runs from the command line using Maven. The application expects four environment variables
+to be set: `ENVIRONMENT`, `SQUARE_APPLICATION_ID`, `SQUARE_LOCATION_ID` and `SQUARE_ACCESS_TOKEN`, 
+which correspond to either your sandbox or production credentials.
+        <b>WARNING</b>: never save your credentials in your code.
 
-If you want to test Apple Pay, you'll need to replace the contents of
-`src/main/resources/public/.well-known/apple-developer-merchantid-domain-association`.
-You can get real content for this file from the
-[Square Developer Portal](https://developer.squareup.com/apps), in the Apple Pay section of your
-application.
+1. Open the command line, and run the following command to start the app:
 
-Note that Apple Pay cannot be tested when running locally. You'll need to deploy the app to try it out.
+    ```bash
+    ENVIRONMENT=<sandbox or production> SQUARE_APPLICATION_ID=replace_me SQUARE_ACCESS_TOKEN=replace_me SQUARE_LOCATION_ID=replace_me mvn spring-boot:run
+    ```
 
+    NOTE: If the credentials are not set or are invalid, the app will fail during startup.
+    
+1. Open a browser and navigate to [localhost:5000](localhost:5000). The default port used is `5000`, but this can be configured in the `application.properties` file.
 
-## Running locally
-
-The app can be run on a command line using Maven. The application expects three environment variables
-to be set: `ENVIRONMENT`, `SQUARE_APPLICATION_ID`, `SQUARE_LOCATION_ID` and `SQUARE_ACCESS_TOKEN`. Both of these can be copied from the
-[Developer Dashboard](https://developer.squareup.com/apps). Keep in mind that the access token is
-sensitive and must remain private.
-
-To get up and running, first clone the repo to your local computer.
-Then open a command line terminal and run the following command:
-
-```bash
-# The following command sets environment variables and starts the application locally:
-ENVIRONMENT=<sandbox or production> SQUARE_APPLICATION_ID=replace_me SQUARE_ACCESS_TOKEN=replace_me SQUARE_LOCATION_ID=replace_me mvn spring-boot:run
-```
-
-After running the above command, you can open a browser and go to
-[http://localhost:5000](http://localhost:5000).
-
-The default port used is `5000`, but this can be configured in the `application.properties` file.
-
-If the credentials are not set or are invalid, the app will fail during startup.
+1. Test with different payment options. For more information on testing in sandbox mode, follow the guide: [Testing using the API sandbox](https://developer.squareup.com/docs/testing/sandbox).
 
 
 ## Application Flow
 
-The Java web application implements the Square Online payment solution to charge a payment source (debit, credit, or digital wallet payment cards).
+This Java web application implements the Square Online payment solution to charge a payment source (debit card, credit card, ACH transfers, and digital wallet payment methods).
 
-Square Online payment solution is a 2-step process: 
+Square Online payment solution is a 2-step process:
 
-1. Generate a nonce -  Using a Square Payment Form (a client-side JavaScript library 
-called the **SqPaymentForm**) you accept payment source information and generate a secure payment token (nonce).
+1. Generate a token - Use the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) to accept payment source information and generate a secure payment token.
 
-    NOTE: The SqPaymentForm library renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token (nonce). For more information, see https://docs.connect.squareup.com/payments/sqpaymentform/what-it-does.
+   NOTE: The Web Payments SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
-    After embedding the Square Payment form in your web application, it will look similar to the following screenshot:
+2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2
+   **Payments** API, you charge the payment source using the sure payment token.
 
-    <img src="./PaymentFormExampleJava.png" width="300"/>
-
-2. Charge the payment source using the nonce - Using a server-side component, that uses the Connect V2 
-**Payments** API, you charge the payment source using the nonce.
-s
 The following sections describe how the Java sample implements these steps.
 
-### Step 1: Generate a Nonce
+### Step 1: Generate a Token
 
-When the page loads it renders the form defined in the index.html file. The page also downloads and executes the following scripts defined in the file:
+When the page loads it renders the form defined in the **src/main/resources/templates/index.html** file. The page also downloads and executes the following scripts:
 
- **Square Payment Form Javascript library** (https://js.squareup.com/v2/paymentform)  It is a library that provides the SqPaymentForm object you use in the next script. For more information about the library, see [SqPaymentForm data model](https://docs.connect.squareup.com/api/paymentform#navsection-paymentform). 
+**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments).
 
-**sq-payment-form.js** - This code provides two things:
+**sq-payment-flow.js** - This code provides two things:
 
-* Initializes the **SqPaymentForm** object by initializing various 
-[configuration fields](https://docs.connect.squareup.com/api/paymentform#paymentform-configurationfields) and providing implementation for [callback functions](https://docs.connect.squareup.com/api/paymentform#_callbackfunctions_detail). For example,
+- Initializes objects for various supported payment methods including card payments, bank payments, and digital wallet payments. Each of the following files handles unique client logic for a specific payment method to generate a payment token:
 
-    * Maps the **SqPaymentForm.cardNumber** configuration field to corresponding form field:  
+  - `sq-card-pay.js`
+  - `sq-ach.js`
+  - `sq-google-pay.js`
+  - `sq-apple-pay.js`
 
-        ```javascript
-        cardNumber: {
-            elementId: 'sq-card-number',               
-            placeholder: '•••• •••• •••• ••••'
+- Provides the global method that fires a `fetch` request to the server after receiving the payment token.
+  ```javascript
+  window.createPayment = async function(token) {
+    const dataJsonString = JSON.stringify({
+      token
+    });
+
+    try {
+      const response = await fetch('process-payment', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: dataJsonString
+      });
+
+      const data = await response.json();
+
+      if (data.errors && data.errors.length > 0) {
+        if (data.errors[0].detail) {
+          window.showError(data.errors[0].detail);
+        } else {
+          window.showError('Payment Failed.');
         }
-        ```
-    * **SqPaymentForm.cardNonceResponseReceived** is one of the callbacks the code provides implementation for. 
+      } else {
+        window.showSuccess('Payment Successful!');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  ```
 
-* Provides the **onGetCardNonce** event handler code that executes after you click **Pay $1.00 Now**.
+### Step 2: Charge the Payment Source Using the Token
 
-After the buyer enters their information in the form and clicks **Pay $1 Now**, the application does the following: 
+All the remaining actions take place in the **src/main/java/com/squareup/connectexamples/ecommerce/Main.java** file. 
+This server-side component uses the [Square Java SDK](https://developer.squareup.com/docs/sdks/java) 
+to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
 
-* The **onGetCardNonce** event handler executes. It first generates a nonce by calling the **SqPaymentForm.requestCardNonce** function.
-* **SqPaymentForm.requestCardNonce** invokes **SqPaymentForm.cardNonceResponseReceived** callback. This callback  assigns the nonce to a form field and posts the form to the payment processing page:
-
-    ```javascript
-    document.getElementById('card-nonce').value = nonce;
-    document.getElementById('nonce-form').submit();  
-    ```
-
-    This invokes the form action **charge**, described in next step.
-
-### Step 2: Charge the Payment Source Using the Nonce 
-All the remaining actions take place in the **Main.java**.  This server-side component uses the Square Java SDK library to call the Connect V2 **Payments** API to charge the payment source using the nonce as shown in the following code fragment. 
 ```java
-String charge(@ModelAttribute NonceForm form, Map<String, Object> model) throws ApiException {
-    CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest()
-        .idempotencyKey(UUID.randomUUID().toString())
-        .amountMoney(new Money().amount(1_00L).currency("USD"))
-        .sourceId(form.getNonce())
-        .note("From a Square sample Java app");
+@PostMapping("/process-payment")
+@ResponseBody PaymentResult processPayment(@RequestBody TokenWrapper tokenObject)
+  throws InterruptedException, ExecutionException {
+  // To learn more about splitting payments with additional recipients,
+  // see the Payments API documentation on our [developer site]
+  // (https://developer.squareup.com/docs/payments-api/overview).
 
-    PaymentsApi paymentsApi = new PaymentsApi(squareClient);
+  // Get currency for location
+  RetrieveLocationResponse locationResponse = getLocationInformation(squareClient).get();
+  String currency = locationResponse.getLocation().getCurrency();
 
-    CreatePaymentResponse response = paymentsApi.createPayment(createPaymentRequest);
+    Money bodyAmountMoney = new Money.Builder()
+        .amount(100L)
+        .currency(currency)
+        .build();
 
-    model.put("payment", response.getPayment());
+    CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
+        tokenObject.getToken(),
+        UUID.randomUUID().toString(),
+        bodyAmountMoney)
+        .build();
 
-    return "charge";
+  PaymentsApi paymentsApi = squareClient.getPaymentsApi();
+    return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
+      return new PaymentResult("SUCCESS", null);
+    }).exceptionally(exception -> {
+      System.out.println("Failed to make the request");
+      System.out.printf("Exception: %s%n", exception.getMessage());
+      // NOTE: Can pass in error messages to be presented in the front end. For simplicity,
+      // we just hardcoded a simple string for now.
+      return new PaymentResult("FAILURE", Collections.singletonList("errorMessage"));
+    }).join();
 }
 ```
+  
 
 # License
 
