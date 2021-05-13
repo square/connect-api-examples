@@ -10,7 +10,7 @@
 There are two sections in this ReadMe.
 
 - [Setup](#setup) - Provides instructions for you to download and run the app.
-- [Application Flow](#application-flow) - Provides an overview of how the Square Payment form integrates in the Ruby on Rails example.
+- [Application Flow](#application-flow) - Provides an overview of how the Web Payments SDK integrates in the Ruby on Rails example.
 
 ## Setup
 
@@ -33,7 +33,7 @@ There are two sections in this ReadMe.
    bin/rails start
    ```
 
-1. Open a browser and navigate to [localhost:3000](localhost:3000)
+1. Open a browser and navigate to [localhost:3000](http://localhost:3000)
 
 1. Test with different payment options. For more information on testing in sandbox mode, follow the guide: [Testing using the API sandbox](https://developer.squareup.com/docs/testing/sandbox)
 
@@ -43,7 +43,7 @@ This Ruby on Rails web application implements the Square Online payment solution
 
 Square Online payment solution is a 2-step process:
 
-1. Generate a token - Using the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) you accept payment source information and generate a secure payment token.
+1. Generate a token - Use the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) to accept payment source information and generate a secure payment token.
 
    NOTE: The Web Payments SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
@@ -56,7 +56,7 @@ The following sections describe how the Ruby on Rails sample implements these st
 
 When the page loads it renders the form defined in the **app/views/welcome/index.html.erb** file. The page also downloads and executes the following scripts:
 
-**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareupstaging.com/reference/sdks/web/payments).
+**Square Web Payments SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments).
 
 **sq-payment-flow.js** - This code provides two things:
 
@@ -102,7 +102,7 @@ When the page loads it renders the form defined in the **app/views/welcome/index
 
 ### Step 2: Charge the Payment Source Using the Token
 
-All the remaining actions take place in the **app/controllers/payments_controller.rb** file. This server-side component uses the Square Ruby SDK library to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
+All the remaining actions take place in the **app/controllers/payments_controller.rb** file. This server-side component uses the [Square Ruby SDK](https://developer.squareup.com/docs/sdks/ruby) to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
 
 ```ruby
 def process_payment
