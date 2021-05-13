@@ -29,6 +29,9 @@ namespace sqRazorSample
                     {
                         // This is for Sample only, remove this to handle the post request in secure way
                         o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
+
+                        // A more expected URL pattern
+                        o.Conventions.AddPageRoute("/ProcessPayment", "process-payment");
                     });
         }
 
