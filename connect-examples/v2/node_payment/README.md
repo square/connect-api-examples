@@ -1,6 +1,6 @@
 # Useful Links
 
-- [Node.js SDK Page](https://developer.squareup.com/docs/sdks/nodejs)
+- [Square Node.js SDK](https://developer.squareup.com/docs/sdks/nodejs)
 - [Web Payment SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
 - [Web Payment SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
 - [Payments API Reference](https://developer.squareup.com/reference/square/payments-api)
@@ -49,7 +49,7 @@ Square Online payment solution is a 2-step process:
 
 1. Generate a token - Using the [Square Payments Web SDK](https://developer.squareup.com/reference/sdks/web/payments) you accept payment source information and generate a secure payment token.
 
-   NOTE: The Payments Web SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see https://developer.squareup.com/docs/web-payments/overview.
+   NOTE: The Payments Web SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
 2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2
    **Payments** API, you charge the payment source using the sure payment token.
@@ -60,16 +60,16 @@ The following sections describe how the Node JS sample implements these steps.
 
 When the page loads it renders the form defined in the **views/index.pug** file. The page also downloads and executes the following scripts:
 
-**Square Payment Web SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Payments Web SDK Reference](https://developer.squareupstaging.com/reference/sdks/web/payments).
+**Square Payment Web SDK** It is a library that provides the Payment objects you use in the next script. For more information about the library, see [Web Payments SDK Reference](https://developer.squareupstaging.com/reference/sdks/web/payments).
 
 **sq-payment-flow.js** - This code provides two things:
 
-- Initializes objects for various supported payment methods including `card payment`, `bank payment`, and `digital wallet payment`. Each of the following files handles unique client logic for a specific payment method to generate a payment token:
+- Initializes objects for various supported payment methods including card payments, bank payments, and digital wallet payments. Each of the following files handles unique client logic for a specific payment method to generate a payment token:
 
-  - sq-card-pay.js
-  - sq-ach.js
-  - sq-google-pay.js
-  - sq-apple-pay.js
+  - `sq-card-pay.js`
+  - `sq-ach.js`
+  - `sq-google-pay.js`
+  - `sq-apple-pay.js`
 
 - Provides the global method that fires a `fetch` request to the server after receiving the payment token.
   ```javascript
@@ -122,11 +122,11 @@ router.post('/process-payment', async (req, res) => {
 
   // Charge the customer's card
   const requestBody = {
-    idempotencyKey: idempotencyKey,
+    idempotencyKey,
     sourceId: token,
     amountMoney: {
       amount: 100, // $1.00 charge
-      currency: currency
+      currency
     }
   };
 
