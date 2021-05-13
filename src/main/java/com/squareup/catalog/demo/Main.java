@@ -18,6 +18,7 @@ package com.squareup.catalog.demo;
 import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
 import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 
+import com.squareup.square.exceptions.ApiException;
 import java.util.Locale;
 
 import com.squareup.catalog.demo.example.ApplyTaxToAllIItemsExample;
@@ -270,6 +271,7 @@ public class Main {
         } catch (Exception e) {
           // This is bad practice. In a real app, you'd want to handle this exception and
           // take action according to what went wrong.
+          logger.error(e.getMessage());
           System.exit(1);
         }
         return;
@@ -289,10 +291,6 @@ public class Main {
    */
   private void setCurrencyAcrossApplication(LocationsApi locationsApi) {
     locationsApi.retrieveLocationAsync("main").thenAccept(result -> {
-      if (checkAndLogErrors(result.getErrors(), logger)) {
-        return;
-      }
-
       // grab the first location for the user, and use that to determine currency.
       if (result.getLocation() != null) {
         Location currentLocation = result.getLocation();
@@ -302,6 +300,9 @@ public class Main {
       // Log exception, exit application as this step is necessary.
       logger.error("Currency could not be retrieved. "
           + "Please verify that your access token is correct.");
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors(), logger);
       System.exit(1);
       return null;
     }).join();

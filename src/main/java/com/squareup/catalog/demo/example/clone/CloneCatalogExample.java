@@ -19,6 +19,7 @@ import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 import static com.squareup.catalog.demo.util.Prompts.promptUserInputYesNo;
 import static java.util.Collections.singletonList;
 
+import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.ListCatalogResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchUpsertCatalogObjectsRequest;
 import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.CatalogObjectBatch;
+import java.util.concurrent.CompletionException;
 
 /**
  * This example clones catalog objects from one merchant account to another. The accessToken
@@ -197,62 +199,67 @@ public class CloneCatalogExample extends Example {
     Long catalogVersion = null;
 
     do {
-      List<CatalogObject> catalogObjectsToUpsert = new ArrayList<>();
+      try {
+        List<CatalogObject> catalogObjectsToUpsert = new ArrayList<>();
 
-      // Retrieve a page of catalog objects from the source account.
-      ListCatalogResponse result =
-          sourceCatalogApi.listCatalogAsync(cursor, cloneUtil.type.toString(), catalogVersion)
-              .join();
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
+        // Retrieve a page of catalog objects from the source account.
+        ListCatalogResponse result =
+            sourceCatalogApi.listCatalogAsync(cursor, cloneUtil.type.toString(), catalogVersion)
+                .join();
 
-      // Log and return if no objects are found.
-      if ((result.getObjects() == null || result.getObjects().size() == 0) && cursor == null) {
-        logger.info("    No "
-            + cloneUtil.type.toString().toLowerCase(Locale.US)
-            + " found in source account.");
-        return;
-      }
+        // Log and return if no objects are found.
+        if ((result.getObjects() == null || result.getObjects().size() == 0) && cursor == null) {
+          logger.info("    No "
+              + cloneUtil.type.toString().toLowerCase(Locale.US)
+              + " found in source account.");
+          return;
+        }
 
-      for (CatalogObject sourceCatalogObject : result.getObjects()) {
-        String encodedString = cloneUtil.encodeCatalogObject(sourceCatalogObject);
+        for (CatalogObject sourceCatalogObject : result.getObjects()) {
+          String encodedString = cloneUtil.encodeCatalogObject(sourceCatalogObject);
 
-        // Check if a similar catalog object already exists in the target account.
-        CatalogObject targetCatalogObject = targetCatalogObjects.get(encodedString);
-        if (targetCatalogObject == null) {
-          // Clone this CatalogObject into the target account.
-          CatalogObject cleanCatalogObject =
-              cloneUtil.removeSourceAccountMetaData(sourceCatalogObject);
-          catalogObjectsToUpsert.add(cleanCatalogObject);
-        } else {
-          // If a similar CatalogObject already exists in the target account, attempt to
-          // merge the source CatalogObject into the existing target CatalogObject.
-          CatalogObject modifiedTargetCatalogObject = cloneUtil
-              .mergeSourceCatalogObjectIntoTarget(sourceCatalogObject, targetCatalogObject);
+          // Check if a similar catalog object already exists in the target account.
+          CatalogObject targetCatalogObject = targetCatalogObjects.get(encodedString);
+          if (targetCatalogObject == null) {
+            // Clone this CatalogObject into the target account.
+            CatalogObject cleanCatalogObject =
+                cloneUtil.removeSourceAccountMetaData(sourceCatalogObject);
+            catalogObjectsToUpsert.add(cleanCatalogObject);
+          } else {
+            // If a similar CatalogObject already exists in the target account, attempt to
+            // merge the source CatalogObject into the existing target CatalogObject.
+            CatalogObject modifiedTargetCatalogObject = cloneUtil
+                .mergeSourceCatalogObjectIntoTarget(sourceCatalogObject, targetCatalogObject);
 
-          // If something changed in the target catalog object, upsert it into the target
-          // account.
-          if (modifiedTargetCatalogObject != null) {
-            catalogObjectsToUpsert.add(modifiedTargetCatalogObject);
+            // If something changed in the target catalog object, upsert it into the target
+            // account.
+            if (modifiedTargetCatalogObject != null) {
+              catalogObjectsToUpsert.add(modifiedTargetCatalogObject);
+            }
           }
         }
+
+        // Upsert the catalog objects into the target account.
+        if (catalogObjectsToUpsert.size() > 0) {
+          upsertCatalogObjectsIntoTargetAccount(targetCatalogApi, catalogObjectsToUpsert);
+        }
+
+        // Log the number of objects cloned.
+        logger.info(
+            "    Cloned "
+                + catalogObjectsToUpsert.size()
+                + " out of "
+                + result.getObjects().size());
+
+        // Move to the next page.
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
+          return;
+        }
       }
-
-      // Upsert the catalog objects into the target account.
-      if (catalogObjectsToUpsert.size() > 0) {
-        upsertCatalogObjectsIntoTargetAccount(targetCatalogApi, catalogObjectsToUpsert);
-      }
-
-      // Log the number of objects cloned.
-      logger.info(
-          "    Cloned "
-              + catalogObjectsToUpsert.size()
-              + " out of "
-              + result.getObjects().size());
-
-      // Move to the next page.
-      cursor = result.getCursor();
     } while (cursor != null);
   }
 
@@ -273,30 +280,35 @@ public class CloneCatalogExample extends Example {
     int count = 0;
 
     do {
-      ListCatalogResponse result =
-          targetCatalogApi.listCatalogAsync(cursor, cloneUtil.type.toString(), catalogVersion)
-              .join();
-      if (checkAndLogErrors(result.getErrors())) {
-        return identifierToCatalogObject;
-      }
+      try {
+        ListCatalogResponse result =
+            targetCatalogApi.listCatalogAsync(cursor, cloneUtil.type.toString(), catalogVersion)
+                .join();
 
-      List<CatalogObject> items = result.getObjects();
-      if (items == null || items.size() == 0) {
-        if (cursor == null) {
-          logger.info("    No items found. Item Library was already empty.");
-        }
-      } else {
-        // Generate an encoded string for each object and add it to the hash map.
-        for (CatalogObject catalogObject : items) {
-          String encodedString = cloneUtil.encodeCatalogObject(catalogObject);
-          identifierToCatalogObject.put(encodedString, catalogObject);
-        }
+        List<CatalogObject> items = result.getObjects();
+        if (items == null || items.size() == 0) {
+          if (cursor == null) {
+            logger.info("    No items found. Item Library was already empty.");
+          }
+        } else {
+          // Generate an encoded string for each object and add it to the hash map.
+          for (CatalogObject catalogObject : items) {
+            String encodedString = cloneUtil.encodeCatalogObject(catalogObject);
+            identifierToCatalogObject.put(encodedString, catalogObject);
+          }
 
-        // Move to the next page.
-        count += result.getObjects().size();
-        logger.info("    Retrieved " + count + " total");
+          // Move to the next page.
+          count += result.getObjects().size();
+          logger.info("    Retrieved " + count + " total");
+        }
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
+          return null;
+        }
       }
-      cursor = result.getCursor();
     } while (cursor != null);
 
     return identifierToCatalogObject;
@@ -316,15 +328,7 @@ public class CloneCatalogExample extends Example {
             UUID.randomUUID().toString(),
             singletonList(new CatalogObjectBatch(catalogObjectsToUpsert))).build();
 
-    targetCatalogApi.batchUpsertCatalogObjectsAsync(batchUpsertRequest).thenAccept(result -> {
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
-    }).exceptionally(exception -> {
-      // Log exception, return null.
-      logger.error(exception.getMessage());
-      return null;
-    }).join();
+    targetCatalogApi.batchUpsertCatalogObjectsAsync(batchUpsertRequest).join();
   }
 
   /**

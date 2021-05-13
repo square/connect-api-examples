@@ -15,6 +15,7 @@
  */
 package com.squareup.catalog.demo.example;
 
+import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.ListCatalogResponse;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.CatalogCategory;
 import com.squareup.square.models.CatalogObject;
+import java.util.concurrent.CompletionException;
 
 /**
  * This example lists all categories in the catalog.
@@ -43,28 +45,33 @@ public class ListCategoriesExample extends Example {
     String cursor = null;
 
     do {
-      // Retrieve a page of categories.
-      ListCatalogResponse result =
-          catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.CATEGORY.toString(),
-              catalogVersion).join();
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
+      try {
+        // Retrieve a page of categories.
+        ListCatalogResponse result =
+            catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.CATEGORY.toString(),
+                catalogVersion).join();
 
-      List<CatalogObject> categories = result.getObjects();
-      if (categories == null || categories.size() == 0) {
-        if (cursor == null) {
-          logger.info("No categories found.");
+        List<CatalogObject> categories = result.getObjects();
+        if (categories == null || categories.size() == 0) {
+          if (cursor == null) {
+            logger.info("No categories found.");
+            return;
+          }
+        } else {
+          for (CatalogObject categoryObject : categories) {
+            CatalogCategory category = categoryObject.getCategoryData();
+            logger.info(category.getName() + " (" + categoryObject.getId() + ")");
+          }
+        }
+        // Move to the next page.
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
           return;
         }
-      } else {
-        for (CatalogObject categoryObject : categories) {
-          CatalogCategory category = categoryObject.getCategoryData();
-          logger.info(category.getName() + " (" + categoryObject.getId() + ")");
-        }
       }
-      // Move to the next page.
-      cursor = result.getCursor();
     } while (cursor != null);
   }
 }

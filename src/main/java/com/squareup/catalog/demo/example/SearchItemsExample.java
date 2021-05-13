@@ -17,6 +17,7 @@ package com.squareup.catalog.demo.example;
 
 import static java.util.Collections.singletonList;
 
+import com.squareup.square.exceptions.ApiException;
 import java.util.List;
 
 import com.squareup.catalog.demo.Logger;
@@ -61,9 +62,6 @@ public class SearchItemsExample extends Example {
 
     // Post the search request and log the results
     catalogApi.searchCatalogObjectsAsync(request).thenAccept(result -> {
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
 
       if (result.getObjects() != null) {
         List<CatalogObject> catalogObjects = result.getObjects();
@@ -81,8 +79,9 @@ public class SearchItemsExample extends Example {
         logger.info("No items with the name \"Soda\" were found.");
       }
     }).exceptionally(exception -> {
-      // Log exception, return null.
-      logger.error(exception.getMessage());
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors());
       return null;
     }).join();
   }

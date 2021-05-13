@@ -17,6 +17,7 @@ package com.squareup.catalog.demo.example;
 
 import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 
+import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.BatchDeleteCatalogObjectsResponse;
 import com.squareup.square.models.ListCatalogResponse;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import com.squareup.square.api.CatalogApi;
 import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.BatchDeleteCatalogObjectsRequest;
 import com.squareup.square.models.CatalogObject;
+import java.util.concurrent.CompletionException;
 
 /**
  * This example deletes all items and variations in a merchant's Item Library.
@@ -61,35 +63,39 @@ public class DeleteAllItemsExample extends Example {
     String cursor = null;
 
     do {
-      ListCatalogResponse result =
-          catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.ITEM.toString(), catalogVersion)
-              .join();
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
+      try {
+        ListCatalogResponse result =
+            catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.ITEM.toString(), catalogVersion)
+                .join();
 
-      List<CatalogObject> items = result.getObjects();
-      if (items == null || items.size() == 0) {
-        if (cursor == null) {
-          logger.info("No items found. Item Library was already empty.");
+        List<CatalogObject> items = result.getObjects();
+        if (items == null || items.size() == 0) {
+          if (cursor == null) {
+            logger.info("No items found. Item Library was already empty.");
+            return;
+          }
+        } else {
+          // Delete all items in the page of results.
+          List<String> ids = new ArrayList<>();
+          for (CatalogObject catalogObject : items) {
+            ids.add(catalogObject.getId());
+          }
+          BatchDeleteCatalogObjectsRequest deleteRequest =
+              new BatchDeleteCatalogObjectsRequest(ids);
+
+          catalogApi.batchDeleteCatalogObjectsAsync(deleteRequest).join();
+
+          logger.info("Deleted " + items.size() + " items");
+          totalDeletedItems += items.size();
+        }
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
           return;
         }
-      } else {
-        // Delete all items in the page of results.
-        List<String> ids = new ArrayList<>();
-        for (CatalogObject catalogObject : items) {
-          ids.add(catalogObject.getId());
-        }
-        BatchDeleteCatalogObjectsRequest deleteRequest = new BatchDeleteCatalogObjectsRequest(ids);
-        BatchDeleteCatalogObjectsResponse deleteResponse =
-            catalogApi.batchDeleteCatalogObjectsAsync(deleteRequest).join();
-        if (checkAndLogErrors(deleteResponse.getErrors())) {
-          return;
-        }
-        logger.info("Deleted " + items.size() + " items");
-        totalDeletedItems += items.size();
       }
-      cursor = result.getCursor();
     } while (cursor != null);
 
     // Log information about the deleted items.

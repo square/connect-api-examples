@@ -84,6 +84,7 @@ public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
         .itemData(oldItemData.toBuilder()
             .variations(newVariations)
             .taxIds(Collections.emptyList())
+            .categoryId(null)
             .build())
         .presentAtAllLocations(true)
         .imageId(null)

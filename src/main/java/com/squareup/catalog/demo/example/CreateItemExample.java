@@ -19,6 +19,7 @@ import static com.squareup.catalog.demo.util.CatalogObjects.item;
 import static com.squareup.catalog.demo.util.CatalogObjects.itemVariation;
 import static java.util.Collections.singletonList;
 
+import com.squareup.square.exceptions.ApiException;
 import java.util.List;
 import java.util.UUID;
 
@@ -98,15 +99,13 @@ public class CreateItemExample extends Example {
        * If the response is successful, we want to log the list of object IDs that
        * were successfully created in the catalog (e.g., #SODA, #SODA-LARGE)
        */
-      if (checkAndLogErrors(result.getErrors())) {
-        return null;
-      }
       CatalogObject newItem = result.getObjects().get(0);
       logger.info("Created item " + newItem.getId());
       return newItem;
     }).exceptionally(exception -> {
-      // Log exception, return null.
-      logger.error(exception.getMessage());
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors());
       return null;
     }).join();
   }
@@ -123,11 +122,8 @@ public class CreateItemExample extends Example {
     // Set optional parameter as null.
     Long catalogVersion = null;
     catalogApi.retrieveCatalogObjectAsync(itemId, false, catalogVersion).thenAccept(result -> {
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
       /*
-       * Otherwise, grab the name and object ID of the CatalogItem that was fetched
+       * Grab the name and object ID of the CatalogItem that was fetched
        * from the catalog and print them to the screen.
        */
       CatalogObject retrievedItem = result.getObject();
@@ -137,8 +133,9 @@ public class CreateItemExample extends Example {
           + retrievedItem.getId()
           + ")");
     }).exceptionally(exception -> {
-      // Log exception, return null.
-      logger.error(exception.getMessage());
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors());
       return null;
     }).join();
   }

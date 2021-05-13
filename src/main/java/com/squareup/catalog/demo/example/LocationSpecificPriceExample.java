@@ -5,6 +5,7 @@ import static com.squareup.catalog.demo.util.Moneys.createMoneyObject;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
+import com.squareup.square.exceptions.ApiException;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +27,9 @@ import com.squareup.square.models.ItemVariationLocationOverrides;
 public class LocationSpecificPriceExample extends Example {
 
   public LocationSpecificPriceExample(Logger logger) {
-    super("location_specific_price", "Create an item with a location-specific price. Must have at least 2 locations to run this example.", logger);
+    super("location_specific_price",
+        "Create an item with a location-specific price. Must have at least 2 locations to run this example.",
+        logger);
   }
 
   @Override
@@ -34,14 +37,12 @@ public class LocationSpecificPriceExample extends Example {
     // Get the list of locations for this merchant.
     logger.info("Retrieving locations");
     locationsApi.listLocationsAsync().thenAccept(result -> {
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
       logger.info("Retrieved " + result.getLocations().size() + " locations");
 
       // If there is only one location, this example cannot be executed.
       if (result.getLocations().size() < 2) {
-        throw new IllegalArgumentException("You must have at least 2 locations to run this example.");
+        throw new IllegalArgumentException(
+            "You must have at least 2 locations to run this example.");
       }
 
       // Choose the first location to apply an override.
@@ -87,7 +88,7 @@ public class LocationSpecificPriceExample extends Example {
               singletonList(
                   item("#SODA", "Soda", null, itemVariation)
               )
-            ).build());
+          ).build());
 
       BatchUpsertCatalogObjectsRequest request = new BatchUpsertCatalogObjectsRequest.Builder(
           UUID.randomUUID().toString(),
@@ -104,12 +105,8 @@ public class LocationSpecificPriceExample extends Example {
       logger.info("Creating new item with override at location id " + locationId);
 
       catalogApi.batchUpsertCatalogObjectsAsync(request).thenAccept(upsertResponse -> {
-        if (checkAndLogErrors(upsertResponse.getErrors())) {
-          return;
-        }
-
         /*
-         * Otherwise, grab the name and object ID of the CatalogItem that was just
+         * Grab the name and object ID of the CatalogItem that was just
          * created and print them to the screen.
          **/
         CatalogObject newItem = upsertResponse.getObjects().get(0);
@@ -117,8 +114,9 @@ public class LocationSpecificPriceExample extends Example {
             "Created item " + newItem.getItemData().getName() + " (" + newItem.getId() + ")");
       }).join();
     }).exceptionally(exception -> {
-      // Log exception, return null.
-      logger.error(exception.getMessage());
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors());
       return null;
     }).join();
   }

@@ -17,6 +17,7 @@ package com.squareup.catalog.demo.example;
 
 import static java.util.Collections.singletonList;
 
+import com.squareup.square.exceptions.ApiException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,10 +107,6 @@ public abstract class Example {
         .build();
 
     catalogApi.searchCatalogObjectsAsync(searchRequest).thenAccept(result -> {
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
-
       if (result.getObjects() == null || result.getObjects().size() == 0) {
         logger.info("No " + type + " found");
       } else {
@@ -124,8 +121,9 @@ public abstract class Example {
         catalogApi.batchDeleteCatalogObjectsAsync(deleteRequest);
       }
     }).exceptionally(exception -> {
-      // Log exception, return null.
-      logger.error(exception.getMessage());
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors());
       return null;
     }).join();
   }

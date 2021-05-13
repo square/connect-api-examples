@@ -20,6 +20,7 @@ import static com.squareup.catalog.demo.util.CatalogObjects.item;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
+import com.squareup.square.exceptions.ApiException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -90,10 +91,10 @@ public class DeleteCategoryExample extends Example {
         UUID.randomUUID().toString(),
         singletonList(new CatalogObjectBatch.Builder(
             asList(
-            category("#CATEGORY-DRINKS", "Drinks"),
-            item("#ITEM-SODA", "Soda", "#CATEGORY-DRINKS", 150),
-            item("#ITEM-WATER", "Water", "#CATEGORY-DRINKS", 0),
-            item("#ITEM-JUICE", "Juice", "#CATEGORY-DRINKS", 200)
+                category("#CATEGORY-DRINKS", "Drinks"),
+                item("#ITEM-SODA", "Soda", "#CATEGORY-DRINKS", 150),
+                item("#ITEM-WATER", "Water", "#CATEGORY-DRINKS", 0),
+                item("#ITEM-JUICE", "Juice", "#CATEGORY-DRINKS", 200)
             ))
             .build()))
         .build();
@@ -107,10 +108,6 @@ public class DeleteCategoryExample extends Example {
      */
     logger.info("Creating new Drinks category with three items");
     return catalogApi.batchUpsertCatalogObjectsAsync(request).thenApply(result -> {
-      if (checkAndLogErrors(result.getErrors())) {
-        return null;
-      }
-
       /*
        * If the response is not null, we want to log the list of object IDs that were
        * successfully created in the catalog (e.g., #ITEM-SODA, #ITEM-JUICE)
@@ -129,8 +126,9 @@ public class DeleteCategoryExample extends Example {
       logger.info("Server generated category ID: " + categoryIdMapping.getObjectId());
       return result;
     }).exceptionally(exception -> {
-      // Log exception, return null.
-      logger.error(exception.getMessage());
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors());
       return null;
     }).join();
   }
@@ -161,11 +159,7 @@ public class DeleteCategoryExample extends Example {
     // Post the batch delete to delete the category and items.
     logger.info("Deleting Drinks category");
     catalogApi.batchDeleteCatalogObjectsAsync(request).thenAccept(result -> {
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
-
-      // Otherwise, log the IDs of all the objects that were successfully deleted
+      // Log the IDs of all the objects that were successfully deleted
       // We should have 7 deleted items since we have 1 category, 3 items, and 3 items
       // variations.
       logger.info("Deleted " + result.getDeletedObjectIds().size() + " objects");
@@ -173,8 +167,9 @@ public class DeleteCategoryExample extends Example {
         logger.info("Deleted object with ID: " + id);
       }
     }).exceptionally(exception -> {
-      // Log exception, return null.
-      logger.error(exception.getMessage());
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors());
       return null;
     }).join();
   }

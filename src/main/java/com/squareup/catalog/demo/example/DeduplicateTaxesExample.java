@@ -17,6 +17,7 @@ package com.squareup.catalog.demo.example;
 
 import static java.util.Collections.singletonList;
 
+import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.ListCatalogResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import com.squareup.square.models.BatchUpsertCatalogObjectsResponse;
 import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.CatalogObjectBatch;
 import com.squareup.square.models.CatalogTax;
+import java.util.concurrent.CompletionException;
 
 /**
  * This example merges identical taxes (same name, percentage, and inclusion type).
@@ -63,36 +65,41 @@ public class DeduplicateTaxesExample extends Example {
     Long catalogVersion = null;
 
     do {
-      ListCatalogResponse result =
-          catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.TAX.toString(), catalogVersion)
-              .join();
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
+      try {
+        ListCatalogResponse result =
+            catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.TAX.toString(), catalogVersion)
+                .join();
 
-      List<CatalogObject> taxes =
-          result.getObjects() == null ? new ArrayList<>() : result.getObjects();
-      for (CatalogObject tax : taxes) {
-        String key = createTaxKey(tax);
-        DuplicateTaxInfo duplicateTaxInfo;
-        if (!taxInfoMap.containsKey(key)) {
-          // If this is the first time we've seen this tax, add it to the map.
-          duplicateTaxInfo = new DuplicateTaxInfo(tax);
-          taxInfoMap.put(key, duplicateTaxInfo);
-        } else {
-          // Otherwise, merge this tax into the first occurrence of the tax. The first
-          // time we find a duplicate, we add the tax to list of taxes that need to be updated.
-          duplicateTaxInfo = taxInfoMap.get(key);
-          duplicateTaxInfo.mergeDuplicate(tax, logger);
-          if (!duplicateTaxInfo.foundDuplicate) {
-            duplicateTaxInfo.markObjectAsDuplicate();
-            taxesToUpdate.add(duplicateTaxInfo.masterTax);
+        List<CatalogObject> taxes =
+            result.getObjects() == null ? new ArrayList<>() : result.getObjects();
+        for (CatalogObject tax : taxes) {
+          String key = createTaxKey(tax);
+          DuplicateTaxInfo duplicateTaxInfo;
+          if (!taxInfoMap.containsKey(key)) {
+            // If this is the first time we've seen this tax, add it to the map.
+            duplicateTaxInfo = new DuplicateTaxInfo(tax);
+            taxInfoMap.put(key, duplicateTaxInfo);
+          } else {
+            // Otherwise, merge this tax into the first occurrence of the tax. The first
+            // time we find a duplicate, we add the tax to list of taxes that need to be updated.
+            duplicateTaxInfo = taxInfoMap.get(key);
+            duplicateTaxInfo.mergeDuplicate(tax, logger);
+            if (!duplicateTaxInfo.foundDuplicate) {
+              duplicateTaxInfo.markObjectAsDuplicate();
+              taxesToUpdate.add(duplicateTaxInfo.masterTax);
+            }
+            taxIdsToDelete.add(tax.getId());
           }
-          taxIdsToDelete.add(tax.getId());
+        }
+        // Move to the next page.
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
+          return;
         }
       }
-      // Move to the next page.
-      cursor = result.getCursor();
     } while (cursor != null);
 
     CompletableFuture<BatchUpsertCatalogObjectsResponse> updateResponseFuture =
@@ -120,8 +127,7 @@ public class DeduplicateTaxesExample extends Example {
 
     // When both futures have been processed, do the logging
     updateResponseFuture.thenAcceptBoth(deleteResponseFuture, (updateResult, deleteResult) -> {
-      if ((updateResult != null && checkAndLogErrors(updateResult.getErrors()))
-          || deleteResult != null && checkAndLogErrors(deleteResult.getErrors())) {
+      if (updateResult.getObjects() == null || deleteResult.getDeletedObjectIds() == null) {
         return;
       }
 
@@ -133,7 +139,9 @@ public class DeduplicateTaxesExample extends Example {
         logger.info(totalMerged + " taxes merged into " + taxesToUpdate.size());
       }
     }).exceptionally(exception -> {
-      logger.error(exception.getMessage());
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors());
       return null;
     }).join();
   }

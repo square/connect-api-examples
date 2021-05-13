@@ -17,6 +17,7 @@ package com.squareup.catalog.demo.example;
 
 import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 
+import com.squareup.square.exceptions.ApiException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,9 +55,6 @@ public class RetrieveCatalogObjectExample extends Example {
     Long catalogVersion = null;
     catalogApi.retrieveCatalogObjectAsync(catalogObjectId, true, catalogVersion)
         .thenAccept(result -> {
-          if (checkAndLogErrors(result.getErrors())) {
-            return;
-          }
 
           if (result.getObject() != null) {
             // Put the related objects into a map keyed by catalog object ID so we can look
@@ -76,8 +74,9 @@ public class RetrieveCatalogObjectExample extends Example {
             logger.info("No items with the given id were found.");
           }
         }).exceptionally(exception -> {
-          // Log exception, return null.
-          logger.error(exception.getMessage());
+          // Extract the actual exception
+          ApiException e = (ApiException) exception.getCause();
+          checkAndLogErrors(e.getErrors());
           return null;
         }).join();
   }

@@ -18,7 +18,9 @@ package com.squareup.catalog.demo.example;
 import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 import static java.util.Collections.singletonList;
 
+import com.squareup.square.exceptions.ApiException;
 import com.squareup.square.models.ListCatalogResponse;
+import com.squareup.square.models.UpdateItemTaxesResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import com.squareup.square.api.LocationsApi;
 import com.squareup.square.models.CatalogObject;
 import com.squareup.square.models.CatalogTax;
 import com.squareup.square.models.UpdateItemTaxesRequest;
+import java.util.concurrent.CompletionException;
 
 /**
  * This example shows a list of taxes to choose from, then applies the selected tax to all items in
@@ -72,22 +75,27 @@ public class ApplyTaxToAllIItemsExample extends Example {
     String cursor = null;
 
     do {
-      // Retrieve a page of taxes
-      ListCatalogResponse result =
-          catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.TAX.toString(), catalogVersion)
-              .join();
-      if (checkAndLogErrors(result.getErrors())) {
-        return null;
+      try {
+        // Retrieve a page of taxes
+        ListCatalogResponse result =
+            catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.TAX.toString(), catalogVersion)
+                .join();
+
+        List<CatalogObject> taxes =
+            result.getObjects() == null ? new ArrayList<>() : result.getObjects();
+
+        // Append the new taxes to the complete list of taxes.
+        allTaxes.addAll(taxes);
+
+        // Move to the next page.
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
+          return null;
+        }
       }
-
-      List<CatalogObject> taxes =
-          result.getObjects() == null ? new ArrayList<>() : result.getObjects();
-
-      // Append the new taxes to the complete list of taxes.
-      allTaxes.addAll(taxes);
-
-      // Move to the next page.
-      cursor = result.getCursor();
     } while (cursor != null);
 
     return allTaxes;
@@ -142,61 +150,64 @@ public class ApplyTaxToAllIItemsExample extends Example {
     Long catalogVersion = null;
 
     do {
-      // Retrieve a page of items.
-      ListCatalogResponse result =
-          catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.ITEM.toString(), catalogVersion)
-              .join();
-      if (checkAndLogErrors(result.getErrors())) {
-        return;
-      }
-      List<CatalogObject> items = result.getObjects();
-      if (items == null || items.size() == 0) {
-        if (cursor == null) {
-          logger.info("No items found in catalog.");
+      try {
+        // Retrieve a page of items.
+        ListCatalogResponse result =
+            catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.ITEM.toString(),
+                catalogVersion)
+                .join();
+
+        List<CatalogObject> items = result.getObjects();
+        if (items == null || items.size() == 0) {
+          if (cursor == null) {
+            logger.info("No items found in catalog.");
+            return;
+          }
+        } else {
+          // Figure out which items to apply the tax to.
+          List<String> itemIds = new ArrayList<>();
+          for (CatalogObject item : items) {
+            // Ignore non-regular items and items already linked to the tax.
+            String itemType = item.getItemData().getProductType();
+            if ((itemType == null || itemType.equals("REGULAR"))
+                && (item.getItemData().getTaxIds() == null || !item.getItemData()
+                .getTaxIds()
+                .contains(taxId))) {
+              itemIds.add(item.getId());
+            }
+          }
+
+          UpdateItemTaxesRequest updateItemTaxesRequest =
+              new UpdateItemTaxesRequest.Builder(itemIds)
+                  .taxesToEnable(singletonList(taxId))
+                  .build();
+
+          // Add the tax to the items.
+          if (updateItemTaxesRequest.getItemIds().size() > 0) {
+            totalItemsApplied += updateItemTaxesRequest.getItemIds().size();
+            catalogApi.updateItemTaxesAsync(updateItemTaxesRequest).join();
+          }
+
+          // Log info about this page of items we just deleted.
+          long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
+          totalItemsVisited += items.size();
+          logger.info("Added tax to "
+              + updateItemTaxesRequest.getItemIds().size()
+              + " items ("
+              + totalItemsVisited
+              + " total items processed in "
+              + elapsedTimeSeconds
+              + " seconds)");
+        }
+        // Move to the next page.
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
           return;
         }
-      } else {
-        // Figure out which items to apply the tax to.
-        List<String> itemIds = new ArrayList<>();
-        for (CatalogObject item : items) {
-          // Ignore non-regular items and items already linked to the tax.
-          String itemType = item.getItemData().getProductType();
-          if ((itemType == null || itemType.equals("REGULAR"))
-              && (item.getItemData().getTaxIds() == null || !item.getItemData()
-              .getTaxIds()
-              .contains(taxId))) {
-            itemIds.add(item.getId());
-          }
-        }
-
-        UpdateItemTaxesRequest updateItemTaxesRequest = new UpdateItemTaxesRequest.Builder(itemIds)
-            .taxesToEnable(singletonList(taxId))
-            .build();
-
-        // Add the tax to the items.
-        if (updateItemTaxesRequest.getItemIds().size() > 0) {
-          totalItemsApplied += updateItemTaxesRequest.getItemIds().size();
-          catalogApi.updateItemTaxesAsync(updateItemTaxesRequest)
-              .thenAccept(updateResponse -> {
-                if (checkAndLogErrors(updateResponse.getErrors())) {
-                  return;
-                }
-              }).join();
-        }
-
-        // Log info about this page of items we just deleted.
-        long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
-        totalItemsVisited += items.size();
-        logger.info("Added tax to "
-            + updateItemTaxesRequest.getItemIds().size()
-            + " items ("
-            + totalItemsVisited
-            + " total items processed in "
-            + elapsedTimeSeconds
-            + " seconds)");
       }
-      // Move to the next page.
-      cursor = result.getCursor();
     } while (cursor != null);
 
     // Log results.
