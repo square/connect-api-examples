@@ -1,6 +1,6 @@
 <?php
 require 'vendor/autoload.php';
-include 'utils/square-client.php';
+include 'utils/location-info.php';
 
 use Square\Environment;
 // dotenv is used to read from the '.env' file created for credentials
@@ -28,14 +28,14 @@ $web_payment_sdk_url = $_ENV["ENVIRONMENT"] === Environment::PRODUCTION ? "https
       "<?php
         echo getenv('SQUARE_LOCATION_ID');
         ?>";
-    window.currency = 
+    window.currency =
       "<?php
-        echo $square_client->getCurrency();
-      ?>";
-    window.country = 
+        echo $location_info->getCurrency();
+        ?>";
+    window.country =
       "<?php
-        echo $square_client->getCountry();
-      ?>";
+        echo $location_info->getCountry();
+        ?>";
   </script>
   <link rel="stylesheet" type="text/css" href="public/stylesheets/style.css">
   <link rel="stylesheet" type="text/css" href="public/stylesheets/sq-payment.css">

@@ -15,12 +15,11 @@ $dotenv->load();
 // Set your environment as *sandbox* if you're just testing things out.
 
 
-class SqClient {
+class LocationInfo {
   // Initialize the Square client.
   var $currency;
   var $country;
-  var $square_client;
-  
+
   function __construct() {
     $access_token =  getenv('SQUARE_ACCESS_TOKEN');
 
@@ -40,12 +39,8 @@ class SqClient {
   public function getCountry() {
     return $this->country;
   }
-
-  public function getSquareClient() {
-    return $this->square_client;
-  }
 }
 
-$square_client = new SqClient();
+$location_info = new LocationInfo();
 
 ?>
