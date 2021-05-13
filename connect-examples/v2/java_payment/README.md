@@ -45,7 +45,7 @@ Square Online payment solution is a 2-step process:
    NOTE: The Web Payments SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
 2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2
-   **Payments** API, you charge the payment source using the sure payment token.
+   **Payments** API, you charge the payment source using the secure payment token.
 
 The following sections describe how the Java sample implements these steps.
 
