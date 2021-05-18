@@ -176,7 +176,7 @@ router.post("/create", async (req, res, next) => {
         acceptedPaymentMethods: {
           bankAccount: true,
           squareGiftCard: true,
-          bankAccount: false
+          card: false
         }
       }
     };
