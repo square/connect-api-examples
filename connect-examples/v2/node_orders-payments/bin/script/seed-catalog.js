@@ -30,7 +30,7 @@ const config = {
   accessToken: process.env.SQUARE_ACCESS_TOKEN
 };
 // Configure catalog API instance
-const { catalogApi } = new Client(config);
+const { catalogApi, locationsApi } = new Client(config);
 
 /*
  * Given an object with image data and a corresponding catalogObjectId,
@@ -69,6 +69,20 @@ const addImages = async (image, catalogObjectId, success) => {
 }
 
 /*
+ * Helper function to get the appropriate currency to be used based on the location ID provided.
+ */
+const getCurrency = async () => {
+  // get the currency for the location
+  try {
+    const locationResponse = await locationsApi.retrieveLocation("main");
+    const currency = locationResponse.result.location.currency;
+    return currency;
+  } catch (error) {
+    console.error("Retrieving currency failed: ", error);
+  }
+}
+
+/*
  * addItems adds all the objects from the sample-seed-data.json file
  * and add each object to the catalog in a batch. It also calls addImages to upload
  * the corresponding image file after getting the new Square Object IDs from uploading.
@@ -76,44 +90,60 @@ const addImages = async (image, catalogObjectId, success) => {
  * https://developer.squareup.com/reference/square/catalog-api/batch-upsert-catalog-objects
  */
 const addItems = async () => {
-  const batches = [{
-    objects: []
-  }];
-  const batchUpsertCatalogRequest = {
-    // Each request needs a unique idempotency key.
-    idempotencyKey: uuidv4(),
-    batches: batches,
-  };
+  const currency = await getCurrency();
+  // Only proceed if currency is available.
+  if (currency) {
+    console.log("Currency " + currency + " was successfully detected.");
+    const batches = [{
+      objects: []
+    }];
+    const batchUpsertCatalogRequest = {
+      // Each request needs a unique idempotency key.
+      idempotencyKey: uuidv4(),
+      batches: batches,
+    };
 
-  // Iterate through each item in the sample-seed-data.json file.
-  for (const item in sampleData) {
-    const currentCatalogItem = sampleData[item];
-    // Add the object data to the batch request item.
-    batchUpsertCatalogRequest.batches[0].objects.push(currentCatalogItem.data);
-  }
-
-  try {
-    // We call the Catalog API function batchUpsertCatalogObjects to upload all our
-    // items at once.
-    const { result : { idMappings }} = await catalogApi.batchUpsertCatalogObjects(
-      batchUpsertCatalogRequest
-    );
-
-    // The new catalog objects will be returned with a corresponding Square Object ID.
-    // Using the new Square Object ID, we map each object with their image and upload their image.
-    idMappings.forEach(function (idMapping) {
-      const clientObjectId = idMapping.clientObjectId;
-      const objectId = idMapping.objectId;
-
-      if (sampleData[clientObjectId] && sampleData[clientObjectId].image) {
-        const image = sampleData[clientObjectId].image;
-        addImages(image, objectId, () => {
-          console.log("Successfully uploaded image for item:", clientObjectId);
-        });
+    // Iterate through each item in the sample-seed-data.json file.
+    // For each item, we want to replace the hardcoded value "CURRENCY" with the actual currency
+    // that we retrieved based on the location.
+    for (const item in sampleData) {
+      const currentCatalogItem = sampleData[item];
+      // If the current element is an ITEM, we need to set its currency.
+      // Otherwise, there is no currency attached.
+      if (currentCatalogItem.data && currentCatalogItem.data.itemData) {
+        // It is an ITEM, so set the currency for all variations.
+        const variations = currentCatalogItem.data.itemData.variations;
+        for (const variation of variations) {
+          variation.itemVariationData.priceMoney.currency = currency;
+        }
       }
-    });
-  } catch (error) {
-    console.error("Updating catalog items failed: ", error);
+      // Add the object data to the batch request item.
+      batchUpsertCatalogRequest.batches[0].objects.push(currentCatalogItem.data);
+    }
+
+    try {
+      // We call the Catalog API function batchUpsertCatalogObjects to upload all our
+      // items at once.
+      const { result : { idMappings }} = await catalogApi.batchUpsertCatalogObjects(
+        batchUpsertCatalogRequest
+      );
+
+      // The new catalog objects will be returned with a corresponding Square Object ID.
+      // Using the new Square Object ID, we map each object with their image and upload their image.
+      idMappings.forEach(function (idMapping) {
+        const clientObjectId = idMapping.clientObjectId;
+        const objectId = idMapping.objectId;
+
+        if (sampleData[clientObjectId] && sampleData[clientObjectId].image) {
+          const image = sampleData[clientObjectId].image;
+          addImages(image, objectId, () => {
+            console.log("Successfully uploaded image for item:", clientObjectId);
+          });
+        }
+      });
+    } catch (error) {
+      console.error("Updating catalog items failed: ", error);
+    }
   }
 }
 
