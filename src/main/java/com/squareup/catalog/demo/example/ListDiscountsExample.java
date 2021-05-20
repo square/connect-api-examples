@@ -35,7 +35,7 @@ import java.util.concurrent.CompletionException;
 public class ListDiscountsExample extends Example {
 
   public ListDiscountsExample(Logger logger) {
-    super("list_discounts", "List all discounts.", logger);
+    super("list_discounts", "Lists all discounts.", logger);
   }
 
   @Override

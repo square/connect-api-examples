@@ -42,7 +42,7 @@ public class DeleteAllItemsExample extends Example {
 
   public DeleteAllItemsExample(Logger logger) {
     super("delete_all_items",
-        "Delete ALL items. This is a destructive action and cannot be undone.", logger);
+        "Deletes ALL items. This is a destructive action and cannot be undone.", logger);
   }
 
   @Override

@@ -47,7 +47,7 @@ import java.util.concurrent.CompletionException;
 public class DeduplicateTaxesExample extends Example {
 
   public DeduplicateTaxesExample(Logger logger) {
-    super("deduplicate_taxes", "Merge identical taxes (same name, percentage, and inclusion type).",
+    super("deduplicate_taxes", "Merges identical taxes (same name, percentage, and inclusion type).",
         logger);
   }
 

@@ -41,7 +41,7 @@ import java.util.concurrent.CompletionException;
 public class GloballyEnableAllItemsExample extends Example {
 
   public GloballyEnableAllItemsExample(Logger logger) {
-    super("globally_enable_items", "Make all items available at all locations.", logger);
+    super("globally_enable_items", "Makes all items available at all locations.", logger);
   }
 
   @Override

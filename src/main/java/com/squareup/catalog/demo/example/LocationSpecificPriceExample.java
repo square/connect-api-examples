@@ -28,7 +28,7 @@ public class LocationSpecificPriceExample extends Example {
 
   public LocationSpecificPriceExample(Logger logger) {
     super("location_specific_price",
-        "Create an item with a location-specific price. Must have at least 2 locations to run this example.",
+        "Creates an item with a location-specific price. Must have at least 2 locations to run this example.",
         logger);
   }
 

@@ -43,7 +43,7 @@ import com.squareup.square.models.CatalogTax;
 public class RetrieveCatalogObjectExample extends Example {
 
   public RetrieveCatalogObjectExample(Logger logger) {
-    super("retrieve_catalog_object", "Retrieve a catalog object by ID.", logger);
+    super("retrieve_catalog_object", "Retrieves a catalog object by ID.", logger);
   }
 
   @Override

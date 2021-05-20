@@ -46,17 +46,17 @@ For simplicity, here is a list of available examples and their description:
 
 | Example Name  | Description |
 | ------------- | ------------- |
-| create_item  | Create an item, then retrieve it  |
-| delete_all_items  | Delete ALL items. This is a destructive action and cannot be undone  |
+| create_item  | Creates an item, then retrieve it  |
+| delete_all_items  | Deletes ALL items. This is a destructive action and cannot be undone  |
 | apply_tax_to_all_items   | Applies a selected tax to all items  |
-| deduplicate_taxes  | Merge identical taxes (same name, percentage, and inclusion type)  |
-| delete_category  | Create a category with three items, then delete the category and items  |
-| list_categories  | List all categories  |
-| list_discounts  | List all discounts  |
-| location_specific_price  | Create an item with a location-specific price. Must have at least 2 locations to run this example  |
-| search_items  | Search for items  |
-| retrieve_catalog_object  | Retrieve a catalog object by ID  |
-| globally_enable_items  | Make all items available at all locations |
+| deduplicate_taxes  | Merges identical taxes (same name, percentage, and inclusion type)  |
+| delete_category  | Creates a category with three items, then delete the category and items  |
+| list_categories  | Lists all categories  |
+| list_discounts  | Lists all discounts  |
+| location_specific_price  | Creates an item with a location-specific price. Must have at least 2 locations to run this example  |
+| search_items  | Searches for items  |
+| retrieve_catalog_object  | Retrieves a catalog object by ID  |
+| globally_enable_items  | Makes all items available at all locations |
 | clone_catalog  | Clones catalog objects from one merchant account to another  |
 
 
@@ -71,11 +71,7 @@ Running an example has the following syntax:
 mvn -q exec:java "-Dexec.args={{ example name }} -token {{ accessToken }}"
 ```
 
-For example:
-```bash
-mvn -q exec:java "-Dexec.args=create_item -token $SQPAT"
-```
-Or, if your `SQPAT` is set:
+For example, if your `SQPAT` is set:
 ```bash
 mvn -q exec:java "-Dexec.args=create_item"
 ```

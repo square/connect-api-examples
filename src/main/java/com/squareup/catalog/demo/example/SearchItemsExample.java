@@ -36,7 +36,7 @@ import com.squareup.square.models.SearchCatalogObjectsRequest;
 public class SearchItemsExample extends Example {
 
   public SearchItemsExample(Logger logger) {
-    super("search_items", "Search for items.", logger);
+    super("search_items", "Searches for items.", logger);
   }
 
   @Override

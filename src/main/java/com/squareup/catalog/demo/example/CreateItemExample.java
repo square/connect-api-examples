@@ -39,7 +39,7 @@ import com.squareup.square.models.CatalogObjectBatch;
 public class CreateItemExample extends Example {
 
   public CreateItemExample(Logger logger) {
-    super("create_item", "Create an item, then retrieve it.", logger);
+    super("create_item", "Creates an item, then retrieve it.", logger);
   }
 
   @Override

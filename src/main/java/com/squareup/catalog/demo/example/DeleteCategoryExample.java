@@ -45,7 +45,7 @@ public class DeleteCategoryExample extends Example {
 
   public DeleteCategoryExample(Logger logger) {
     super("delete_category",
-        "Create a category with three items, then delete the category and items.", logger);
+        "Creates a category with three items, then deletes the category and items.", logger);
   }
 
   @Override

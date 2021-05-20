@@ -33,7 +33,7 @@ import java.util.concurrent.CompletionException;
 public class ListCategoriesExample extends Example {
 
   public ListCategoriesExample(Logger logger) {
-    super("list_categories", "List all categories.", logger);
+    super("list_categories", "Lists all categories.", logger);
   }
 
   @Override
