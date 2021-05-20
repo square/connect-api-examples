@@ -1,4 +1,10 @@
-# Catalog API Demo App
+# Useful Links
+
+- [Square Java SDK](https://developer.squareup.com/docs/sdks/java)
+- [Catalog API Overview](https://developer.squareup.com/docs/catalog-api/what-it-does)
+- [Catalog in the API Reference](https://developer.squareup.com/reference/square/catalog-api)
+
+# Catalog API Sample App
 
 This is a sample command line application providing examples of common Catalog API interactions.
 
