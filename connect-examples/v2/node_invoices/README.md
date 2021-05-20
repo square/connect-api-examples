@@ -75,6 +75,7 @@ with card on file. Run the script, wait for 30 seconds and refresh the page:
 
 This Express.js project is organized as follows:
 
+
 *   **.env.** You provide credentials in this file.
 *   **/public.** These are the CSS files used to render the home page 
 *   **/routes.** The following JavaScript files define the routes to handle requests:
