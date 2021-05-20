@@ -65,8 +65,8 @@ public class Main {
   private static final String ARG_BASE_URL = "-base-url";
 
   /**
-   * Optional argument used to specify that the example should be cleaned up
-   * instead of being executed.
+   * Optional argument used to specify that the example should be cleaned up instead of being
+   * executed.
    */
   private static final String ARG_CLEANUP = "-cleanup";
 
@@ -76,9 +76,8 @@ public class Main {
   private static final String ARG_TOKEN = "-token";
 
   /**
-   * Argument used to set environment. If set to sandbox, the APIs will hit the
-   * sandbox environment. If set to production, the APIs will hit the production
-   * environment.
+   * Argument used to set environment. If set to sandbox, the APIs will hit the sandbox environment.
+   * If set to production, the APIs will hit the production environment.
    */
   private static final String ENV_FLAG = "-env";
 
@@ -128,9 +127,9 @@ public class Main {
     }
 
     // Process arguments associated with the example.
-    // By default, set the value of the access token to the environment variable SQPAT,
+    // By default, set the value of the access token to the environment variable SQUARE_ACCESS_TOKEN,
     // as mentioned in the README.
-    String accessToken = System.getenv("SQPAT");
+    String accessToken = System.getenv("SQUARE_ACCESS_TOKEN");
     boolean cleanup = false;
     String environment = null;
     String customUrl = null;
@@ -187,7 +186,8 @@ public class Main {
     if (environment != null && !environment.equalsIgnoreCase("sandbox")
         && !environment.equalsIgnoreCase("production")) {
       // was set to something that we do not support.
-      logger.error("If you choose to use the -env flag, you must either specify \"sandbox\" or \"production\"");
+      logger.error(
+          "If you choose to use the -env flag, you must either specify \"sandbox\" or \"production\"");
       return;
     }
 
@@ -261,7 +261,8 @@ public class Main {
    * @param cleanup     if true, cleanup the example instead of executing it
    * @param catalogApi  the CatalogApi utility
    */
-  private void executeExample(String exampleName, boolean cleanup, CatalogApi catalogApi, LocationsApi locationsApi) {
+  private void executeExample(String exampleName, boolean cleanup, CatalogApi catalogApi,
+      LocationsApi locationsApi) {
     for (Example example : examples) {
       if (example.getName().equalsIgnoreCase(exampleName)) {
         try {
@@ -283,11 +284,11 @@ public class Main {
   }
 
   /**
-   * Finds out the currency to be used across all examples. The listLocation api call will block,
-   * as we need the currency information in order to proceed with processing the examples.
-   * NOTE: This step can be avoided if you know what currency you will be using.
-   * In that case, you can simply comment out the below function, and call
-   * 'Moneys.setCurrency(<YOUR APP CURRENCY>);' with values such as CAD, USD, EUR, GBP, etc.
+   * Finds out the currency to be used across all examples. The listLocation api call will block, as
+   * we need the currency information in order to proceed with processing the examples. NOTE: This
+   * step can be avoided if you know what currency you will be using. In that case, you can simply
+   * comment out the below function, and call 'Moneys.setCurrency(<YOUR APP CURRENCY>);' with values
+   * such as CAD, USD, EUR, GBP, etc.
    *
    * @param locationsApi the LocationsApi utility
    */

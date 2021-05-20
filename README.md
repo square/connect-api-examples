@@ -22,7 +22,7 @@ token:
 5. Copy the Access Token on that page and save it to an
   environment variable:
    
-   `export SQPAT={{ YOUR NEW ACCESS TOKEN }}`
+   `export SQUARE_ACCESS_TOKEN={{ YOUR NEW ACCESS TOKEN }}`
 
 ## STEP 2: Compile the demo
 
@@ -71,7 +71,7 @@ Running an example has the following syntax:
 mvn -q exec:java "-Dexec.args={{ example name }} -token {{ accessToken }}"
 ```
 
-For example, if your `SQPAT` is set:
+For example, if your `SQUARE_ACCESS_TOKEN` is set:
 ```bash
 mvn -q exec:java "-Dexec.args=create_item"
 ```
@@ -80,7 +80,7 @@ By default, the example will use the sandbox environment: https://connect.square
 
 In order to use the production environment, use the `-env` flag with the `production` argument:
 ```bash
-mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -env production"
+mvn -q exec:java "-Dexec.args=create_item -token $SQUARE_ACCESS_TOKEN -env production"
 ```
 
 In order to use a different/custom URL, use the `-base-url` flag with your custom URL and omit the `-env` flag.
@@ -96,5 +96,5 @@ delete items with the same name that were not created by the example.
 
 For example:
 ```bash
-mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -cleanup"
+mvn -q exec:java "-Dexec.args=create_item -token $SQUARE_ACCESS_TOKEN -cleanup"
 ```
