@@ -15,22 +15,22 @@
  */
 package com.squareup.catalog.demo.example;
 
-import com.squareup.catalog.demo.Logger;
-import com.squareup.catalog.demo.util.Errors;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.BatchDeleteCatalogObjectsRequest;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.CatalogQuery;
-import com.squareup.connect.models.CatalogQueryExact;
-import com.squareup.connect.models.Error;
-import com.squareup.connect.models.SearchCatalogObjectsRequest;
-import com.squareup.connect.models.SearchCatalogObjectsRequest.ObjectTypesEnum;
-import com.squareup.connect.models.SearchCatalogObjectsResponse;
+import static java.util.Collections.singletonList;
+
+import com.squareup.square.exceptions.ApiException;
+import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
+import com.squareup.catalog.demo.Logger;
+import com.squareup.catalog.demo.util.Errors;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.BatchDeleteCatalogObjectsRequest;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.square.models.CatalogQuery;
+import com.squareup.square.models.CatalogQueryExact;
+import com.squareup.square.models.Error;
+import com.squareup.square.models.SearchCatalogObjectsRequest;
 
 /**
  * Base class used to define Examples.
@@ -58,22 +58,21 @@ public abstract class Example {
   /**
    * Executes the example.
    *
-   * @param catalogApi the API abstraction used to interact with the Catalog API
+   * @param catalogApi   the API abstraction used to interact with the Catalog API
    * @param locationsApi the API abstraction used to interact with merchant locations
    */
-  public abstract void execute(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException;
+  public abstract void execute(CatalogApi catalogApi, LocationsApi locationsApi);
 
   /**
    * Cleans up {@link CatalogObject}s created by this example.
-   *
+   * <p>
    * Note that this is a destructive operation and may delete items by name, which may include items
    * that were not created by this example.
    *
-   * @param catalogApi the API abstraction used to interact with the Catalog API
+   * @param catalogApi   the API abstraction used to interact with the Catalog API
    * @param locationsApi the API abstraction used to interact with merchant locations
    */
-  public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  public void cleanup(CatalogApi catalogApi, LocationsApi locationsApi) {
     logger.info("Nothing to cleanup");
   }
 
@@ -91,38 +90,41 @@ public abstract class Example {
    * Deletes objects of the specified type and name.
    *
    * @param catalogApi the API abstraction used to interact with the Catalog API
-   * @param type the type of objects to delete
-   * @param name the name of objects to delete
+   * @param type       the type of objects to delete
+   * @param name       the name of objects to delete
    */
-  protected void cleanCatalogObjectsByName(CatalogApi catalogApi, ObjectTypesEnum type, String name)
-      throws ApiException {
+  protected void cleanCatalogObjectsByName(CatalogApi catalogApi, String type, String name) {
     // Search for objects by name and type.
     logger.info("Search for " + type + " named " + name);
-    SearchCatalogObjectsRequest searchRequest = new SearchCatalogObjectsRequest()
-        .objectTypes(singletonList(type))
-        .query(new CatalogQuery()
-            // An Exact query searches for exact matches of the specified attribute.
-            .exactQuery(new CatalogQueryExact()
-                .attributeName("name")
-                .attributeValue(name)
-            )
-        );
-    SearchCatalogObjectsResponse searchResponse = catalogApi.searchCatalogObjects(searchRequest);
-    if (checkAndLogErrors(searchResponse.getErrors())) {
-      return;
-    }
 
-    List<CatalogObject> found = searchResponse.getObjects();
-    if (found.size() == 0) {
-      logger.info("No " + type + " found");
-    } else {
-      // Delete the objects.
-      logger.info("Deleting " + found.size() + " " + type);
-      BatchDeleteCatalogObjectsRequest deleteRequest = new BatchDeleteCatalogObjectsRequest();
-      for (CatalogObject catalogObject : searchResponse.getObjects()) {
-        deleteRequest.addObjectIdsItem(catalogObject.getId());
+    CatalogQuery query = new CatalogQuery.Builder()
+        // An Exact query searches for exact matches of the specified attribute.
+        .exactQuery(new CatalogQueryExact("name", name))
+        .build();
+
+    SearchCatalogObjectsRequest searchRequest = new SearchCatalogObjectsRequest.Builder()
+        .objectTypes(singletonList(type)).query(query)
+        .build();
+
+    catalogApi.searchCatalogObjectsAsync(searchRequest).thenAccept(result -> {
+      if (result.getObjects() == null || result.getObjects().size() == 0) {
+        logger.info("No " + type + " found");
+      } else {
+        List<CatalogObject> found = result.getObjects();
+        // Delete the objects.
+        logger.info("Deleting " + found.size() + " " + type);
+        List<String> ids = new ArrayList<>();
+        for (CatalogObject catalogObject : found) {
+          ids.add(catalogObject.getId());
+        }
+        BatchDeleteCatalogObjectsRequest deleteRequest = new BatchDeleteCatalogObjectsRequest(ids);
+        catalogApi.batchDeleteCatalogObjectsAsync(deleteRequest);
       }
-      catalogApi.batchDeleteCatalogObjects(deleteRequest);
-    }
+    }).exceptionally(exception -> {
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors());
+      return null;
+    }).join();
   }
 }

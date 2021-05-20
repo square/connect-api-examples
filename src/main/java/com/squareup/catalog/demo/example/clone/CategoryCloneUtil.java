@@ -13,32 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.squareup.catalog.demo.example.clone;
 
 import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.square.models.CatalogCategory;
 import com.squareup.square.models.CatalogObject;
-import com.squareup.square.models.CatalogTax;
 
 /**
- * Utility methods used to clone a {@link CatalogTax}.
+ * Utility methods used to clone a {@link CatalogCategory}.
  */
-class TaxCloneUtil extends CatalogObjectCloneUtil<CatalogTax> {
+public class CategoryCloneUtil extends CatalogObjectCloneUtil<CatalogCategory> {
 
-  TaxCloneUtil() {
-    super(CatalogObjectTypes.TAX);
+  CategoryCloneUtil() {
+    super(CatalogObjectTypes.CATEGORY);
   }
 
   @Override
-  CatalogTax getCatalogData(CatalogObject catalogObject) {
-    return catalogObject.getTaxData();
+  CatalogCategory getCatalogData(CatalogObject catalogObject) {
+    return catalogObject.getCategoryData();
   }
 
   @Override
-  String encodeCatalogData(CatalogTax tax) {
-    return tax.getName()
-        + ":::"
-        + tax.getPercentage()
-        + ":::"
-        + tax.getInclusionType();
+  String encodeCatalogData(CatalogCategory category) {
+    return category.getName();
   }
 }

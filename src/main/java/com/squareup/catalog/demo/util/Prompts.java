@@ -46,7 +46,7 @@ public class Prompts {
    * Display a message prompting the user to answer a yes or no question.
    *
    * @param message the message displayed the user
-   * @param logger the {@link Logger} used to log errors
+   * @param logger  the {@link Logger} used to log errors
    * @return true if yes, false if no
    */
   public static boolean promptUserInputYesNo(String message, Logger logger) {

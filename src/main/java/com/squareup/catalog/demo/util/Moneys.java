@@ -15,22 +15,24 @@
  */
 package com.squareup.catalog.demo.util;
 
-import com.squareup.connect.models.Money;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
-import static com.squareup.connect.models.Money.CurrencyEnum.USD;
+import com.squareup.square.models.Money;
 
 public class Moneys {
 
   /**
-   * Creates a Money object for the specified amount of cents in USD.
+   * Variable that holds the currency to be used across the application.
    */
-  public static Money usd(long cents) {
-    return new Money()
-        .amount(cents)
-        .currency(USD);
+  private static String currency;
+
+  /**
+   * Creates a Money object for the specified amount of cents in the currency provided earlier.
+   */
+  public static Money createMoneyObject(long cents) {
+    return new Money.Builder().amount(cents).currency(currency).build();
   }
 
   /**
@@ -47,7 +49,7 @@ public class Moneys {
    * Formats Money into a human readable currency string.
    *
    * @param moneyOrNull the money to format, or null
-   * @param locale the {@link Locale} to format for
+   * @param locale      the {@link Locale} to format for
    * @return a formatted money string, or null if moneyOrNull is null
    */
   public static String format(Money moneyOrNull, Locale locale) {
@@ -64,16 +66,34 @@ public class Moneys {
     formatter.setMaximumFractionDigits(currency.getDefaultFractionDigits());
 
     if (currency.getDefaultFractionDigits() == 0) {
-      // For locales that do not support fractional amounts, use the amount as is. For example,
-      // Japan has no concept of "cents". The base unit of currency is 1 Yen, and currency is always
-      // measured in Yen.
+      // For locales that do not support fractional amounts, use the amount as is.
+      // For example, Japan has no concept of "cents". The base unit of currency is 1 Yen,
+      // and currency is always measured in Yen.
       return formatter.format(moneyOrNull.getAmount());
     } else {
       // For locales that support fractional amounts, divide by 100 to get the local equivalent of
-      // "dollars". For example, the amount in USD is represented as cents. We devide by 100 to get
+      // "dollars". For example, the amount in USD is represented as cents. We divide by 100 to get
       // US dollars.
       return formatter.format(moneyOrNull.getAmount() / 100.0);
     }
+  }
+
+  /**
+   * Sets the appropriate currency for the app.
+   *
+   * @param c the currency to be used.
+   */
+  public static void setCurrency(String c) {
+    currency = c;
+  }
+
+  /**
+   * Gets the appropriate currency for the app.
+   *
+   * @return the currency used across the app.
+   */
+  public static String getCurrency() {
+    return currency;
   }
 
   private Moneys() {

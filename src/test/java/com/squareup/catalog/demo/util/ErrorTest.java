@@ -15,59 +15,58 @@
  */
 package com.squareup.catalog.demo.util;
 
-import com.squareup.catalog.demo.Logger;
-import com.squareup.connect.models.Error;
-import com.squareup.connect.models.Error.CategoryEnum;
-import com.squareup.connect.models.Error.CodeEnum;
+import static org.mockito.Mockito.verify;
+
 import java.util.Collections;
 import java.util.List;
+
+import com.squareup.catalog.demo.Logger;
+import com.squareup.square.models.Error;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.verify;
-
 public class ErrorTest {
 
-  @Mock Logger logger;
+  @Mock
+  Logger logger;
 
-  @Before public void setUp() {
+  @Before
+  public void setUp() {
     MockitoAnnotations.initMocks(this);
   }
 
-  @Test public void checkAndLogErrors_hasCodeAndCategory() {
-    List<Error> errors = Collections.singletonList(new Error()
-        .category(CategoryEnum.INVALID_REQUEST_ERROR)
-        .code(CodeEnum.BAD_REQUEST)
-        .detail("detail"));
+  @Test
+  public void checkAndLogErrors_hasCodeAndCategory() {
+    List<Error> errors =
+        Collections.singletonList(new Error.Builder("CATEGORY", "code").detail("detail").build());
+
     Errors.checkAndLogErrors(errors, logger);
-    verify(logger).error("[INVALID_REQUEST_ERROR:BAD_REQUEST] detail");
+    verify(logger).error("[CATEGORY:code] detail");
   }
 
-  @Test public void checkAndLogErrors_hasCodeOnly() {
-    List<Error> errors = Collections.singletonList(new Error()
-        .category(null)
-        .code(CodeEnum.BAD_REQUEST)
-        .detail("detail"));
+  @Test
+  public void checkAndLogErrors_hasCodeOnly() {
+    List<Error> errors =
+        Collections.singletonList(new Error.Builder(null, "BAD REQUEST").detail("detail").build());
     Errors.checkAndLogErrors(errors, logger);
-    verify(logger).error("[BAD_REQUEST] detail");
+    verify(logger).error("[BAD REQUEST] detail");
   }
 
-  @Test public void checkAndLogErrors_hasCategoryOnly() {
-    List<Error> errors = Collections.singletonList(new Error()
-        .category(CategoryEnum.INVALID_REQUEST_ERROR)
-        .code(null)
-        .detail("detail"));
+  @Test
+  public void checkAndLogErrors_hasCategoryOnly() {
+    List<Error> errors = Collections.singletonList(
+        new Error.Builder("INVALID REQUEST", null).detail("detail").build());
     Errors.checkAndLogErrors(errors, logger);
-    verify(logger).error("[INVALID_REQUEST_ERROR] detail");
+    verify(logger).error("[INVALID REQUEST] detail");
   }
 
-  @Test public void checkAndLogErrors_noCodeOrCategory() {
-    List<Error> errors = Collections.singletonList(new Error()
-        .category(null)
-        .code(null)
-        .detail("detail"));
+  @Test
+  public void checkAndLogErrors_noCodeOrCategory() {
+    List<Error> errors =
+        Collections.singletonList(new Error.Builder(null, null).detail("detail").build());
     Errors.checkAndLogErrors(errors, logger);
     verify(logger).error("detail");
   }

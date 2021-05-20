@@ -1,6 +1,6 @@
 # Catalog API Demo App
 
-Demo app providing examples of common Catalog API interactions.
+This is a sample command line application providing examples of common Catalog API interactions.
 
 ## Assumptions
 
@@ -15,20 +15,21 @@ Square. If you already have one, you can use it for this demo. If you don't
 already have one (or want to use a different one) you can generate a new access
 token:
 
-1. Visit the Application Dashboard at https://connect.squareup.com/apps
-2. Click "New Application".
+1. Visit the Developer Dashboard at https://developer.squareup.com/apps
+2. Click "+" under Applications to create a new application.
 3. Create an application with the name "Catalog API Demo".
-4. Copy the Personal Access Token that is generated and save it to an
+4. Click on the application you have just created, and navigate to "Credentials"
+5. Copy the Access Token on that page and save it to an
   environment variable:
    
-   `export SQPAT={{ YOUR NEW ACCESS TOKEN }}`
+   `export SQUARE_ACCESS_TOKEN={{ YOUR NEW ACCESS TOKEN }}`
 
 ## STEP 2: Compile the demo
 
 The `src` directory should contain everything you need to compile and run the
 demo app. To build `catalog-api-demo`:
 
-```
+```bash
 mvn compile
 ```
 
@@ -37,9 +38,27 @@ mvn compile
 To confirm the demo is runnable, use the `-list-examples` flag to see all
 the available examples:
 
-```
+```bash
 mvn -q exec:java "-Dexec.args=-list-examples"
 ```
+
+For simplicity, here is a list of available examples and their description:
+
+| Example Name  | Description |
+| ------------- | ------------- |
+| create_item  | Creates an item, then retrieve it  |
+| delete_all_items  | Deletes ALL items. This is a destructive action and cannot be undone  |
+| apply_tax_to_all_items   | Applies a selected tax to all items  |
+| deduplicate_taxes  | Merges identical taxes (same name, percentage, and inclusion type)  |
+| delete_category  | Creates a category with three items, then delete the category and items  |
+| list_categories  | Lists all categories  |
+| list_discounts  | Lists all discounts  |
+| location_specific_price  | Creates an item with a location-specific price. Must have at least 2 locations to run this example  |
+| search_items  | Searches for items  |
+| retrieve_catalog_object  | Retrieves a catalog object by ID  |
+| globally_enable_items  | Makes all items available at all locations |
+| clone_catalog  | Clones catalog objects from one merchant account to another  |
+
 
 ## Execute an Example
 
@@ -48,14 +67,24 @@ Source code for each of the examples is listed under
 
 Running an example has the following syntax:
 
-```
+```bash
 mvn -q exec:java "-Dexec.args={{ example name }} -token {{ accessToken }}"
 ```
 
-For example:
+For example, if your `SQUARE_ACCESS_TOKEN` is set:
+```bash
+mvn -q exec:java "-Dexec.args=create_item"
 ```
-mvn -q exec:java "-Dexec.args=create_item -token $SQPAT"
+
+By default, the example will use the sandbox environment: https://connect.squareupsandbox.com/
+
+In order to use the production environment, use the `-env` flag with the `production` argument:
+```bash
+mvn -q exec:java "-Dexec.args=create_item -token $SQUARE_ACCESS_TOKEN -env production"
 ```
+
+In order to use a different/custom URL, use the `-base-url` flag with your custom URL and omit the `-env` flag.
+
 
 ## Cleanup an Example
 
@@ -66,6 +95,6 @@ Note that the cleanup code will delete items and other objects by name, and as s
 delete items with the same name that were not created by the example. 
 
 For example:
-```
-mvn -q exec:java "-Dexec.args=create_item -token $SQPAT -cleanup"
+```bash
+mvn -q exec:java "-Dexec.args=create_item -token $SQUARE_ACCESS_TOKEN -cleanup"
 ```

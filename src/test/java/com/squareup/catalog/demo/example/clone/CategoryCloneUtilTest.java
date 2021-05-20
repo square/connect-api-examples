@@ -15,30 +15,27 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
-import com.squareup.catalog.demo.util.CatalogObjectTypes;
-import com.squareup.square.models.CatalogObject;
-import com.squareup.square.models.CatalogTax;
+import static org.fest.assertions.Assertions.assertThat;
 
-/**
- * Utility methods used to clone a {@link CatalogTax}.
- */
-class TaxCloneUtil extends CatalogObjectCloneUtil<CatalogTax> {
+import com.squareup.catalog.demo.util.Moneys;
+import com.squareup.square.models.CatalogCategory;
 
-  TaxCloneUtil() {
-    super(CatalogObjectTypes.TAX);
+import org.junit.Before;
+import org.junit.Test;
+
+public class CategoryCloneUtilTest {
+
+  private CategoryCloneUtil cloneUtil;
+
+  @Before
+  public void setUp() {
+    this.cloneUtil = new CategoryCloneUtil();
+    Moneys.setCurrency("CAD");
   }
 
-  @Override
-  CatalogTax getCatalogData(CatalogObject catalogObject) {
-    return catalogObject.getTaxData();
-  }
-
-  @Override
-  String encodeCatalogData(CatalogTax tax) {
-    return tax.getName()
-        + ":::"
-        + tax.getPercentage()
-        + ":::"
-        + tax.getInclusionType();
+  @Test
+  public void encodeCatalogData() {
+    CatalogCategory category = new CatalogCategory("TestCategory");
+    assertThat(cloneUtil.encodeCatalogData(category)).isEqualTo("TestCategory");
   }
 }

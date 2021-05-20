@@ -15,15 +15,17 @@
  */
 package com.squareup.catalog.demo.example;
 
-import com.squareup.catalog.demo.Logger;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.CatalogCategory;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.ListCatalogResponse;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.models.ListCatalogResponse;
+import java.util.List;
 
-import static com.squareup.connect.models.CatalogObjectType.CATEGORY;
+import com.squareup.catalog.demo.Logger;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.CatalogCategory;
+import com.squareup.square.models.CatalogObject;
+import java.util.concurrent.CompletionException;
 
 /**
  * This example lists all categories in the catalog.
@@ -31,31 +33,45 @@ import static com.squareup.connect.models.CatalogObjectType.CATEGORY;
 public class ListCategoriesExample extends Example {
 
   public ListCategoriesExample(Logger logger) {
-    super("list_categories", "List all categories.", logger);
+    super("list_categories", "Lists all categories.", logger);
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
+
+    // Optional parameters can be set to null.
+    Long catalogVersion = null;
+
     String cursor = null;
+
     do {
-      // Retrieve a page of categories.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, CATEGORY.toString());
-      if (checkAndLogErrors(listResponse.getErrors())) {
-        return;
-      }
+      try {
+        // Retrieve a page of categories.
+        ListCatalogResponse result =
+            catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.CATEGORY.toString(),
+                catalogVersion).join();
 
-      if (listResponse.getObjects().isEmpty() && cursor == null) {
-        logger.info("No categories found.");
-        return;
+        List<CatalogObject> categories = result.getObjects();
+        if (categories == null || categories.size() == 0) {
+          if (cursor == null) {
+            logger.info("No categories found.");
+            return;
+          }
+        } else {
+          for (CatalogObject categoryObject : categories) {
+            CatalogCategory category = categoryObject.getCategoryData();
+            logger.info(category.getName() + " (" + categoryObject.getId() + ")");
+          }
+        }
+        // Move to the next page.
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
+          return;
+        }
       }
-
-      for (CatalogObject categoryObject : listResponse.getObjects()) {
-        CatalogCategory category = categoryObject.getCategoryData();
-        logger.info(category.getName() + " (" + categoryObject.getId() + ")");
-      }
-
-      // Move to the next page.
-      cursor = listResponse.getCursor();
     } while (cursor != null);
   }
 }

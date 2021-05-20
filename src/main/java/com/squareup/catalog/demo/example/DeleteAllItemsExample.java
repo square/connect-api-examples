@@ -15,18 +15,21 @@
  */
 package com.squareup.catalog.demo.example;
 
-import com.squareup.catalog.demo.Logger;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.BatchDeleteCatalogObjectsRequest;
-import com.squareup.connect.models.BatchDeleteCatalogObjectsResponse;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.ListCatalogResponse;
+import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
+
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.models.BatchDeleteCatalogObjectsResponse;
+import com.squareup.square.models.ListCatalogResponse;
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
-import static com.squareup.connect.models.CatalogObjectType.ITEM;
+import com.squareup.catalog.demo.Logger;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.BatchDeleteCatalogObjectsRequest;
+import com.squareup.square.models.CatalogObject;
+import java.util.concurrent.CompletionException;
 
 /**
  * This example deletes all items and variations in a merchant's Item Library.
@@ -39,68 +42,72 @@ public class DeleteAllItemsExample extends Example {
 
   public DeleteAllItemsExample(Logger logger) {
     super("delete_all_items",
-        "Delete ALL items. This is a destructive action and cannot be undone.", logger);
+        "Deletes ALL items. This is a destructive action and cannot be undone.", logger);
   }
 
-  @Override public void execute(CatalogApi catalogApi, LocationsApi locationsApi)
-      throws ApiException {
+  @Override
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
 
-    // Prompt the  user to verify that they actually want to delete all items in the library.
+    // Prompt the user to verify that they actually want to delete all items in the
+    // library.
     if (!promptUserInput(CONFIRMATION_PROMPT).equals("DELETE")) {
       logger.info("Example aborted");
       return;
     }
 
-    String cursor = null;
-    int totalDeletedItems = 0;
+    // Optional parameters can be set to null.
+    Long catalogVersion = null;
+
     final long startTimeMillis = System.currentTimeMillis();
+    int totalDeletedItems = 0;
+    String cursor = null;
+
     do {
-      // Retrieve a page of items.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, ITEM.toString());
-      if (checkAndLogErrors(listResponse.getErrors())) {
-        return;
-      }
+      try {
+        ListCatalogResponse result =
+            catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.ITEM.toString(), catalogVersion)
+                .join();
 
-      List<CatalogObject> items = listResponse.getObjects();
-      if (items.size() == 0) {
-        if (cursor == null) {
-          logger.info("No items found. Item Library was already empty.");
+        List<CatalogObject> items = result.getObjects();
+        if (items == null || items.size() == 0) {
+          if (cursor == null) {
+            logger.info("No items found. Item Library was already empty.");
+            return;
+          }
+        } else {
+          // Delete all items in the page of results.
+          List<String> ids = new ArrayList<>();
+          for (CatalogObject catalogObject : items) {
+            ids.add(catalogObject.getId());
+          }
+          BatchDeleteCatalogObjectsRequest deleteRequest =
+              new BatchDeleteCatalogObjectsRequest(ids);
+
+          catalogApi.batchDeleteCatalogObjectsAsync(deleteRequest).join();
+
+          logger.info("Deleted " + items.size() + " items");
+          totalDeletedItems += items.size();
+        }
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
           return;
         }
-      } else {
-        // Delete all items in the page of results.
-        BatchDeleteCatalogObjectsRequest deleteRequest = new BatchDeleteCatalogObjectsRequest();
-        for (CatalogObject catalogObject : items) {
-          deleteRequest.addObjectIdsItem(catalogObject.getId());
-        }
-        BatchDeleteCatalogObjectsResponse deleteResponse =
-            catalogApi.batchDeleteCatalogObjects(deleteRequest);
-        if (checkAndLogErrors(deleteResponse.getErrors())) {
-          return;
-        }
-
-        // Log info about this page of items we just deleted.
-        long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
-        totalDeletedItems += items.size();
-        logger.info("Deleted "
-            + items.size()
-            + " items ("
-            + totalDeletedItems
-            + " total in "
-            + elapsedTimeSeconds
-            + " seconds)");
       }
-
-      // Move to the next page.
-      cursor = listResponse.getCursor();
     } while (cursor != null);
 
-    // Show completion message.
+    // Log information about the deleted items.
     long elapsedTimeSeconds = (System.currentTimeMillis() - startTimeMillis) / 1000;
+    logDeletedItems(elapsedTimeSeconds, totalDeletedItems);
+  }
+
+  private void logDeletedItems(long elapsedTime, int totalDeletedItems) {
     logger.info("Complete! Deleted "
         + totalDeletedItems
         + " total items in "
-        + elapsedTimeSeconds
+        + elapsedTime
         + " seconds");
   }
 }

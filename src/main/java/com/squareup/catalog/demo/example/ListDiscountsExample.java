@@ -15,16 +15,19 @@
  */
 package com.squareup.catalog.demo.example;
 
-import com.squareup.catalog.demo.Logger;
-import com.squareup.catalog.demo.util.Moneys;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.models.CatalogDiscount;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.ListCatalogResponse;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.models.ListCatalogResponse;
+import java.util.List;
 
-import static com.squareup.connect.models.CatalogObjectType.DISCOUNT;
+import com.squareup.catalog.demo.Logger;
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.catalog.demo.util.DiscountTypes;
+import com.squareup.catalog.demo.util.Moneys;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.CatalogDiscount;
+import com.squareup.square.models.CatalogObject;
+import java.util.concurrent.CompletionException;
 
 /**
  * This example lists all discounts in the catalog.
@@ -32,55 +35,69 @@ import static com.squareup.connect.models.CatalogObjectType.DISCOUNT;
 public class ListDiscountsExample extends Example {
 
   public ListDiscountsExample(Logger logger) {
-    super("list_discounts", "List all discounts.", logger);
+    super("list_discounts", "Lists all discounts.", logger);
   }
 
   @Override
-  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) throws ApiException {
+  public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
+
+    // Optional parameters can be set to null.
+    Long catalogVersion = null;
+
     String cursor = null;
+
     do {
-      // Retrieve a page of discounts.
-      ListCatalogResponse listResponse = catalogApi.listCatalog(cursor, DISCOUNT.toString());
-      if (checkAndLogErrors(listResponse.getErrors())) {
-        return;
-      }
 
-      if (listResponse.getObjects().isEmpty() && cursor == null) {
-        logger.info("No discounts found.");
-        return;
-      }
+      try {
+        // Retrieve a page of discounts.
+        ListCatalogResponse result =
+            catalogApi.listCatalogAsync(cursor, CatalogObjectTypes.DISCOUNT.toString(),
+                catalogVersion).join();
 
-      for (CatalogObject discountObject : listResponse.getObjects()) {
-        CatalogDiscount discount = discountObject.getDiscountData();
-        String amount = null;
+        List<CatalogObject> discounts = result.getObjects();
+        if (discounts == null || discounts.size() == 0) {
+          if (cursor == null) {
+            logger.info("No discounts found.");
+            return;
+          }
+        } else {
+          for (CatalogObject discountObject : discounts) {
+            CatalogDiscount discount = discountObject.getDiscountData();
+            String amount = null;
 
-        // Determine which type of discount this is.
-        switch (discount.getDiscountType()) {
-          case FIXED_AMOUNT:
-            amount = Moneys.format(discount.getAmountMoney());
-            break;
-          case FIXED_PERCENTAGE:
-            amount = discount.getPercentage() + "%";
-            break;
-          case VARIABLE_AMOUNT:
-            amount = "variable $";
-            break;
-          case VARIABLE_PERCENTAGE:
-            amount = "variable %";
-            break;
+            // Determine which type of discount this is.
+            switch (DiscountTypes.valueOf(discount.getDiscountType())) {
+              case FIXED_AMOUNT:
+                amount = Moneys.format(discount.getAmountMoney());
+                break;
+              case FIXED_PERCENTAGE:
+                amount = discount.getPercentage() + "%";
+                break;
+              case VARIABLE_AMOUNT:
+                amount = "variable $";
+                break;
+              case VARIABLE_PERCENTAGE:
+                amount = "variable %";
+                break;
+            }
+
+            // Log the name and amount of the discount.
+            String logMessage = discount.getName();
+            if (amount != null) {
+              logMessage += " [" + amount + "]";
+            }
+            logMessage += " (" + discountObject.getId() + ")";
+            logger.info(logMessage);
+          }
         }
-
-        // Log the name and amount of the discount.
-        String logMessage = discount.getName();
-        if (amount != null) {
-          logMessage += " [" + amount + "]";
+        cursor = result.getCursor();
+      } catch (CompletionException e) {
+        // Extract the actual exception
+        ApiException exception = (ApiException) e.getCause();
+        if (checkAndLogErrors(exception.getErrors())) {
+          return;
         }
-        logMessage += " (" + discountObject.getId() + ")";
-        logger.info(logMessage);
       }
-
-      // Move to the next page.
-      cursor = listResponse.getCursor();
     } while (cursor != null);
   }
 }

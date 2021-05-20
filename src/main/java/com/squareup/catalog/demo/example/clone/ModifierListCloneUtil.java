@@ -15,11 +15,15 @@
  */
 package com.squareup.catalog.demo.example.clone;
 
-import com.squareup.connect.models.CatalogModifier;
-import com.squareup.connect.models.CatalogModifierList;
-import com.squareup.connect.models.CatalogObject;
-import com.squareup.connect.models.Money;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+
+import com.squareup.catalog.demo.util.CatalogObjectTypes;
+import com.squareup.square.models.CatalogModifier;
+import com.squareup.square.models.CatalogModifierList;
+import com.squareup.square.models.CatalogObject;
+import com.squareup.square.models.Money;
 
 /**
  * Utility methods used to clone a {@link CatalogModifierList}.
@@ -27,29 +31,40 @@ import java.util.HashSet;
 class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> {
 
   ModifierListCloneUtil() {
-    super(CatalogObject.TypeEnum.MODIFIER_LIST);
-  }
-
-  @Override CatalogModifierList getCatalogData(CatalogObject catalogObject) {
-    return catalogObject.getModifierListData();
-  }
-
-  @Override public String encodeCatalogData(CatalogModifierList modifierList) {
-    return modifierList.getName() + ":::" + modifierList.getSelectionType();
+    super(CatalogObjectTypes.MODIFIER_LIST);
   }
 
   @Override
-  void removeSourceAccountMetaData(CatalogObject catalogObject) {
-    super.removeSourceAccountMetaData(catalogObject);
+  CatalogModifierList getCatalogData(CatalogObject catalogObject) {
+    return catalogObject.getModifierListData();
+  }
+
+  @Override
+  public String encodeCatalogData(CatalogModifierList modifierList) {
+    return modifierList.getName()
+        + ":::"
+        + modifierList.getSelectionType();
+  }
+
+  @Override
+  CatalogObject removeSourceAccountMetaData(CatalogObject catalogObject) {
+    CatalogObject.Builder cleanObjectBuilder =
+        super.removeSourceAccountMetaData(catalogObject).toBuilder();
 
     // Make modifier lists available at all locations by default.
-    catalogObject.setPresentAtAllLocations(true);
+    CatalogObject cleanObject = cleanObjectBuilder.presentAtAllLocations(true).build();
 
     // Also remove meta data from the embedded modifiers.
-    CatalogModifierList modifierList = catalogObject.getModifierListData();
+    List<CatalogObject> updatedModifiers = new ArrayList<>();
+    CatalogModifierList modifierList = cleanObject.getModifierListData();
     for (CatalogObject modifierObject : modifierList.getModifiers()) {
-      removeSourceAccountMetaDataFromModifier(modifierObject, catalogObject);
+      updatedModifiers.add(removeSourceAccountMetaDataFromModifier(modifierObject, cleanObject));
     }
+
+    CatalogModifierList cleanModifierList =
+        modifierList.toBuilder().modifiers(updatedModifiers).build();
+
+    return cleanObject.toBuilder().modifierListData(cleanModifierList).build();
   }
 
   @Override
@@ -57,27 +72,35 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
       CatalogObject targetCatalogObject) {
     // Create a HashSet of the modifiers in the target modifier list.
     CatalogModifierList targetModifierList = targetCatalogObject.getModifierListData();
+    List<CatalogObject> cleanModifiers = new ArrayList<>();
     HashSet<String> targetModifiers = getEncodedModifiers(targetModifierList);
 
-    // Add modifiers from the source modifier list that are not already in the target list.
+    // Add modifiers from the source modifier list that are not already in the
+    // target list.
     boolean addedModifierToTarget = false;
     CatalogModifierList sourceModifierList = sourceCatalogObject.getModifierListData();
     for (CatalogObject modifierObject : sourceModifierList.getModifiers()) {
       String encodeModifier = encodeModifier(modifierObject);
       if (!targetModifiers.contains(encodeModifier)) {
         // Prepare the catalog object for the target account.
-        removeSourceAccountMetaDataFromModifier(modifierObject, targetCatalogObject);
+        CatalogObject cleanModifierObject = removeSourceAccountMetaDataFromModifier(modifierObject,
+            targetCatalogObject);
 
         // Add the modifier to the target modifier list.
-        targetModifierList.addModifiersItem(modifierObject);
+        cleanModifiers.add(cleanModifierObject);
 
         // Mark that we've updated the target modifier list.
         addedModifierToTarget = true;
       }
     }
 
+    cleanModifiers.addAll(targetModifierList.getModifiers());
+
+    CatalogObject updatedObject = targetCatalogObject.toBuilder()
+        .modifierListData(targetModifierList.toBuilder().modifiers(cleanModifiers).build()).build();
+
     // Return the modifier target CatalogObject if it changed.
-    return addedModifierToTarget ? targetCatalogObject : null;
+    return addedModifierToTarget ? updatedObject : null;
   }
 
   /**
@@ -98,20 +121,25 @@ class ModifierListCloneUtil extends CatalogObjectCloneUtil<CatalogModifierList> 
     Money price = modifier.getPriceMoney();
     long amount = (price == null) ? 0 : price.getAmount();
 
-    return modifier.getName() + ":::" + amount;
+    return modifier.getName()
+        + ":::"
+        + amount;
   }
 
   /**
    * Removes meta data from the {@link CatalogObject} that only applies to the source account, such
    * as location IDs and version. Also matches locations with the parent modifier list.
    */
-  private void removeSourceAccountMetaDataFromModifier(CatalogObject modifier,
+  private CatalogObject removeSourceAccountMetaDataFromModifier(CatalogObject modifier,
       CatalogObject modifierList) {
-    super.removeSourceAccountMetaData(modifier);
+    CatalogObject.Builder cleanModifierBuilder =
+        super.removeSourceAccountMetaData(modifier).toBuilder();
 
     // Make the locations of the modifier match the locations of the modifier list.
-    modifier.setPresentAtAllLocations(modifierList.getPresentAtAllLocations());
-    modifier.setPresentAtLocationIds(modifierList.getPresentAtLocationIds());
-    modifier.setAbsentAtLocationIds(modifierList.getAbsentAtLocationIds());
+    return cleanModifierBuilder
+        .presentAtAllLocations(modifierList.getPresentAtAllLocations())
+        .presentAtLocationIds(modifierList.getPresentAtLocationIds())
+        .absentAtLocationIds(modifierList.getAbsentAtLocationIds())
+        .build();
   }
 }

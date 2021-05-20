@@ -15,7 +15,12 @@
  */
 package com.squareup.catalog.demo;
 
-import com.google.gson.JsonSyntaxException;
+import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
+import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
+
+import com.squareup.square.exceptions.ApiException;
+import java.util.Locale;
+
 import com.squareup.catalog.demo.example.ApplyTaxToAllIItemsExample;
 import com.squareup.catalog.demo.example.CreateItemExample;
 import com.squareup.catalog.demo.example.DeduplicateTaxesExample;
@@ -29,26 +34,20 @@ import com.squareup.catalog.demo.example.LocationSpecificPriceExample;
 import com.squareup.catalog.demo.example.RetrieveCatalogObjectExample;
 import com.squareup.catalog.demo.example.SearchItemsExample;
 import com.squareup.catalog.demo.example.clone.CloneCatalogExample;
-import com.squareup.catalog.demo.util.GsonProvider;
-import com.squareup.connect.ApiClient;
-import com.squareup.connect.ApiException;
-import com.squareup.connect.Configuration;
-import com.squareup.connect.api.CatalogApi;
-import com.squareup.connect.api.LocationsApi;
-import com.squareup.connect.auth.OAuth;
-import com.squareup.connect.models.Error;
-import java.util.List;
-import java.util.Locale;
-
-import static com.squareup.catalog.demo.util.Errors.checkAndLogErrors;
-import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
+import com.squareup.catalog.demo.util.Moneys;
+import com.squareup.square.Environment;
+import com.squareup.square.SquareClient;
+import com.squareup.square.SquareClient.Builder;
+import com.squareup.square.api.CatalogApi;
+import com.squareup.square.api.LocationsApi;
+import com.squareup.square.models.Location;
 
 public class Main {
 
-  private static final String USAGE = "USAGE:\n" +
-      "  Execute Example: java <example_name> [-token <accessToken>] [-cleanup]\n" +
-      "  List Examples:   java -list-examples\n" +
-      "  Print Usage:     java -usage";
+  private static final String USAGE = "USAGE:\n"
+      + "  Execute Example: java <example_name> [-token <accessToken>] [-cleanup] [-env <sandbox/production>]\n"
+      + "  List Examples:   java -list-examples\n"
+      + "  Print Usage:     java -usage";
 
   /**
    * Argument used to print usage information.
@@ -76,21 +75,27 @@ public class Main {
    */
   private static final String ARG_TOKEN = "-token";
 
+  /**
+   * Argument used to set environment. If set to sandbox, the APIs will hit the sandbox environment.
+   * If set to production, the APIs will hit the production environment.
+   */
+  private static final String ENV_FLAG = "-env";
+
   public static void main(String[] args) {
     Logger logger = new Logger.SystemLogger();
     Main main = new Main(logger,
-        new ApplyTaxToAllIItemsExample(logger),
-        new CloneCatalogExample(logger),
         new CreateItemExample(logger),
-        new DeduplicateTaxesExample(logger),
         new DeleteAllItemsExample(logger),
+        new ApplyTaxToAllIItemsExample(logger),
+        new DeduplicateTaxesExample(logger),
         new DeleteCategoryExample(logger),
-        new GloballyEnableAllItemsExample(logger),
         new ListCategoriesExample(logger),
         new ListDiscountsExample(logger),
         new LocationSpecificPriceExample(logger),
+        new SearchItemsExample(logger),
         new RetrieveCatalogObjectExample(logger),
-        new SearchItemsExample(logger));
+        new GloballyEnableAllItemsExample(logger),
+        new CloneCatalogExample(logger));
     main.processArgs(args);
   }
 
@@ -122,9 +127,13 @@ public class Main {
     }
 
     // Process arguments associated with the example.
-    String accessToken = null;
+    // By default, set the value of the access token to the environment variable SQUARE_ACCESS_TOKEN,
+    // as mentioned in the README.
+    String accessToken = System.getenv("SQUARE_ACCESS_TOKEN");
     boolean cleanup = false;
-    ApiClient apiClient = Configuration.getDefaultApiClient();
+    String environment = null;
+    String customUrl = null;
+
     for (int i = 1; i < args.length; i++) {
       String arg = args[i].toLowerCase(Locale.US);
       switch (arg) {
@@ -133,7 +142,7 @@ public class Main {
             usage(ARG_BASE_URL + " specified without a url");
             return;
           }
-          apiClient = new ApiClient().setBasePath(args[i + 1]);
+          customUrl = args[i + 1];
           i++;
           break;
         case ARG_CLEANUP:
@@ -145,6 +154,14 @@ public class Main {
             return;
           }
           accessToken = args[i + 1];
+          i++;
+          break;
+        case ENV_FLAG:
+          if (i == args.length - 1) {
+            usage(ENV_FLAG + " specified without an environment");
+            return;
+          }
+          environment = args[i + 1];
           i++;
           break;
         default:
@@ -164,13 +181,44 @@ public class Main {
       return;
     }
 
-    // Configure OAuth2 access token for authorization: oauth2
-    OAuth oauth2 = (OAuth) apiClient.getAuthentication("oauth2");
-    oauth2.setAccessToken(accessToken);
+    Builder apiClientBuilder = new SquareClient.Builder();
 
-    CatalogApi catalogApi = new CatalogApi(apiClient);
-    LocationsApi locationsApi = new LocationsApi(apiClient);
+    if (environment != null && !environment.equalsIgnoreCase("sandbox")
+        && !environment.equalsIgnoreCase("production")) {
+      // was set to something that we do not support.
+      logger.error(
+          "If you choose to use the -env flag, you must either specify \"sandbox\" or \"production\"");
+      return;
+    }
+
+    // Decide on environment.
+    // If both environment and base-url were set, the environment choice will override.
+    Environment env;
+    if (environment == null) {
+      // if environment was not set, check if base url was provided. If so, set
+      // environment to custom. Otherwise, set environment to be sandbox by default.
+      if (customUrl != null) {
+        env = Environment.CUSTOM;
+        apiClientBuilder.customUrl(customUrl);
+      } else {
+        env = Environment.SANDBOX;
+      }
+    } else {
+      env = environment.equalsIgnoreCase("sandbox") ? Environment.SANDBOX : Environment.PRODUCTION;
+    }
+
+    // Build the client using the arguments provided
+    SquareClient apiClient = apiClientBuilder.environment(env).accessToken(accessToken).build();
+
+    CatalogApi catalogApi = apiClient.getCatalogApi();
+    LocationsApi locationsApi = apiClient.getLocationsApi();
+
+    setCurrencyAcrossApplication(locationsApi);
+
     executeExample(command, cleanup, catalogApi, locationsApi);
+
+    // Necessary in order for the program not to hang (kill background threads).
+    System.exit(0);
   }
 
   /**
@@ -210,8 +258,8 @@ public class Main {
    * Executes a single example.
    *
    * @param exampleName the name of the example to execute
-   * @param cleanup if true, cleanup the example instead of executing it
-   * @param catalogApi the CatalogApi utility
+   * @param cleanup     if true, cleanup the example instead of executing it
+   * @param catalogApi  the CatalogApi utility
    */
   private void executeExample(String exampleName, boolean cleanup, CatalogApi catalogApi,
       LocationsApi locationsApi) {
@@ -223,8 +271,11 @@ public class Main {
           } else {
             example.execute(catalogApi, locationsApi);
           }
-        } catch (ApiException e) {
-          handleApiException(e);
+        } catch (Exception e) {
+          // This is bad practice. In a real app, you'd want to handle this exception and
+          // take action according to what went wrong.
+          logger.error(e.getMessage());
+          System.exit(1);
         }
         return;
       }
@@ -233,29 +284,30 @@ public class Main {
   }
 
   /**
-   * Attempts to log {@link Error}s from an {@link ApiException}, or rethrows if the response body
-   * cannot be parsed.
+   * Finds out the currency to be used across all examples. The listLocation api call will block, as
+   * we need the currency information in order to proceed with processing the examples. NOTE: This
+   * step can be avoided if you know what currency you will be using. In that case, you can simply
+   * comment out the below function, and call 'Moneys.setCurrency(<YOUR APP CURRENCY>);' with values
+   * such as CAD, USD, EUR, GBP, etc.
+   *
+   * @param locationsApi the LocationsApi utility
    */
-  private void handleApiException(ApiException apiException) {
-    try {
-      // If the response includes a body, it means that he server returned some error message.
-      ErrorResponse response =
-          GsonProvider.gson().fromJson(apiException.getResponseBody(), ErrorResponse.class);
-
-      // If we found errors in the response body, log them. Otherwise, rethrow.
-      if (!checkAndLogErrors(response.errors, logger)) {
-        throw new RuntimeException(apiException);
+  private void setCurrencyAcrossApplication(LocationsApi locationsApi) {
+    locationsApi.retrieveLocationAsync("main").thenAccept(result -> {
+      // grab the first location for the user, and use that to determine currency.
+      if (result.getLocation() != null) {
+        Location currentLocation = result.getLocation();
+        Moneys.setCurrency(currentLocation.getCurrency());
       }
-    } catch (JsonSyntaxException e) {
-      // If the error message isn't in JSON format, rethrow the error.
-      throw new RuntimeException(apiException);
-    }
-  }
-
-  /**
-   * Represents the response body of an {@link ApiException} that contains server specified errors.
-   */
-  private static class ErrorResponse {
-    List<Error> errors;
+    }).exceptionally(exception -> {
+      // Log exception, exit application as this step is necessary.
+      logger.error("Currency could not be retrieved. "
+          + "Please verify that your access token is correct.");
+      // Extract the actual exception
+      ApiException e = (ApiException) exception.getCause();
+      checkAndLogErrors(e.getErrors(), logger);
+      System.exit(1);
+      return null;
+    }).join();
   }
 }
