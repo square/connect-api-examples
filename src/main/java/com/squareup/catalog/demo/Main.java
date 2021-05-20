@@ -128,7 +128,9 @@ public class Main {
     }
 
     // Process arguments associated with the example.
-    String accessToken = null;
+    // By default, set the value of the access token to the environment variable SQPAT,
+    // as mentioned in the README.
+    String accessToken = System.getenv("SQPAT");
     boolean cleanup = false;
     String environment = null;
     String customUrl = null;

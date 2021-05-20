@@ -127,10 +127,6 @@ public class DeduplicateTaxesExample extends Example {
 
     // When both futures have been processed, do the logging
     updateResponseFuture.thenAcceptBoth(deleteResponseFuture, (updateResult, deleteResult) -> {
-      if (updateResult.getObjects() == null || deleteResult.getDeletedObjectIds() == null) {
-        return;
-      }
-
       // Log results.
       int totalMerged = taxesToUpdate.size() + taxIdsToDelete.size();
       if (totalMerged == 0) {

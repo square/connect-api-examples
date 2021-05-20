@@ -36,9 +36,8 @@ public class LocationSpecificPriceExample extends Example {
   public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
     // Get the list of locations for this merchant.
     logger.info("Retrieving locations");
-    locationsApi.listLocationsAsync().thenAccept(result -> {
+    locationsApi.listLocationsAsync().thenCompose(result -> {
       logger.info("Retrieved " + result.getLocations().size() + " locations");
-
       // If there is only one location, this example cannot be executed.
       if (result.getLocations().size() < 2) {
         throw new IllegalArgumentException(
@@ -103,20 +102,23 @@ public class LocationSpecificPriceExample extends Example {
        * on the command line.
        */
       logger.info("Creating new item with override at location id " + locationId);
-
-      catalogApi.batchUpsertCatalogObjectsAsync(request).thenAccept(upsertResponse -> {
-        /*
-         * Grab the name and object ID of the CatalogItem that was just
-         * created and print them to the screen.
-         **/
-        CatalogObject newItem = upsertResponse.getObjects().get(0);
-        logger.info(
-            "Created item " + newItem.getItemData().getName() + " (" + newItem.getId() + ")");
-      }).join();
+      return catalogApi.batchUpsertCatalogObjectsAsync(request);
+    }).thenAccept(upsertResponse -> {
+      /*
+       * Grab the name and object ID of the CatalogItem that was just
+       * created and print them to the screen.
+       **/
+      CatalogObject newItem = upsertResponse.getObjects().get(0);
+      logger.info(
+          "Created item " + newItem.getItemData().getName() + " (" + newItem.getId() + ")");
     }).exceptionally(exception -> {
       // Extract the actual exception
-      ApiException e = (ApiException) exception.getCause();
-      checkAndLogErrors(e.getErrors());
+      if (exception.getCause() instanceof ApiException) {
+        ApiException e = (ApiException) exception.getCause();
+        checkAndLogErrors(e.getErrors());
+      } else {
+        logger.error(exception.getMessage());
+      }
       return null;
     }).join();
   }

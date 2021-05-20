@@ -75,6 +75,10 @@ For example:
 ```bash
 mvn -q exec:java "-Dexec.args=create_item -token $SQPAT"
 ```
+Or, if your `SQPAT` is set:
+```bash
+mvn -q exec:java "-Dexec.args=create_item"
+```
 
 By default, the example will use the sandbox environment: https://connect.squareupsandbox.com/
 
