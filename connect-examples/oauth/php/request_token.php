@@ -1,6 +1,9 @@
 <?php
-  $state = md5(time());
-  setcookie("Auth_State", $state, time() + 60);
+  session_start();
+  $state = $_SESSION['auth_state'];
+  if (empty($state)) {
+    $_SESSION['auth_state'] = bin2hex(random_bytes(32));
+  }
 ?>
 <link rel="stylesheet" href="public/style.css" type="text/css">
 <meta name="viewport" content="width=device-width">
