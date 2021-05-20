@@ -1,7 +1,6 @@
 <?php
   session_start();
-  $state = $_SESSION['auth_state'];
-  if (empty($state)) {
+  if (empty($_SESSION['auth_state'])) {
     $_SESSION['auth_state'] = bin2hex(random_bytes(32));
   }
 ?>
@@ -45,7 +44,7 @@ echo '
    href="' . $base_url . "/oauth2/authorize" .
      '?client_id=' . $application_id .
      '&scope=' . $permissions .
-     '&state=' . $state .'">
+     '&state=' . $_SESSION['auth_state'] .'">
      <strong>Authorize</strong>
   </a>
 </div>';
