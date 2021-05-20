@@ -8,9 +8,12 @@
   },
   "keywords": [],
   "dependencies": {
-    "express": "*",
-    "square-connect": "*",
+    "axios": "^0.21.1",
     "cookie-parser": "*",
-    "md5": "*"
+    "dotenv": "^8.2.0",
+    "express": "*",
+    "md5": "*",
+    "square": "^8.0.0",
+    "ejs": "*"
   }
 }

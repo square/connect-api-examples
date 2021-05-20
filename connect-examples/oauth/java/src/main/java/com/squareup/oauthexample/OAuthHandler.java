@@ -15,17 +15,17 @@
    This sample requires the Unirest Java library. Download instructions are here:
    http://unirest.io/java.html
 
-   This sample requires Java SE 6 or later.
+   This sample requires Java SE 8 or later.
  */
 
 package com.squareup.oauthexample;
 
-import com.squareup.connect.ApiException;
-import com.squareup.connect.Configuration;
-import com.squareup.connect.api.OAuthApi;
-import com.squareup.connect.ApiClient;
-import com.squareup.connect.models.ObtainTokenRequest;
-import com.squareup.connect.models.ObtainTokenResponse;
+import com.squareup.square.exceptions.ApiException;
+import com.squareup.square.api.OAuthApi;
+import com.squareup.square.SquareClient;
+import com.squareup.square.models.ObtainTokenRequest;
+import com.squareup.square.models.ObtainTokenResponse;
+import com.squareup.square.Environment;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -35,29 +35,37 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.List;
+import java.util.LinkedList;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
-import org.json.JSONObject;
-
 public class OAuthHandler {
 
+  // Options are Environment.SANDBOX, Environment.PRODUCTION
+  private static final Environment ENVIRONMENT = Environment.SANDBOX;
 
-  // FOR SANDBOX TESTING:
+  // Your application's ID and secret, available from the OAuth tab in the Developer Dashboard
   // If you are testing the OAuth flow in the sandbox, use your sandbox application
-  // ID and secret. You MUST also set the CONNECT_HOST to "https://connect.squareupsandbox.com"
-
-  // Your application's ID and secret, available from your application dashboard.
-  private static final String APPLICATION_ID =  "REPLACE_ME";
-  private static final String APPLICATION_SECRET =  "REPLACE_ME";
-  // The base URL for every Connect API request
-  private static final String CONNECT_HOST = "https://connect.squareup.com";
-  private static final String SCOPES = "REPLACE_ME";
+  // ID and secret. If you are testing in production, use the production application ID and secret.
+  private static final String APPLICATION_ID =  "REPLACE ME";
+  private static final String APPLICATION_SECRET =  "REPLACE ME";
+  // Modify this list as needed
+  private static final String[] SCOPES = { "MERCHANT_PROFILE_READ", "PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS", "PAYMENTS_WRITE", "PAYMENTS_READ" };
   // Serves the authorize link
+
   static class AuthorizeHandler implements HttpHandler {
 
     public void handle(HttpExchange t) throws IOException {
+
+      String connect_host;
+      // For testing in sandbox, the base url is "https://connect.squareupsandbox.com",
+      // and https://connect.squareup.com for production mode
+      if (ENVIRONMENT == Environment.SANDBOX) {
+        connect_host = "https://connect.squareupsandbox.com";
+      } else {
+        connect_host = "https://connect.squareup.com";
+      }
 
       // Reject non-GET requests
       if (!t.getRequestMethod().equals("GET")) {
@@ -68,9 +76,9 @@ public class OAuthHandler {
 
       String authorizeURL = String.format(
         "<a href=\"%s/oauth2/authorize?client_id=%s&scope=%s\">Click here</a> ",
-        CONNECT_HOST,
+        connect_host,
         APPLICATION_ID,
-        SCOPES)
+        String.join("+", SCOPES))
         + "to authorize the application.";
 
       System.out.println(authorizeURL);
@@ -101,6 +109,8 @@ public class OAuthHandler {
       List<NameValuePair> queryParameters = URLEncodedUtils.parse(requestUri, "UTF-8");
       String authorizationCode = null;
       for (NameValuePair param : queryParameters) {
+        System.out.println(param.getName());
+        System.out.println(param.getValue());
         if(param.getName().equals("code")) {
           authorizationCode = param.getValue();
           break;
@@ -117,39 +127,51 @@ public class OAuthHandler {
         return;
       }
 
-      ObtainTokenRequest body = new ObtainTokenRequest();
-      body.setClientId(APPLICATION_ID);
-      body.setClientSecret(APPLICATION_SECRET);
-      body.setCode(authorizationCode);
-      body.setGrantType("authorization_code");
+      SquareClient client = new SquareClient.Builder()
+            .environment(ENVIRONMENT)
+            .build();
 
-      //The default base path is 'https://connect.squareup.com'
-      //When you are testing OAuth in the Square Sandbox, this resets
-      //the base path to the Square Sandbox domain
-      ApiClient apiClient = Configuration.getDefaultApiClient();
-      apiClient.setBasePath(CONNECT_HOST);
-
-      OAuthApi oAuthApi = new OAuthApi();
-      ObtainTokenResponse response = null;
-      try {
-        response = oAuthApi.obtainToken(body);
-      } catch (ApiException e) {
-        System.out.print(e.getResponseBody());
-        t.sendResponseHeaders(405, 0);
-        t.getResponseBody().close();
-        return;
+      List<String> bodyScopes = new LinkedList<>();
+      for (String scope : SCOPES) {
+        bodyScopes.add(scope);
       }
 
-      if (response != null) {
-        System.out.println("Access token: " + response.getAccessToken());
-        System.out.println("Refresh token: " + response.getRefreshToken());
-        System.out.println("Authorization succeeded!");
-        t.sendResponseHeaders(200, 0);
-        t.getResponseBody().close();
-      }
+      // Create obtain token request body
+      ObtainTokenRequest body = new ObtainTokenRequest.Builder(
+        APPLICATION_ID,
+        APPLICATION_SECRET,
+        "authorization_code")
+      .code(authorizationCode)
+      .scopes(bodyScopes)
+      .build();
 
-      t.sendResponseHeaders(200, 0);
-      t.getResponseBody().close();
+      OAuthApi oAuthApi = client.getOAuthApi();
+
+      // Call obtain token API and print the results on success
+      // In production, you should never write tokens to the page. 
+      // You should encrypt the tokens and handle them securely. 
+      oAuthApi.obtainTokenAsync(body).thenAccept(result -> {     
+        if (result != null) {
+          System.out.println("Access token: " + result.getAccessToken());
+          System.out.println("Refresh token: " + result.getRefreshToken());
+          System.out.println("Merchant id: " + result.getMerchantId());
+          System.out.println("Authorization succeeded!");
+          try {
+            t.sendResponseHeaders(200, 0);
+            t.getResponseBody().close();
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }).exceptionally(exception -> {
+        try {
+          t.sendResponseHeaders(405, 0);
+          t.getResponseBody().close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        return null;
+      });
     }
   }
 

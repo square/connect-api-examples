@@ -16,8 +16,8 @@ limitations under the License.
 
 const express = require("express");
 const {
-  randomBytes
-} = require("crypto");
+  v4: uuidv4
+} = require("uuid");
 const {
   retrieveOrderAndLocation,
   getDefaultLoyaltyProgram,
@@ -70,7 +70,7 @@ router.get("/", async (req, res, next) => {
       locationInfo,
       orderInfo,
       loyaltyAccumulateInfo,
-      idempotencyKey: randomBytes(45).toString("hex")
+      idempotencyKey: uuidv4()
     });
   } catch (error) {
     next(error);

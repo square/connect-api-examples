@@ -17,8 +17,8 @@ limitations under the License.
 const express = require("express");
 const url = require("url");
 const {
-  randomBytes
-} = require("crypto");
+  v4: uuidv4
+} = require("uuid");
 const {
   squareApplicationId,
   retrieveOrderAndLocation,
@@ -26,7 +26,8 @@ const {
   getLoyaltyRewardInformation,
   ordersApi,
   paymentsApi,
-  loyaltyApi
+  loyaltyApi,
+  locationsApi
 } = require("../util/square-client");
 const DeliveryPickUpTimes = require("../models/delivery-pickup-times");
 
@@ -123,7 +124,7 @@ router.get("/add-pickup-details", async (req, res, next) => {
       locationInfo,
       expectedPickUpTimes: new DeliveryPickUpTimes(),
       orderInfo,
-      idempotencyKey: randomBytes(45).toString("hex"),
+      idempotencyKey: uuidv4(),
     });
   } catch (error) {
     next(error);
@@ -239,7 +240,7 @@ router.get("/add-delivery-details", async (req, res, next) => {
       locationInfo,
       expectedDeliveryTimes: new DeliveryPickUpTimes(),
       orderInfo,
-      idempotencyKey: randomBytes(45).toString("hex"),
+      idempotencyKey: uuidv4(),
     });
   } catch (error) {
     next(error);
@@ -294,6 +295,11 @@ router.post("/add-delivery-details", async (req, res, next) => {
       orderIds: [orderId],
     });
     const order = orders[0];
+
+    // get the currency for the location
+    const locationResponse = await locationsApi.retrieveLocation(locationId);
+    const currency = locationResponse.result.location.currency;
+
     await ordersApi.updateOrder(order.id, {
       order: {
         locationId,
@@ -328,7 +334,7 @@ router.post("/add-delivery-details", async (req, res, next) => {
           name: "delivery fee",
           amountMoney: {
             amount: 200,
-            currency: "USD"
+            currency: currency
           },
           taxable: true,
           calculationPhase: "SUBTOTAL_PHASE",
@@ -388,7 +394,7 @@ router.get("/payment", async (req, res, next) => {
       locationInfo,
       loyaltyRewardInfo,
       applicationId: squareApplicationId,
-      idempotencyKey: randomBytes(45).toString("hex").slice(0, 45), // Payments api has 45 max length limit on idempotencyKey
+      idempotencyKey: uuidv4(), // Payments api has 45 max length limit on idempotencyKey
     });
   } catch (error) {
     next(error);
@@ -416,8 +422,9 @@ router.post("/payment", async (req, res, next) => {
     orderId,
     locationId,
     idempotencyKey,
-    nonce,
+    token,
   } = req.body;
+
   try {
     // get the latest order information in case the price is changed from a different session
     const { result: { orders } } = await ordersApi.batchRetrieveOrders({
@@ -426,24 +433,39 @@ router.post("/payment", async (req, res, next) => {
     });
     const order = orders[0];
     if (order.totalMoney.amount > 0) {
-      // Payment can only be made when order amount is greater than 0
-      await paymentsApi.createPayment({
-        sourceId: nonce, // Card nonce created by the payment form
-        idempotencyKey,
-        amountMoney: order.totalMoney, // Provides total amount of money and currency to charge for the order.
-        orderId: order.id, // Order that is associated with the payment
-      });
-    } else {
-      // Settle an order with a total of 0.
-      await ordersApi.payOrder(orderId, {
-        idempotencyKey
-      });
-    }
+      try {
+        // Payment can only be made when order amount is greater than 0
+        const { result: { payment } } = await paymentsApi.createPayment({
+          sourceId: token, // Card nonce created by the payment form
+          idempotencyKey,
+          amountMoney: order.totalMoney, // Provides total amount of money and currency to charge for the order.
+          orderId: order.id, // Order that is associated with the payment
+        });
+    
+        const result = JSON.stringify(payment, (key, value) => {
+          return typeof value === "bigint" ? parseInt(value) : value;
+        }, 4);
+        res.json(result);
 
-    // redirect to order confirmation page once the order is paid
-    res.redirect(
-      `/order-confirmation?orderId=${order.id}&locationId=${order.locationId}`
-    );
+      } catch (error) {
+        res.json(error.result);
+      }
+    } else {
+      try{
+        // Settle an order with a total of 0.
+        const { result: { payment } } = await ordersApi.payOrder(orderId, {
+          idempotencyKey
+        });
+
+        const result = JSON.stringify(payment, (key, value) => {
+          return typeof value === "bigint" ? parseInt(value) : value;
+        }, 4);
+        res.json(result);
+
+      } catch (error) {
+        res.json(error.result);
+      }
+    }
   } catch (error) {
     next(error);
   }

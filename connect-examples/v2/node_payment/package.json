@@ -13,8 +13,9 @@
     "dotenv": "^8.2.0",
     "express": "*",
     "morgan": "*",
-    "pug": "*",
+    "pug": "^3.0.2",
     "serve-favicon": "*",
-    "square": "7.0.0"
+    "square": "^11.0.0",
+    "uuid": "^8.3.0"
   }
 }

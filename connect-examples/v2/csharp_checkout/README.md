@@ -1,12 +1,14 @@
-﻿# Website Payment Processing Using the Square Checkout API: Csharp
+﻿# Useful Links
+
+* [C# (.NET) SDK Page](https://developer.squareup.com/docs/sdks/dotnet)
+* [Checkout API Overview](https://developer.squareup.com/docs/checkout-api/what-it-does)
+* [Checkout in the API Reference](https://developer.squareup.com/reference/square/checkout-api)
+
+# Website Payment Processing Using the Square Checkout API: Csharp
 
 This is a simple example application that utilizes Square's Checkout API 
 using ASP.NET Core Razor. This examples assumes you are familiar with C# development. 
 
-For more information about the Checkout API, see:
-* [What It Does](https://developer.squareup.com/docs/checkout-api/what-it-does)
-* [CreateCheckout - API Reference](https://developer.squareup.com/docs/api/connect/v2#endpoint-checkout-createcheckout)
-* [CreateCheckout - Connect C# SDK](https://github.com/square/connect-csharp-sdk/blob/master/docs/CheckoutApi.md) 
 
 There are two sections in this ReadMe.
 * [Setup](#setup) - Provides instructions for you to download and run the app.
@@ -14,6 +16,7 @@ There are two sections in this ReadMe.
 Checkout API integrate in the ASP.NET app.
 
 ## Setup
+
 To get it running:
 
 * Clone/download to your local computer.
@@ -28,8 +31,6 @@ dotnet run --launch-profile Sandbox
   * Note: replace "Sandbox" with "Production" to use your production credentials.
 
 This will start the server on `localhost:5000`, which you can navigate to in your favorite browser.
-
-
 
 ## Application flow
 
@@ -79,4 +80,20 @@ Checkout.cshtml.cs). The event handler does the following:
 
         <img src="./confirmation.png" width="650"/>
 
+# License
 
+Copyright 2021 Square, Inc.
+​
+```
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+​
+   http://www.apache.org/licenses/LICENSE-2.0
+​
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```

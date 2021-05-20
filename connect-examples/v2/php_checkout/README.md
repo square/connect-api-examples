@@ -1,3 +1,9 @@
+# Useful Links
+
+* [PHP SDK Page](https://developer.squareup.com/docs/sdks/php)
+* [Checkout API Overview](https://developer.squareup.com/docs/checkout-api/what-it-does)
+* [Checkout in the API Reference](https://developer.squareup.com/reference/square/checkout-api)
+
 Square Checkout Demo
 =========================
 
@@ -34,10 +40,10 @@ Open your [application dashboard](https://developer.squareup.com/). Now supply e
 
 | Variable               |  Type    |   Description   |
 |------------------------|:---------|-----------------|
-| ENVIRONMENT (`*`)      | `string` | `production` or `sandbox` depending on what type of endpoint you want to hit. For testing purposes please use the sandbox mode (already configured in the `.env`)   |
-| *_APP_ID               | `string` | `*` Application ID found on your Developer App Dashboard, Credentials tab.  |
-| *_ACCESS_TOKEN         | `string` | `*` Access Token found at the Developer App Dashboard, Credentials tab. |
-| *_LOCATION_ID           | `string` | `*` Location found at the Developer App Dashboard, Location tab. |
+| ENVIRONMENT            | `string` | `production` or `sandbox` depending on what type of endpoint you want to hit. For testing purposes please use the sandbox mode (already configured in the `.env`)   |
+| SQUARE_APPLICATION_ID  | `string` | Application ID found on your Developer App Dashboard, Credentials tab. Must match the corresponding `ENVIRONMENT`.  |
+| SQUARE_ACCESS_TOKEN    | `string` | Access Token found at the Developer App Dashboard, Credentials tab. Must match the corresponding `ENVIRONMENT`.  |
+| SQUARE_LOCATION_ID     | `string` | Location found at the Developer App Dashboard, Location tab. Must match the corresponding `ENVIRONMENT`. |
 
 ## Running the sample
 
@@ -49,6 +55,6 @@ This will start the server on `localhost:8888`, which you can navigate to in you
 
 
 For more information about Checkout please visit:
-* https://docs.connect.squareup.com/payments/checkout/overview
-* https://docs.connect.squareup.com/api/connect/v2#navsection-checkout
+* https://developer.squareup.com/docs/checkout-api-overview
+* https://developer.squareup.com/reference/square/checkout-api
 * https://github.com/square/square-php-sdk/blob/master/docs/Api/CheckoutApi.md

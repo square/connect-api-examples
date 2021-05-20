@@ -6,7 +6,7 @@
 # installation instructions.
 #
 # See Webhooks Overview for more information:
-# https://docs.connect.squareup.com/api/connect/v1/#webhooks-overview
+# https://developer.squareup.com/docs/webhooks-api/v1-tech-ref
 
 require 'vendor/autoload.php';
 

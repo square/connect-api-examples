@@ -1,0 +1,5 @@
+squareup == 11.0.0.20210513
+configparser
+fastapi
+uvicorn
+aiofiles

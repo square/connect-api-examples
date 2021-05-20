@@ -1,38 +1,40 @@
 extends layout
 block content
-  script(type="text/javascript" src= (env === "sandbox" ? "https://js.squareupsandbox.com/v2/paymentform" : "https://js.squareup.com/v2/paymentform") )
+  - let productionUrl = "https://web.squarecdn.com/v1/square.js";
+  - let sandBoxUrl = "https://sandbox.web.squarecdn.com/v1/square.js";
+  - let paymentFormSrc = process.env.NODE_ENV === "sandbox" ? sandBoxUrl : productionUrl;
+  script(type="text/javascript" src=paymentFormSrc)
   script(type="text/javascript").
-    window.applicationId= "#{squareApplicationId}";
-    window.locationId= "#{squareLocationId}";
-  script(type="text/javascript" src="/js/sq-payment-form.js")
+    window.applicationId="#{squareApplicationId}";
+    window.locationId="#{squareLocationId}";
+    window.currency="#{squareAccountCurrency}";
+    window.country="#{squareAccountCountry}";
 
-  div(class="sq-payment-form")
-    div(id="sq-walletbox")
-      button(id="sq-google-pay" class="button-google-pay").
-      button(id="sq-apple-pay" class="sq-apple-pay").
-      button(id="sq-masterpass" class="sq-masterpass").
-      div(class="sq-wallet-divider")
-        span(class="sq-wallet-divider__text").
-          Or
+  form(class="payment-form" id="fast-checkout")
+    div(class="wrapper")
+      div(id="apple-pay-button" alt="apple-pay" type="button")
+      div(id="google-pay-button" alt="google-pay" type="button")
+      div(class="border")
+        span().
+          OR
 
-    div(id="sq-ccbox")
-      form(id="nonce-form" novalidate action="process-payment" method="post")
-        div(class="sq-field")
-          label(class="sq-label") Card Number
-          div(id="sq-card-number")
-        div(class="sq-field-wrapper")
-          div(class="sq-field sq-field--in-wrapper")
-            label(class="sq-label") CVV
-            div(id="sq-cvv")
-          div(class="sq-field sq-field--in-wrapper")
-            label(class="sq-label") Expiration
-            div(id="sq-expiration-date")
-          div(class="sq-field sq-field--in-wrapper")
-            label(class="sq-label") Postal Code
-            div(id="sq-postal-code")
-        div(class="sq-field")
-            button(id="sq-creditcard" class="sq-button" onclick="onGetCardNonce(event)").
-              Pay $1.00 Now
+      div(id="ach-wrapper")
+        label(for="ach-account-holder-name").
+          Full Name
+        input(id="ach-account-holder-name" type="text" placeholder="Jane Doe" name="ach-account-holder-name" autocomplete="name")
+        span(id="ach-message")
+        button(id="ach-button" type="button").
+          Pay with Bank Account
+        div(class="border")
+          span().
+            OR
 
-        div(id="error")
-        input(type="hidden" id="card-nonce" name="nonce")
+      div(id="card-container")
+      button(id="card-button" type="button").
+        Pay with Card
+      span(id="payment-flow-message")
+      
+  script(type="text/javascript" src="/js/sq-ach.js")
+  script(type="text/javascript" src="/js/sq-apple-pay.js")
+  script(type="text/javascript" src="/js/sq-google-pay.js")
+  script(type="text/javascript" src="/js/sq-card-pay.js")

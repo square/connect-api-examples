@@ -1,3 +1,11 @@
+# Useful Links
+
+* [Square Node.js SDK](https://developer.squareup.com/docs/sdks/nodejs)
+* [Orders API - Order Ahead Overview](https://developer.squareup.com/docs/orders-api/order-ahead-usecase)
+* [Catalog API Overview](https://developer.squareup.com/docs/catalog-api/what-it-does)
+* [Payments API Overview](https://developer.squareup.com/docs/payments)
+* [Loyalty API Overview](https://developer.squareup.com/docs/loyalty-api/overview)
+
 # Order-Ahead Sample App
 
   - [Setup](#setup)
@@ -76,12 +84,12 @@ This Express.js project is organized as follows:
 * **/models**. JavaScript classes in these files are used to abstract data coming from Square APIs.
   The views (.pug files) use these object models to access Square data. 
 * **/public.** These are the client-side JavaScript and CSS files used to render the home page and
-  create and initialize the client-side `SqPaymentForm` object. 
+  create and initialize the client-side payment form objects using the [Square Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments). 
 * **/routes.** The following JavaScript files define the routes to handle requests:
-    * **Index.js.** Provides routes to handle all the requests for the initial page, which shows
+    * **index.js.** Provides routes to handle all the requests for the initial page, which shows
       catalog items that buyers can purchase.
-    * **Checkout.js.** Provides routes to handle all the requests related to the checkout flow.
-    * **Order-confirmation.js.** Provides routes to handle order confirmation requests.
+    * **checkout.js.** Provides routes to handle all the requests related to the checkout flow.
+    * **order-confirmation.js.** Provides routes to handle order confirmation requests.
 * **/util.** The code initializes the Square SDK client and provides utility functions.
   The `retrieveOrderAndLocation` function, for example, retrieves order and location information.
 * **/views.** Provides the view (.pug) files.
@@ -177,12 +185,12 @@ This controller does the following:
 
     The `/checkout/payment.pug` compiles the preceding page. The page includes a payment form
     (the **PAYMENT DETAILS** panel) for the buyer to provide card information. The application
-    uses the Square-provided `SqPaymentForm` JavaScript library to generate a secure token (nonce)
-    from the card information the buyer provides. After generating the nonce, a POST request is sent
+    uses the Square Web Payments SDK to generate a secure payment token
+    from the card information the buyer provides. After generating the token, a POST request is sent
     to the `router.post("/payment"`) controller in checkout.js.
 
-    **NOTE:** This documentation does not cover details about using the `SqPaymentForm` library to embed
-    a payment form in your website. For more information, see [Square payments in your website](https://developer.squareup.com/docs/payment-form/overview).
+    **NOTE:** This documentation does not cover details about using the [Web Payments SDK](https://developer.squareup.com/reference/sdks/web/payments) to embed
+    a payment form in your website. For more information, see [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
 1. The `router.post("/payment"`) controller (in the [checkout.js](routes/checkout.js#L398)) executes.
 This controller does the following:
@@ -255,11 +263,11 @@ The following source files manage the application flow related to this page:
 #### Application flow for accruing points
 
 After the buyer provides card information and chooses **Pay with Card**, the on-click event handler
-(`onGetCardNonce`) executes. The subsequent code path uses the `SqPaymentForm` JavaScript library to
-generate a nonce from the card information and calls `CreatePayment` (Payments API call) to charge the nonce. 
+fires a `fetch` request to **checkout.js**. The subsequent code path uses the Web Payments SDK to
+generate a token from the card information and calls `CreatePayment` (Payments API call) to charge the payment source. 
 
 **NOTE:** Details about how to integrate Square payments are not covered in this exercise.
-For related information, see [Square Payments in your Website](https://developer.squareupstaging.com/docs/payment-form/overview?preview=true).
+For related information, see [Square Payments in your Website](https://developer.squareup.com/docs/web-payments/overview).
 
 After processing the payment, the request gets redirected to the `router.get("/", ...)` controller in order-confirmation.js.
 The controller renders the `order-confirmation` view. The view compiles the following **Order Status** page: 
@@ -300,9 +308,9 @@ The following source files manage the application flow related to this **Order S
     * `calculateLoyaltyPoints` (Loyalty API). The example loyalty program gives the buyer one point for every dollar spent.
       The application calls this function to check the order and determine whether the buyer qualifies to accumulate at least one point.
 
-
 # License
-Copyright 2019 Square, Inc.
+
+Copyright 2021 Square, Inc.
 ​
 ```
 Licensed under the Apache License, Version 2.0 (the "License");

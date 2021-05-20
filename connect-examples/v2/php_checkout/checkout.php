@@ -17,12 +17,9 @@ use Square\SquareClient;
 $dotenv = Dotenv::create(__DIR__);
 $dotenv->load();
 
-// Pulled from the .env file and upper cased e.g. SANDBOX, PRODUCTION.
-$upper_case_environment = strtoupper(getenv('ENVIRONMENT'));
-
 // Use the environment and the key name to get the appropriate values from the .env file.
-$access_token = getenv($upper_case_environment.'_ACCESS_TOKEN');    
-$location_id =  getenv($upper_case_environment.'_LOCATION_ID');
+$access_token = getenv('SQUARE_ACCESS_TOKEN');    
+$location_id =  getenv('SQUARE_LOCATION_ID');
 
 // Initialize the authorization for Square
 $client = new SquareClient([
@@ -38,8 +35,11 @@ try {
 
   // Monetary amounts are specified in the smallest unit of the applicable currency.
   // This amount is in cents. It's also hard-coded for $1.00, which isn't very useful.
+  
+  // Set currency to the currency for the location
+  $currency = $client->getLocationsApi()->retrieveLocation(getenv('SQUARE_LOCATION_ID'))->getResult()->getLocation()->getCurrency();
   $money_A = new Money();
-  $money_A->setCurrency('USD');
+  $money_A->setCurrency($currency);
   $money_A->setAmount(500);
 
   $item_A = new OrderLineItem(1);
@@ -47,7 +47,7 @@ try {
   $item_A->setBasePriceMoney($money_A);
 
   $money_B = new Money();
-  $money_B->setCurrency('USD');
+  $money_B->setCurrency($currency);
   $money_B->setAmount(1000);
   
   $item_B = new OrderLineItem(3);

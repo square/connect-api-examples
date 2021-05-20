@@ -1,3 +1,9 @@
+# Useful Links
+
+* [Node.js SDK Page](https://developer.squareup.com/docs/sdks/nodejs)
+* [Invoices API Overview](https://developer.squareup.com/docs/invoices-api/overview)
+* [Invoices in the API Reference](https://developer.squareup.com/reference/square/invoices-api)
+
 # Invoice API Sample App
 
   - [Setup](#setup)
@@ -25,7 +31,7 @@ Before you begin, note the following:
 1. Set your credentials.
 
     Create a `.env` file in the root of this directory. Populate the file with the following
-    line `SQUARE_ACCESS_TOKEN=YOUR_ACCESS_TOKEN`. Replace the placeholder for `SQUARE_ACCESS_TOKEN` with your 
+    line `SQUARE_ACCESS_TOKEN=your-access-token`. Replace the placeholder for `SQUARE_ACCESS_TOKEN` with your 
     own production or sandbox credentials. For more help, see our [guide on how to get 
     your credentials](https://developer.squareup.com/docs/orders-api/quick-start/step-1).
 
@@ -69,7 +75,8 @@ with card on file. Run the script, wait for 30 seconds and refresh the page:
 
 This Express.js project is organized as follows:
 
-*   **.env** You provide credentials in this file.
+
+*   **.env.** You provide credentials in this file.
 *   **/public.** These are the CSS files used to render the home page 
 *   **/routes.** The following JavaScript files define the routes to handle requests:
     * **index.js.** Provides routes to handle all the requests for the initial page, which shows a list of customers.
@@ -148,7 +155,8 @@ Regardless of whether a customer has a card on file, the creation of the invoice
 Wait until the configured `schedule_at` time (10 minutes after the invoice is created) and view the invoice. You see that the invoice status changed from SCHEDULED to UNPAID. When the `due_date` arrives (set to 7 days after the invoice is created), depending on whether the customer has a card on file, Square charges the card on the due date or the customer is responsible to pay for the invoice within the due date (wait 10 minutes and then refresh the invoice page to see the URL to the Square-hosted invoice page that you can use to pay). The invoice status then changes to PAID. 
 
 # License
-Copyright 2020 Square, Inc.
+
+Copyright 2021 Square, Inc.
 ​
 ```
 Licensed under the Apache License, Version 2.0 (the "License");

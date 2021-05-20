@@ -16,19 +16,37 @@
 
 require 'sinatra'
 require 'square'
+require 'dotenv/load'
 
 # Your application's ID and secret, available from your application dashboard.
-APP_ID     = 'REPLACE_ME'
-APP_SECRET = 'REPLACE_ME'
+application_id = ENV['SQ_APPLICATION_ID']
+application_secret = ENV['SQ_APPLICATION_SECRET']
+environment = ENV['SQ_ENVIRONMENT'].downcase
 
-CONNECT_HOST = "https://connect.squareup.com"
+if environment == 'production'
+  connect_host = "https://connect.squareup.com"
+else
+  connect_host = "https://connect.squareupsandbox.com"
+end
 
-oauth_api = Square::Client.new.o_auth
+client = Square::Client.new(
+  environment: environment
+)
+oauth_api = client.o_auth
 
 # Serves the link that merchants click to authorize your application
 get '/' do
-  "<a href=\"#{CONNECT_HOST}/oauth2/authorize?client_id=#{APP_ID}\">Click here</a>
-            to authorize the application."
+  url = "#{connect_host}/oauth2/authorize?client_id=#{application_id}"
+  content = "
+  <link type='text/css' rel='stylesheet' href='style.css'>
+  <meta name='viewport' content='width=device-width'>
+  <div class='wrapper'>
+    <a class='btn'
+     href='#{url}'>
+       <strong>Authorize</strong>
+    </a>
+  </div>"
+  erb :base, :locals => {:content => content}
 end
 
 # Serves requsts from Square to your application's redirect URL
@@ -43,8 +61,8 @@ get '/callback' do
 
     # Provide the code in a request to the Obtain Token endpoint
     oauth_request_body = {
-      'client_id' => APP_ID,
-      'client_secret' => APP_SECRET,
+      'client_id' => application_id,
+      'client_secret' => application_secret,
       'code' => authorization_code,
       'grant_type' => 'authorization_code'
     }
@@ -54,18 +72,49 @@ get '/callback' do
     # Extract the returned access token from the ObtainTokenResponse object
     if response.success?
 
-      # Here, instead of printing the access token, your application server should store it securely
+      # In production, instead of printing the access token, your application server should store it securely
       # and use it in subsequent requests to the Connect API on behalf of the merchant.
       puts 'Access token: ' + response.data.access_token
-      return 'Authorization succeeded!'
-
+      content = "
+      <div class='wrapper'>
+        <div class='messages'>
+          <h1>Authorization Succeeded</h1>
+            <div style='color:rgba(204, 0, 35, 1)'><strong>Caution:</strong> NEVER store or share OAuth access tokens or refresh tokens in clear text.
+                Use a strong encryption standard such as AES to encrypt OAuth tokens. Ensure the production encryption key is not
+                accessible to anyone who does not need it.
+            </div>
+            <br/>
+            <div><strong>OAuth access token:</strong> #{response.data.access_token} </div>
+            <div><strong>OAuth access token expires at:</strong> #{response.data.expires_at} </div>
+            <div><strong>OAuth refresh token:</strong> #{response.data.refresh_token} </div>
+            <div><strong>Merchant Id:</strong> #{response.data.merchant_id} </div>
+            <div><p>You can use this OAuth access token to call Create Payment and other APIs that were authorized by this seller.</p>
+            <p>Try it out with <a href='https://developer.squareup.com/explorer/square/payments-api/create-payment' target='_blank'>API Explorer</a>.</p>
+          </div>
+        </div>
+      </div>
+      "
     # The response from the Obtain Token endpoint did not include an access token. Something went wrong.
     else
-      return 'Code exchange failed!'
+      content = "
+      <link type='text/css' rel='stylesheet' href='style.css'>
+      <meta name='viewport' content='width=device-width'>
+      <div class='wrapper'>
+      <div class='messages'>
+        <h1>Code exchange failed</h1>
+      </div>
+    </div>"
     end
-
   # The request to the Redirect URL did not include an authorization code. Something went wrong.
   else
-    return 'Authorization failed!'
+    content = "
+    <link type='text/css' rel='stylesheet' href='style.css'>
+    <meta name='viewport' content='width=device-width'>
+    <div class='wrapper'>
+    <div class='messages'>
+      <h1>Authorization failed</h1>
+    </div>
+  </div>"
   end
+  return erb :base, :locals => {:content => content}
 end

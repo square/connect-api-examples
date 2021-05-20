@@ -16,3 +16,6 @@
 !/log/.keep
 tmp/
 .byebug_history
+
+# Ignore environment files
+.env
