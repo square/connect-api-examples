@@ -23,7 +23,7 @@ const bodyParser = require("body-parser");
 const routes = require("./routes/index");
 const app = express();
 
-// Node creates cashed instance of square-client, on initial load
+// Node creates cached instance of square-client, on initial load
 require("./util/square-client");
 
 app.use(logger("dev"));
