@@ -4,7 +4,9 @@
   "description": "A sample app demonstrating use of Square Gift Card API",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon -e js ./bin/www"
+    "start": "nodemon -e js ./bin/www",
+    "seed": "node ./bin/script/seed-data.js generate",
+    "clear": "node ./bin/script/seed-data.js clear"
   },
   "repository": {
     "type": "git",
