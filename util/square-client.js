@@ -37,6 +37,7 @@ const {
   locationsApi
 } = new Client(config);
 
+
 module.exports = {
   giftCardsApi,
   giftCardActivitiesApi,
