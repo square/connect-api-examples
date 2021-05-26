@@ -22,6 +22,15 @@ const { v4: uuidv4 } = require("uuid");
 const env = process.env[`ENVIRONMENT`].toLowerCase();
 const accessToken = process.env[`SQUARE_ACCESS_TOKEN`];
 
+// Only run the script if the application is in sandbox environment.
+if (env !== "sandbox") {
+  console.error(
+    "This script should only run in sandbox environment. It is not intended to be used in production."
+    + "\nPlease check your .env file."
+  );
+  return;
+}
+
 // Client configuration
 const config = {
   accessToken,
@@ -74,7 +83,6 @@ async function createCustomers() {
 /**
  * Function to clear all customers for the configured access token.
  * WARNING: This is permanent and irreversible!
- * Do not run this in production environment.
  */
 async function clearCustomers() {
   try {
