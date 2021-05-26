@@ -1,0 +1,28 @@
+{
+  "name": "gift-card-api-sample-app",
+  "version": "1.0.0",
+  "description": "Sample app demonstrating use of gift card API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/squareup/gift-card-api-sample-app.git"
+  },
+  "keywords": [
+    "gift",
+    "cards",
+    "sample",
+    "app"
+  ],
+  "author": "barakj, emmac",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/squareup/gift-card-api-sample-app/issues"
+  },
+  "homepage": "https://github.com/squareup/gift-card-api-sample-app#readme",
+  "dependencies": {
+    "square": "11.0.0-alpha.1"
+  }
+}
