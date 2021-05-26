@@ -1,3 +1,6 @@
+<?php
+  session_start();
+?>
 <link rel="stylesheet" href="public/style.css" type="text/css">
 <?php
 require 'vendor/autoload.php';
@@ -61,7 +64,7 @@ function obtainOAuthToken($authorizationCode) {
 // Handle the response.
 try {
     // Verify the state to protect against cross-site request forgery.
-    if ($_COOKIE["Auth_State"] !== $_GET['state']) {
+    if ($_SESSION["auth_state"] !== $_GET['state']) {
       displayStateError();
       return;
     }

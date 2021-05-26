@@ -1,6 +1,8 @@
 <?php
-  $state = md5(time());
-  setcookie("Auth_State", $state, time() + 60);
+  session_start();
+  if (empty($_SESSION['auth_state'])) {
+    $_SESSION['auth_state'] = bin2hex(random_bytes(32));
+  }
 ?>
 <link rel="stylesheet" href="public/style.css" type="text/css">
 <meta name="viewport" content="width=device-width">
@@ -42,7 +44,7 @@ echo '
    href="' . $base_url . "/oauth2/authorize" .
      '?client_id=' . $application_id .
      '&scope=' . $permissions .
-     '&state=' . $state .'">
+     '&state=' . $_SESSION['auth_state'] .'">
      <strong>Authorize</strong>
   </a>
 </div>';
