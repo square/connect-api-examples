@@ -2,9 +2,9 @@
   "name": "gift-card-api-sample-app",
   "version": "1.0.0",
   "description": "Sample app demonstrating use of gift card API",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon -e js ./bin/www"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,12 @@
   },
   "homepage": "https://github.com/squareup/gift-card-api-sample-app#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7",
     "square": "11.0.0-alpha.1"
   }
 }
