@@ -125,10 +125,9 @@ if (args[0] === "generate") {
   });
 } else if (args[0] === "-h" || args[0] === "--help") {
   console.log(
-    "Please check the README.md for more information on how to run our catalog script."
-    + "\nAvailable commands include:\n npm run seed - Generates catalog items for your sandbox catalog."
-    + "\n npm run clear - Clears your sandbox catalog of all items."
-    + "\n\n More information can also be found on our Quick Start guide at https://developer.squareup.com/docs/orders-api/quick-start/start."
+    "Please check the README.md for more information on how to run our seeding script."
+    + "\nAvailable commands include:\n npm run seed - Generates fake customers."
+    + "\n npm run clear - Clears your customers."
   );
 } else {
   console.log("Command not recognized. Please try again.");
