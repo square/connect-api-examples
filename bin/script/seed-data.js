@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const { Client } = require("square");
+const { Client, ApiError } = require("square");
 require('dotenv').config();
 const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
@@ -29,8 +29,7 @@ const config = {
 };
 
 const {
-  customersApi,
-  locationsApi
+  customersApi
 } = new Client(config);
 
 /**
@@ -61,9 +60,14 @@ async function createCustomers() {
       cardNonce: "cnon:card-nonce-ok"
     });
 
-    console.log("Successfully created customers")
+    console.log("Successfully created customers");
   } catch (error) {
-    console.error("Create customers failed: ", error);
+    if (error instanceof ApiError) {
+      const errors = error.errors;
+      console.error("Create customers failed: ", JSON.stringify(errors));
+    } else {
+      console.error("Create customers failed: ", error);
+    }
   }
 }
 
@@ -88,7 +92,12 @@ async function clearCustomers() {
     await Promise.all(promises);
     console.log("Successfully cleared all customers");
   } catch (error) {
-    console.error("Clear customers failed: ", error);
+    if (error instanceof ApiError) {
+      const errors = error.errors;
+      console.error("Clear customers failed: ", JSON.stringify(errors));
+    } else {
+      console.error("Clear customers failed: ", error);
+    }
   }
 }
 
