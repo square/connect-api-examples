@@ -26,9 +26,11 @@ const app = express();
 // Node creates cached instance of square-client, on initial load
 require("./util/square-client");
 
+// set the view engine to ejs
+app.set('view engine', 'ejs');
 app.use(logger("dev"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+app.use(express.json());
+app.use(express.urlencoded({
   extended: false
 }));
 app.use(cookieParser());
