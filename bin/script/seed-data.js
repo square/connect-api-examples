@@ -34,7 +34,7 @@ const {
 } = new Client(config);
 
 /**
- * Function to create a couple of customers (with card on file), so that those can be used
+ * Function to create a couple of fake customers (with card on file), so that those can be used
  * throughout the sample app.
  */
 async function createCustomers() {
@@ -80,10 +80,12 @@ async function clearCustomers() {
       return;
     }
 
+    const promises = [];
     customers.forEach(customer => {
-      customersApi.deleteCustomer(customer.id);
+      promises.push(customersApi.deleteCustomer(customer.id));
     });
 
+    await Promise.all(promises);
     console.log("Successfully cleared all customers");
   } catch (error) {
     console.error("Clear customers failed: ", error);
@@ -95,10 +97,10 @@ async function clearCustomers() {
 */
 const args = process.argv.slice(2);
 if (args[0] === "generate") {
-  // generate new customers
+  // Generate new customers
   createCustomers();
 } else if (args[0] === "clear") {
-  // clear customers
+  // Clear customers
   const ioInterface = readline.createInterface({
     input: process.stdin,
     output: process.stdout
