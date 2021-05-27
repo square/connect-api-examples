@@ -1,0 +1,25 @@
+<html>
+
+<head>
+  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <div id="login-container">
+    <div class="wrapper">
+      <div>This is a fake login page where you may select an existing customer to log in as</div>
+      <form class="form-control" action="/login" method="POST">
+        <select size="5" name="customer">
+          <% customers.forEach(function(customer) { %>
+            <option value=<%=customer.id %>>
+              <%= customer.givenName %> <%= customer.familyName %>
+            </option>
+          <% }); %>
+        </select>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
