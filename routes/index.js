@@ -43,11 +43,12 @@ router.get("/login", async (req, res, next) => {
   try {
     const response = await customersApi.listCustomers();
     customers = response.result.customers;
+    
+    res.render("pages/login", {customers})
   } catch(error) {
     console.log(error);
     next(error);
   }
-  res.render("pages/login", {customers})
 });
 
 // Mimics the login action, no actual authentication.

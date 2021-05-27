@@ -29,20 +29,18 @@ const { checkAuth } = require("../util/check-auth");
 router.get("/", checkAuth, async (req, res, next) => {
   // display a list of gift cards linked to the
   // customer's account
-  let giftCards;
   try {
     const response = await giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, req.session.customerId);
-    giftCards = response.result;
+
+    if (Object.keys(response.result).length === 0) {
+      res.render("pages/dashboard-no-cards");
+    } else {
+      res.render("pages/dashboard");
+    }
   } catch (error) {
     console.log(error);
     next(error);
   }
-  if (Object.keys(giftCards).length === 0) {
-    res.render("pages/dashboard-no-cards");
-  } else {
-    res.render("pages/dashboard");
-  }
-
 });
 
 module.exports = router;
