@@ -2,7 +2,7 @@
 <table id="table" class="styled-table">
   <tbody>
       <% cards.forEach(function(card) { %>
-        <tr>
+        <tr> <input type="hidden" name="cardId" value=<%= card.id %>>
           <td><%= card.cardBrand %></td>
           <td>**** **** **** <%= card.last4 %></td>
         </tr>

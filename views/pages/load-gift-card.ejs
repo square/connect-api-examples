@@ -14,11 +14,12 @@
     <div class="wrapper">
       <div>
         <h1>Add Fund</h1>
-        <h3>Select a payment method to pay with:</h3>
       </div>
-      <form class="form-control" action="/gift-card/load" method="POST">
+      <form class="form-control" action="/gift-card/load/<%= gan %>" method="POST">
         <h1>gan: <%= gan %></h1>
         <h2>current balance: XXXX</h2>
+        <h3>Enter a money amount to add to your gift card:</h3> <%- include("../partials/amount-input") %>
+        <h3>Select a payment method to pay with:</h3>
         <%- include("../partials/table") %>
         <%- include("../partials/confirm-button") %>
       </form>

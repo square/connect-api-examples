@@ -81,27 +81,34 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
   res.render("pages/card-detail", { giftCard });
 });
 
-router.post("/create", async (req, res, next) => {
-  // to create a gift card, I need:
-  // 1. order (amount to activate to)
-  // 2. retreieve customer (so I need the ID)
-  // 3. payment using the orderId and source_id (card on file for cust)
-  // 4. create gift card
-  // 5. create gift card activity (ACTIVATE)
-  // for now, assume the payload contains the customerID, amount to create with, payment method.
+/**
+ * Handler for "/gift-card/create" route.
+ * Steps are:
+ * 1. order (amount to activate to)
+ * 2. payment using the orderId and source_id (card on file for cust)
+ * 3. create gift card
+ * 4. create gift card activity (ACTIVATE)
+ * 5. link gift card to customer
+ * Steps (1,2) and (3) can happen in parallel. Once those are done, can proceed with (4,5).
+ * TODO: COMBINE ORDER AND PAYMENT INTO ONE FUNCTION!!
+ */
+router.post("/create", checkAuth, async (req, res, next) => {
   try {
-    const customerId = "TA3WENG538TEV1PPG86MJK6RRW";
-    const amount = 82500;
-    const paymentSource = "ccof:6tkulkGbcTkqSSoe3GB";
+    // The following information will come from the request/session. Hardcoded for now.
+    const customerId = req.session.customerId;
+    const amount = getAmountInSmallestDenomination(req.body.amount);
+    const paymentSource = req.body.cardId;
 
     // Grab the currency to be used based on the location.
     const currency = await getCurrency();
-    console.log(currency);
 
-    // The following code runs the order/payment flow and the gift card creation flow in parallel as they are independent.
+    // The following code runs the order/payment flow and the gift card creation flow concurrently as they are independent.
     const orderPromise = createGiftCardOrder(customerId, amount, currency);
     const giftCardPromise = createGiftCard()
+
+    // Await order call, as payment needs order information.
     const { result: { order } } = await orderPromise;
+
     // extract useful information from the order
     const orderId = order.id;
     const lineItemId = order.lineItems[0].uid;
@@ -113,37 +120,35 @@ router.post("/create", async (req, res, next) => {
     const { result: { giftCard } } = await giftCardPromise;
     const gan = giftCard.gan;
 
-    // No that we have an actual gift card created and paid for, activate it.
-    const { result: { giftCardActivity }} = await activateGiftCard(gan, orderId, lineItemId);
+    // Now that we have an actual gift card created and paid for, activate it.
+    const { result: { giftCardActivity }} = await createGiftCardActivity("ACTIVATE", gan, orderId, lineItemId);
     const giftCardId = giftCardActivity.giftCardId;
 
     // Now link it to the customer that paid for it!
     await linkCustomerToGiftCard(customerId, giftCardId);
 
-    //DONE!!! (VERIFY BY LISTING GIFT CARDS BY CUSTOMER ID)
-    console.log("DONE");
+    // TODO: render confirmation page
   } catch (error) {
-    // TODO: fix
     console.error(error);
+    next(error);
   }
 });
 
-
-
-router.post("/load", async (req, res, next) => {
+router.post("/load/:gan", checkAuth, async (req, res, next) => {
   try {
-    const customerId = "TA3WENG538TEV1PPG86MJK6RRW";
-    const amount = 82500;
-    const paymentSource = "ccof:6tkulkGbcTkqSSoe3GB";
+    // The following information will come from the request/session. Hardcoded for now.
+    const customerId = req.session.customerId;
+    const amount = getAmountInSmallestDenomination(req.body.amount);
+    const paymentSource = req.body.cardId;
+    const gan = req.params.gan;
 
     // Grab the currency to be used based on the location.
     const currency = await getCurrency();
-    console.log(currency);
 
-    // The following code runs the order/payment flow and the gift card creation flow in parallel as they are independent.
-    const orderPromise = createGiftCardOrder(customerId, amount, currency);
-    const giftCardPromise = createGiftCard()
-    const { result: { order } } = await orderPromise;
+    // The following code runs the order/payment flow.
+    // Await order call, as payment needs order information.
+    const { result: { order } } = await createGiftCardOrder(customerId, amount, currency);
+
     // extract useful information from the order
     const orderId = order.id;
     const lineItemId = order.lineItems[0].uid;
@@ -151,22 +156,13 @@ router.post("/load", async (req, res, next) => {
     // We have the order response, we can move on to the payment.
     await createGiftCardPayment(customerId, amount, currency, paymentSource, orderId);
 
-    // Do not proceed until the gift card creation is done
-    const { result: { giftCard } } = await giftCardPromise;
-    const gan = giftCard.gan;
+    // Load the gift card
+    await createGiftCardActivity("LOAD", gan, orderId, lineItemId);
 
-    // No that we have an actual gift card created and paid for, activate it.
-    const { result: { giftCardActivity }} = await activateGiftCard(gan, orderId, lineItemId);
-    const giftCardId = giftCardActivity.giftCardId;
-
-    // Now link it to the customer that paid for it!
-    await linkCustomerToGiftCard(customerId, giftCardId);
-
-    //DONE!!! (VERIFY BY LISTING GIFT CARDS BY CUSTOMER ID)
-    console.log("DONE");
+    // TODO: render confirmation page
   } catch (error) {
-    // TODO: fix
     console.error(error);
+    next(error);
   }
 });
 
@@ -210,7 +206,7 @@ function createGiftCardPayment(customerId, amount, currency, paymentSource, orde
   return paymentsApi.createPayment(paymentRequest);
 }
 
-async function createGiftCard() {
+function createGiftCard() {
   const createGiftCardRequest = {
     idempotencyKey: uuidv4(),
     locationId: locationId,
@@ -222,24 +218,51 @@ async function createGiftCard() {
   return giftCardsApi.createGiftCard(createGiftCardRequest);
 }
 
-async function activateGiftCard(gan, orderId, lineItemId) {
-  const createGiftCardActivityRequest = {
+function createGiftCardActivity(activityName, gan, orderId, lineItemId) {
+  const request = generateRequestBasedOnActivity(activityName, gan, orderId, lineItemId);
+  return giftCardActivitiesApi.createGiftCardActivity(request);
+}
+
+function generateRequestBasedOnActivity(activityName, gan, orderId, lineItemId) {
+  const activityObject = getActivityObject(activityName, orderId, lineItemId);
+  const [ key ] = Object.keys(activityObject);
+  const [ value ] = Object.values(activityObject);
+  const request = {
     idempotencyKey: uuidv4(),
     giftCardActivity: {
       giftCardGan: gan,
-      type: "ACTIVATE",
+      type: activityName,
       locationId: locationId,
-      activateActivityDetails: {
-        orderId: orderId,
-        lineItemUid: lineItemId
-      }
     }
   };
-
-  return giftCardActivitiesApi.createGiftCardActivity(createGiftCardActivityRequest);
+  // Add the correct activity object to our request.
+  request.giftCardActivity[key] = value;
+  return request;
 }
 
-async function linkCustomerToGiftCard(customerId, giftCardId) {
+function getActivityObject(activityName, orderId, lineItemId) {
+  switch(activityName) {
+    case "ACTIVATE":
+      return {
+        activateActivityDetails: {
+          orderId: orderId,
+          lineItemUid: lineItemId
+        }
+      };
+    case "LOAD":
+      return {
+        loadActivityDetails: {
+          orderId: orderId,
+          lineItemUid: lineItemId
+        }
+      };
+    // Add more Gift Card Activities types you wish to support here!
+    default:
+      console.error("Unrecognized type");
+  }
+}
+
+function linkCustomerToGiftCard(customerId, giftCardId) {
   return giftCardsApi.linkCustomerToGiftCard(giftCardId, {
     customerId: customerId
   });
@@ -252,6 +275,10 @@ async function getCurrency() {
   } catch (error) {
     console.error("Could not fetch currency from location ID");
   }
+}
+
+function getAmountInSmallestDenomination(amount) {
+  return amount * 100;
 }
 
 module.exports = router;
