@@ -13,12 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+const { v4: uuidv4 } = require("uuid");
 
 const express = require("express");
 const path = require("path");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const session = require('express-session');
 
 const routes = require("./routes/index");
 const app = express();
@@ -28,10 +30,24 @@ require("./util/square-client");
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
+
 app.use(logger("dev"));
+
+app.use(express.static(__dirname + '/public'));
+
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
+}));
+
+// 
+app.use(session({
+  genid: function(req) {
+    return uuidv4() // use UUIDs for session IDs
+  },
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
 }));
 app.use(cookieParser());
 app.use("/", routes);

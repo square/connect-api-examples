@@ -24,9 +24,47 @@ const {
   paymentsApi,
   locationsApi
 } = require("../util/square-client");
+const cardsRoute = require("./cards");
 
+router.use("/cards", cardsRoute);
 router.get("/", async (req, res, next) => {
-  res.send("HELLO WORLD");
+  if (req.session.loggedin) {
+    res.redirect('/cards');
+  } else {
+    res.redirect('/login');
+  }
+});
+
+// Renders a fake login page that is just a list
+// of existing customers to choose from.
+router.get("/login", async (req, res, next) => {
+  let customers;
+  try {
+    const response = await customersApi.listCustomers();
+    customers = response.result.customers;
+    console.log(customers);
+
+  } catch(error) {
+    console.log(error);
+  }
+  res.render("pages/login", {customers})
+});
+
+// Mimicks the login action, no actual authentication
+// In production, implement real login system.
+router.post("/login", async (req, res, next) => {
+  if (req.body.customer) {
+    req.session.loggedin = true;
+    req.session.customerid = req.body.customer;
+  }
+
+  res.redirect("/");
+})
+
+router.get("/logout", async (req, res, next) => {
+  req.session.destroy();
+
+  res.redirect("/");
 });
 
 module.exports = router;
