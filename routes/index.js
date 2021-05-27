@@ -28,6 +28,8 @@ const dashboardRoute = require("./dashboard");
 
 router.use("/dashboard", dashboardRoute);
 
+router.use("/gift-card", require("./gift-card-activity"));
+
 router.get("/", async (req, res, next) => {
   if (req.session.loggedIn) {
     res.redirect('/dashboard');
