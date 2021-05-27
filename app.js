@@ -40,7 +40,6 @@ app.use(express.urlencoded({
   extended: false
 }));
 
-// 
 app.use(session({
   genid: function(req) {
     return uuidv4() // use UUIDs for session IDs
