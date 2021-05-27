@@ -29,8 +29,8 @@ const dashboardRoute = require("./dashboard");
 router.use("/dashboard", dashboardRoute);
 
 router.get("/", async (req, res, next) => {
-  if (req.session.loggedin) {
-    res.redirect('/cards');
+  if (req.session.loggedIn) {
+    res.redirect('/dashboard');
   } else {
     res.redirect('/login');
   }
@@ -43,7 +43,7 @@ router.get("/login", async (req, res, next) => {
   try {
     const response = await customersApi.listCustomers();
     customers = response.result.customers;
-    
+
     res.render("pages/login", {customers})
   } catch(error) {
     console.log(error);
