@@ -1,0 +1,32 @@
+<html>
+
+<head>
+  <link href="../stylesheets/style.css" rel="stylesheet" type="text/css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="../js/table.js"></script>
+</head>
+
+<body>
+  <div id="container">
+    <div class="wrapper">
+      <div>This is a fake payment page to load a gift card</div>
+      <form class="form-control" action="/gift-card/load" method="POST">
+        <table id="table" class="styled-table">
+          <h1>gan: <%= gan %></h1>
+          <h2>current balance: XXXX</h1>
+          <tbody>
+              <% cards.forEach(function(card) { %>
+                <tr>
+                  <td><%= card.cardBrand %></td>
+                  <td>**** **** **** <%= card.last4 %></td>
+                </tr>
+              <% }); %>
+          </tbody>
+      </table>
+        <input id="load" type="submit" name="OK" class="ok" value="OK"/>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

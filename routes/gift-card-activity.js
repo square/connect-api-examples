@@ -41,4 +41,22 @@ router.get("/activate", async (req, res, next) => {
   }
 });
 
+router.get("/load", async (req, res, next) => {
+  // grab customerID from session
+  // GAN value should either come from session or from path (need to figure out whether gan is considered private data)
+  // const customerId = req.session.customerId;
+  // const gan = req.query.gan;
+  const customerId = "7ZP819JGYMTXH0D1ASA5086JKG";
+  const gan = 7783320008099368;
+  try {
+    const { result: { customer } } = await customersApi.retrieveCustomer(customerId);
+    // we want to return all cards that belong to customer (add filtering logic here if don't want to show customer's gift card as payment method)
+    const cards = customer.cards;
+    res.render("pages/load", { cards: cards, gan: gan});
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;
