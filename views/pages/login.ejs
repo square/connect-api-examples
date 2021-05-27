@@ -11,9 +11,9 @@
       <form class="form-control" action="/login" method="POST">
         <select size="5" name="customer">
           <% customers.forEach(function(customer) { %>
-          <option value=<%=customer.id %>>
-            <%= customer.givenName %> <%= customer.familyName %>
-          </option>
+            <option value=<%=customer.id %>>
+              <%= customer.givenName %> <%= customer.familyName %>
+            </option>
           <% }); %>
         </select>
         <button type="submit">Login</button>

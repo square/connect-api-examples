@@ -24,9 +24,9 @@ const {
   paymentsApi,
   locationsApi
 } = require("../util/square-client");
-const cardsRoute = require("./cards");
+const dashboardRoute = require("./dashboard");
 
-router.use("/cards", cardsRoute);
+router.use("/dashboard", dashboardRoute);
 
 router.get("/", async (req, res, next) => {
   if (req.session.loggedin) {
@@ -45,16 +45,17 @@ router.get("/login", async (req, res, next) => {
     customers = response.result.customers;
   } catch(error) {
     console.log(error);
+    next(error);
   }
   res.render("pages/login", {customers})
 });
 
-// Mimicks the login action, no actual authentication
+// Mimics the login action, no actual authentication.
 // In production, implement real login system.
 router.post("/login", async (req, res, next) => {
   if (req.body.customer) {
-    req.session.loggedin = true;
-    req.session.customerid = req.body.customer;
+    req.session.loggedIn = true;
+    req.session.customerId = req.body.customer;
   }
   res.redirect("/");
 })

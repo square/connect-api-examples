@@ -45,7 +45,7 @@ app.use(session({
   genid: function(req) {
     return uuidv4() // use UUIDs for session IDs
   },
-	secret: 'secret',
+	secret: 'secret', // in production, use a unique and random generated string and store it in an environment variable
 	resave: true,
 	saveUninitialized: true
 }));
@@ -63,7 +63,7 @@ app.use(function (req, res, next) {
 // For simplicity, we print all error information
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  res.render("error", {
+  res.render("pages/error", {
     status: err.status,
     message: err.message,
     // If it is a response error then format the JSON string, if not output the error
