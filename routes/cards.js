@@ -38,7 +38,7 @@ router.get("/", async (req, res, next) => {
   if (Object.keys(giftCards).length === 0) {
     res.render("pages/no-cards");
   } else {
-    res.render("pages/all-cards");
+    res.render("pages/cards-dashboard");
   }
 
 });

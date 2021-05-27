@@ -27,6 +27,7 @@ const {
 const cardsRoute = require("./cards");
 
 router.use("/cards", cardsRoute);
+
 router.get("/", async (req, res, next) => {
   if (req.session.loggedin) {
     res.redirect('/cards');
@@ -42,8 +43,6 @@ router.get("/login", async (req, res, next) => {
   try {
     const response = await customersApi.listCustomers();
     customers = response.result.customers;
-    console.log(customers);
-
   } catch(error) {
     console.log(error);
   }
@@ -57,13 +56,11 @@ router.post("/login", async (req, res, next) => {
     req.session.loggedin = true;
     req.session.customerid = req.body.customer;
   }
-
   res.redirect("/");
 })
 
 router.get("/logout", async (req, res, next) => {
   req.session.destroy();
-
   res.redirect("/");
 });
 
