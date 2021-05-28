@@ -1,0 +1,11 @@
+<!-- This is a partial for the payment-method table. Can be inserted at runtime into a page. -->
+<table id="table" class="styled-table">
+  <tbody>
+      <% cards.forEach(function(card) { %>
+        <tr>
+          <td><%= card.cardBrand %></td>
+          <td>**** **** **** <%= card.last4 %></td>
+        </tr>
+      <% }); %>
+  </tbody>
+</table>

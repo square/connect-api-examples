@@ -25,34 +25,42 @@ const {
   locationsApi
 } = require("../util/square-client");
 
-router.get("/activate", async (req, res, next) => {
-  // grab customerID from session
-  // const customerId = req.session.customerId;
-  // hardcode for now
-  const customerId = "7ZP819JGYMTXH0D1ASA5086JKG";
+const { checkAuth } = require("../util/check-auth");
+
+/**
+ * GET /gift-card/create
+ * Renders the `Create a new gift card` page.
+ * This endpoint retrieves all cards on file for the customer currently logged in.
+ * Can add additional logic to filter out payment methods that might not be allowed
+ * (i.e. paying for new gift cards using an existing gift card).
+ */
+router.get("/create", checkAuth, async (req, res, next) => {
   try {
-    const { result: { customer } } = await customersApi.retrieveCustomer(customerId);
-    // we want to return all cards that belong to customer (add filtering logic here if don't want to show customer's gift card as payment method)
+    const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
     const cards = customer.cards;
-    res.render("pages/activate", {cards});
+    res.render("pages/create-gift-card", { cards });
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
 
-router.get("/load", async (req, res, next) => {
-  // grab customerID from session
-  // GAN value should either come from session or from path (need to figure out whether gan is considered private data)
-  // const customerId = req.session.customerId;
+/**
+ * GET /gift-card/load
+ * Renders the `Load an existing gift card` page.
+ * This endpoint retrieves all cards on file for the customer currently logged in.
+ * Can add additional logic to filter out payment methods that might not be allowed
+ * (i.e. loading gift cards using an existing gift card).
+ */
+router.get("/load", checkAuth, async (req, res, next) => {
+  // TODO: GAN value should either come from session or from path, currently hardcoded.
+  // TODO: might want to return more information - like current balance.
   // const gan = req.query.gan;
-  const customerId = "7ZP819JGYMTXH0D1ASA5086JKG";
   const gan = 7783320008099368;
   try {
-    const { result: { customer } } = await customersApi.retrieveCustomer(customerId);
-    // we want to return all cards that belong to customer (add filtering logic here if don't want to show customer's gift card as payment method)
+    const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
     const cards = customer.cards;
-    res.render("pages/load", { cards: cards, gan: gan});
+    res.render("pages/load-gift-card", { cards: cards, gan: gan });
   } catch (error) {
     console.error(error);
     next(error);

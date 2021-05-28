@@ -1,15 +1,19 @@
 <html>
 
 <head>
-  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+  <link href="../stylesheets/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
   <header>
     <%- include("../partials/header") %>
   </header>
-  <div>No gift cards for this account</div>
-  <button type="button" href="#TODO">Add Card</button>
+  <div id="container">
+    <form id="dashboard" class="form-control" action="/gift-card/create" method="GET">
+      <h1> No gift cards for this account</h1>
+      <button type="submit">Add Card</button>
+    </form>
+  </div>
 </body>
 
 </html>

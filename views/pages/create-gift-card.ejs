@@ -1,0 +1,27 @@
+<html>
+
+<head>
+  <link href="../stylesheets/style.css" rel="stylesheet" type="text/css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript" src="../js/table.js"></script>
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+  <div id="container">
+    <div class="wrapper">
+      <div>
+        <h1>Add New Card</h1>
+        <h3>Select a payment method to pay with:</h3>
+      </div>
+      <form class="form-control" action="/gift-card/create" method="POST">
+        <%- include("../partials/table") %>
+        <%- include("../partials/confirm-button") %>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
