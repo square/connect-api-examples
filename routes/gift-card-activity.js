@@ -31,7 +31,7 @@ const { checkAuth } = require("../util/check-auth");
  * GET /gift-card/create
  * Renders the `Create a new gift card` page.
  * This endpoint retrieves all cards on file for the customer currently logged in.
- * Can add additional logic to filter out payment methods that might not be allowed
+ * You can add additional logic to filter out payment methods that might not be allowed
  * (i.e. paying for new gift cards using an existing gift card).
  */
 router.get("/create", checkAuth, async (req, res, next) => {
@@ -48,12 +48,12 @@ router.get("/create", checkAuth, async (req, res, next) => {
 /**
  * GET /gift-card/load
  * Renders the `Load an existing gift card` page.
- * This endpoint retrieves all cards on file for the customer currently logged in.
- * Can add additional logic to filter out payment methods that might not be allowed
+ * This endpoint is very similar to GET /gift-card/create, but returns more information regarding the gift card.
+ * You can add additional logic to filter out payment methods that might not be allowed
  * (i.e. loading gift cards using an existing gift card).
  */
 router.get("/load", checkAuth, async (req, res, next) => {
-  // TODO: GAN value should either come from session or from path, currently hardcoded.
+  // TODO: GAN value should either come from session or from path, currently hardcoded FOR TESTING.
   // TODO: might want to return more information - like current balance.
   // const gan = req.query.gan;
   const gan = 7783320008099368;
