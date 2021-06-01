@@ -19,7 +19,7 @@ async function checkCardOwner(req, res, next) {
     const gan = req.params.gan;
     const { result: { giftCard } } = await giftCardsApi.retrieveGiftCardFromGAN({ gan });
     if (!giftCard.customerIds.includes(req.session.customerId)) {
-      res.redirect("/login");
+      res.redirect("/");
     } else {
       // pass the giftCard object to the next middleware
       res.locals.giftCard = giftCard;

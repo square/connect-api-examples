@@ -24,7 +24,6 @@ const {
   paymentsApi,
   locationsApi
 } = require("../util/square-client");
-const { v4: uuidv4 } = require("uuid");
 
 const dashboardRoute = require("./dashboard");
 const giftCardRoute = require("./gift-card-activity");
