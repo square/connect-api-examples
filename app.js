@@ -16,17 +16,24 @@ limitations under the License.
 const { v4: uuidv4 } = require("uuid");
 
 const express = require("express");
-const path = require("path");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
 const session = require('express-session');
 
 const routes = require("./routes/index");
 const app = express();
 
-// Node creates cached instance of square-client, on initial load
-require("./util/square-client");
+// Set currency to be used in the app, default to USD.
+const { locationsApi } = require("./util/square-client");
+app.locals.currency = "USD";
+locationsApi.retrieveLocation(process.env[`SQUARE_LOCATION_ID`]).then(function(response) {
+  app.locals.currency = response.result.location.currency;
+}).catch(function(error) {
+  if (error.statusCode == "401") {
+    console.error("Configuration has failed. Please verify `.env` file is correct.");
+  }
+  process.exit(1);
+});
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');

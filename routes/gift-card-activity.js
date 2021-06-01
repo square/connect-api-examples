@@ -82,15 +82,15 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
 });
 
 /**
- * Handler for "/gift-card/create" route.
+ * POST /gift-card/create
+ * Creates and activates a gift card for the logged in customer based on the amount provided.
  * Steps are:
- * 1. order (amount to activate to)
- * 2. payment using the orderId and source_id (card on file for cust)
- * 3. create gift card
- * 4. create gift card activity (ACTIVATE)
- * 5. link gift card to customer
+ * 1. Create an order (with the amount provided by the customer)
+ * 2. Create a payment using the orderId and sourceId from (1)
+ * 3. Create gift card
+ * 4. Activate the gift card using information from (1,2,3)
+ * 5. Link gift card to the customer
  * Steps (1,2) and (3) can happen in parallel. Once those are done, can proceed with (4,5).
- * TODO: COMBINE ORDER AND PAYMENT INTO ONE FUNCTION!!
  */
 router.post("/create", checkAuth, async (req, res, next) => {
   try {
@@ -99,8 +99,8 @@ router.post("/create", checkAuth, async (req, res, next) => {
     const amount = getAmountInSmallestDenomination(req.body.amount);
     const paymentSource = req.body.cardId;
 
-    // Grab the currency to be used based on the location.
-    const currency = await getCurrency();
+    // Grab the currency to be used for the order/payment.
+    const currency = req.app.locals.currency;
 
     // The following code runs the order/payment flow and the gift card creation flow concurrently as they are independent.
     const orderPromise = createGiftCardOrder(customerId, amount, currency);
@@ -127,13 +127,22 @@ router.post("/create", checkAuth, async (req, res, next) => {
     // Now link it to the customer that paid for it!
     await linkCustomerToGiftCard(customerId, giftCardId);
 
-    // TODO: render confirmation page
+    res.render("pages/confirmation");
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
 
+
+/**
+ * POST /gift-card/load/:gan
+ * Loads a given gift card with the amount provided.
+ * Steps are:
+ * 1. Create an order (with the amount provided by the customer)
+ * 2. Create a payment using the orderId and sourceId from (1)
+ * 3. Load the gift card using information from (1,2)
+ */
 router.post("/load/:gan", checkAuth, async (req, res, next) => {
   try {
     // The following information will come from the request/session. Hardcoded for now.
@@ -142,8 +151,8 @@ router.post("/load/:gan", checkAuth, async (req, res, next) => {
     const paymentSource = req.body.cardId;
     const gan = req.params.gan;
 
-    // Grab the currency to be used based on the location.
-    const currency = await getCurrency();
+    // Grab the currency to be used for the order/payment.
+    const currency = req.app.locals.currency;
 
     // The following code runs the order/payment flow.
     // Await order call, as payment needs order information.
@@ -159,7 +168,7 @@ router.post("/load/:gan", checkAuth, async (req, res, next) => {
     // Load the gift card
     await createGiftCardActivity("LOAD", gan, orderId, lineItemId);
 
-    // TODO: render confirmation page
+    res.render("pages/confirmation");
   } catch (error) {
     console.error(error);
     next(error);
@@ -266,15 +275,6 @@ function linkCustomerToGiftCard(customerId, giftCardId) {
   return giftCardsApi.linkCustomerToGiftCard(giftCardId, {
     customerId: customerId
   });
-}
-
-async function getCurrency() {
-  try {
-    const { result: { location } } = await locationsApi.retrieveLocation(locationId);
-    return location.currency;
-  } catch (error) {
-    console.error("Could not fetch currency from location ID");
-  }
 }
 
 function getAmountInSmallestDenomination(amount) {
