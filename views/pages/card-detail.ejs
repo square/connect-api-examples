@@ -1,0 +1,23 @@
+<html>
+
+<head>
+  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+  <script src="/js/js-barcode.js"></script>
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+  <%= giftCard.gan %>
+  <%= giftCard.state %>
+  <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %>
+    <svg id="barcode">
+    </svg>
+    <a href="">Add Fund</a>
+    <script>
+      JsBarcode("#barcode", <%= giftCard.gan %>);
+    </script>
+</body>
+
+</html>

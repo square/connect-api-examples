@@ -25,10 +25,11 @@ const {
   locationsApi
 } = require("../util/square-client");
 
-const { checkAuth } = require("../util/check-auth");
+const { checkAuth, checkCardOwner } = require("../util/check-auth");
 
 /**
  * GET /gift-card/create
+ * 
  * Renders the `Create a new gift card` page.
  * This endpoint retrieves all cards on file for the customer currently logged in.
  * You can add additional logic to filter out payment methods that might not be allowed
@@ -47,6 +48,7 @@ router.get("/create", checkAuth, async (req, res, next) => {
 
 /**
  * GET /gift-card/load
+ * 
  * Renders the `Load an existing gift card` page.
  * This endpoint is very similar to GET /gift-card/create, but returns more information regarding the gift card.
  * You can add additional logic to filter out payment methods that might not be allowed
@@ -65,6 +67,16 @@ router.get("/load", checkAuth, async (req, res, next) => {
     console.error(error);
     next(error);
   }
+});
+
+/**
+ * GET /gift-card/:gan
+ * 
+ * Shows the details of a gift card by its GAN
+ */
+router.get("/:gan", checkAuth, checkCardOwner, async (req, res, next) => {
+  const giftCard = res.locals.giftCard;
+  res.render("pages/card-detail", { giftCard });
 });
 
 module.exports = router;

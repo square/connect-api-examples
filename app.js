@@ -21,12 +21,11 @@ const logger = require("morgan");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const session = require('express-session');
-
 const routes = require("./routes/index");
-const app = express();
 
-// Node creates cached instance of square-client, on initial load
-require("./util/square-client");
+const ti = require("./util/square-client.js");
+
+const app = express();
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
@@ -69,5 +68,6 @@ app.use(function (err, req, res, next) {
     error: err.errors ? JSON.stringify(err.errors, null, 4) : err.stack
   });
 });
+
 
 module.exports = app;

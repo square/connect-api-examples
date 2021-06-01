@@ -26,6 +26,12 @@ const {
 } = require("../util/square-client");
 const { checkAuth } = require("../util/check-auth");
 
+/**
+ * GET /dashboard
+ * 
+ * Lists all gift cards both ACTIVE and INACTIVE for a user. If
+ * the user has not card, show a default page.
+ */
 router.get("/", checkAuth, async (req, res, next) => {
   // display a list of gift cards linked to the
   // customer's account
@@ -35,7 +41,8 @@ router.get("/", checkAuth, async (req, res, next) => {
     if (Object.keys(response.result).length === 0) {
       res.render("pages/dashboard-no-cards");
     } else {
-      res.render("pages/dashboard");
+      giftCards = response.result.giftCards;
+      res.render("pages/dashboard", { giftCards });
     }
   } catch (error) {
     console.log(error);

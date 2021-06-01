@@ -24,8 +24,14 @@ const {
   paymentsApi,
   locationsApi
 } = require("../util/square-client");
+const { v4: uuidv4 } = require("uuid");
+
 const dashboardRoute = require("./dashboard");
 const giftCardRoute = require("./gift-card-activity");
+
+const locationId = process.env[`SQUARE_LOCATION_ID`];
+
+const { checkAuth } = require("../util/check-auth");
 
 // Define the routes
 router.use("/dashboard", dashboardRoute);
@@ -42,6 +48,7 @@ router.get("/", async (req, res, next) => {
 // Renders a fake login page that is just a list
 // of existing customers to choose from.
 router.get("/login", async (req, res, next) => {
+  console.log("Currency is:" + res.app.locals.currency);
   let customers;
   try {
     const response = await customersApi.listCustomers();
