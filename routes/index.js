@@ -44,7 +44,6 @@ router.get("/", async (req, res, next) => {
 // Renders a fake login page that is just a list
 // of existing customers to choose from.
 router.get("/login", async (req, res, next) => {
-  console.log("Currency is:" + res.app.locals.currency);
   let customers;
   try {
     const response = await customersApi.listCustomers();

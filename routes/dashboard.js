@@ -36,12 +36,11 @@ router.get("/", checkLoginStatus, async (req, res, next) => {
   // display a list of gift cards linked to the
   // customer's account
   try {
-    const response = await giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, req.session.customerId);
+    const {result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, req.session.customerId);
 
-    if (Object.keys(response.result).length === 0) {
+    if (!giftCards) {
       res.render("pages/dashboard-no-cards");
     } else {
-      giftCards = response.result.giftCards;
       res.render("pages/dashboard", { giftCards });
     }
   } catch (error) {
