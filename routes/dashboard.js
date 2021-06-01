@@ -24,7 +24,7 @@ const {
   paymentsApi,
   locationsApi
 } = require("../util/square-client");
-const { checkAuth } = require("../util/check-auth");
+const { checkLoginStatus } = require("../util/middleware");
 
 /**
  * GET /dashboard
@@ -32,7 +32,7 @@ const { checkAuth } = require("../util/check-auth");
  * Lists all gift cards both ACTIVE and INACTIVE for a user. If
  * the user has not card, show a default page.
  */
-router.get("/", checkAuth, async (req, res, next) => {
+router.get("/", checkLoginStatus, async (req, res, next) => {
   // display a list of gift cards linked to the
   // customer's account
   try {

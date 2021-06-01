@@ -1,8 +1,8 @@
 const {
   giftCardsApi
-} = require("../util/square-client");
+} = require("./square-client");
 
-async function checkAuth(req, res, next) {
+async function checkLoginStatus(req, res, next) {
   if (!req.session.loggedIn) {
     res.redirect("/login");
   } else {
@@ -26,6 +26,6 @@ async function checkCardOwner(req, res, next) {
 }
 
 module.exports = {
-  checkAuth,
+  checkLoginStatus,
   checkCardOwner
 };

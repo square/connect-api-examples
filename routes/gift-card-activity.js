@@ -25,7 +25,7 @@ const {
   locationsApi
 } = require("../util/square-client");
 
-const { checkAuth, checkCardOwner } = require("../util/check-auth");
+const { checkLoginStatus, checkCardOwner } = require("../util/middleware");
 
 /**
  * GET /gift-card/create
@@ -35,7 +35,7 @@ const { checkAuth, checkCardOwner } = require("../util/check-auth");
  * You can add additional logic to filter out payment methods that might not be allowed
  * (i.e. paying for new gift cards using an existing gift card).
  */
-router.get("/create", checkAuth, async (req, res, next) => {
+router.get("/create", checkLoginStatus, async (req, res, next) => {
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
     const cards = customer.cards;
@@ -54,7 +54,7 @@ router.get("/create", checkAuth, async (req, res, next) => {
  * You can add additional logic to filter out payment methods that might not be allowed
  * (i.e. loading gift cards using an existing gift card).
  */
-router.get("/load", checkAuth, async (req, res, next) => {
+router.get("/load", checkLoginStatus, async (req, res, next) => {
   // TODO: GAN value should either come from session or from path, currently hardcoded FOR TESTING.
   // TODO: might want to return more information - like current balance.
   // const gan = req.query.gan;
@@ -74,7 +74,7 @@ router.get("/load", checkAuth, async (req, res, next) => {
  * 
  * Shows the details of a gift card by its GAN
  */
-router.get("/:gan", checkAuth, checkCardOwner, async (req, res, next) => {
+router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const giftCard = res.locals.giftCard;
   res.render("pages/card-detail", { giftCard });
 });

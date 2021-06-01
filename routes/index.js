@@ -29,10 +29,6 @@ const { v4: uuidv4 } = require("uuid");
 const dashboardRoute = require("./dashboard");
 const giftCardRoute = require("./gift-card-activity");
 
-const locationId = process.env[`SQUARE_LOCATION_ID`];
-
-const { checkAuth } = require("../util/check-auth");
-
 // Define the routes
 router.use("/dashboard", dashboardRoute);
 router.use("/gift-card", giftCardRoute);
