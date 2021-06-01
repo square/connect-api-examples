@@ -36,6 +36,7 @@ router.get("/", checkLoginStatus, async (req, res, next) => {
   // display a list of gift cards linked to the
   // customer's account
   try {
+    // TODO: filter only active cards
     const {result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, req.session.customerId);
 
     if (!giftCards) {
