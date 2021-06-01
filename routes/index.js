@@ -32,8 +32,6 @@ const giftCardRoute = require("./gift-card-activity");
 router.use("/dashboard", dashboardRoute);
 router.use("/gift-card", giftCardRoute);
 
-router.use("/gift-card", require("./gift-card-activity"));
-
 router.get("/", async (req, res, next) => {
   if (req.session.loggedIn) {
     res.redirect('/dashboard');
