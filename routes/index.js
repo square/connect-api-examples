@@ -24,6 +24,7 @@ const {
   paymentsApi,
   locationsApi
 } = require("../util/square-client");
+
 const dashboardRoute = require("./dashboard");
 const giftCardRoute = require("./gift-card-activity");
 

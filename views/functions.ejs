@@ -1,0 +1,11 @@
+<%
+formatMoney = function(value, currency) {
+  // Create number formatter.
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+  });
+
+  return formatter.format(Number(value)/100.0);
+}
+%>

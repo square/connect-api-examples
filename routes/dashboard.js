@@ -24,18 +24,25 @@ const {
   paymentsApi,
   locationsApi
 } = require("../util/square-client");
-const { checkAuth } = require("../util/check-auth");
+const { checkLoginStatus } = require("../util/middleware");
 
-router.get("/", checkAuth, async (req, res, next) => {
+/**
+ * GET /dashboard
+ * 
+ * Lists all ACTIVE gift cards for a user. If the user does not have any 
+ * card, show a default page.
+ */
+router.get("/", checkLoginStatus, async (req, res, next) => {
   // display a list of gift cards linked to the
   // customer's account
   try {
-    const response = await giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, req.session.customerId);
+    // TODO: filter only active cards
+    const {result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, req.session.customerId);
 
-    if (Object.keys(response.result).length === 0) {
+    if (!giftCards) {
       res.render("pages/dashboard-no-cards");
     } else {
-      res.render("pages/dashboard");
+      res.render("pages/dashboard", { giftCards });
     }
   } catch (error) {
     console.log(error);
