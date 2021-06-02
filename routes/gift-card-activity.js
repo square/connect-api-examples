@@ -48,14 +48,14 @@ router.get("/create", checkLoginStatus, async (req, res, next) => {
 });
 
 /**
- * GET /gift-card/load
+ * GET /gift-card/:gan/load
  *
  * Renders the `Load an existing gift card` page.
  * This endpoint is very similar to GET /gift-card/create, but returns more information regarding the gift card.
  * You can add additional logic to filter out payment methods that might not be allowed
  * (i.e. loading gift cards using an existing gift card).
  */
-router.get("/load/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+router.get("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const gan = req.params.gan;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
@@ -96,7 +96,7 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
     const amount = getAmountInSmallestDenomination(req.body.amount);
     const paymentSource = req.body.cardId;
 
-    // Grab the currency to be used for the order/payment.
+    // Get the currency to be used for the order/payment.
     const currency = req.app.locals.currency;
 
     // The following code runs the order/payment flow and the gift card creation flow concurrently as they are independent.
@@ -133,7 +133,7 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
 
 
 /**
- * POST /gift-card/load/:gan
+ * POST /gift-card/:gan/load
  *
  * Loads a given gift card with the amount provided.
  * Steps are:
@@ -141,7 +141,7 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
  * 2. Create a payment using the orderId and sourceId from (1)
  * 3. Load the gift card using information from (1,2)
  */
-router.post("/load/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+router.post("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   try {
     // The following information will come from the request/session.
     const customerId = req.session.customerId;
@@ -149,7 +149,7 @@ router.post("/load/:gan", checkLoginStatus, checkCardOwner, async (req, res, nex
     const paymentSource = req.body.cardId;
     const gan = req.params.gan;
 
-    // Grab the currency to be used for the order/payment.
+    // Get the currency to be used for the order/payment.
     const currency = req.app.locals.currency;
 
     // The following code runs the order/payment flow.
@@ -197,7 +197,6 @@ function createGiftCardOrder(customerId, amount, currency) {
       customerId: customerId
     }
   };
-
 
   return ordersApi.createOrder(orderRequest);
 }
