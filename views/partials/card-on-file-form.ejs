@@ -1,12 +1,17 @@
 <!-- This is a partial for the payment-method table. Can be inserted at runtime into a page. -->
-<table id="table" class="styled-table">
-  <tbody>
+<form class="form-control" action=<%= path %> method="POST">
+  <h3><%= prompt %></h3>
+  <input type="number" id="amount" name="amount" min="1">
+  <h3>Select a payment method to pay with:</h3>
+  <table id="table" class="styled-table">
+    <tbody>
       <% cards.forEach(function(card) { %>
         <tr> <input type="hidden" name="cardId" value=<%= card.id %>>
           <td><%= card.cardBrand %></td>
           <td>**** **** **** <%= card.last4 %></td>
         </tr>
       <% }); %>
-  </tbody>
-</table>
-<input id="confirm" type="submit" value="Confirm"/>
+    </tbody>
+  </table>
+  <input id="confirm" type="submit" value="Confirm"/>
+</form>

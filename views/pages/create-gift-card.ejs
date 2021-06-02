@@ -3,7 +3,7 @@
 <head>
   <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script type="text/javascript" src="/js/table.js"></script>
+  <script type="text/javascript" src="/js/card-on-file-table.js"></script>
 </head>
 
 <body>
@@ -15,12 +15,7 @@
       <div>
         <h1>Add New Card</h1>
       </div>
-      <form class="form-control" action="/gift-card/create" method="POST">
-        <h3>Enter a money amount to create your gift card with:</h3>
-        <input type="number" id="amount" name="amount" min="1">
-        <h3>Select a payment method to pay with:</h3>
-        <%- include("../partials/table") %>
-      </form>
+      <%- include("../partials/card-on-file-form", {path: "/gift-card/create", prompt: "Enter a money amount to create your gift card with:"}) %>
     </div>
   </div>
 </body>
