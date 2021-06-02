@@ -11,19 +11,23 @@ async function checkLoginStatus(req, res, next) {
 }
 
 /**
- * If the gift card being accessed does not belong to the customer 
+ * If the gift card being accessed does not belong to the customer
  * logged in, redirect to the login page
- * */ 
+ * */
 async function checkCardOwner(req, res, next) {
   if (req.params.gan) {
-    const gan = req.params.gan;
-    const { result: { giftCard } } = await giftCardsApi.retrieveGiftCardFromGAN({ gan });
-    if (!giftCard.customerIds.includes(req.session.customerId)) {
+    try {
+      const gan = req.params.gan;
+      const { result: { giftCard } } = await giftCardsApi.retrieveGiftCardFromGAN({ gan });
+      if (!giftCard.customerIds.includes(req.session.customerId)) {
+        res.redirect("/");
+      } else {
+        // pass the giftCard object to the next middleware
+        res.locals.giftCard = giftCard;
+        next();
+      }
+    } catch (error) {
       res.redirect("/");
-    } else {
-      // pass the giftCard object to the next middleware
-      res.locals.giftCard = giftCard;
-      next();
     }
   }
 }

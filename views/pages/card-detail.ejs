@@ -14,7 +14,7 @@
   <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %>
     <svg id="barcode">
     </svg>
-    <a href="">Add Fund</a>
+    <a href=<%= "/gift-card/" + giftCard.gan + "/load"%>>Add Fund</a>
     <script>
       JsBarcode("#barcode", "<%= giftCard.gan %>");
     </script>
