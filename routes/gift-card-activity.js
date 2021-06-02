@@ -187,9 +187,8 @@ router.post("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, nex
 });
 
 /**
- * Helper function for creating a gift card order.
- * This function makes the POST "v2/orders" API call using the SDK and returns a promise
- * that can be await-ed when the information is needed.
+ * Helper function for generating a gift card order request.
+ * This function builds the request that will be used in the POST "v2/orders" API call.
  */
 function generateOrderRequest(customerId, amount, currency) {
   return {
@@ -213,9 +212,8 @@ function generateOrderRequest(customerId, amount, currency) {
 }
 
 /**
- * Helper function for creating a gift card payment.
- * This function makes the POST "v2/payment" API call using the SDK and returns a promise
- * that can be await-ed when the information is needed.
+ * Helper function for generating a gift card payment request.
+ * This function builds the request that will be used in the POST "v2/payment" API call.
  */
 function generatePaymentRequest(customerId, amount, currency, paymentSource, orderId) {
   return {
@@ -232,9 +230,8 @@ function generatePaymentRequest(customerId, amount, currency, paymentSource, ord
 }
 
 /**
- * Helper function for creating the actual gift card.
- * This function makes the POST "v2/gift-cards" API call using the SDK and returns a promise
- * that can be await-ed when the information is needed.
+ * Helper function for generating a create gift card request.
+ * This function builds the request that will be used in the POST "v2/gift-cards" API call.
  */
 function generateGiftCardRequest() {
   return {
@@ -247,7 +244,8 @@ function generateGiftCardRequest() {
 }
 
 /**
- * Helper function for constructing the POST "v2/gift-cards/activities" request.
+ * Helper function for generating a create gift card activity request.
+ * This function builds the request that will be used in the POST "v2/gift-cards/activities" API call.
  */
  function generateGiftCardActivityRequest(activityName, gan, orderId, lineItemId) {
   const activityObject = getActivityObject(activityName, orderId, lineItemId);
