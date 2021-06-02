@@ -18,7 +18,8 @@
       <form class="form-control" action="/gift-card/<%= gan %>/load" method="POST">
         <h1>gan: <%= gan %></h1>
         <h2>current balance: XXXX</h2>
-        <h3>Enter a money amount to add to your gift card:</h3> <%- include("../partials/amount-input") %>
+        <h3>Enter a money amount to add to your gift card:</h3>
+        <input type="number" id="amount" name="amount" min="1">
         <h3>Select a payment method to pay with:</h3>
         <%- include("../partials/table") %>
       </form>

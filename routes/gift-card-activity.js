@@ -39,6 +39,7 @@ const { checkLoginStatus, checkCardOwner } = require("../util/middleware");
 router.get("/create", checkLoginStatus, async (req, res, next) => {
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
+    // TODO: might want to filter out gift cards as payment option.
     const cards = customer.cards;
     res.render("pages/create-gift-card", { cards });
   } catch (error) {
@@ -59,6 +60,8 @@ router.get("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, next
   const gan = req.params.gan;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
+    // TODO: might want to filter out gift cards as payment option.
+    // TODO: might want to return more information about the card, such as balance.
     const cards = customer.cards;
     res.render("pages/load-gift-card", { cards: cards, gan: gan });
   } catch (error) {
@@ -100,8 +103,11 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
     const currency = req.app.locals.currency;
 
     // The following code runs the order/payment flow and the gift card creation flow concurrently as they are independent.
-    const orderPromise = createGiftCardOrder(customerId, amount, currency);
-    const giftCardPromise = createGiftCard();
+    const orderRequest = generateOrderRequest(customerId, amount, currency);
+    const orderPromise = ordersApi.createOrder(orderRequest);
+
+    const giftCardRequest = generateGiftCardRequest();
+    const giftCardPromise = giftCardsApi.createGiftCard(giftCardRequest);
 
     // Await order call, as payment needs order information.
     const { result: { order } } = await orderPromise;
@@ -111,18 +117,22 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
     const lineItemId = order.lineItems[0].uid;
 
     // We have the order response, we can move on to the payment.
-    await createGiftCardPayment(customerId, amount, currency, paymentSource, orderId);
+    const paymentRequest = generatePaymentRequest(customerId, amount, currency, paymentSource, orderId);
+    await paymentsApi.createPayment(paymentRequest);
 
     // Do not proceed until the gift card creation is done.
     const { result: { giftCard } } = await giftCardPromise;
     const gan = giftCard.gan;
 
     // Now that we have an actual gift card created and paid for, activate it.
-    const { result: { giftCardActivity }} = await createGiftCardActivity("ACTIVATE", gan, orderId, lineItemId);
+    const giftCardActivityRequest = generateGiftCardActivityRequest("ACTIVATE", gan, orderId, lineItemId);
+    const { result: { giftCardActivity }} = await giftCardActivitiesApi.createGiftCardActivity(giftCardActivityRequest);
     const giftCardId = giftCardActivity.giftCardId;
 
     // Now link it to the customer that paid for it!
-    await linkCustomerToGiftCard(customerId, giftCardId);
+    await giftCardsApi.linkCustomerToGiftCard(giftCardId, {
+      customerId: customerId
+    });
 
     res.render("pages/confirmation");
   } catch (error) {
@@ -154,17 +164,20 @@ router.post("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, nex
 
     // The following code runs the order/payment flow.
     // Await order call, as payment needs order information.
-    const { result: { order } } = await createGiftCardOrder(customerId, amount, currency);
+    const orderRequest = generateOrderRequest(customerId, amount, currency);
+    const { result: { order } } = await ordersApi.createOrder(orderRequest);
 
     // Extract useful information from the order.
     const orderId = order.id;
     const lineItemId = order.lineItems[0].uid;
 
     // We have the order response, we can move on to the payment.
-    await createGiftCardPayment(customerId, amount, currency, paymentSource, orderId);
+    const paymentRequest = generatePaymentRequest(customerId, amount, currency, paymentSource, orderId);
+    await paymentsApi.createPayment(paymentRequest);
 
     // Load the gift card.
-    await createGiftCardActivity("LOAD", gan, orderId, lineItemId);
+    const giftCardActivityRequest = generateGiftCardActivityRequest("LOAD", gan, orderId, lineItemId);
+    await giftCardActivitiesApi.createGiftCardActivity(giftCardActivityRequest);
 
     res.render("pages/confirmation");
   } catch (error) {
@@ -178,8 +191,8 @@ router.post("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, nex
  * This function makes the POST "v2/orders" API call using the SDK and returns a promise
  * that can be await-ed when the information is needed.
  */
-function createGiftCardOrder(customerId, amount, currency) {
-  const orderRequest = {
+function generateOrderRequest(customerId, amount, currency) {
+  return {
     idempotencyKey: uuidv4(),
     order: {
       lineItems: [
@@ -197,8 +210,6 @@ function createGiftCardOrder(customerId, amount, currency) {
       customerId: customerId
     }
   };
-
-  return ordersApi.createOrder(orderRequest);
 }
 
 /**
@@ -206,8 +217,8 @@ function createGiftCardOrder(customerId, amount, currency) {
  * This function makes the POST "v2/payment" API call using the SDK and returns a promise
  * that can be await-ed when the information is needed.
  */
-function createGiftCardPayment(customerId, amount, currency, paymentSource, orderId) {
-  const paymentRequest = {
+function generatePaymentRequest(customerId, amount, currency, paymentSource, orderId) {
+  return {
     idempotencyKey: uuidv4(),
     sourceId: paymentSource,
     amountMoney: {
@@ -218,8 +229,6 @@ function createGiftCardPayment(customerId, amount, currency, paymentSource, orde
     locationId: locationId,
     customerId: customerId
   };
-
-  return paymentsApi.createPayment(paymentRequest);
 }
 
 /**
@@ -227,22 +236,20 @@ function createGiftCardPayment(customerId, amount, currency, paymentSource, orde
  * This function makes the POST "v2/gift-cards" API call using the SDK and returns a promise
  * that can be await-ed when the information is needed.
  */
-function createGiftCard() {
-  const createGiftCardRequest = {
+function generateGiftCardRequest() {
+  return {
     idempotencyKey: uuidv4(),
     locationId: locationId,
     giftCard: {
       type: "DIGITAL"
     }
   };
-
-  return giftCardsApi.createGiftCard(createGiftCardRequest);
 }
 
 /**
  * Helper function for constructing the POST "v2/gift-cards/activities" request.
  */
- function generateRequestBasedOnActivity(activityName, gan, orderId, lineItemId) {
+ function generateGiftCardActivityRequest(activityName, gan, orderId, lineItemId) {
   const activityObject = getActivityObject(activityName, orderId, lineItemId);
   const [ key ] = Object.keys(activityObject);
   const [ value ] = Object.values(activityObject);
@@ -257,17 +264,6 @@ function createGiftCard() {
   // Add the correct activity object to our request.
   request.giftCardActivity[key] = value;
   return request;
-}
-
-/**
- * Helper function for creating the gift card activity.
- * This function can be used to either activate or load a gift card.
- * This function makes the POST "v2/gift-cards/activities" API call using the SDK
- * and returns a promise that can be await-ed when the information is needed.
- */
-function createGiftCardActivity(activityName, gan, orderId, lineItemId) {
-  const request = generateRequestBasedOnActivity(activityName, gan, orderId, lineItemId);
-  return giftCardActivitiesApi.createGiftCardActivity(request);
 }
 
 /**
@@ -297,17 +293,6 @@ function getActivityObject(activityName, orderId, lineItemId) {
     default:
       console.error("Unrecognized type");
   }
-}
-
-/**
- * Helper function for linking a gift card to an existing customer.
- * This function makes the POST "v2/gift-cards/{id}/link-customer" API call using the SDK
- * and returns a promise that can be await-ed when the information is needed.
- */
-function linkCustomerToGiftCard(customerId, giftCardId) {
-  return giftCardsApi.linkCustomerToGiftCard(giftCardId, {
-    customerId: customerId
-  });
 }
 
 /**

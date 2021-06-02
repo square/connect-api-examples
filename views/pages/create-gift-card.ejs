@@ -16,7 +16,8 @@
         <h1>Add New Card</h1>
       </div>
       <form class="form-control" action="/gift-card/create" method="POST">
-        <h3>Enter a money amount to create your gift card with:</h3> <%- include("../partials/amount-input") %>
+        <h3>Enter a money amount to create your gift card with:</h3>
+        <input type="number" id="amount" name="amount" min="1">
         <h3>Select a payment method to pay with:</h3>
         <%- include("../partials/table") %>
       </form>
