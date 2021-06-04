@@ -13,25 +13,27 @@
   <div id="dashboard-cards__wrapper"> 
     <h3 id="dashboard-cards__title">Gift Cards</h3>
     <% if (giftCards.length === 0) { %>
-    <div id="dashboard-cards__description">You curenlty dont have any Gift Cards avalible for use. Get started by adding one.</div>
+    <div id="dashboard-cards__description">You currently don't have any Gift Cards avalible for use. Get started by adding one.</div>
     <% }; %>
     <div id="dashboard-cards__content">
       <div id="dashboard-cards__cards">
         <% giftCards.forEach(function(giftCard) { %>
           <div class="dashboard-cards__card-wrapper">
-          <div class="dashboard-cards__card">
-            <%= giftCard.gan %>
-            <%= giftCard.state %>
-            
-            <a href=<%= "gift-card/" + giftCard.gan %>>View</a>
-            <a href=<%= "/gift-card/" + giftCard.gan + "/load"%>>Add Fund</a>
-          </div>
+          <a href="/gift-card/<%= giftCard.gan %>">
+            <div class="dashboard-cards__card">
+              <div class="dashboard-cards__inner">
+                <img src="/images/giftCardImage.png" />
+              </div>
+            </div>
+          </a>
           <div class="dashboard-cards__card-balance">Card balance: <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency)  %></div>
         </div>
         <%}); %>
-        <div class="dashboard-cards__card dashboard-cards__new-card">
-          <span><a href="/gift-card/create">+ Add Gift Card</a></span>
-        </div>
+        <a href="/gift-card/create">
+          <div class="dashboard-cards__card dashboard-cards__new-card">
+            <span>+ Add Gift Card</span>
+          </div>
+        </a>
       </div>
     </div>
   </div>
