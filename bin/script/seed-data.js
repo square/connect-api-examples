@@ -216,7 +216,7 @@ if (args[0] === "generate") {
     output: process.stdout
   });
   ioInterface.question(
-    "Are you sure you want to clear all the customers previously created by this script (Y/N) ",
+    "Are you sure you want to clear all the customers previously created by this script? (Y/N) ",
      (ans) => {
     ans = ans.toUpperCase();
     if (ans === "Y") {
