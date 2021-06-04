@@ -2,24 +2,53 @@
 
 <head>
   <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+  <% include("../functions") %> 
 </head>
 
 <body>
-  <div id="login-container">
+  <div class="container" id="login-container">
     <div class="wrapper">
-      <div>This is a fake login page where you may select an existing customer to log in as</div>
-      <form class="form-control" action="/login" method="POST">
-        <select size="5" name="customer">
-          <% customers.forEach(function(customer) { %>
-            <option value=<%=customer.id %>>
-              <%= customer.givenName %> <%= customer.familyName %>
-            </option>
-          <% }); %>
-        </select>
-        <button type="submit">Login</button>
-      </form>
+      <span class="eyebrow">Square Developer</span>
+      <h1>Gift Card Sample App</h1>
+      <span>You can easily manage your gift cards with Square Gift Cards. This sample app 
+        demonstrates how Square Gift Cards API may be used by a customer to manage their gift cards.
+      </span>
+      <h5>Login</h5>
+      <div class="dropdown" id="login-dropdown">
+        <div id="dropdown-selected" class="dropdown-selected"" onclick="showOptions()">
+          <div class="option-picture">
+            <img src="/images/profile.svg"/>
+          </div>
+          <div class="option-selected">
+            <span id="selected-primary">Customer</span>
+            <span id="selected-secondary"></span>
+          </div>
+          <span class="dropdown-icon">
+            <img src="/images/caret.svg" alt=""/>
+          </span>
+        </div>
+        <ul id="dropdown-options" class="dropdown-options">
+        <% customers.forEach(function(customer) { %>
+          <li onclick="select(this)" customer-id="<%= customer.id %>">
+            <div class="option"><%= customer.givenName %> <%= customer.familyName %></div>
+          </li>
+        <% }); %>
+        </ul>
+        <form class="form-control" action="/login" method="POST">
+          <input name="customer" id="login-customer" hidden=true type="text" />
+          <button type="submit">Login</button>
+        </form>
+        <span class="message">
+          Don’t forget you can manage Customers and Gift Cards using Squar’s API Explorer to call the API. This sample app will update acrodingly.
+        </span>
+      </div>
+      
     </div>
   </div>
+  <script src="/js/dropdown.js"></script>
+  <script>
+    initializeDropdown("login-dropdown", <%- stringifyJSON(customers) %>);
+  </script>
 </body>
 
 </html>

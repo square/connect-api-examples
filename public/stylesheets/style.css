@@ -1,4 +1,67 @@
-#login-container {
+h1 {
+  font-size: 52px;
+  line-height: 60px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+}
+
+h3 {
+  font-size: 32px;
+  line-height: 40px;
+}
+
+h5 {
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.006em;
+  margin-top: 32px;
+  margin-bottom: 10px;
+}
+
+body {
+  font-size: 14px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.9);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+span.eyebrow {
+  color: #5F666C;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+span.message {
+  font-size: 12px;
+  line-height: 18px;
+  color: #5F666C;
+}
+
+td {
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+button {
+  background-color: rgba(0, 106, 255, 1);
+  color: white;
+  border-width: 0;
+  width: 100%;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  border-radius: 6px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+form {
+  margin-bottom: 0;
+}
+
+.container {
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -6,19 +69,118 @@
   align-items: center;
 }
 
-#container {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#login-container .wrapper {
+  width: 400px;
 }
 
-td {border: none; padding: 5px; cursor: pointer;}
+/** 
+  Dropdown selector
+*/
+.dropdown-selected {
+  display: flex;
+  width: 100%;
+  border: 1px;
+  border-color: rgba(0, 0, 0, 0.15);
+  border-style: solid;
+  align-items: center;
+  border-radius: 6px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.dropdown-options.show {
+  display:block;
+}
+
+.dropdown {
+  position: relative;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+#login-container .dropdown {
+  width: 350px;
+}
+
+.dropdown-options {
+  display: none;
+  position: absolute;
+}
+
+ul.dropdown-options {
+  padding: 8px 24px 8px 24px;
+  background-color: white;
+  z-index: 1;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+ul.dropdown-options li {
+  list-style-type: none;
+  height: 40px;
+  width: 100%;
+  display: block;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+ul.dropdown-options li:first-child {
+  border-top: none;
+}
+
+ul.dropdown-options li .option {
+  border-radius: 6px;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+ul.dropdown-options li .option:hover {
+  background-color: rgba(0, 106, 255, 0.1);
+  cursor: pointer;
+}
+
+.dropdown .option-picture {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 20px;
+  background-color: rgba(0, 106, 255, 0.1);
+  margin-right: 15px;
+  display: block;
+  text-align: center;
+  position: relative;
+}
+
+.dropdown .dropdown-icon {
+  position: absolute;
+  right: 15px
+}
+
+.dropdown .option-picture img {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.dropdown .option-selected {
+  display: flex;
+  flex-direction: column;
+}
+
+/** 
+  Card on file table
+*/
 
 .selected {
-    background-color: brown;
-    color: #FFF;
+  background-color: brown;
+  color: #fff;
 }
 
 .styled-table {
@@ -38,7 +200,7 @@ td {border: none; padding: 5px; cursor: pointer;}
 
 .styled-table th,
 .styled-table td {
-    padding: 12px 15px;
+  padding: 12px 15px;
 }
 
 .styled-table tbody tr {
@@ -52,7 +214,7 @@ td {border: none; padding: 5px; cursor: pointer;}
 .styled-table tbody tr.active-row {
   font-weight: bold;
   color: #009879;
-  background-color:rgb(219, 247, 219);
+  background-color: rgb(219, 247, 219);
 }
 
 #dashboard {
