@@ -14,28 +14,28 @@
         demonstrates how Square Gift Cards API may be used by a customer to manage their gift cards.
       </span>
       <h5>Login</h5>
-      <div class="dropdown" id="login-dropdown">
-        <div id="dropdown-selected" class="dropdown-selected"" onclick="showOptions()">
-          <div class="option-picture">
+      <div class="pretty-dropdown" id="login-dropdown">
+        <div id="login-dropdown__selected-content" class="pretty-dropdown__selected" onclick="showOptions()">
+          <div class="pretty-dropdown__picture">
             <img src="/images/profile.svg"/>
           </div>
-          <div class="option-selected">
-            <span id="selected-primary">Customer</span>
-            <span id="selected-secondary"></span>
+          <div class="pretty-dropdown__selected-info">
+            <span id="pretty-dropdown__selected-primary">Customer</span>
+            <span id="pretty-dropdown__selected-secondary"><%= customers[0].givenName %> <%= customers[0].familyName %></span>
           </div>
-          <span class="dropdown-icon">
+          <span class="pretty-dropdown__icon">
             <img src="/images/caret.svg" alt=""/>
           </span>
         </div>
-        <ul id="dropdown-options" class="dropdown-options">
+        <ul id="login-dropdown__options" class="pretty-dropdown__options">
         <% customers.forEach(function(customer) { %>
-          <li onclick="select(this)" customer-id="<%= customer.id %>">
-            <div class="option"><%= customer.givenName %> <%= customer.familyName %></div>
+          <li onclick="select(this)" pretty-dropdown-value="<%= customer.id %>">
+            <div class="pretty-dropdown__option"><%= customer.givenName %> <%= customer.familyName %></div>
           </li>
         <% }); %>
         </ul>
-        <form class="form-control" action="/login" method="POST">
-          <input name="customer" id="login-customer" hidden=true type="text" />
+        <form action="/login" method="POST">
+          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="<%= customers[0].id %>" />
           <button type="submit">Login</button>
         </form>
         <span class="message">
@@ -45,9 +45,9 @@
       
     </div>
   </div>
-  <script src="/js/dropdown.js"></script>
+  <script src="/js/pretty-dropdown.js"></script>
   <script>
-    initializeDropdown("login-dropdown", <%- stringifyJSON(customers) %>);
+    initializeDropdown("login-dropdown");
   </script>
 </body>
 
