@@ -98,6 +98,7 @@ form {
 /**
   Header
 */
+
 .top-nav {
   font-size: 14px;
   line-height: 24px;
@@ -122,6 +123,7 @@ form {
 /**
   Dashboard
 */
+
 #dashboard-cards__wrapper {
   display: flex;
   justify-content: center;
@@ -171,6 +173,7 @@ form {
 /** 
   Dropdown selector
 */
+
 .pretty-dropdown {
   position: relative;
   font-size: 14px;
