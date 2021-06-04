@@ -18,9 +18,12 @@ const { Client, ApiError } = require("square");
 require('dotenv').config();
 const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
+const { promiseImpl } = require("ejs");
 
 const env = process.env[`ENVIRONMENT`].toLowerCase();
 const accessToken = process.env[`SQUARE_ACCESS_TOKEN`];
+const locationId = process.env[`SQUARE_LOCATION_ID`];
+const referenceId = "GiftCardSampleApp"
 
 // Only run the script if the application is in sandbox environment.
 if (env !== "sandbox") {
@@ -38,7 +41,9 @@ const config = {
 };
 
 const {
-  customersApi
+  customersApi,
+  giftCardsApi,
+  giftCardActivitiesApi
 } = new Client(config);
 
 /**
@@ -47,29 +52,31 @@ const {
  */
 async function createCustomers() {
   try {
-    const { result: { customer: customer1 } } = await customersApi.createCustomer({
+    const customer1Promise = customersApi.createCustomer({
       idempotencyKey: uuidv4(),
       givenName: "Michael",
       familyName: "Scott",
-      emailAddress: "michaelscott123@example.com"
+      emailAddress: "michaelscott123@example.com",
+      referenceId: referenceId
     });
 
-    await customersApi.createCustomerCard(customer1.id, {
-      cardNonce: "cnon:card-nonce-ok"
-    });
-
-    const { result: { customer: customer2 } } = await customersApi.createCustomer({
+    const customer2Promise = customersApi.createCustomer({
       idempotencyKey: uuidv4(),
       givenName: "Dwight",
       familyName: "Schrute",
-      emailAddress: "dwightschrute@beetfarm.com"
+      emailAddress: "dwightschrute@beetfarm.com",
+      referenceId: referenceId
     });
 
-    await customersApi.createCustomerCard(customer2.id, {
-      cardNonce: "cnon:card-nonce-ok"
-    });
+    const data = await Promise.all([customer1Promise, customer2Promise]);
 
-    console.log("Successfully created customers");
+    await Promise.all(data.map(body => {
+      return customersApi.createCustomerCard(body.result.customer.id, {
+        cardNonce: "cnon:card-nonce-ok"
+      });
+    }));
+
+    console.log("Successfully created two customers");
   } catch (error) {
     if (error instanceof ApiError) {
       const errors = error.errors;
@@ -81,24 +88,111 @@ async function createCustomers() {
 }
 
 /**
- * Function to clear all customers for the configured access token.
+ * Function to clear customers created using the seeding script.
+ *
+ * The steps taken are:
+ * 1. Get all the customers to be deleted based on the reference_id for our app
+ * 2. Get all gift cards associated with each customer (there may be duplicates b/c multiple ownership)
+ * 3. Create a unique list of all gift card objects
+ * 4. Unlink card owners that are about to be deleted
+ * 5. Deactivate cards that were active before, and have no remaining owners
+ * 6. Delete the customers
  * WARNING: This is permanent and irreversible!
  */
-async function clearCustomers() {
+ async function clearCustomers() {
   try {
-    const { result: { customers } } = await customersApi.listCustomers();
+    // Get all customers with the reference ID of our sample app.
+    const { result: { customers } } = await customersApi.searchCustomers({
+      query: {
+        filter: {
+          referenceId: {
+            exact: referenceId
+          }
+        }
+      }
+    });
+
     if (!customers) {
       console.log("No customers to delete");
       return;
     }
 
-    const promises = [];
-    customers.forEach(customer => {
-      promises.push(customersApi.deleteCustomer(customer.id));
+    const customersToDelete = customers.map(customer => {
+      return customer.id;
     });
 
-    await Promise.all(promises);
-    console.log("Successfully cleared all customers");
+    // Make request to get gift cards associated with each customer to be deleted.
+    const giftCardsPromises = customersToDelete.map(id => {
+      return giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, id);
+    });
+
+    const data = await Promise.all(giftCardsPromises);
+
+    // Get all gift card objects related to customers we are about to delete.
+    const allGiftCards = data
+        .filter(body => body.result.giftCards)
+        .flatMap(body => {
+          return body.result.giftCards;
+        }
+    );
+
+    // Getting rid of duplicate gift card objects (b/c of multiple ownership).
+    const uniqueGiftCardObjects = [];
+    const map = {};
+    allGiftCards.forEach(giftCard => {
+      if (!map[giftCard.id]) {
+        map[giftCard.id] = true;
+        uniqueGiftCardObjects.push(giftCard);
+      }
+    });
+
+    // Make requests to unlink cards from soon-to-be deleted customers.
+    const toDeactivate = [];
+    const unlinkPromises = uniqueGiftCardObjects.flatMap(giftCard => {
+      // get all common IDs between the gift card owners and the customers to be deleted.
+      // these are the ones we have to unlink.
+      // If all of the owners are customers to be deleted AND the card is active, we also
+      // mark it for deactivation.
+      const idsToUnlink = customersToDelete.filter(customerId => giftCard.customerIds.includes(customerId));
+      if (idsToUnlink.length == giftCard.customerIds.length && giftCard.state === "ACTIVE") {
+        toDeactivate.push(giftCard.gan);
+      }
+
+      return idsToUnlink.map(customerId => {
+        return giftCardsApi.unlinkCustomerFromGiftCard(giftCard.id, {
+          customerId: customerId
+        })
+      });
+    });
+
+    // Unlink deleted customers
+    await Promise.all(unlinkPromises);
+
+    // Make requests to deactivate all marked GANs.
+    const giftCardDeactivationPromises = toDeactivate.map(gan => {
+      return giftCardActivitiesApi.createGiftCardActivity({
+        idempotencyKey: uuidv4(),
+        giftCardActivity: {
+          giftCardGan: gan,
+          locationId: locationId,
+          type: "DEACTIVATE",
+          deactivateActivityDetails: {
+            // In the future we will support other reasons.
+            reason: "SUSPICIOUS_ACTIVITY"
+          }
+        }
+      });
+    });
+
+    // Delete all previously created customers.
+    await Promise.all(customersToDelete.map(id => {
+      return customersApi.deleteCustomer(id);
+    }));
+
+    // Deactivate all gift cards.
+    await Promise.all(giftCardDeactivationPromises);
+
+    console.log("Successfully cleared all customers previously created by this script");
   } catch (error) {
     if (error instanceof ApiError) {
       const errors = error.errors;
@@ -122,7 +216,9 @@ if (args[0] === "generate") {
     input: process.stdin,
     output: process.stdout
   });
-  ioInterface.question("Are you sure you want to clear all the customers in your business? (Y/N) ", (ans) => {
+  ioInterface.question(
+    "Are you sure you want to clear all the customers previously created by this script (Y/N) ",
+     (ans) => {
     ans = ans.toUpperCase();
     if (ans === "Y") {
       clearCustomers();
