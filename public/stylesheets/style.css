@@ -122,11 +122,6 @@ ul.dropdown-options li {
   height: 40px;
   width: 100%;
   display: block;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-ul.dropdown-options li:first-child {
-  border-top: none;
 }
 
 ul.dropdown-options li .option {
