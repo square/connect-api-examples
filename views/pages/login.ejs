@@ -29,7 +29,7 @@
         </div>
         <ul id="login-dropdown__options" class="pretty-dropdown__options">
         <% customers.forEach(function(customer) { %>
-          <li onclick="select(this)" pretty-dropdown-value="<%= customer.id %>">
+          <li onclick="select(this)" pretty-dropdown-primary-value="Customer" pretty-dropdown-value="<%= customer.id %>" pretty-dropdown-secondary-value="<%= customer.givenName %> <%= customer.familyName %>">
             <div class="pretty-dropdown__option"><%= customer.givenName %> <%= customer.familyName %></div>
           </li>
         <% }); %>

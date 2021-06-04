@@ -6,9 +6,14 @@ function initializeDropdown(elementId) {
 }
 
 function select(element) {
-  var value = element.querySelector(".pretty-dropdown__option").innerHTML;
-  
-  dropdownElement.querySelector("#pretty-dropdown__selected-secondary").innerHTML = value;
+  var primaryValue = element.getAttribute("pretty-dropdown-primary-value");
+  var secondaryValue = element.getAttribute("pretty-dropdown-secondary-value");
+
+  // Update primary and secondary display values
+  dropdownElement.querySelector("#pretty-dropdown__selected-primary").innerHTML = primaryValue;
+  dropdownElement.querySelector("#pretty-dropdown__selected-secondary").innerHTML = secondaryValue;
+
+  // Update the actual value to be submitted
   dropdownElement.querySelector("#pretty-dropdown__value").setAttribute("value", element.getAttribute("pretty-dropdown-value"));
 }
 
