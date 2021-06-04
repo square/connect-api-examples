@@ -18,7 +18,6 @@ const { Client, ApiError } = require("square");
 require('dotenv').config();
 const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
-const { promiseImpl } = require("ejs");
 
 const env = process.env[`ENVIRONMENT`].toLowerCase();
 const accessToken = process.env[`SQUARE_ACCESS_TOKEN`];
