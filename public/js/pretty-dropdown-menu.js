@@ -3,10 +3,10 @@ function showMenuOptions() {
 }
 
 window.onclick = function(event) {
-  var parentNode = dropdownElement.querySelector(".pretty-dropdown-menu");
+  var parentNode = event.target.closest(".pretty-dropdown-menu");
 
-  if (!parentNode.contains(event.target)) {
-    var openDropdown = dropdownElement.querySelector(".pretty-dropdown-menu__list");
+  if (!parentNode) {
+    var openDropdown = document.querySelector(".pretty-dropdown-menu__list");
     if (openDropdown.classList.contains("show")) {
       openDropdown.classList.remove("show");
     }
