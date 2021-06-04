@@ -20,7 +20,7 @@
           <button class="btn-secondary"><img src="/images/ellipsis.svg" /></button>
           <ul class="pretty-dropdown-menu__list">
             <li class="pretty-dropdown-menu__list-item">Transaction history</li>
-            <% if (giftCard.balanceMoney.amount === 0) { %>
+            <% if (giftCard.state === "NOT_ACTIVE") { %>
               <li class="pretty-dropdown-menu__list-item--disabled">Delete card</li>
             <% } else { %>
               <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--critical">Delete card</li>
