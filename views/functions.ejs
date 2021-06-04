@@ -8,4 +8,10 @@ formatMoney = function(value, currency) {
 
   return formatter.format(Number(value)/100.0);
 }
+
+stringifyJSON = function(data) {
+  return JSON.stringify(data, (key, value) =>
+    typeof value === "bigint" ? value.toString() : value
+  );
+}
 %>

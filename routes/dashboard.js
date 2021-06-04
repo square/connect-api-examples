@@ -40,7 +40,7 @@ router.get("/", checkLoginStatus, async (req, res, next) => {
     const {result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, req.session.customerId);
 
     if (!giftCards) {
-      res.render("pages/dashboard-no-cards");
+      res.render("pages/dashboard", { giftCards: [] });
     } else {
       res.render("pages/dashboard", { giftCards });
     }
