@@ -13,8 +13,8 @@
     <div id="card-details__wrapper">
       <div id="card-details__title-wrapper">
         <div id="card-details__title">
-        <h4>Add money</h4>
-        <div><p><h5>Card number </h5>xxxx xxxx xxxx xxxx</p></div>
+        <h4>Add funds</h4>
+        <div id="card-details__content"><h5>Card number </h5> <%= gan %> </div>
         </div>
       </div>
       <div class="dashboard-cards__card">
@@ -39,9 +39,11 @@
           </div>
         </div>
         <div id="custom-amount__div">
-          <input id="custom-amount-text" type="text" placeholder="$0.00" oninput="updatePayButtonText(this)">
+          <input id="custom-amount-text" type="number" placeholder="$0.00" oninput="updatePayButtonText(this)">
         </div>
+        <div id="cards-pretty-dropdown-title">
         <h5>Pay with card on file</h5>
+        </div>
           <div class="pretty-dropdown" id="login-dropdown">
             <div id="login-dropdown__selected-content" class="pretty-dropdown__selected" onclick="showOptions()">
               <div class="pretty-dropdown__selected-card">
@@ -67,12 +69,9 @@
             </ul>
               <input name="cardId" id="pretty-dropdown__value" hidden=true type="text" value="xxx" />
               <input name="amount" id="pretty-dropdown__value-2" hidden=true type="text" value="yyy" />
-              <input name="state" id="pretty-dropdown__value-3" hidden=true type="text" value=<%=giftCard.state%> />
+              <input name="state" id="pretty-dropdown__value-3" hidden=true type="text" value=<%=state%> />
               <button id="pay-button" class="square_button" type="submit">Pay $5.00</button>
           </div>
-          <span class="message">
-              Don’t forget you can manage Customers and Gift Cards using Square’s API Explorer to call the API. This sample app will update accordingly.
-            </span>
       </form>
     </div>
   </div>
