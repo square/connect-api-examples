@@ -17,10 +17,7 @@ stringifyJSON = function(data) {
 
 capitalize = function(str) {
   if(str.includes("_")) {
-    console.log(str);
     const words = str.split("_");
-    console.log(words);
-    console.log(capitalize(words[0]) + " " + capitalize(words[1]));
     return capitalize(words[0]) + " " + capitalize(words[1]);
   }
   return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
