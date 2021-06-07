@@ -131,10 +131,6 @@ form {
   width: auto;
 }
 
-.top-nav #dashboard-link {
-
-}
-
 /**
   Dashboard
 */
@@ -278,7 +274,6 @@ ul.pretty-dropdown__options li {
   width: 100%;
   display: block;
   text-align: center;
-  float:
 }
 
 ul.pretty-dropdown__options li .pretty-dropdown__option {
