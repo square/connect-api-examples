@@ -30,11 +30,45 @@
         <div class="card-details__info">
           <div class="card-details__info-row">
             <div class="amount-bar">
-              <button class="btn active" type="button" amount-bar-value="5.00" onclick="selectButton(this)">$5</button>
-              <button class="btn" type="button" amount-bar-value="10.00" onclick="selectButton(this)">$10</button>
-              <button class="btn" type="button" amount-bar-value="15.00" onclick="selectButton(this)">$15</button>
-              <button class="btn" type="button" amount-bar-value="20.00" onclick="selectButton(this)">$20</button>
-              <button class="btn custom" type="button" amount-bar-value="0.00" onclick="selectButton(this)">Custom</button>
+              <button 
+                class="btn active" 
+                type="button" 
+                amount-bar-value="5.00" 
+                onclick="selectButton(this)">
+                $5
+              </button>
+
+              <button 
+                class="btn" 
+                type="button" 
+                amount-bar-value="10.00" 
+                onclick="selectButton(this)">
+                $10
+              </button>
+
+              <button 
+                class="btn" 
+                type="button" 
+                amount-bar-value="15.00" 
+                onclick="selectButton(this)">
+                $15
+              </button>
+
+              <button 
+                class="btn" 
+                type="button" 
+                amount-bar-value="20.00" 
+                onclick="selectButton(this)">
+                $20
+              </button>
+
+              <button 
+                class="btn custom" 
+                type="button" 
+                amount-bar-value="0.00" 
+                onclick="selectButton(this)">
+                Custom
+              </button>
             </div>
           </div>
         </div>
@@ -59,7 +93,11 @@
           </div>
           <ul id="login-dropdown__options" class="pretty-dropdown__options">
             <% cards.forEach(function(card) { %>
-              <li onclick="select(this)" pretty-dropdown-primary-value="<%= capitalize(card.cardBrand) %>" pretty-dropdown-value=<%= card.id %> pretty-dropdown-secondary-value="Ending in  ●●●● <%= card.last4 %>">
+              <li 
+                onclick="select(this)" 
+                pretty-dropdown-primary-value="<%= capitalize(card.cardBrand) %>" 
+                pretty-dropdown-value=<%= card.id %> 
+                pretty-dropdown-secondary-value="Ending in  ●●●● <%= card.last4 %>">
                 <div class="pretty-dropdown__option">
                   <img src=<%= getImageForBrand(card.cardBrand) %> />
                   <%= capitalize(card.cardBrand) %>  ●●●● <%= card.last4 %>
