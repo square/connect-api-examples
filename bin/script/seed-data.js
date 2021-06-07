@@ -56,7 +56,7 @@ async function createCustomers() {
       givenName: "Michael",
       familyName: "Scott",
       emailAddress: "michaelscott123@example.com",
-      referenceId: referenceId
+      referenceId
     });
 
     const customer2Promise = customersApi.createCustomer({
@@ -64,7 +64,7 @@ async function createCustomers() {
       givenName: "Dwight",
       familyName: "Schrute",
       emailAddress: "dwightschrute@beetfarm.com",
-      referenceId: referenceId
+      referenceId
     });
 
     const data = await Promise.all([customer1Promise, customer2Promise]);
@@ -128,22 +128,16 @@ async function createCustomers() {
     const data = await Promise.all(giftCardsPromises);
 
     // Get all gift card objects related to customers we are about to delete.
-    const allGiftCards = data
+    const set = new Set();
+    const uniqueGiftCardObjects = data
         .filter(body => body.result.giftCards)
         .flatMap(body => {
           return body.result.giftCards;
-        }
-    );
-
-    // Getting rid of duplicate gift card objects (b/c of multiple ownership).
-    const uniqueGiftCardObjects = [];
-    const map = {};
-    allGiftCards.forEach(giftCard => {
-      if (!map[giftCard.id]) {
-        map[giftCard.id] = true;
-        uniqueGiftCardObjects.push(giftCard);
-      }
-    });
+        }).filter(giftCard => {
+          const exists = set.has(giftCard.id);
+          set.add(giftCard.id);
+          return !exists;
+        });
 
     // Make requests to unlink cards from soon-to-be deleted customers.
     const toDeactivate = [];
@@ -191,7 +185,7 @@ async function createCustomers() {
     // Deactivate all gift cards.
     await Promise.all(giftCardDeactivationPromises);
 
-    console.log("Successfully cleared all customers previously created by this script");
+    console.log("Successfully deleted all customers previously created by this script, and unlinked all gift cards from each of the deleted customers.");
   } catch (error) {
     if (error instanceof ApiError) {
       const errors = error.errors;
@@ -216,7 +210,8 @@ if (args[0] === "generate") {
     output: process.stdout
   });
   ioInterface.question(
-    "Are you sure you want to clear all the customers previously created by this script? (Y/N) ",
+    "Are you sure you want to delete all customers previously created by this script? "
+    + "This might lead to deactivation of gift cards associated with those customers. (Y/N) ",
      (ans) => {
     ans = ans.toUpperCase();
     if (ans === "Y") {
