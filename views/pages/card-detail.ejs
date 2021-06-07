@@ -17,7 +17,7 @@
         <div>Created on date</div>
         </div>
         <div class="pretty-dropdown-menu" onclick="showMenuOptions()">
-          <button class="btn-secondary"><img src="/images/ellipsis.svg" /></button>
+          <button class="square_button btn-secondary"><img src="/images/ellipsis.svg" /></button>
           <ul class="pretty-dropdown-menu__list">
             <li class="pretty-dropdown-menu__list-item">Transaction history</li>
             <% if (giftCard.state === "NOT_ACTIVE") { %>
@@ -52,7 +52,9 @@
           </div>
         </div>
       </div>
-      <button>Add Fund</button>
+      <form action=<%="/gift-card/" +  giftCard.gan + "/load"%> method="GET">
+        <button class="square_button" type="submit">Add Funds</button>
+      </form>
     </div>
   </div>
   <script src="/js/pretty-dropdown-menu.js"></script>

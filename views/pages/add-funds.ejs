@@ -1,0 +1,86 @@
+<% include("../functions") %> 
+<html>
+
+<head>
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+  <div class="wrapper">
+    <div id="card-details__wrapper">
+      <div id="card-details__title-wrapper">
+        <div id="card-details__title">
+        <h4>Add money</h4>
+        <div><p><h5>Card number </h5>xxxx xxxx xxxx xxxx</p></div>
+        </div>
+      </div>
+      <div class="dashboard-cards__card">
+        <div class="dashboard-cards__inner dashboard-cards__inner-flip">
+          <div class="dashboard-cards__card-front">
+            <img src="/images/giftCardImage.png" />
+          </div>
+          <div class="dashboard-cards__card-back"></div>
+        </div>
+      </div>
+      <h5>Amount</h5>
+      <form>
+        <div class="card-details__info">
+          <div class="card-details__info-row">
+            <div class="amount-bar">
+              <button class="btn active" type="button" name="5.00" onclick="selectButton(this)">$5</button>
+              <button class="btn" type="button" name="10.00" onclick="selectButton(this)">$10</button>
+              <button class="btn" type="button" name="15.00" onclick="selectButton(this)">$15</button>
+              <button class="btn" type="button" name="20.00" onclick="selectButton(this)">$20</button>
+              <button class="btn custom" type="button" name="0.00" onclick="selectButton(this)">Custom</button>
+            </div>
+          </div>
+        </div>
+        <div id="custom-amount__div">
+          <input id="custom-amount-text" type="text" placeholder="$0.00" oninput="updatePayButtonText(this)">
+        </div>
+        <h5>Pay with card on file</h5>
+          <div class="pretty-dropdown" id="login-dropdown">
+            <div id="login-dropdown__selected-content" class="pretty-dropdown__selected" onclick="showOptions()">
+              <div class="pretty-dropdown__selected-card">
+                <img id="pretty-dropdown__selected-image" src=<%= getImageForBrand(cards[0].cardBrand) %> />
+              </div>
+              <div class="pretty-dropdown__selected-info">
+                <span id="pretty-dropdown__selected-primary"><%= capitalize(cards[0].cardBrand) %></span>
+                <span id="pretty-dropdown__selected-secondary">Ending in  ●●●● <%= cards[0].last4 %></span>
+              </div>
+              <span class="pretty-dropdown__icon">
+                <img src="/images/caret.svg" alt=""/>
+              </span>
+            </div>
+            <ul id="login-dropdown__options" class="pretty-dropdown__options">
+              <% cards.forEach(function(card) { %>
+                <li onclick="select(this)" pretty-dropdown-primary-value="<%= capitalize(card.cardBrand) %>" pretty-dropdown-value="xxx" pretty-dropdown-secondary-value="Ending in  ●●●● <%= card.last4 %>">
+                  <div class="pretty-dropdown__option">
+                    <img src=<%= getImageForBrand(card.cardBrand) %> />
+                    <%= capitalize(card.cardBrand) %>  ●●●● <%= card.last4 %>
+                  </div>
+                </li>
+              <% }); %>
+            </ul>
+              <input name="cardId" id="pretty-dropdown__value" hidden=true type="text" value="xxx" />
+              <input name="amount" id="pretty-dropdown__value-2" hidden=true type="text" value="yyy" />
+              <input name="state" id="pretty-dropdown__value-3" hidden=true type="text" value=<%=giftCard.state%> />
+              <button id="pay-button" class="square_button" type="submit">Pay $5.00</button>
+          </div>
+          <span class="message">
+              Don’t forget you can manage Customers and Gift Cards using Square’s API Explorer to call the API. This sample app will update accordingly.
+            </span>
+      </form>
+    </div>
+  </div>
+  <script src="/js/pretty-dropdown.js"></script>
+  <script src="/js/amount-bar.js"></script>
+  <script>
+    initializeDropdown("login-dropdown");
+  </script>
+</body>
+
+</html>
