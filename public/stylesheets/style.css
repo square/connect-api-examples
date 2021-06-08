@@ -539,3 +539,12 @@ ul.pretty-dropdown__options li .pretty-dropdown__option img {
 #cards-pretty-dropdown-title {
   float: left;
 }
+
+button.no-content {
+  display: none;
+}
+
+span.no-content {
+  color: rgb(158 150 150);
+  font-weight: normal !important;
+}

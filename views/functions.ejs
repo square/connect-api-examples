@@ -1,10 +1,17 @@
 <%
-formatMoney = function(value, currency) {
+formatMoney = function(value, currency, isRounded) {
   // Create number formatter.
-  var formatter = new Intl.NumberFormat('en-US', {
+  const props = {
     style: 'currency',
     currency: currency,
-  });
+  };
+
+  // Might want to round to no decimal places based on flag.
+  if (isRounded) {
+    props.maximumFractionDigits = 0;
+    props.minimumFractionDigits = 0;
+  }
+  var formatter = new Intl.NumberFormat('en-US', props);
 
   return formatter.format(Number(value)/100.0);
 }

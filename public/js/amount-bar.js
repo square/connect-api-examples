@@ -15,8 +15,10 @@ function initializeAmountBar(formattingFunction, currency) {
     if (buttons[i].classList.contains("custom")) {
       continue;
     }
-    // For each button that is not "custom", set the text to be formatted based on currency.
-    buttons[i].textContent = this.formattingFunction(buttons[i].getAttribute("amount-bar-value"), this.currency);
+    // For each button that is not "custom", set the text to be formatted based on currency
+    // Pass in true in order to achieve rounding, so text fits nicely. The actual function can be
+    // found in functions.ejs.
+    buttons[i].textContent = this.formattingFunction(buttons[i].getAttribute("amount-bar-value"), this.currency, true);
   }
 
   // Set initial value for `pay` button and data.
@@ -58,6 +60,7 @@ function updatePayButtonText(element) {
 }
 
 function setAmountChosen(amount) {
-  document.getElementById("pay-button").innerHTML = "Pay " + this.formattingFunction(amount, this.currency);
+  // We dont want rounding on our pay button, pass in false to our formatting function.
+  document.getElementById("pay-button").innerHTML = "Pay " + this.formattingFunction(amount, this.currency, false);
   document.getElementById("amount-bar__value").value = amount;
 }
