@@ -212,6 +212,7 @@ form {
   font-weight: bold;
   background-color: white;
   color: #5F666C;
+  cursor: pointer;
 }
 
 .dashboard-cards__card-balance {
@@ -547,4 +548,28 @@ button.no-content {
 span.no-content {
   color: rgb(158 150 150);
   font-weight: normal !important;
+}
+
+.success-toast {
+  justify-content: center;
+  display: flex;
+}
+
+.success-toast div {
+  position: absolute;
+  width: 206px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  border-radius: 50px;
+  justify-content: center;
+  margin-top: 100px;
+}
+
+.success-toast img {
+  vertical-align: middle;
+  margin-right: 12px;
 }
