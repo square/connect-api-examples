@@ -9,15 +9,17 @@
   <header>
     <%- include("../partials/header") %>
   </header>
-  <div class="wrapper">
-    <div id="card-details__wrapper">
-      <div id="card-details__title-wrapper">
-        <div id="card-details__title">
-        <h4>Gift Card</h4>
-        <div>Created on date</div>
+  <div class="content">
+    <div class="content__wrapper">
+      <div class="content__title-wrapper">
+        <div class="content__title">
+          <h4>Gift Card</h4>
+          Created on date
         </div>
         <div class="pretty-dropdown-menu" onclick="showMenuOptions()">
-          <button class="btn-secondary"><img src="/images/ellipsis.svg" /></button>
+          <button class="btn-secondary">
+            <img src="/images/ellipsis.svg" />
+          </button>
           <ul class="pretty-dropdown-menu__list">
             <li class="pretty-dropdown-menu__list-item">Transaction history</li>
             <% if (giftCard.state === "NOT_ACTIVE") { %>
@@ -28,15 +30,20 @@
           </ul>
         </div>
       </div>
-      <div class="dashboard-cards__card">
-        <div class="dashboard-cards__inner dashboard-cards__inner-flip">
-          <div class="dashboard-cards__card-front">
+
+      <div class="card">
+        <div class="card__inner card__inner-flip">
+          <div class="card__card-front">
             <img src="/images/giftCardImage.png" />
           </div>
-          <div class="dashboard-cards__card-back"></div>
+          <div class="card__card-back"></div>
         </div>
       </div>
-      <h3 id="card-details__balance"><%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %></h3>
+
+      <div class="card-details">
+        <h3 class="card-details__balance">
+          <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %>
+        </h3>
       <% if (giftCard.state === "NOT_ACTIVE") { %>
         <div>Your card curently has no funds avalible. Add money to activate this card for use.</div>
       <% } else { %>
@@ -53,6 +60,7 @@
         </div>
       </div>
       <button>Add Fund</button>
+    </div>
     </div>
   </div>
   <script src="/js/pretty-dropdown-menu.js"></script>

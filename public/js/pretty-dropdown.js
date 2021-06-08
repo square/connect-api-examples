@@ -10,8 +10,8 @@ function select(element) {
   var secondaryValue = element.getAttribute("pretty-dropdown-secondary-value");
 
   // Update primary and secondary display values
-  dropdownElement.querySelector("#pretty-dropdown__selected-primary").innerHTML = primaryValue;
-  dropdownElement.querySelector("#pretty-dropdown__selected-secondary").innerHTML = secondaryValue;
+  dropdownElement.querySelector(".pretty-dropdown__selected-primary").innerHTML = primaryValue;
+  dropdownElement.querySelector(".pretty-dropdown__selected-secondary").innerHTML = secondaryValue;
 
   // Update the actual value to be submitted
   dropdownElement.querySelector("#pretty-dropdown__value").setAttribute("value", element.getAttribute("pretty-dropdown-value"));
