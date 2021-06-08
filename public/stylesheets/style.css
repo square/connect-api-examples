@@ -59,7 +59,7 @@ td {
   cursor: pointer;
 }
 
-.square_button {
+.square-button {
   background-color: rgba(0, 106, 255, 1);
   color: white;
   border-width: 0;
@@ -467,14 +467,13 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   position: absolute;
   width: 352px;
   height: 48px;
-
   border: 1px solid #DDDDDD;
   box-sizing: border-box;
-  border-radius: 6px;
+  border-radius: 6px 6px 6px 6px;
 }
 
 .amount-bar button {
-  float: left; /* Float the buttons side by side */
+  float: left;
   border: 1px solid #DDDDDD;
   cursor: pointer;
   height: 100%;
@@ -488,22 +487,19 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   border-right: none;
 }
 
-.amount-bar button:first-child, .amount-bar button:last-child {
-  border-left: none; /* Prevent double borders */
-  border-radius: 6px;
+.amount-bar button:first-child {
+  border-left: none;
+  border-radius: 6px 0px 0px 6px;
 }
 
-.amount-bar button:nth-child(4) {
-  border-right: 1px solid #DDDDDD;
+.amount-bar button:last-child {
+  border-radius: 0px 6px 6px 0px;
 }
 
 #custom-amount-text {
   position: absolute;
   width: 352px;
   height: 48px;
-
-/* Emphasis/Fill */
-
   border: 2.5px solid #006AFF;
   box-sizing: border-box;
   border-radius: 6px;

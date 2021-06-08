@@ -1,3 +1,28 @@
+
+var currency;
+var formattingFunction;
+
+/**
+ * Function to initialize our amount bar.
+ * The first parameter is the formatting function used.
+ * The second parameter is the currency to be used.
+ */
+function initializeAmountBar(formattingFunction, currency) {
+  this.currency = currency;
+  this.formattingFunction = formattingFunction;
+  const buttons = document.getElementById("amount-bar").children;
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i].classList.contains("custom")) {
+      continue;
+    }
+    // For each button that is not "custom", set the text to be formatted based on currency.
+    buttons[i].textContent = this.formattingFunction(buttons[i].getAttribute("amount-bar-value"), this.currency);
+  }
+
+  // Set initial value for `pay` button and data.
+  setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
+}
+
 /**
  * Function to select a button from the amount bar.
  * It will update other "buttons" on the bar to not be selected.
@@ -25,12 +50,14 @@ function hideCustomTextField() {
   document.getElementById("custom-amount__div").classList.remove("show");
 }
 
+// This function will run every time a character is typed in our "custom" text field.
+// We will update both the `pay` button text and the actual data to send to our backend
+// accordingly.
 function updatePayButtonText(element) {
-  // In the case we use a custom amount, the amount to send to the backend and the text amount are the same.
-  setAmountChosen(element.value, element.value);
+  setAmountChosen(100 * element.value);
 }
 
 function setAmountChosen(amount) {
-  document.getElementById("pay-button").innerHTML = "Pay $" + amount;
+  document.getElementById("pay-button").innerHTML = "Pay " + this.formattingFunction(amount, this.currency);
   document.getElementById("amount-bar__value").value = amount;
 }

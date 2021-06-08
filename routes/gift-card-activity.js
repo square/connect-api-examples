@@ -63,7 +63,7 @@ router.get("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, next
     // TODO: might want to filter out gift cards as payment option.
     // TODO: might want to return more information about the card, such as balance.
     const creditCardsOnFile = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
-    res.render("pages/add-funds", { cards: creditCardsOnFile, gan: gan, state: res.locals.giftCard.state });
+    res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard });
   } catch (error) {
     console.error(error);
     next(error);
