@@ -77,7 +77,25 @@ router.get("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, next
  */
 router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const giftCard = res.locals.giftCard;
+  
   res.render("pages/card-detail", { giftCard });
+});
+
+/**
+ * GET /gift-card/:gan/history
+ * 
+ * Displays the transaction history for a card
+ */
+ router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+  try {
+    const giftCard = res.locals.giftCard;
+    const { result : { giftCardActivities } } = await giftCardActivitiesApi.listGiftCardActivities(giftCard.id);
+    
+    res.render("pages/history", { giftCard, giftCardActivities });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 });
 
 /**
@@ -140,7 +158,6 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
     next(error);
   }
 });
-
 
 /**
  * POST /gift-card/:gan/load

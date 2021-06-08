@@ -1,4 +1,3 @@
-<% include("../functions") %> 
 <html>
 
 <head>
@@ -22,13 +21,15 @@
           <a href="/gift-card/<%= giftCard.gan %>">
             <div class="dashboard-cards__card">
               <div class="dashboard-cards__inner">
-                <img src="/images/giftCardImage.png" />
+                <div class="dashboard-cards__card-front">
+                  <img src="/images/giftCardImage.png" />
+                </div>
               </div>
             </div>
           </a>
           <div class="dashboard-cards__card-balance">Card balance: <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency)  %></div>
         </div>
-        <%}); %>
+        <% }); %>
         <a href="/gift-card/create">
           <div class="dashboard-cards__card dashboard-cards__new-card">
             <span>+ Add Gift Card</span>

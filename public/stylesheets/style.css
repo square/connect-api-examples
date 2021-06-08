@@ -169,9 +169,17 @@ form {
   border-radius: 11px;
 }
 
-.dashboard-cards__card img {
+.dashboard-cards__card-front img {
   width: 100%;
   height: 100%;
+}
+
+.dashboard-cards__card-back {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dashboard-cards__inner {
@@ -414,6 +422,28 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
 }
 
 .card-details__info-label {
+  font-weight: bold;
+}
+
+ul.transaction-history-list {
+  margin: 12px auto;
+  padding: 0;
+}
+
+.transaction-history-list li {
+  padding: 12px 0px;
+  list-style-type: none;
+  display: block;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.transaction-history-list li:last-child {
+  border-bottom: 0;
+}
+
+.transaction-history-list li .transaction-history-detail__money {
+  display: flex;
+  justify-content: space-between;
   font-weight: bold;
 }
 

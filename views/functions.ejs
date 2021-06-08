@@ -9,6 +9,33 @@ formatMoney = function(value, currency) {
   return formatter.format(Number(value)/100.0);
 }
 
+formatDate = function(date) {
+  return date.split("T")[0];
+}
+
+getActivityByType = function(type) {
+  switch (type) {
+    case "ACTIVATE":
+      return "Activate"
+    case "LOAD":
+      return "Add money"
+    case "REDEEM":
+      return "Redeem"
+    case "REFUND":
+      return "Refund"
+    case "DEACTIVATE":
+      return "Deactivate"
+    case "CLEAR_BALANCE":
+      return "Clear balance"
+    case "ADJUST_INCREMENT":
+      return "Adjust increment"
+    case "ADJUST_DECREMENT":
+      return "Adjust decrement"
+    default:
+      return "Unknown activity"
+  }
+} 
+
 stringifyJSON = function(data) {
   return JSON.stringify(data, (key, value) =>
     typeof value === "bigint" ? value.toString() : value
