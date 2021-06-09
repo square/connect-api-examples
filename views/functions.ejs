@@ -42,7 +42,6 @@ getActivityMoney = function(activity) {
   let type = activity.type;
   let money;
 
-  console.log(type);
   switch (type) {
     case "ACTIVATE":
       money = activity.activateActivityDetails.amountMoney;
