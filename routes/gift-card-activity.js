@@ -99,7 +99,6 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
  */
 router.post("/:gan/add", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   try {
-    console.log(req.body);
     // The following information will come from the request/session.
     const customerId = req.session.customerId;
     const amount = req.body.amount;
