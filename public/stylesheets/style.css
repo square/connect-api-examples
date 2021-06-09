@@ -22,7 +22,7 @@ h5 {
   font-size: 14px;
   line-height: 24px;
   letter-spacing: 0.006em;
-  margin-top: 32px;
+  margin-top: 28px;
   margin-bottom: 10px;
 }
 
@@ -48,7 +48,7 @@ td {
   cursor: pointer;
 }
 
-button {
+.square-button {
   background-color: rgba(0, 106, 255, 1);
   color: white;
   border-width: 0;
@@ -115,7 +115,6 @@ form {
 
 }
 
-
 /**
   Content
 */
@@ -135,6 +134,7 @@ form {
 /**
   Dashboard
 **/
+
 .dashboard {
   max-width: 724px;
   margin: 0 auto;
@@ -162,8 +162,6 @@ form {
   background-color: white;
   color: #5F666C;
 }
-
-.dashboard__cards
 
 /**
   Card
@@ -236,6 +234,7 @@ form {
 /**
   Login Page
 */
+
 #login-container .pretty-dropdown {
   width: 350px;
 }
@@ -258,7 +257,7 @@ form {
   width: 350px;
 }
 
-/** 
+/**
   Dropdown selector
 */
 
@@ -276,7 +275,7 @@ form {
   border-style: solid;
   align-items: center;
   border-radius: 6px;
-  padding: 10px;
+  padding: 15px;
   box-sizing: border-box;
 }
 
@@ -294,7 +293,7 @@ form {
 }
 
 ul.pretty-dropdown__options {
-  padding: 8px 24px 8px 24px;
+  padding: 8px 24px 8px 8px;
   background-color: white;
   z-index: 1;
   width: 100%;
@@ -308,6 +307,7 @@ ul.pretty-dropdown__options li {
   height: 40px;
   width: 100%;
   display: block;
+  text-align: center;
 }
 
 ul.pretty-dropdown__options li .pretty-dropdown__option {
@@ -317,6 +317,8 @@ ul.pretty-dropdown__options li .pretty-dropdown__option {
   padding: 10px;
   margin: 0;
   box-sizing: border-box;
+  float: left;
+  text-align: left;
 }
 
 ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
@@ -453,3 +455,92 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   background-color: rgb(219, 247, 219);
 }
 
+/**
+  Amount bar
+*/
+
+.amount-bar {
+  position: absolute;
+  width: 352px;
+  height: 48px;
+  border: 1px solid #DDDDDD;
+  box-sizing: border-box;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.amount-bar button {
+  float: left;
+  border: 1px solid #DDDDDD;
+  cursor: pointer;
+  height: 100%;
+  width: 20%;
+  background-color: #ffffff;
+  color: rgba(0, 0, 0, 0.9);
+  font-size: 14px;
+  line-height: 24px;
+  border-bottom: none;
+  border-top: none;
+  border-right: none;
+}
+
+.amount-bar button:first-child {
+  border-left: none;
+  border-radius: 6px 0px 0px 6px;
+}
+
+.amount-bar button:last-child {
+  border-radius: 0px 6px 6px 0px;
+}
+
+#custom-amount-text {
+  position: absolute;
+  width: 352px;
+  height: 48px;
+  border: 2.5px solid #006AFF;
+  box-sizing: border-box;
+  border-radius: 6px;
+}
+
+#custom-amount__div {
+  display: none;
+  width: 350px;
+  height: 50px;
+  margin-top: 40px;
+  border-radius: 11px;
+}
+
+#custom-amount__div.show {
+  display: block;
+}
+
+.pretty-dropdown__selected-card {
+  float: left;
+  margin-right: 15px;
+}
+
+ul.pretty-dropdown__options li .pretty-dropdown__option img {
+  float: left;
+  margin-right: 15px;
+}
+
+.btn.active {
+  background-color: #32373C;
+  color: #ffffff;
+}
+
+#card-details__content h5 {
+  display: inline
+}
+
+#cards-pretty-dropdown-title {
+  float: left;
+}
+
+button.no-content {
+  display: none;
+}
+
+span.no-content {
+  color: rgb(158 150 150);
+  font-weight: normal !important;
+}
