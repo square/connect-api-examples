@@ -13,7 +13,9 @@ formatDate = function(date) {
   return date.split("T")[0];
 }
 
-getActivityByType = function(type) {
+getActivityType = function(activity) {
+  let type = activity.type;
+
   switch (type) {
     case "ACTIVATE":
       return "Activate"
@@ -33,6 +35,42 @@ getActivityByType = function(type) {
       return "Adjust decrement"
     default:
       return "Unknown activity"
+  }
+} 
+
+getActivityMoney = function(activity) {
+  let type = activity.type;
+  let money;
+
+  console.log(type);
+  switch (type) {
+    case "ACTIVATE":
+      money = activity.activateActivityDetails.amountMoney;
+      break;
+    case "LOAD":
+      money = activity.loadActivityDetails.amountMoney;
+      break;
+    case "REDEEM":
+      money = activity.redeemActivityDetails.amountMoney
+      break;
+    case "REFUND":
+      money = activity.refundActivityDetails.amountMoney;
+      break;
+    case "ADJUST_INCREMENT":
+      money = activity.adjustIncrementActivityDetails.amountMoney;
+      break;
+    case "ADJUST_DECREMENT":
+      money = activity.adjustDecrementActivityDetails.amountMoney;
+      break;
+    default:
+      money = null;
+  }
+
+  console.log(money);
+  if (money) {
+    return formatMoney(money.amount, money.currency);
+  } else {
+    return null;
   }
 } 
 

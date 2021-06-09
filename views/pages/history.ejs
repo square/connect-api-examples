@@ -28,8 +28,8 @@
           <% giftCardActivities.forEach(function(activity) { %>
             <li>
               <div class="transaction-history-detail__money">
-                <div><%= getActivityByType(activity.type) %></div>
-                <div><%= formatMoney(activity.giftCardBalanceMoney.amount, activity.giftCardBalanceMoney.currency) %></div>
+                <div><%= getActivityType(activity) %></div>
+                <div><%= getActivityMoney(activity) %></div>
               </div>
               <div class="transaction-history-detail__date">
                 <%= formatDate(activity.createdAt) %>

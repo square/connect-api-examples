@@ -90,7 +90,7 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
   try {
     const giftCard = res.locals.giftCard;
     const { result : { giftCardActivities } } = await giftCardActivitiesApi.listGiftCardActivities(giftCard.id);
-    
+
     res.render("pages/history", { giftCard, giftCardActivities });
   } catch (error) {
     console.error(error);
