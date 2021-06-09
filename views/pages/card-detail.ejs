@@ -19,12 +19,13 @@
         <div class="pretty-dropdown-menu" onclick="showMenuOptions(this)">
           <button class="btn-secondary"><img src="/images/ellipsis.svg" /></button>
           <ul class="pretty-dropdown-menu__list">
-            <a href="<%= giftCard.gan %>/history">
-              <li class="pretty-dropdown-menu__list-item">Transaction history</li>
-            </a>
-            <% if (giftCard.state === "NOT_ACTIVE") { %>
-              <li class="pretty-dropdown-menu__list-item--disabled">Delete card</li>
+            <% if (giftCard.state !== "NOT_ACTIVE") { %>
+              <a href="<%= giftCard.gan %>/history">
+                <li class="pretty-dropdown-menu__list-item">Transaction history</li>
+              </a>
+              <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Delete card</li>
             <% } else { %>
+              <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Transaction history</li>
               <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--critical">Delete card</li>
             <% } %>
           </ul>
@@ -60,21 +61,9 @@
     </div>
   </div>
   <script src="/js/pretty-dropdown-menu.js"></script>
+  <script src="/js/generate-barcode.js"></script>
   <script>
-    function generateBarCode(value) {
-      let canvas = document.createElement('canvas');
-      let options = {
-        bcid:        'pdf417',        // Barcode type
-        text:        value.toString(),    // Text to encode
-        scale:       2,               // 3x scaling factor
-        height:      10,              // Bar height, in millimeters
-        includetext: true,            // Show human-readable text
-        textxalign:  'center',        // Always good to set this
-      }
-      bwipjs.toCanvas(canvas, options);
-      document.getElementById('barcode').src = canvas.toDataURL('image/png');
-    }
-    generateBarCode(<%= giftCard.gan %>);
+    generateBarCode("#barcode", <%= giftCard.gan %>);
   </script>
 </body>
 

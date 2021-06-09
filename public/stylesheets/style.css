@@ -261,6 +261,10 @@ form {
   display:block;
 }
 
+.pretty-dropdown-menu__list-item--disabled {
+  
+}
+
 #login-container .dropdown {
   width: 350px;
 }
