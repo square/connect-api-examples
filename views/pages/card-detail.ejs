@@ -59,9 +59,16 @@
           </div>
         </div>
       </div>
-      <form action=<%="/gift-card/" +  giftCard.gan + "/load"%> method="GET">
+      <form action=<%="/gift-card/" +  giftCard.gan + "/add-funds"%> method="GET">
         <button class="square-button" type="submit">Add Funds</button>
       </form>
+      <% if (payment && payment === "success") { %>
+        <div class="success-toast">
+          <div>
+              <img src="/images/success.svg">Payment successful!
+          </div>
+        </div>
+      <% } %>
     </div>
     </div>
   </div>

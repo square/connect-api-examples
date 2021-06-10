@@ -248,6 +248,7 @@ form {
   color: #5F666C;
   font-size: 16px;
   line-height: 24px;
+  cursor: pointer;
 }
 
 #login-container .content__wrapper {
@@ -555,6 +556,36 @@ ul.pretty-dropdown__options li .pretty-dropdown__option img {
   Cards on file
 */
 
+
 #cards-on-file-dropdown .pretty-dropdown__selected-image {
   background-color: none;
+}
+
+span.no-content {
+  color: rgb(158 150 150);
+  font-weight: normal !important;
+}
+
+.success-toast {
+  justify-content: center;
+  display: flex;
+}
+
+.success-toast div {
+  position: absolute;
+  width: 206px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  border-radius: 50px;
+  justify-content: center;
+  margin-top: 90px;
+}
+
+.success-toast img {
+  vertical-align: middle;
+  margin-right: 12px;
 }
