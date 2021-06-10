@@ -32,8 +32,8 @@ class PrettyDropdownSelect {
     this.options = options;
 
     this._buildDropdownElements();
-    this._applyOptions();
     this._buildDropdownData();
+    this._applyOptions();
 
 
     var self = this;
