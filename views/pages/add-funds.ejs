@@ -102,7 +102,7 @@
           initializeDropdown("cards-on-file-dropdown", {
             img: "<%= getImageForBrand(cards[0].cardBrand) %>",
             primary: "<%= capitalize(cards[0].cardBrand) %>",
-            secondary: "<%= cards[0].last4 %>"
+            secondary: "Ending in ●●●● <%= cards[0].last4 %>"
           });
         </script>
       <% }; %>

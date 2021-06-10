@@ -71,8 +71,9 @@ function select(element) {
 }
 
 function showOptions() {
-  if (dropdownElement)
-  dropdownElement.querySelector(".pretty-dropdown__options").classList.toggle("show");
+  if (dropdownElement) {
+    dropdownElement.querySelector(".pretty-dropdown__options").classList.toggle("show");
+  }
 }
 
 window.onclick = function(event) {
