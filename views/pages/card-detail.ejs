@@ -22,7 +22,7 @@
           </button>
           <ul class="pretty-dropdown-menu__list">
             <% if (giftCard.state !=="NOT_ACTIVE" ) { %>
-              <a href="<%= giftCard.gan %>/history">
+              <a href="/gift-card/<%= giftCard.gan %>/history">
                 <li class="pretty-dropdown-menu__list-item">Transaction history</li>
               </a>
               <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Delete card</li>
