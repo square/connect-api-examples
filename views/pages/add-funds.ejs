@@ -17,7 +17,7 @@
             <h4>Add funds</h4>
             <div id="card-details__content">
               <h5>Card number </h5>
-              <%= gan %>
+              <%= giftCard.gan %>
             </div>
           </div>
         </div>
@@ -64,49 +64,22 @@
           <h5>Pay with card on file</h5>
 
           <div id="cards-on-file-dropdown">
-            <ul class="pretty-dropdown__options">
-              <% if (cards.length> 0) { %>
-                <% cards.forEach(function(card) { %>
-                  <li onclick="select(this)" 
-                    pretty-dropdown-primary-display="<%= capitalize(card.cardBrand) %>"
-                    pretty-dropdown-value="<%=card.id %>"
-                    pretty-dropdown-secondary-display="Ending in ●●●● <%= card.last4 %>">
-                    <div class="pretty-dropdown__option">
-                      <img src=<%= getImageForBrand(card.cardBrand) %> />
-                      <%= capitalize(card.cardBrand) %> ●●●● <%= card.last4 %>
-                    </div>
-                  </li>
-                <% }); %>
-              <% } else { %>
-                <span class="pretty-dropdown__selected-secondary--no-content">
-                  No cards on file. Please create a card to pay.
-                </span>
-              <% } %>
-            </ul>
           </div>
         </div>
-        <% if (cards.length > 0) { %>
-          <form class="form-control" action="/gift-card/<%= giftCard.gan %>/add-funds" method="POST">
-            <input name="cardId" id="pretty-dropdown__value" hidden=true type="text" value=<%=cards[0].id %> />
-            <input name="amount" id="amount-bar__value" hidden=true type="text" value="5" />
-            <input name="state" id="state__value" hidden=true type="text" value=<%=giftCard.state%> />
-            <button id="pay-button" class="square-button" type="submit"></button>
-          </form>
-        <% } %>
+        <form class="form-control" action="/gift-card/<%= giftCard.gan %>/add-funds" method="POST">
+          <input name="cardId" id="pretty-dropdown__value" hidden=true type="text" value="" %> />
+          <input name="amount" id="amount-bar__value" hidden=true type="text" value="5" />
+          <input name="state" id="state__value" hidden=true type="text" value=<%=giftCard.state%> />
+          <button id="pay-button" class="square-button" type="submit"></button>
+        </form>
       </div>
       <script src="/js/pretty-dropdown-select.js"></script>
       <script src="/js/amount-bar.js"></script>
 
 
-      <% if (cards.length > 0) { %>
-        <script>
-          initializeDropdown("cards-on-file-dropdown", {
-            img: "<%= getImageForBrand(cards[0].cardBrand) %>",
-            primary: "<%= capitalize(cards[0].cardBrand) %>",
-            secondary: "Ending in ●●●● <%= cards[0].last4 %>"
-          });
-        </script>
-      <% }; %>
+      <script>
+        new PrettyDropdownSelect("cards-on-file-dropdown", <%- stringifyJSON(cardsData) %>);
+      </script>
 
       <script>
         initializeAmountBar("amount-bar", <%- formatMoney %>, "<%- giftCard.balanceMoney.currency %>");

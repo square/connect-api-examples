@@ -17,22 +17,9 @@
       <div id="login">
         <h5>Login</h5>
         <div id="login-dropdown">
-          <ul class="pretty-dropdown__options">
-            <% customers.forEach(function(customer) { %>
-              <li onclick="select(this)" 
-                pretty-dropdown-value="<%= customer.id %>"
-                pretty-dropdown-primary-display="Customer"
-                pretty-dropdown-secondary-display="<%= customer.givenName %> <%= customer.familyName %>">
-                <div class="pretty-dropdown__option">
-                  <%= customer.givenName %>
-                  <%= customer.familyName %>
-                </div>
-              </li>
-              <% }); %>
-          </ul>
         </div>
         <form action="/login" method="POST">
-          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="<%= customers[0].id %>" />
+          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="" />
           <button class="square-button" type="submit">Login</button>
         </form>
         <div class="message">
@@ -44,12 +31,7 @@
 
     <script src="/js/pretty-dropdown-select.js"></script>
     <script>
-      initializeDropdown("login-dropdown",
-        {
-          img: "/images/profile.svg",
-          primary: "Customer",
-          secondary: "<%= customers[0].givenName %> <%= customers[0].familyName %>"
-        });
+      new PrettyDropdownSelect("login-dropdown", <%- stringifyJSON(customerData) %>, { placeholderImg: "/images/profile.svg" });
     </script>
 </body>
 

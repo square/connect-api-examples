@@ -16,30 +16,47 @@ class PrettyDropdownSelect {
    *    img: "/example2.png",
    *    description: "Customer",
    *    value: "123457",
-   *    displayed-value: "Sailor Moon"
+   *    displayValue: "Sailor Moon"
    * }]
    * 
    * example `options`: {
    *    disabled: false,                  // whether the dropdown is disabled
    *    addonIds: ["createCustomer"],     // additional elements added to the dropdown select list
    *    placeholder:  "Select customer"   // placeholder text to display
+   *    placeholderImg: "/placeholder.svg"  // placeholder for img
    * }
    */
-  constructor(elementId, data, options) {
+  constructor(elementId, data = [], options = {}) {
     this.dropdownElement = document.getElementById(elementId);
     this.data = data;
     this.options = options;
 
     this._buildDropdownElements();
+    this._applyOptions();
     this._buildDropdownData();
+
+
+    var self = this;
+    window.onclick = function(event) {
+      var parentNode = self.dropdownElement.querySelector(".pretty-dropdown__selected");
+    
+      if (!parentNode.contains(event.target)) {
+        var openDropdown = self.dropdownElement.querySelector(".pretty-dropdown__options-wrapper");
+        if (openDropdown.classList.contains("show")) {
+          openDropdown.classList.remove("show");
+        }
+      }
+    }
   }
 
   _buildDropdownElements() {
-    dropdownElement.classList.add("pretty-dropdown");
+    this.dropdownElement.classList.add("pretty-dropdown");
   
     var selected = document.createElement("div");
     selected.classList.add("pretty-dropdown__selected");
-    selected.onclick = _showOptions;
+
+    var self = this;
+    selected.onclick = this._showOptions.bind(this);
   
     var selectedImageContainer = document.createElement("div");
     selectedImageContainer.classList.add("pretty-dropdown__selected-image");
@@ -53,11 +70,11 @@ class PrettyDropdownSelect {
     selected.appendChild(selectedValues);
   
     var defaultSelectedPrimaryValue = document.createElement("span");
-    defaultSelectedPrimaryValue.classList.add("pretty-dropdown__selected-primary-display")
+    defaultSelectedPrimaryValue.classList.add("pretty-dropdown__selected-description")
     selectedValues.appendChild(defaultSelectedPrimaryValue);
   
     var defaultSelectedSecondaryDisplay = document.createElement("span");
-    defaultSelectedSecondaryDisplay.classList.add("pretty-dropdown__selected-secondary-display")
+    defaultSelectedSecondaryDisplay.classList.add("pretty-dropdown__selected-display-value")
     selectedValues.appendChild(defaultSelectedSecondaryDisplay);
   
     var dropdownIcon = document.createElement("span");
@@ -69,38 +86,96 @@ class PrettyDropdownSelect {
     dropdownIcon.appendChild(dropdownIconImg);
 
     // insert the selection box at the front of the parent element
-    dropdownElement.insertBefore(selected, dropdownElement.firstChild);
+    this.dropdownElement.insertBefore(selected, this.dropdownElement.firstChild);
 
     // insert the selection options list next
     var dropdownOptionsWrapper = document.createElement("div");
-    var dropdownOptionsList = document.createElement("ul");
-    dropdownOptionsList.classList.add("pretty-dropdown-options");
-    dropdownOptionsWrapper.appendChild(dropdownOptionsList);
+    dropdownOptionsWrapper.classList.add("pretty-dropdown__options-wrapper")
+    this.dropdownElement.appendChild(dropdownOptionsWrapper);
   }
 
   _buildDropdownData() {
+    // if data length is > 0, then build the options list
     if (this.data.length > 0) {
-      
+      // set the default values
+      this.dropdownElement.querySelector(".pretty-dropdown__selected-description").innerText = this.data[0].description;
+      this.dropdownElement.querySelector(".pretty-dropdown__selected-display-value").innerText = this.data[0].displayValue;
+      document.getElementById("pretty-dropdown__value").setAttribute("value", this.data[0].value);
+      if (this.data[0].img) {
+        this.dropdownElement.querySelector(".pretty-dropdown__selected-image").querySelector("img").src = this.data[0].img;
+      }
+
+
+      // build select option items
+      var dropdownOptionsWrapper = this.dropdownElement.querySelector(".pretty-dropdown__options-wrapper");
+
+      var dropdownOptionsList = document.createElement("ul");
+      dropdownOptionsList.classList.add("pretty-dropdown__options");
+      dropdownOptionsWrapper.appendChild(dropdownOptionsList);
+
+      this.data.forEach(item => {
+        // create the list item
+        var listItem = document.createElement("li");
+        listItem.onclick = this._select.bind(this);
+
+        var dropdownOption = document.createElement("div");
+        dropdownOption.classList.add("pretty-dropdown__option");
+    
+        listItem.setAttribute("pretty-dropdown-description", item.description);
+        listItem.setAttribute("pretty-dropdown-value", item.value);
+        listItem.appendChild(dropdownOption);
+
+        if (item.img) {
+          var listItemImage = document.createElement("img");
+          listItemImage.src = item.img;
+          dropdownOption.appendChild(listItemImage);
+        }
+
+        // set the displayed value
+        var listItemDisplayValue = document.createElement("span");
+        listItemDisplayValue.innerText = item.displayValue;
+        dropdownOption.appendChild(listItemDisplayValue);
+
+        dropdownOptionsList.appendChild(listItem);
+      });
+    } else {
+      var placeholder = "No selection options available";
+      if (this.options.placeholder) {
+        placeholder = this.options.placeholder;
+      }
+
+      this.dropdownElement.querySelector(".pretty-dropdown__selected-display-value").innerText = placeholder;
     }
   }
 
   _applyOptions() {
+    if (this.options.placeholderImg) {
+      console.log(this.options.placeholderImg);
+      this.dropdownElement
+      .querySelector(".pretty-dropdown__selected-image")
+      .querySelector("img").src = this.options.placeholderImg;
+    }
+
+    if (this.options.disabled) {
+      this.dropdownElement.classList.add("pretty-dropdown__disabled");
+    }
 
   }
 
-  _select(element) {
-    var primaryDisplay = element.getAttribute("pretty-dropdown-primary-display");
-    var secondaryDisplay = element.getAttribute("pretty-dropdown-secondary-display");
-    var value = element.getAttribute("pretty-dropdown-value");
+  _select(event) {
+    var listItem = event.target.closest("li");
+    var description = listItem.getAttribute("pretty-dropdown-description");
+    var displayValue = listItem.querySelector("span").innerText;
+    var value = listItem.getAttribute("pretty-dropdown-value");
   
     // Update primary and secondary display values
-    dropdownElement.querySelector(".pretty-dropdown__selected-primary-display").innerHTML = primaryDisplay;
-    dropdownElement.querySelector(".pretty-dropdown__selected-secondary-display").innerHTML = secondaryDisplay;
+    this.dropdownElement.querySelector(".pretty-dropdown__selected-description").innerText = description;
+    this.dropdownElement.querySelector(".pretty-dropdown__selected-display-value").innerText = displayValue;
   
     // If there is an image associated with an option, we want to set that as well.
-    var image = element.querySelector("img");
+    var image = listItem.querySelector("img");
     if (image) {
-      dropdownElement.querySelector(".pretty-dropdown__selected-image").querySelector("img").src = image.src;
+      this.dropdownElement.querySelector(".pretty-dropdown__selected-image").querySelector("img").src = image.src;
     }
   
     // Update the actual value to be submitted
@@ -108,19 +183,8 @@ class PrettyDropdownSelect {
   }
   
   _showOptions() {
-    if (dropdownElement) {
-      dropdownElement.querySelector(".pretty-dropdown__options").classList.toggle("show");
-    }
-  }
-}
-
-window.onclick = function(event) {
-  var parentNode = dropdownElement.querySelector(".pretty-dropdown__selected");
-
-  if (!parentNode.contains(event.target)) {
-    var openDropdown = dropdownElement.querySelector(".pretty-dropdown__options");
-    if (openDropdown.classList.contains("show")) {
-      openDropdown.classList.remove("show");
+    if (!this.dropdownElement.classList.contains("pretty-dropdown__disabled")) {
+      this.dropdownElement.querySelector(".pretty-dropdown__options-wrapper").classList.toggle("show");
     }
   }
 }

@@ -25,6 +25,7 @@ const {
   ordersApi,
   paymentsApi,
 } = require("../util/square-client");
+const { capitalize, getImageForBrand } = require("../util/card-on-file");
 
 const { checkLoginStatus, checkCardOwner } = require("../util/middleware");
 
@@ -95,11 +96,20 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
  * (i.e. loading gift cards using an existing gift card).
  */
  router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
-  const gan = req.params.gan;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
-    const creditCardsOnFile = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
-    res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard });
+    const cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
+
+    const cardsData = cards.map((card) => {
+      return {
+        img: getImageForBrand(card.cardBrand),
+        value: card.id,
+        displayValue: capitalize(card.cardBrand) + " ●●●● " + card.last4,
+        description: capitalize(card.cardBrand)
+      }
+    })
+
+    res.render("pages/add-funds", { cards, cardsData, giftCard: res.locals.giftCard });
   } catch (error) {
     console.error(error);
     next(error);

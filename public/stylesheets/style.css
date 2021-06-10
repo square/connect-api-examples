@@ -408,16 +408,6 @@ ul.transaction-history-list {
   display: block;
 }
 
-.pretty-dropdown__selected-card {
-  float: left;
-  margin-right: 15px;
-}
-
-ul.pretty-dropdown__options li .pretty-dropdown__option img {
-  float: left;
-  margin-right: 15px;
-}
-
 .btn.active {
   background-color: #32373C;
   color: #ffffff;
