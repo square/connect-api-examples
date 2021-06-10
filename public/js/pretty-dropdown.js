@@ -13,6 +13,12 @@ function select(element) {
   dropdownElement.querySelector("#pretty-dropdown__selected-primary").innerHTML = primaryValue;
   dropdownElement.querySelector("#pretty-dropdown__selected-secondary").innerHTML = secondaryValue;
 
+  // If there is an image associated with an option, we want to set that as well.
+  var image = element.querySelector("img");
+  if (image) {
+    dropdownElement.querySelector("#pretty-dropdown__selected-image").src = image.src;
+  }
+
   // Update the actual value to be submitted
   dropdownElement.querySelector("#pretty-dropdown__value").setAttribute("value", element.getAttribute("pretty-dropdown-value"));
 }

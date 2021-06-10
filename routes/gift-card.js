@@ -29,56 +29,15 @@ const {
 const { checkLoginStatus, checkCardOwner } = require("../util/middleware");
 
 /**
- * GET /gift-card/create
- *
- * Renders the `Create a new gift card` page.
- * This endpoint retrieves all cards on file for the customer currently logged in.
- * You can add additional logic to filter out payment methods that might not be allowed
- * (i.e. paying for new gift cards using an existing gift card).
- */
-router.get("/create", checkLoginStatus, async (req, res, next) => {
-  try {
-    const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
-    // TODO: might want to filter out gift cards as payment option.
-    const cards = customer.cards;
-    res.render("pages/create-gift-card", { cards });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
-/**
- * GET /gift-card/:gan/load
- *
- * Renders the `Load an existing gift card` page.
- * This endpoint is very similar to GET /gift-card/create, but returns more information regarding the gift card.
- * You can add additional logic to filter out payment methods that might not be allowed
- * (i.e. loading gift cards using an existing gift card).
- */
-router.get("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, next) => {
-  const gan = req.params.gan;
-  try {
-    const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
-    // TODO: might want to filter out gift cards as payment option.
-    // TODO: might want to return more information about the card, such as balance.
-    const cards = customer.cards;
-    res.render("pages/load-gift-card", { cards: cards, gan: gan });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
-/**
  * GET /gift-card/:gan
  *
  * Shows the details of a gift card by its GAN
  */
 router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const giftCard = res.locals.giftCard;
-  
-  res.render("pages/card-detail", { giftCard });
+  const payment = req.query.payment;
+
+  res.render("pages/card-detail", { giftCard, payment });
 });
 
 /**
@@ -101,58 +60,26 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
 /**
  * POST /gift-card/create
  *
- * Creates and activates a gift card for the logged in customer based on the amount provided.
- * Steps are:
- * 1. Create an order (with the amount provided by the customer)
- * 2. Create a payment using the orderId and sourceId from (1)
- * 3. Create gift card
- * 4. Activate the gift card using information from (1,2,3)
- * 5. Link gift card to the customer
- * Steps (1,2) and (3) can happen in parallel. Once those are done, can proceed with (4,5).
+ * Creates a gift card for the logged in customer.
+ * It will create an inactive gift card with 0 balance,
+ * and link it to the logged in customer.
  */
 router.post("/create", checkLoginStatus, async (req, res, next) => {
   try {
     // The following information will come from the request/session.
     const customerId = req.session.customerId;
-    const amount = getAmountInSmallestDenomination(req.body.amount);
-    const paymentSource = req.body.cardId;
 
-    // Get the currency to be used for the order/payment.
-    const currency = req.app.locals.currency;
-
-    // The following code runs the order/payment flow and the gift card creation flow concurrently as they are independent.
-    const orderRequest = generateOrderRequest(customerId, amount, currency);
-    const orderPromise = ordersApi.createOrder(orderRequest);
-
+    // Create an inactive gift card.
     const giftCardRequest = generateGiftCardRequest();
-    const giftCardPromise = giftCardsApi.createGiftCard(giftCardRequest);
+    const { result: { giftCard }} = await giftCardsApi.createGiftCard(giftCardRequest);
 
-    // Await order call, as payment needs order information.
-    const { result: { order } } = await orderPromise;
-
-    // Extract useful information from the order.
-    const orderId = order.id;
-    const lineItemId = order.lineItems[0].uid;
-
-    // We have the order response, we can move on to the payment.
-    const paymentRequest = generatePaymentRequest(customerId, amount, currency, paymentSource, orderId);
-    await paymentsApi.createPayment(paymentRequest);
-
-    // Do not proceed until the gift card creation is done.
-    const { result: { giftCard } } = await giftCardPromise;
-    const gan = giftCard.gan;
-
-    // Now that we have an actual gift card created and paid for, activate it.
-    const giftCardActivityRequest = generateGiftCardActivityRequest("ACTIVATE", gan, orderId, lineItemId);
-    const { result: { giftCardActivity }} = await giftCardActivitiesApi.createGiftCardActivity(giftCardActivityRequest);
-    const giftCardId = giftCardActivity.giftCardId;
-
-    // Now link it to the customer that paid for it!
-    await giftCardsApi.linkCustomerToGiftCard(giftCardId, {
-      customerId: customerId
+    // Now link it to the customer logged in!
+    await giftCardsApi.linkCustomerToGiftCard(giftCard.id, {
+      customerId
     });
 
-    res.render("pages/confirmation");
+    // Redirect to GET /gift-card/:gan, which will render the card-detail page.
+    res.redirect("/gift-card/" + giftCard.gan);
   } catch (error) {
     console.error(error);
     next(error);
@@ -160,20 +87,41 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
 });
 
 /**
- * POST /gift-card/:gan/load
+ * GET /gift-card/:gan/add-funds
  *
- * Loads a given gift card with the amount provided.
+ * Renders the `add funds` page.
+ * This endpoint retrieves all cards on file for the customer currently logged in.
+ * You can add additional logic to filter out payment methods that might not be allowed
+ * (i.e. loading gift cards using an existing gift card).
+ */
+ router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+  const gan = req.params.gan;
+  try {
+    const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
+    const creditCardsOnFile = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
+    res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+/**
+ * POST /gift-card/:gan/add-funds
+ *
+ * Adds funds by loading or activating a given gift card with the amount provided.
  * Steps are:
  * 1. Create an order (with the amount provided by the customer)
  * 2. Create a payment using the orderId and sourceId from (1)
- * 3. Load the gift card using information from (1,2)
+ * 3. Load or activate the gift card using information from (1,2)
  */
-router.post("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   try {
     // The following information will come from the request/session.
     const customerId = req.session.customerId;
-    const amount = getAmountInSmallestDenomination(req.body.amount);
+    const amount = req.body.amount;
     const paymentSource = req.body.cardId;
+    const giftCardState = req.body.state;
     const gan = req.params.gan;
 
     // Get the currency to be used for the order/payment.
@@ -192,11 +140,15 @@ router.post("/:gan/load", checkLoginStatus, checkCardOwner, async (req, res, nex
     const paymentRequest = generatePaymentRequest(customerId, amount, currency, paymentSource, orderId);
     await paymentsApi.createPayment(paymentRequest);
 
-    // Load the gift card.
-    const giftCardActivityRequest = generateGiftCardActivityRequest("LOAD", gan, orderId, lineItemId);
+    // Load or activate the gift card based on its current state.
+    // If the gift card is inactive, activate it with the amount given.
+    // Otherwise, if the card is already active, load it with the amount given.
+    const giftCardActivity = giftCardState === "NOT_ACTIVE" ? "ACTIVATE" : "LOAD";
+    const giftCardActivityRequest = generateGiftCardActivityRequest(giftCardActivity, gan, orderId, lineItemId);
     await giftCardActivitiesApi.createGiftCardActivity(giftCardActivityRequest);
 
-    res.render("pages/confirmation");
+    // Redirect to GET /gift-card/:gan, which will render the card-detail page, with a success message.
+    res.redirect("/gift-card/" + gan + "/?payment=success");
   } catch (error) {
     console.error(error);
     next(error);
@@ -308,13 +260,6 @@ function getActivityObject(activityName, orderId, lineItemId) {
     default:
       console.error("Unrecognized type");
   }
-}
-
-/**
- * Helper function to convert user money input to the smallest denomination.
- */
-function getAmountInSmallestDenomination(amount) {
-  return amount * 100;
 }
 
 module.exports = router;

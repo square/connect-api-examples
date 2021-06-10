@@ -17,7 +17,7 @@
           <div>Created on <%= formatDate(giftCard.createdAt) %></div>
         </div>
         <div class="pretty-dropdown-menu" onclick="showMenuOptions(this)">
-          <button class="btn-secondary"><img src="/images/ellipsis.svg" /></button>
+          <button class="btn-secondary square-button"><img src="/images/ellipsis.svg" /></button>
           <ul class="pretty-dropdown-menu__list">
             <% if (giftCard.state !== "NOT_ACTIVE") { %>
               <a href="<%= giftCard.gan %>/history">
@@ -57,13 +57,22 @@
           </div>
         </div>
       </div>
-      <button>Add Fund</button>
+      <form action= "/gift-card/<%= giftCard.gan %>/add-funds" method="GET">
+        <button class="square-button" type="submit">Add Funds</button>
+      </form>
+      <% if (payment && payment === "success") { %>
+        <div class="success-toast">
+          <div>
+              <img src="/images/success.svg">Payment successful!
+          </div>
+        </div>
+      <% } %>
     </div>
   </div>
   <script src="/js/pretty-dropdown-menu.js"></script>
   <script src="/js/generate-barcode.js"></script>
   <script>
-    generateBarCode("#barcode", <%= giftCard.gan %>);
+    generateBarCode("#barcode", "<%= giftCard.gan %>");
   </script>
 </body>
 
