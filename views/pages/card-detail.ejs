@@ -2,7 +2,7 @@
 
 <head>
   <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
-  <script src="/js/js-barcode.js"></script>
+  <script src="/js/bwip-js-min.js"></script>
 </head>
 
 <body>
@@ -13,16 +13,19 @@
     <div id="card-details__wrapper">
       <div id="card-details__title-wrapper">
         <div id="card-details__title">
-        <h4>Gift Card</h4>
-        <div>Created on date</div>
+          <h4>Gift Card</h4>
+          <div>Created on <%= formatDate(giftCard.createdAt) %></div>
         </div>
-        <div class="pretty-dropdown-menu" onclick="showMenuOptions()">
-          <button class="square-button btn-secondary"><img src="/images/ellipsis.svg" /></button>
+        <div class="pretty-dropdown-menu" onclick="showMenuOptions(this)">
+          <button class="btn-secondary square-button"><img src="/images/ellipsis.svg" /></button>
           <ul class="pretty-dropdown-menu__list">
-            <li class="pretty-dropdown-menu__list-item">Transaction history</li>
-            <% if (giftCard.state === "NOT_ACTIVE") { %>
-              <li class="pretty-dropdown-menu__list-item--disabled">Delete card</li>
+            <% if (giftCard.state !== "NOT_ACTIVE") { %>
+              <a href="<%= giftCard.gan %>/history">
+                <li class="pretty-dropdown-menu__list-item">Transaction history</li>
+              </a>
+              <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Delete card</li>
             <% } else { %>
+              <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Transaction history</li>
               <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--critical">Delete card</li>
             <% } %>
           </ul>
@@ -33,7 +36,9 @@
           <div class="dashboard-cards__card-front">
             <img src="/images/giftCardImage.png" />
           </div>
-          <div class="dashboard-cards__card-back"></div>
+          <div class="dashboard-cards__card-back">
+            <img id="barcode"/>
+          </div>
         </div>
       </div>
       <h3 id="card-details__balance"><%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %></h3>
@@ -52,7 +57,7 @@
           </div>
         </div>
       </div>
-      <form action=<%="/gift-card/" +  giftCard.gan + "/add-funds"%> method="GET">
+      <form action= "/gift-card/<%= giftCard.gan %>/add-funds" method="GET">
         <button class="square-button" type="submit">Add Funds</button>
       </form>
       <% if (payment && payment === "success") { %>
@@ -65,6 +70,10 @@
     </div>
   </div>
   <script src="/js/pretty-dropdown-menu.js"></script>
+  <script src="/js/generate-barcode.js"></script>
+  <script>
+    generateBarCode("#barcode", "<%= giftCard.gan %>");
+  </script>
 </body>
 
 </html>

@@ -26,7 +26,7 @@ const {
 } = require("../util/square-client");
 
 const dashboardRoute = require("./dashboard");
-const giftCardRoute = require("./gift-card-activity");
+const giftCardRoute = require("./gift-card");
 
 // Define the routes
 router.use("/dashboard", dashboardRoute);
