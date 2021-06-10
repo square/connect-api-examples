@@ -161,6 +161,10 @@ form {
   font-weight: bold;
   background-color: white;
   color: #5F666C;
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 /**
