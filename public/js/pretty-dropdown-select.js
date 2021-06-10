@@ -52,31 +52,34 @@ class PrettyDropdownSelect {
   _buildDropdownElements() {
     this.dropdownElement.classList.add("pretty-dropdown");
   
+    // build the element that displays the selected option
     var selected = document.createElement("div");
     selected.classList.add("pretty-dropdown__selected");
-
-    var self = this;
     selected.onclick = this._showOptions.bind(this);
   
+    // build element that displays the image associated with the selected option
     var selectedImageContainer = document.createElement("div");
     selectedImageContainer.classList.add("pretty-dropdown__selected-image");
     selected.appendChild(selectedImageContainer);
     var selectedImage = document.createElement("img");
-  
     selectedImageContainer.appendChild(selectedImage);
   
+    // build the element that displays the values of the selected option
     var selectedValues = document.createElement("div");
     selectedValues.classList.add("pretty-dropdown__selected-values");
     selected.appendChild(selectedValues);
   
+    // build the element that displays the description of the selected option
     var defaultSelectedPrimaryValue = document.createElement("span");
     defaultSelectedPrimaryValue.classList.add("pretty-dropdown__selected-description")
     selectedValues.appendChild(defaultSelectedPrimaryValue);
   
+    // build the element that displays the displayed value of the selected option
     var defaultSelectedSecondaryDisplay = document.createElement("span");
     defaultSelectedSecondaryDisplay.classList.add("pretty-dropdown__selected-display-value")
     selectedValues.appendChild(defaultSelectedSecondaryDisplay);
   
+    // build the dropdown caret icon
     var dropdownIcon = document.createElement("span");
     dropdownIcon.classList.add("pretty-dropdown__icon");
     selected.appendChild(dropdownIcon);
@@ -105,7 +108,6 @@ class PrettyDropdownSelect {
         this.dropdownElement.querySelector(".pretty-dropdown__selected-image").querySelector("img").src = this.data[0].img;
       }
 
-
       // build select option items
       var dropdownOptionsWrapper = this.dropdownElement.querySelector(".pretty-dropdown__options-wrapper");
 
@@ -117,6 +119,7 @@ class PrettyDropdownSelect {
         // create the list item
         var listItem = document.createElement("li");
         listItem.onclick = this._select.bind(this);
+        dropdownOptionsList.appendChild(listItem);
 
         var dropdownOption = document.createElement("div");
         dropdownOption.classList.add("pretty-dropdown__option");
@@ -125,6 +128,7 @@ class PrettyDropdownSelect {
         listItem.setAttribute("pretty-dropdown-value", item.value);
         listItem.appendChild(dropdownOption);
 
+        // if an image is available for the item, create the element that displays the image
         if (item.img) {
           var listItemImage = document.createElement("img");
           listItemImage.src = item.img;
@@ -135,10 +139,9 @@ class PrettyDropdownSelect {
         var listItemDisplayValue = document.createElement("span");
         listItemDisplayValue.innerText = item.displayValue;
         dropdownOption.appendChild(listItemDisplayValue);
-
-        dropdownOptionsList.appendChild(listItem);
       });
     } else {
+      // if no data is available, display placeholder value
       var placeholder = "No selection options available";
       if (this.options.placeholder) {
         placeholder = this.options.placeholder;
