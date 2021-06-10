@@ -36,7 +36,25 @@ const { checkLoginStatus, checkCardOwner } = require("../util/middleware");
 router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const giftCard = res.locals.giftCard;
   const payment = req.query.payment;
+
   res.render("pages/card-detail", { giftCard, payment });
+});
+
+/**
+ * GET /gift-card/:gan/history
+ * 
+ * Displays the transaction history for a card
+ */
+ router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+  try {
+    const giftCard = res.locals.giftCard;
+    const { result : { giftCardActivities } } = await giftCardActivitiesApi.listGiftCardActivities(giftCard.id);
+
+    res.render("pages/history", { giftCard, giftCardActivities });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 });
 
 /**

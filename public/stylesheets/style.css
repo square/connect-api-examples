@@ -430,6 +430,28 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   color: rgb(158 150 150);
 }
 
+ul.transaction-history-list {
+  margin: 12px auto;
+  padding: 0;
+}
+
+.transaction-history-list li {
+  padding: 12px 0px;
+  list-style-type: none;
+  display: block;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.transaction-history-list li:last-child {
+  border-bottom: 0;
+}
+
+.transaction-history-list li .transaction-history-detail__money {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
 /** 
   Card on file table
 */
