@@ -299,7 +299,6 @@ form {
   border-radius: 6px;
   padding: 15px;
   box-sizing: border-box;
-  cursor: pointer;
 }
 
 .pretty-dropdown__selected .pretty-dropdown__selected-primary-display {
@@ -434,8 +433,8 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   color: rgba(0, 0, 0, 0.3);
 }
 
-.pretty-dropdown__selected-primary--no-content {
-  font-weight: bold;
+.pretty-dropdown__selected-secondary--no-content {
+  color: rgb(158 150 150);
 }
 
 ul.transaction-history-list {
@@ -621,13 +620,4 @@ span.no-content {
 .success-toast img {
   vertical-align: middle;
   margin-right: 12px;
-}
-
-.pretty-dropdown__selected--no-content {
-  height: 100% !important;
-  text-align: left !important;
-}
-
-.pretty-dropdown__selected--no-content-add-card {
-  display: inline-grid;
 }
