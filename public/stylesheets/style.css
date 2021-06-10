@@ -215,6 +215,9 @@ form {
   background-color: white;
   transform: rotateY(180deg);
   border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-details {
@@ -269,6 +272,10 @@ form {
 
 #login {
   width: 350px;
+}
+
+#login .pretty-dropdown__selected-image {
+  background-color: rgba(0, 106, 255, 0.1);
 }
 
 /**
@@ -350,7 +357,6 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   height: 40px;
   line-height: 40px;
   border-radius: 20px;
-  background-color: rgba(0, 106, 255, 0.1);
   margin-right: 15px;
   display: block;
   text-align: center;
@@ -581,7 +587,6 @@ ul.pretty-dropdown__options li .pretty-dropdown__option img {
 /**
   Cards on file
 */
-
 
 #cards-on-file-dropdown .pretty-dropdown__selected-image {
   background-color: none;
