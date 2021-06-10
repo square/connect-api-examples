@@ -42,7 +42,7 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
 
 /**
  * GET /gift-card/:gan/history
- * 
+ *
  * Displays the transaction history for a card
  */
  router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, next) => {
@@ -99,7 +99,7 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
     const creditCardsOnFile = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
-    res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard });
+    res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard, customerId: req.session.customerId });
   } catch (error) {
     console.error(error);
     next(error);
@@ -117,6 +117,7 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
  */
 router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   try {
+    console.log(req.body);
     // The following information will come from the request/session.
     const customerId = req.session.customerId;
     const amount = req.body.amount;

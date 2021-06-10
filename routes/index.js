@@ -27,10 +27,12 @@ const {
 
 const dashboardRoute = require("./dashboard");
 const giftCardRoute = require("./gift-card");
+const seedRoute = require("./seed");
 
 // Define the routes
 router.use("/dashboard", dashboardRoute);
 router.use("/gift-card", giftCardRoute);
+router.use("/seed", seedRoute);
 
 router.get("/", async (req, res, next) => {
   if (req.session.loggedIn) {

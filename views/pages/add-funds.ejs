@@ -77,12 +77,24 @@
                   </li>
                 <% }); %>
               <% } else { %>
-                <span class="pretty-dropdown__selected-secondary--no-content">
-                  No cards on file. Please create a card to pay.
-                </span>
+                <li class="pretty-dropdown__selected--no-content">
+                  <div class="pretty-dropdown__selected--no-content-add-card">
+                    <span class="pretty-dropdown__selected-primary--no-content">
+                      Create a new card
+                    </span>
+                    <span class="pretty-dropdown__selected-secondary--no-content">
+                      This is some information about the issue. We want to create a card for the customer
+                      and there will be a button under this text.
+                      <form action="/seed/<%= customerId %>/create-card" method="POST">
+                        <input name="gan" id="state__value" hidden=true type="text" value=<%=giftCard.gan%> />
+                        <button class="square-button" type="submit">Add card</button>
+                      </form>
+                    </span>
+                  </div>
+                </li>
               <% } %>
-            </ul>
-          </div>
+            </div>
+          </ul>
         </div>
         <% if (cards.length > 0) { %>
           <form class="form-control" action="/gift-card/<%= giftCard.gan %>/add-funds" method="POST">
@@ -105,7 +117,14 @@
             secondary: "Ending in ●●●● <%= cards[0].last4 %>"
           });
         </script>
-      <% }; %>
+      <% } else { %>
+        <script>
+          initializeDropdown("cards-on-file-dropdown", {
+            img: "/images/blank.svg",
+            primary: "No cards available"
+          });
+        </script>
+      <% } %>
 
       <script>
         initializeAmountBar("amount-bar", <%- formatMoney %>, "<%- giftCard.balanceMoney.currency %>");

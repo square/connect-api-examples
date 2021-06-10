@@ -32,7 +32,33 @@ async function checkCardOwner(req, res, next) {
   }
 }
 
+/**
+ * We don't want to allow production access to a few endpoints.
+ * This helper function verifies that the environment set for the customer is sandbox.
+ */
+async function checkSandboxEnv(req, res, next) {
+  if (process.env[`ENVIRONMENT`].toLowerCase() !== "sandbox") {
+    res.redirect("/");
+  } else {
+    next();
+  }
+}
+
+/**
+ * If the customerId path parameter for the endpoint doesn't match the customerId
+ * in the session, don't let the request through.
+ */
+ async function checkCustomerIdMatch(req, res, next) {
+  if (req.session.customerId !== req.params.customerId) {
+    res.redirect("/");
+  } else {
+    next();
+  }
+}
+
 module.exports = {
   checkLoginStatus,
-  checkCardOwner
+  checkCardOwner,
+  checkSandboxEnv,
+  checkCustomerIdMatch
 };
