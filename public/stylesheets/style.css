@@ -227,6 +227,11 @@ form {
   justify-content: space-between;
 }
 
+.section__row {
+  display: flex;
+  justify-content: space-between;
+}
+
 .card-details__info-label {
   font-weight: bold;
 }
@@ -257,6 +262,10 @@ form {
   width: 350px;
 }
 
+#login {
+  width: 350px;
+}
+
 /**
   Dropdown selector
 */
@@ -279,7 +288,7 @@ form {
   box-sizing: border-box;
 }
 
-.pretty-dropdown__selected .pretty-dropdown__selected-primary {
+.pretty-dropdown__selected .pretty-dropdown__selected-primary-display {
   font-weight: bold;
 }
 
@@ -293,7 +302,7 @@ form {
 }
 
 ul.pretty-dropdown__options {
-  padding: 8px 24px 8px 8px;
+  padding: 8px 24px 8px 24px;
   background-color: white;
   z-index: 1;
   width: 100%;
@@ -331,7 +340,7 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   flex-direction: column;
 }
 
-.pretty-dropdown__picture {
+.pretty-dropdown__selected-image {
   width: 40px;
   height: 40px;
   line-height: 40px;
@@ -348,7 +357,7 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   right: 15px
 }
 
-.pretty-dropdown__picture img {
+.pretty-dropdown__selected-image img {
   position: absolute;
   left: 0;
   right: 0;
@@ -412,6 +421,10 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   color: rgba(0, 0, 0, 0.3);
 }
 
+.pretty-dropdown__selected-secondary--no-content {
+  color: rgb(158 150 150);
+}
+
 /** 
   Card on file table
 */
@@ -459,8 +472,11 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   Amount bar
 */
 
+.amount-bar-wrapper {
+  margin-bottom: 24px;
+}
+
 .amount-bar {
-  position: absolute;
   width: 352px;
   height: 48px;
   border: 1px solid #DDDDDD;
@@ -493,7 +509,6 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
 }
 
 #custom-amount-text {
-  position: absolute;
   width: 352px;
   height: 48px;
   border: 2.5px solid #006AFF;
@@ -501,15 +516,15 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   border-radius: 6px;
 }
 
-#custom-amount__div {
+#custom-amount {
   display: none;
   width: 350px;
   height: 50px;
-  margin-top: 40px;
+  margin-top: 20px;
   border-radius: 11px;
 }
 
-#custom-amount__div.show {
+#custom-amount.show {
   display: block;
 }
 
@@ -536,11 +551,10 @@ ul.pretty-dropdown__options li .pretty-dropdown__option img {
   float: left;
 }
 
-button.no-content {
-  display: none;
-}
+/**
+  Cards on file
+*/
 
-span.no-content {
-  color: rgb(158 150 150);
-  font-weight: normal !important;
+#cards-on-file-dropdown .pretty-dropdown__selected-image {
+  background-color: none;
 }

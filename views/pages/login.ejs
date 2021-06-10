@@ -13,29 +13,15 @@
       <span>You can easily manage your gift cards with Square Gift Cards. This sample app
         demonstrates how Square Gift Cards API may be used by a customer to manage their gift cards.
       </span>
-      <h5>Login</h5>
       <div id="login">
-        <div class="pretty-dropdown">
-          <div id="login-dropdown__selected-content" class="pretty-dropdown__selected" onclick="showOptions()">
-            <div class="pretty-dropdown__picture">
-              <img src="/images/profile.svg" />
-            </div>
-            <div class="pretty-dropdown__selected-values">
-              <span class="pretty-dropdown__selected-primary">Customer</span>
-              <span class="pretty-dropdown__selected-secondary">
-                <%= customers[0].givenName %>
-                  <%= customers[0].familyName %>
-              </span>
-            </div>
-            <span class="pretty-dropdown__icon">
-              <img src="/images/caret.svg" alt="" />
-            </span>
-          </div>
+        <h5>Login</h5>
+        <div id="login-dropdown">
           <ul class="pretty-dropdown__options">
             <% customers.forEach(function(customer) { %>
-              <li onclick="select(this)" pretty-dropdown-primary-value="Customer"
+              <li onclick="select(this)" 
                 pretty-dropdown-value="<%= customer.id %>"
-                pretty-dropdown-secondary-value="<%= customer.givenName %> <%= customer.familyName %>">
+                pretty-dropdown-primary-display="Customer"
+                pretty-dropdown-secondary-display="<%= customer.givenName %> <%= customer.familyName %>">
                 <div class="pretty-dropdown__option">
                   <%= customer.givenName %>
                   <%= customer.familyName %>
@@ -43,22 +29,27 @@
               </li>
               <% }); %>
           </ul>
-          <form action="/login" method="POST">
-            <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="<%= customers[0].id %>" />
-            <button type="submit">Login</button>
-          </form>
         </div>
+        <form action="/login" method="POST">
+          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="<%= customers[0].id %>" />
+          <button class="square-button" type="submit">Login</button>
+        </form>
         <div class="message">
           Don’t forget you can manage Customers and Gift Cards using Square’s API Explorer to call the API. This sample
           app will update accordingly.
         </div>
       </div>
     </div>
-  </div>
-  <script src="/js/pretty-dropdown.js"></script>
-  <script>
-    initializeDropdown("login");
-  </script>
+
+    <script src="/js/pretty-dropdown.js"></script>
+    <script>
+      initializeDropdown("login-dropdown",
+        {
+          img: "/images/profile.svg",
+          primary: "Customer",
+          secondary: "<%= customers[0].givenName %> <%= customers[0].familyName %>"
+        });
+    </script>
 </body>
 
 </html>

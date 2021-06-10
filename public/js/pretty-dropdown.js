@@ -1,29 +1,77 @@
 
 var dropdownElement;
+var data;
 
-function initializeDropdown(elementId) {
+function initializeDropdown(elementId, defaultData) {
   dropdownElement = document.getElementById(elementId);
+  data = data;
+
+  dropdownElement.classList.add("pretty-dropdown");
+
+  var selected = document.createElement("div");
+  selected.classList.add("pretty-dropdown__selected");
+  selected.onclick = showOptions;
+
+  var selectedImageContainer = document.createElement("div");
+  selectedImageContainer.classList.add("pretty-dropdown__selected-image");
+  selected.appendChild(selectedImageContainer);
+  var selectedImage = document.createElement("img");
+
+  if (defaultData.img) {
+    selectedImage.src = defaultData.img;
+  }
+  selectedImageContainer.appendChild(selectedImage);
+
+  var selectedValues = document.createElement("div");
+  selectedValues.classList.add("pretty-dropdown__selected-values");
+  selected.appendChild(selectedValues);
+
+  var defaultSelectedPrimaryValue = document.createElement("span");
+  defaultSelectedPrimaryValue.classList.add("pretty-dropdown__selected-primary-display")
+  if (defaultData.primary) {
+    defaultSelectedPrimaryValue.textContent = defaultData.primary;
+  }
+  selectedValues.appendChild(defaultSelectedPrimaryValue);
+
+  var defaultSelectedSecondaryDisplay = document.createElement("span");
+  defaultSelectedSecondaryDisplay.classList.add("pretty-dropdown__selected-secondary-display")
+  if (defaultData.secondary) {
+    defaultSelectedSecondaryDisplay.textContent = defaultData.secondary;
+  }
+  selectedValues.appendChild(defaultSelectedSecondaryDisplay);
+
+  var dropdownIcon = document.createElement("span");
+  dropdownIcon.classList.add("pretty-dropdown__icon");
+  selected.appendChild(dropdownIcon);
+
+  var dropdownIconImg = document.createElement("img");
+  dropdownIconImg.src = "/images/caret.svg";
+  dropdownIcon.appendChild(dropdownIconImg);
+
+  dropdownElement.insertBefore(selected, dropdownElement.firstChild);
 }
 
 function select(element) {
-  var primaryValue = element.getAttribute("pretty-dropdown-primary-value");
-  var secondaryValue = element.getAttribute("pretty-dropdown-secondary-value");
+  var primaryDisplay = element.getAttribute("pretty-dropdown-primary-display");
+  var secondaryDisplay = element.getAttribute("pretty-dropdown-secondary-display");
+  var value = element.getAttribute("pretty-dropdown-value");
 
   // Update primary and secondary display values
-  dropdownElement.querySelector(".pretty-dropdown__selected-primary").innerHTML = primaryValue;
-  dropdownElement.querySelector(".pretty-dropdown__selected-secondary").innerHTML = secondaryValue;
+  dropdownElement.querySelector(".pretty-dropdown__selected-primary-display").innerHTML = primaryDisplay;
+  dropdownElement.querySelector(".pretty-dropdown__selected-secondary-display").innerHTML = secondaryDisplay;
 
   // If there is an image associated with an option, we want to set that as well.
   var image = element.querySelector("img");
   if (image) {
-    dropdownElement.querySelector("#pretty-dropdown__selected-image").src = image.src;
+    dropdownElement.querySelector(".pretty-dropdown__selected-image").querySelector("img").src = image.src;
   }
 
   // Update the actual value to be submitted
-  dropdownElement.querySelector("#pretty-dropdown__value").setAttribute("value", element.getAttribute("pretty-dropdown-value"));
+  document.getElementById("pretty-dropdown__value").setAttribute("value", value);
 }
 
 function showOptions() {
+  if (dropdownElement)
   dropdownElement.querySelector(".pretty-dropdown__options").classList.toggle("show");
 }
 
