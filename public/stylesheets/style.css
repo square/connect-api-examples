@@ -632,6 +632,7 @@ span.no-content {
 
 .pretty-dropdown__selected--no-content {
   height: 100% !important;
+  text-align: left !important;
 }
 
 .pretty-dropdown__selected--no-content-add-card {

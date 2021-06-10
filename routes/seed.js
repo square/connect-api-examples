@@ -42,7 +42,7 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
     await customersApi.createCustomerCard(customerId, { cardNonce });
 
     // Redirect to the add-funds page, which will now present the newly created card.
-    res.redirect("/gift-card/" + req.body.gan + "/add-funds");
+    res.redirect("/gift-card/" + req.body.gan + "/add-funds/?cardCreated=success");
   } catch (error) {
     console.error(error);
     next(error);

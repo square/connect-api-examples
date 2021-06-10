@@ -96,10 +96,11 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
  */
  router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const gan = req.params.gan;
+  const cardCreated = req.query.cardCreated;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
     const creditCardsOnFile = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
-    res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard, customerId: req.session.customerId });
+    res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard, customerId: req.session.customerId, cardCreated });
   } catch (error) {
     console.error(error);
     next(error);
@@ -117,7 +118,6 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
  */
 router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   try {
-    console.log(req.body);
     // The following information will come from the request/session.
     const customerId = req.session.customerId;
     const amount = req.body.amount;

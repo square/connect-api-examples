@@ -80,11 +80,11 @@
                 <li class="pretty-dropdown__selected--no-content">
                   <div class="pretty-dropdown__selected--no-content-add-card">
                     <span class="pretty-dropdown__selected-primary--no-content">
-                      Create a new card
+                      Add a new card
                     </span>
                     <span class="pretty-dropdown__selected-secondary--no-content">
-                      This is some information about the issue. We want to create a card for the customer
-                      and there will be a button under this text.
+                      You currently don't have any credit cards on file.
+                      In sandbox environment, you can create a test card on file by clicking the button below.
                       <form action="/seed/<%= customerId %>/create-card" method="POST">
                         <input name="gan" id="state__value" hidden=true type="text" value=<%=giftCard.gan%> />
                         <button class="square-button" type="submit">Add card</button>
@@ -104,27 +104,23 @@
             <button id="pay-button" class="square-button" type="submit"></button>
           </form>
         <% } %>
+
+        <% if (cardCreated && cardCreated === "success") { %>
+          <div class="success-toast">
+            <div>
+              <img src="/images/success.svg">Created test card!
+            </div>
+          </div>
+        <% } %>
       </div>
       <script src="/js/pretty-dropdown.js"></script>
       <script src="/js/amount-bar.js"></script>
-
-
-      <% if (cards.length > 0) { %>
-        <script>
-          initializeDropdown("cards-on-file-dropdown", {
-            img: "<%= getImageForBrand(cards[0].cardBrand) %>",
-            primary: "<%= capitalize(cards[0].cardBrand) %>",
-            secondary: "Ending in ●●●● <%= cards[0].last4 %>"
-          });
-        </script>
-      <% } else { %>
-        <script>
-          initializeDropdown("cards-on-file-dropdown", {
-            img: "/images/blank.svg",
-            primary: "No cards available"
-          });
-        </script>
-      <% } %>
+      <script>
+        initializeDropdown("cards-on-file-dropdown", {
+          img: "/images/blank.svg",
+          primary: "Select card"
+        });
+      </script>
 
       <script>
         initializeAmountBar("amount-bar", <%- formatMoney %>, "<%- giftCard.balanceMoney.currency %>");
