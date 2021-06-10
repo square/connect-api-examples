@@ -9,70 +9,80 @@
   <header>
     <%- include("../partials/header") %>
   </header>
-  <div class="wrapper">
-    <div id="card-details__wrapper">
-      <div id="card-details__title-wrapper">
-        <div id="card-details__title">
+  <div class="content">
+    <div class="content__wrapper">
+      <div class="content__title-wrapper">
+        <div class="content__title">
           <h4>Gift Card</h4>
-          <div>Created on <%= formatDate(giftCard.createdAt) %></div>
+          Created on <%= formatDate(giftCard.createdAt) %>
         </div>
-        <div class="pretty-dropdown-menu" onclick="showMenuOptions(this)">
-          <button class="btn-secondary square-button"><img src="/images/ellipsis.svg" /></button>
+        <div class="pretty-dropdown-menu" onclick="showMenuOptions()">
+          <button class="btn-secondary square-button">
+            <img src="/images/ellipsis.svg" />
+          </button>
           <ul class="pretty-dropdown-menu__list">
-            <% if (giftCard.state !== "NOT_ACTIVE") { %>
+            <% if (giftCard.state !=="NOT_ACTIVE" ) { %>
               <a href="<%= giftCard.gan %>/history">
                 <li class="pretty-dropdown-menu__list-item">Transaction history</li>
               </a>
               <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Delete card</li>
-            <% } else { %>
-              <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Transaction history</li>
-              <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--critical">Delete card</li>
-            <% } %>
+              <% } else { %>
+                <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Transaction
+                  history</li>
+                <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--critical">Delete card</li>
+                <% } %>
           </ul>
         </div>
       </div>
-      <div class="dashboard-cards__card">
-        <div class="dashboard-cards__inner dashboard-cards__inner-flip">
-          <div class="dashboard-cards__card-front">
+
+      <div class="card">
+        <div class="card__inner card__inner-flip">
+          <div class="card__card-front">
             <img src="/images/giftCardImage.png" />
           </div>
-          <div class="dashboard-cards__card-back">
-            <img id="barcode"/>
+          <div class="card__card-back">
+          <img id="barcode">
           </div>
         </div>
       </div>
-      <h3 id="card-details__balance"><%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %></h3>
-      <% if (giftCard.state === "NOT_ACTIVE") { %>
-        <div>Your card curently has no funds avalible. Add money to activate this card for use.</div>
-      <% } else { %>
-        <div>This card is active</div>
-      <% } %>
-      <div class="card-details__info">
-        <div class="card-details__info-row">
-          <div class="card-details__info-label">
-            Card number
-          </div>
-          <div class="card-details__info-value">
-            <%= giftCard.gan %>
-          </div>
-        </div>
+
+      <div class="card-details">
+        <h3 class="card-details__balance">
+          <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %>
+        </h3>
+        <% if (giftCard.state==="NOT_ACTIVE" ) { %>
+          <div>Your card curently has no funds avalible. Add money to activate this card for use.</div>
+          <% } else { %>
+            <div>This card is active</div>
+          <% } %>
+            <div class="card-details__info">
+              <div class="card-details__info-row">
+                <div class="card-details__info-label">
+                  Card number
+                </div>
+                <div class="card-details__info-value">
+                  <%= giftCard.gan %>
+                </div>
+              </div>
+            </div>
+            <form action="/gift-card/<%= giftCard.gan %>/add-funds" method="GET">
+              <button class="square-button" type="submit">Add Funds</button>
+            </form>
+            <% if (payment && payment==="success" ) { %>
+              <div class="success-toast">
+                <div>
+                  <img src="/images/success.svg">Payment successful!
+                </div>
+              </div>
+            <% } %>
       </div>
-      <form action= "/gift-card/<%= giftCard.gan %>/add-funds" method="GET">
-        <button class="square-button" type="submit">Add Funds</button>
-      </form>
-      <% if (payment && payment === "success") { %>
-        <div class="success-toast">
-          <div>
-              <img src="/images/success.svg">Payment successful!
-          </div>
-        </div>
-      <% } %>
     </div>
   </div>
+
   <script src="/js/pretty-dropdown-menu.js"></script>
   <script src="/js/generate-barcode.js"></script>
   <script>
-    generateBarCode("#barcode", "<%= giftCard.gan %>");
+    generateBarCode("barcode", "<%= giftCard.gan %>");
   </script>
 </body>
 

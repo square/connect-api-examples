@@ -9,31 +9,36 @@
     <%- include("../partials/header") %>
   </header>
 
-  <div id="dashboard-cards__wrapper"> 
-    <h3 id="dashboard-cards__title">Gift Cards</h3>
-    <% if (giftCards.length === 0) { %>
-    <div id="dashboard-cards__description">You currently don't have any Gift Cards avalible for use. Get started by adding one.</div>
-    <% }; %>
-    <div id="dashboard-cards__content">
-      <div id="dashboard-cards__cards">
-        <% giftCards.forEach(function(giftCard) { %>
-          <div class="dashboard-cards__card-wrapper">
+  <div class="dashboard">
+    <div class="content__title-wrapper">
+      <div class="content__title">
+        <h3>Gift Cards</h3>
+        <% if (giftCards.length === 0) { %>
+          <div>You currently don't have any Gift Cards avalible for use. Get started by adding one.</div>
+        <% }; %>
+      </div>
+    </div>
+    
+    <div class="dashboard__cards">
+      <% giftCards.forEach(function(giftCard) { %>
+        <div class="dashboard__cards_card-wrapper">
           <a href="/gift-card/<%= giftCard.gan %>">
-            <div class="dashboard-cards__card">
-              <div class="dashboard-cards__inner">
-                <div class="dashboard-cards__card-front">
+            <div class="card">  
+              <div class="card__inner">
+                <div class="card__card-front">
                   <img src="/images/giftCardImage.png" />
                 </div>
               </div>
             </div>
           </a>
-          <div class="dashboard-cards__card-balance">Card balance: <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency)  %></div>
+          <div class="dashboard__cards_card-balance">Card balance: <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency)  %></div>
         </div>
-        <%}); %>
-        <form class="form-control" action="/gift-card/create" method="POST">
+      <%}); %>
+      <form class="form-control" action="/gift-card/create" method="POST">
+        <div class="card">
           <input class="dashboard-cards__card dashboard-cards__new-card" type="submit" value="+ Add Gift Card"/>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   </div>
 </body>
