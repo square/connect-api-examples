@@ -57,7 +57,7 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
 
     // Now link it to the customer logged in!
     await giftCardsApi.linkCustomerToGiftCard(giftCard.id, {
-      customerId: customerId
+      customerId
     });
 
     // Redirect to GET /gift-card/:gan, which will render the card-detail page.
@@ -69,14 +69,14 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
 });
 
 /**
- * GET /gift-card/:gan/add
+ * GET /gift-card/:gan/add-funds
  *
  * Renders the `add funds` page.
  * This endpoint retrieves all cards on file for the customer currently logged in.
  * You can add additional logic to filter out payment methods that might not be allowed
  * (i.e. loading gift cards using an existing gift card).
  */
- router.get("/:gan/add", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+ router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const gan = req.params.gan;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
@@ -89,15 +89,15 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
 });
 
 /**
- * POST /gift-card/:gan/add
+ * POST /gift-card/:gan/add-funds
  *
- * Loads or activates a given gift card with the amount provided.
+ * Adds funds by loading or activating a given gift card with the amount provided.
  * Steps are:
  * 1. Create an order (with the amount provided by the customer)
  * 2. Create a payment using the orderId and sourceId from (1)
  * 3. Load or activate the gift card using information from (1,2)
  */
-router.post("/:gan/add", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   try {
     // The following information will come from the request/session.
     const customerId = req.session.customerId;
@@ -242,13 +242,6 @@ function getActivityObject(activityName, orderId, lineItemId) {
     default:
       console.error("Unrecognized type");
   }
-}
-
-/**
- * Helper function to convert user money input to the smallest denomination.
- */
-function getAmountInSmallestDenomination(amount) {
-  return amount * 100;
 }
 
 module.exports = router;
