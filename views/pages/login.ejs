@@ -46,7 +46,8 @@
       initializeDropdown("login-dropdown",
         {
           img: "/images/profile.svg",
-          primary: "Select customer"
+          primary: "Customer",
+          secondary: "<%= customers[0].givenName %> <%= customers[0].familyName %>"
         });
     </script>
 </body>

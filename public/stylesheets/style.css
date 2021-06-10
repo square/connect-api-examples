@@ -34,13 +34,6 @@ h5 {
   margin-bottom: 10px;
 }
 
-body {
-  font-size: 14px;
-  line-height: 22px;
-  color: rgba(0, 0, 0, 0.9);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
 a {
   text-decoration: none;
   color: rgba(0, 0, 0, 0.9);
