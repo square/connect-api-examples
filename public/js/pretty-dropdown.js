@@ -59,7 +59,6 @@ function select(element) {
   // Update primary and secondary display values
   dropdownElement.querySelector(".pretty-dropdown__selected-primary-display").innerHTML = primaryDisplay;
   dropdownElement.querySelector(".pretty-dropdown__selected-secondary-display").innerHTML = secondaryDisplay;
-  console.log(secondaryDisplay);
 
   // If there is an image associated with an option, we want to set that as well.
   var image = element.querySelector("img");
