@@ -26,7 +26,7 @@
         </div>
       </div>
       <h5>Amount</h5>
-      <form>
+      <form class="form-control" action="/gift-card/<%= giftCard.gan %>/add-funds" method="POST">
         <div class="card-details__info">
           <div class="card-details__info-row">
             <div id="amount-bar" class="amount-bar">
@@ -69,7 +69,7 @@
           </div>
         </div>
         <div id="custom-amount__div">
-          <input id="custom-amount-text" type="number" placeholder="$0.00" step="0.01" oninput="updatePayButtonText(this)" >
+          <input id="custom-amount-text" type="number" placeholder="$0.00" step="0.01" min="0.01" oninput="updatePayButtonText(this)" >
         </div>
         <div class="pretty-dropdown" id="cards-on-file-dropdown">
           <div id="cards-pretty-dropdown-title">

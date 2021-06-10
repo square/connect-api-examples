@@ -29,11 +29,9 @@
           <div class="dashboard-cards__card-balance">Card balance: <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency)  %></div>
         </div>
         <%}); %>
-        <a href="/gift-card/create">
-          <div class="dashboard-cards__card dashboard-cards__new-card">
-            <span>+ Add Gift Card</span>
-          </div>
-        </a>
+        <form class="form-control" action="/gift-card/create" method="POST">
+          <input class="dashboard-cards__card dashboard-cards__new-card" type="submit" value="+ Add Gift Card"/>
+        </form>
       </div>
     </div>
   </div>
