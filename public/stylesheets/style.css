@@ -448,10 +448,10 @@ span.no-content {
 .success-toast {
   justify-content: center;
   display: flex;
+  margin-top: 60px;
 }
 
 .success-toast div {
-  position: fixed;
   width: 206px;
   height: 48px;
   line-height: 48px;
@@ -461,7 +461,6 @@ span.no-content {
   box-sizing: border-box;
   border-radius: 50px;
   justify-content: center;
-  bottom: 60px;
   background-color: white;
 }
 
@@ -473,14 +472,14 @@ span.no-content {
 .developer-note {
   justify-content: center;
   display: flex;
+  background-color: white;
+  margin-top: 60px;
 }
 
 .developer-note div {
   width: 350px;
   padding: 24px;
   background-color: rgba(245, 246, 247, 1);
-  bottom: 60px;
-  position: fixed;
   border-radius: 12px;
 }
 
