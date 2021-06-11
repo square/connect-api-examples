@@ -64,11 +64,8 @@ router.get("/login", async (req, res, next) => {
         .filter(missingCustomer => !customerIds.includes(missingCustomer.id));
 
       // Those who aren't available yet, should be appended to our retrieved list of customers.
-      console.log(req.session.missingCustomers);
-      console.log(customers);
       customers = customers.concat(req.session.missingCustomers);
     }
-    console.log(customers);
 
     res.render("pages/login",
       { customers, customerCreated, customerCreatedGivenName, customerCreatedFamilyName });
