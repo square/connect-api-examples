@@ -1,5 +1,15 @@
 <% include("../functions") %> 
 <div class="top-nav">
-  <a id="dashboard-link" href="/dashboard">Gift Card Dashboard</a>
+  <% if (typeof link != "undefined") { %>
+    <div>
+      <a href="<%= link.url %>">
+        <button class="square-button btn-secondary">
+          <%= link.name %>
+        </button>
+      </a>
+    </div>
+  <% } else { %>
+    <a id="dashboard-link" href="/dashboard">Gift Card Dashboard</a>
+  <% }; %>
   <a href="/logout"><button class="square-button btn-secondary">Log Out</button></a>
 </div>
