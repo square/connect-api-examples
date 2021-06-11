@@ -38,11 +38,12 @@ const { checkLoginStatus, checkCustomerIdMatch, checkSandboxEnv } = require("../
 router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, checkSandboxEnv, async (req, res, next) => {
   try {
     const customerId = req.params.customerId;
+    const gan = req.query.gan;
     const cardNonce = "cnon:card-nonce-ok"
     await customersApi.createCustomerCard(customerId, { cardNonce });
 
     // Redirect to the add-funds page, which will now present the newly created card.
-    res.redirect("/gift-card/" + req.body.gan + "/add-funds/?cardCreated=success");
+    res.redirect("/gift-card/" + gan + "/add-funds/?cardCreated=success");
   } catch (error) {
     console.error(error);
     next(error);
