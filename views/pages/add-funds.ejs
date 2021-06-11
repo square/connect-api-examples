@@ -68,13 +68,35 @@
           <button id="pay-button" class="square-button" type="submit"></button>
         </form>
       </div>
+
+      <% if (cards.length === 0) { %>
+      <div id="no-card">
+        <h5>Add New Card</h5>
+        <span>This account currently does not have cards on file. 
+          Click on the button below to add a card on file, this action is only supported in sandbox mode.
+        </span>
+        <button class="square-button">Add card</button>
+      </div>
+      <% } %>
+
       <script src="/js/pretty-dropdown-select.js"></script>
       <script src="/js/amount-bar.js"></script>
 
       <% var cardsData = getCardsData(cards); %>
+
+      <% if (cards.length > 0) { %>
       <script>
-        new PrettyDropdownSelect("cards-on-file-dropdown", <%- stringifyJSON(cardsData) %>);
+        new PrettyDropdownSelect("cards-on-file-dropdown", 
+        <%- stringifyJSON(cardsData) %>, 
+        {placeholder: "Select card", placeholderImg: "/images/no-card.svg"});
       </script>
+      <% } else { %>
+        <script>
+          new PrettyDropdownSelect("cards-on-file-dropdown",
+          <%- stringifyJSON(cardsData) %>,
+          {placeholder: "Select card", placeholderImg: "/images/no-card.svg", addonIds:["no-card"]});
+        </script>
+      <% } %>
 
       <script>
         initializeAmountBar("amount-bar", <%- formatMoney %>, "<%- giftCard.balanceMoney.currency %>");

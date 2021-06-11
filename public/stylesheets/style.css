@@ -91,6 +91,10 @@ form {
   box-sizing: border-box;
 }
 
+.hidden {
+  display: none;
+}
+
 /**
   Header
 */
@@ -456,4 +460,25 @@ span.no-content {
 .success-toast img {
   vertical-align: middle;
   margin-right: 12px;
+}
+
+/**
+*  Others
+*/
+#add-customer {
+  padding: 0px 24px 24px 24px;
+}
+
+#no-card {
+  padding: 8px 24px;
+}
+
+#add-customer button {
+  margin: 0;
+}
+
+#no-card span {
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(0, 0, 0, 0.55);
 }

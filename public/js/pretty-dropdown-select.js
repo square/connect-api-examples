@@ -38,9 +38,7 @@ class PrettyDropdownSelect {
 
     var self = this;
     window.onclick = function(event) {
-      var parentNode = self.dropdownElement.querySelector(".pretty-dropdown__selected");
-    
-      if (!parentNode.contains(event.target)) {
+      if (!self.dropdownElement.contains(event.target)) {
         var openDropdown = self.dropdownElement.querySelector(".pretty-dropdown__options-wrapper");
         if (openDropdown.classList.contains("show")) {
           openDropdown.classList.remove("show");
@@ -153,7 +151,6 @@ class PrettyDropdownSelect {
 
   _applyOptions() {
     if (this.options.placeholderImg) {
-      console.log(this.options.placeholderImg);
       this.dropdownElement
       .querySelector(".pretty-dropdown__selected-image")
       .querySelector("img").src = this.options.placeholderImg;
@@ -161,6 +158,20 @@ class PrettyDropdownSelect {
 
     if (this.options.disabled) {
       this.dropdownElement.classList.add("pretty-dropdown__disabled");
+    }
+
+    if (this.options.placeholder) {
+      this.dropdownElement.querySelector(".pretty-dropdown__selected-description").innerText = this.options.placeholder;
+      this.dropdownElement.querySelector(".pretty-dropdown__selected-display-value").innerText = null;
+    }
+
+    if (this.options.addonIds) {
+      this.options.addonIds.forEach((id) => {
+        var element = document.getElementById(id);
+        if (element) {
+          this.dropdownElement.querySelector(".pretty-dropdown__options-wrapper").appendChild(element);
+        }
+      });
     }
 
   }
@@ -183,6 +194,8 @@ class PrettyDropdownSelect {
   
     // Update the actual value to be submitted
     document.getElementById("pretty-dropdown__value").setAttribute("value", value);
+
+    this._showOptions();
   }
   
   _showOptions() {

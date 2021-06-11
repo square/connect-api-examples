@@ -30,10 +30,16 @@
       </div>
     </div>
 
+    <div id="add-customer">
+      <button class="square-button btn-secondary">Add customer</button>
+    </div>
+
     <% var customerData = getCustomersData(customers); %>
     <script src="/js/pretty-dropdown-select.js"></script>
     <script>
-      new PrettyDropdownSelect("login-dropdown", <%- stringifyJSON(customerData) %>, { placeholderImg: "/images/profile.svg" });
+      new PrettyDropdownSelect("login-dropdown",
+      <%- stringifyJSON(customerData) %>,
+      { placeholderImg: "/images/profile.svg", placeholder: "Select customer", addonIds:["add-customer"] });
     </script>
 </body>
 
