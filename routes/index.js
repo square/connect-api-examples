@@ -17,12 +17,7 @@ limitations under the License.
 const express = require("express");
 const router = express.Router();
 const {
-  giftCardsApi,
-  giftCardActivitiesApi,
-  customersApi,
-  ordersApi,
-  paymentsApi,
-  locationsApi
+  customersApi
 } = require("../util/square-client");
 
 const dashboardRoute = require("./dashboard");
@@ -42,8 +37,10 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// Renders a fake login page that is just a list
-// of existing customers to choose from.
+/**
+ *  Renders a fake login page that shows a list of existing
+ *  customers to choose from.
+ */ 
 router.get("/login", async (req, res, next) => {
   let customers;
   try {
@@ -54,14 +51,16 @@ router.get("/login", async (req, res, next) => {
     }
 
     res.render("pages/login", { customers })
-  } catch(error) {
+  } catch (error) {
     console.log(error);
     next(error);
   }
 });
 
-// Mimics the login action, no actual authentication.
-// In production, implement real login system.
+/**
+ * Mimics the login action, no actual authentication is implemented.
+ * ** Do not copy this code in production. **
+*/ 
 router.post("/login", async (req, res, next) => {
   if (req.body.customer) {
     req.session.loggedIn = true;

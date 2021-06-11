@@ -17,12 +17,7 @@ limitations under the License.
 const express = require("express");
 const router = express.Router();
 const {
-  giftCardsApi,
-  giftCardActivitiesApi,
-  customersApi,
-  ordersApi,
-  paymentsApi,
-  locationsApi
+  customersApi
 } = require("../util/square-client");
 
 const { checkLoginStatus, checkCustomerIdMatch, checkSandboxEnv } = require("../util/middleware");

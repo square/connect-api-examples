@@ -17,12 +17,7 @@ limitations under the License.
 const express = require("express");
 const router = express.Router();
 const {
-  giftCardsApi,
-  giftCardActivitiesApi,
-  customersApi,
-  ordersApi,
-  paymentsApi,
-  locationsApi
+  giftCardsApi
 } = require("../util/square-client");
 const { checkLoginStatus } = require("../util/middleware");
 
@@ -35,8 +30,12 @@ router.get("/", checkLoginStatus, async (req, res, next) => {
   // display a list of gift cards linked to the customer's account
   const deletion = req.query.deletion;
   try {
-    let { result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined,
-      undefined, req.session.customerId);
+    let { result: { giftCards } } = await giftCardsApi.listGiftCards(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      req.session.customerId);
     if (!giftCards) {
       giftCards = [];
     }
