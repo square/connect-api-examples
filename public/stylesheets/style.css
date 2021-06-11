@@ -447,7 +447,7 @@ span.no-content {
   display: flex;
 }
 
-.success-toast .success-toast__large {
+.success-toast.success-toast__large div {
   width: 285px;
 }
 
