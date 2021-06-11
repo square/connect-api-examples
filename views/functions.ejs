@@ -115,4 +115,25 @@ getImageForBrand = function(brand) {
 
   return prefix + name + extension;
 }
+
+getCustomersData = function(customers) {
+  return customers.map((customer) => {
+    return {
+    description: "Customer",
+    value: customer.id,
+    displayValue: customer.givenName + " " + customer.familyName,
+    }
+ });
+}
+
+getCardsData = function(cards) {
+  return cards.map((card) => {
+    return {
+    img: getImageForBrand(card.cardBrand),
+    value: card.id,
+    displayValue: capitalize(card.cardBrand) + " ●●●● " + card.last4,
+    description: capitalize(card.cardBrand)
+    }
+  });
+}
 %>

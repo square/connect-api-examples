@@ -95,12 +95,12 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
  * (i.e. loading gift cards using an existing gift card).
  */
  router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
-  const gan = req.params.gan;
   const cardCreated = req.query.cardCreated;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
-    const creditCardsOnFile = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
-    res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard, customerId: req.session.customerId, cardCreated });
+    const cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
+
+    res.render("pages/add-funds", { cards, giftCard: res.locals.giftCard, customerId: req.session.customerId, cardCreated });
   } catch (error) {
     console.error(error);
     next(error);

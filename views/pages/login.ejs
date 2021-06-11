@@ -2,6 +2,7 @@
 
 <head>
   <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/pretty-dropdown-select.css" rel="stylesheet" type="text/css">
   <% include("../functions") %>
 </head>
 
@@ -16,39 +17,28 @@
       <div id="login">
         <h5>Login</h5>
         <div id="login-dropdown">
-          <ul class="pretty-dropdown__options">
-            <% customers.forEach(function(customer) { %>
-              <li onclick="select(this)" 
-                pretty-dropdown-value="<%= customer.id %>"
-                pretty-dropdown-primary-display="Customer"
-                pretty-dropdown-secondary-display="<%= customer.givenName %> <%= customer.familyName %>">
-                <div class="pretty-dropdown__option">
-                  <%= customer.givenName %>
-                  <%= customer.familyName %>
-                </div>
-              </li>
-              <% }); %>
-          </ul>
         </div>
         <form action="/login" method="POST">
-          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="<%= customers[0].id %>" />
+          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="" required />
           <button class="square-button" type="submit">Login</button>
         </form>
         <div class="message">
-          Don’t forget you can manage Customers and Gift Cards using Square’s API Explorer to call the API. This sample
+          Don’t forget you can manage Customers and Gift Cards using Square’s <a href="https://developer.squareup.com/explorer/square">API Explorer</a> to call the API. This sample
           app will update accordingly.
         </div>
       </div>
     </div>
 
-    <script src="/js/pretty-dropdown.js"></script>
+    <div id="add-customer">
+      <button class="square-button btn-secondary">Add customer</button>
+    </div>
+
+    <% var customerData = getCustomersData(customers); %>
+    <script src="/js/pretty-dropdown-select.js"></script>
     <script>
-      initializeDropdown("login-dropdown",
-        {
-          img: "/images/profile.svg",
-          primary: "Customer",
-          secondary: "<%= customers[0].givenName %> <%= customers[0].familyName %>"
-        });
+      new PrettyDropdownSelect("login-dropdown",
+      <%- stringifyJSON(customerData) %>,
+      { placeholderImg: "/images/profile.svg", placeholder: "Select customer", addonIds:["add-customer"] });
     </script>
 </body>
 
