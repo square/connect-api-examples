@@ -447,6 +447,10 @@ span.no-content {
   display: flex;
 }
 
+.success-toast__large {
+  width: 285px !important;
+}
+
 .success-toast div {
   position: absolute;
   width: 206px;

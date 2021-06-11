@@ -71,12 +71,18 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
       referenceId
     });
 
-    // Add test card on file for that customer.
-    await customersApi.createCustomerCard(customer.id, {
-      cardNonce: "cnon:card-nonce-ok"
-    });
+    // Since listCustomers endpoint has a delay, we want to store this newly
+    // created customerId temporarily.
+    if (!req.session.missingCustomers) {
+      req.session.missingCustomers = [];
+    }
 
-    res.redirect("/login?customerCreated=success");
+    req.session.missingCustomers.push(
+      { id: customer.id, givenName: customer.givenName, familyName: customer.familyName });
+
+    res.redirect("/login?customerCreated=success&"
+     + "givenName=" + customer.givenName + "&"
+     + "familyName=" + customer.familyName);
   } catch (error) {
     console.error(error);
     next(error);

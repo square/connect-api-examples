@@ -46,6 +46,8 @@ router.get("/", async (req, res, next) => {
 // of existing customers to choose from.
 router.get("/login", async (req, res, next) => {
   const customerCreated = req.query.customerCreated;
+  const customerCreatedGivenName = req.query.givenName;
+  const customerCreatedFamilyName = req.query.familyName;
   let customers;
   try {
     const response = await customersApi.listCustomers();
@@ -54,7 +56,22 @@ router.get("/login", async (req, res, next) => {
       customers = [];
     }
 
-    res.render("pages/login", { customers, customerCreated })
+    const customerIds = customers.map(customer => customer.id);
+
+    // Check if there are any missing customers that need to be added to the list of available customers.
+    if (req.session.missingCustomers) {
+      req.session.missingCustomers = req.session.missingCustomers
+        .filter(missingCustomer => !customerIds.includes(missingCustomer.id));
+
+      // Those who aren't available yet, should be appended to our retrieved list of customers.
+      console.log(req.session.missingCustomers);
+      console.log(customers);
+      customers = customers.concat(req.session.missingCustomers);
+    }
+    console.log(customers);
+
+    res.render("pages/login",
+      { customers, customerCreated, customerCreatedGivenName, customerCreatedFamilyName });
   } catch(error) {
     console.log(error);
     next(error);
@@ -72,7 +89,8 @@ router.post("/login", async (req, res, next) => {
 })
 
 router.get("/logout", async (req, res, next) => {
-  req.session.destroy();
+  req.session.customerId = null;
+  req.session.loggedIn = false;
   res.redirect("/");
 });
 
