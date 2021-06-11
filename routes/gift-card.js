@@ -98,7 +98,8 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
   const cardCreated = req.query.cardCreated;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
-    const cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");  
+    const cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
+
     res.render("pages/add-funds", { cards, giftCard: res.locals.giftCard, customerId: req.session.customerId, cardCreated });
   } catch (error) {
     console.error(error);

@@ -62,9 +62,9 @@
           </div>
         </div>
         <form class="form-control" action="/gift-card/<%= giftCard.gan %>/add-funds" method="POST">
-          <input name="cardId" id="pretty-dropdown__value" hidden=true type="text" value="" %> />
-          <input name="amount" id="amount-bar__value" hidden=true type="text" value="5" />
-          <input name="state" id="state__value" hidden=true type="text" value=<%=giftCard.state%> />
+          <input name="cardId" id="pretty-dropdown__value" hidden=true type="text" value="" required />
+          <input name="amount" id="amount-bar__value" hidden=true type="text" value="5" required />
+          <input name="state" id="state__value" hidden=true type="text" value="<%= giftCard.state %>" required />
           <button id="pay-button" class="square-button" type="submit"></button>
         </form>
         <% if (cardCreated && cardCreated === "success") { %>

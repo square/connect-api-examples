@@ -163,6 +163,7 @@ class PrettyDropdownSelect {
     if (this.options.placeholder) {
       this.dropdownElement.querySelector(".pretty-dropdown__selected-description").innerText = this.options.placeholder;
       this.dropdownElement.querySelector(".pretty-dropdown__selected-display-value").innerText = null;
+      document.getElementById("pretty-dropdown__value").setAttribute("value", "");
     }
 
     if (this.options.addonIds) {

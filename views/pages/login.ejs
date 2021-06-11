@@ -1,4 +1,3 @@
-<% include("../functions") %> 
 <html>
 
 <head>
@@ -20,7 +19,7 @@
         <div id="login-dropdown">
         </div>
         <form action="/login" method="POST">
-          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="" />
+          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="" required />
           <button class="square-button" type="submit">Login</button>
         </form>
         <div class="message">
