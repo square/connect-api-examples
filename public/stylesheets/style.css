@@ -147,6 +147,7 @@ form {
 .dashboard {
   max-width: 724px;
   margin: 0 auto;
+  margin-bottom: 250px;
 }
 
 .dashboard__cards {
@@ -402,6 +403,8 @@ ul.transaction-history-list {
   border: 2.5px solid #006AFF;
   box-sizing: border-box;
   border-radius: 6px;
+  padding: 8px;
+  font-size: 14px;
 }
 
 #custom-amount {
@@ -445,10 +448,10 @@ span.no-content {
 .success-toast {
   justify-content: center;
   display: flex;
+  margin-top: 60px;
 }
 
 .success-toast div {
-  position: absolute;
   width: 206px;
   height: 48px;
   line-height: 48px;
@@ -458,12 +461,34 @@ span.no-content {
   box-sizing: border-box;
   border-radius: 50px;
   justify-content: center;
-  margin-top: 40px;
+  background-color: white;
 }
 
 .success-toast img {
   vertical-align: middle;
   margin-right: 12px;
+}
+
+.developer-note {
+  justify-content: center;
+  display: flex;
+  background-color: white;
+  margin-top: 60px;
+}
+
+.developer-note div {
+  width: 350px;
+  padding: 24px;
+  background-color: rgba(245, 246, 247, 1);
+  border-radius: 12px;
+}
+
+.developer-note div h5 {
+  margin-top: 0px;
+}
+
+.developer-note span {
+  color: #5F666C;
 }
 
 /**
