@@ -48,16 +48,7 @@ router.get("/login", async (req, res, next) => {
     const response = await customersApi.listCustomers();
     customers = response.result.customers;
 
-    // data for building the login dropdown selection list items
-    customerData = customers.map((customer) => {
-      return {
-        description: "Customer",
-        value: customer.id,
-        displayValue: customer.givenName + " " + customer.familyName,
-      }
-    })
-
-    res.render("pages/login", {customers, customerData})
+    res.render("pages/login", { customers })
   } catch(error) {
     console.log(error);
     next(error);

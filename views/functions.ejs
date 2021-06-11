@@ -84,4 +84,56 @@ stringifyJSON = function(data) {
     typeof value === "bigint" ? value.toString() : value
   );
 }
+
+capitalize = function(str) {
+  if(str.includes("_")) {
+    const words = str.split("_");
+    return capitalize(words[0]) + " " + capitalize(words[1]);
+  }
+  return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
+}
+
+getImageForBrand = function(brand) {
+  // Wiring the images for each card type. 
+  // If path changes or you want to support more cards, change the code here.
+  const prefix = "/images/"
+  const extension = ".svg";
+  let name = "";
+  switch(brand) {
+    case "VISA": 
+      name = "visa";
+      break;
+    case "MASTERCARD":
+      name = "mastercard";
+      break;
+    case "AMERICAN_EXPRESS":
+      name = "apex"
+      break;
+    default:
+      break;
+  }
+
+  return prefix + name + extension;
+}
+
+getCustomersData = function(customers) {
+  return customers.map((customer) => {
+    return {
+    description: "Customer",
+    value: customer.id,
+    displayValue: customer.givenName + " " + customer.familyName,
+    }
+ });
+}
+
+getCardsData = function(cards) {
+  return cards.map((card) => {
+    return {
+    img: getImageForBrand(card.cardBrand),
+    value: card.id,
+    displayValue: capitalize(card.cardBrand) + " ●●●● " + card.last4,
+    description: capitalize(card.cardBrand)
+    }
+  });
+}
 %>

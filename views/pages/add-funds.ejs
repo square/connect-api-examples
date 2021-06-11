@@ -71,6 +71,7 @@
       <script src="/js/pretty-dropdown-select.js"></script>
       <script src="/js/amount-bar.js"></script>
 
+      <% var cardsData = getCardsData(cards); %>
       <script>
         new PrettyDropdownSelect("cards-on-file-dropdown", <%- stringifyJSON(cardsData) %>);
       </script>

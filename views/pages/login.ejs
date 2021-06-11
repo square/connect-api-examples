@@ -1,3 +1,4 @@
+<% include("../functions") %> 
 <html>
 
 <head>
@@ -29,6 +30,7 @@
       </div>
     </div>
 
+    <% var customerData = getCustomersData(customers); %>
     <script src="/js/pretty-dropdown-select.js"></script>
     <script>
       new PrettyDropdownSelect("login-dropdown", <%- stringifyJSON(customerData) %>, { placeholderImg: "/images/profile.svg" });
