@@ -28,6 +28,34 @@ const {
 
 const { checkLoginStatus, checkCardOwner, checkInactiveCard } = require("../util/middleware");
 
+
+/**
+ * POST /gift-card/create
+ *
+ * Creates a gift card for the logged in customer.
+ * It will create an inactive gift card with 0 balance,
+ * and link it to the logged in customer.
+ */
+router.post("/create", checkLoginStatus, async (req, res, next) => {
+  try {
+    // The following information will come from the request/session.
+    const customerId = req.session.customerId;
+
+    // Create an inactive gift card.
+    const giftCardRequest = generateGiftCardRequest();
+    const { result: { giftCard } } = await giftCardsApi.createGiftCard(giftCardRequest);
+
+    // Now link it to the customer logged in!
+    await giftCardsApi.linkCustomerToGiftCard(giftCard.id, { customerId });
+
+    // Redirect to GET /gift-card/:gan, which will render the card-detail page.
+    res.redirect("/gift-card/" + giftCard.gan);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 /**
  * GET /gift-card/:gan
  *
@@ -45,10 +73,10 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
  *
  * Displays the transaction history for a card
  */
- router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   try {
     const giftCard = res.locals.giftCard;
-    const { result : { giftCardActivities } } = await giftCardActivitiesApi.listGiftCardActivities(giftCard.id);
+    const { result: { giftCardActivities } } = await giftCardActivitiesApi.listGiftCardActivities(giftCard.id);
 
     res.render("pages/history", { giftCard, giftCardActivities });
   } catch (error) {
@@ -63,7 +91,7 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
  * "Deletes" a card by unlinking it from the customer.
  * Card must be in NOT_ACTIVE state.
  */
- router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkInactiveCard, async (req, res, next) => {
+router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkInactiveCard, async (req, res, next) => {
   try {
     const giftCard = res.locals.giftCard;
     const customerId = req.session.customerId;
@@ -78,35 +106,6 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
 });
 
 /**
- * POST /gift-card/create
- *
- * Creates a gift card for the logged in customer.
- * It will create an inactive gift card with 0 balance,
- * and link it to the logged in customer.
- */
-router.post("/create", checkLoginStatus, async (req, res, next) => {
-  try {
-    // The following information will come from the request/session.
-    const customerId = req.session.customerId;
-
-    // Create an inactive gift card.
-    const giftCardRequest = generateGiftCardRequest();
-    const { result: { giftCard }} = await giftCardsApi.createGiftCard(giftCardRequest);
-
-    // Now link it to the customer logged in!
-    await giftCardsApi.linkCustomerToGiftCard(giftCard.id, {
-      customerId
-    });
-
-    // Redirect to GET /gift-card/:gan, which will render the card-detail page.
-    res.redirect("/gift-card/" + giftCard.gan);
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-
-/**
  * GET /gift-card/:gan/add-funds
  *
  * Renders the `add funds` page.
@@ -114,13 +113,15 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
  * You can add additional logic to filter out payment methods that might not be allowed
  * (i.e. loading gift cards using an existing gift card).
  */
- router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const cardCreated = req.query.cardCreated;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
     const cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
+    const giftCard = res.locals.giftCard;
+    const customerId = req.session.customerId;
 
-    res.render("pages/add-funds", { cards, giftCard: res.locals.giftCard, customerId: req.session.customerId, cardCreated });
+    res.render("pages/add-funds", { cards, giftCard, customerId, cardCreated });
   } catch (error) {
     console.error(error);
     next(error);
@@ -155,7 +156,7 @@ router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res
 
     // Extract useful information from the order.
     const orderId = order.id;
-    const lineItemId = order.lineItems[0].uid;
+    const lineItemUid = order.lineItems[0].uid;
 
     // We have the order response, we can move on to the payment.
     const paymentRequest = generatePaymentRequest(customerId, amount, currency, paymentSource, orderId);
@@ -165,7 +166,7 @@ router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res
     // If the gift card is inactive, activate it with the amount given.
     // Otherwise, if the card is already active, load it with the amount given.
     const giftCardActivity = giftCardState === "NOT_ACTIVE" ? "ACTIVATE" : "LOAD";
-    const giftCardActivityRequest = generateGiftCardActivityRequest(giftCardActivity, gan, orderId, lineItemId);
+    const giftCardActivityRequest = generateGiftCardActivityRequest(giftCardActivity, gan, orderId, lineItemUid);
     await giftCardActivitiesApi.createGiftCardActivity(giftCardActivityRequest);
 
     // Redirect to GET /gift-card/:gan, which will render the card-detail page, with a success message.
@@ -190,13 +191,13 @@ function generateOrderRequest(customerId, amount, currency) {
           quantity: "1",
           itemType: "GIFT_CARD",
           basePriceMoney: {
-            amount: amount,
-            currency: currency
+            amount,
+            currency
           }
         }
       ],
-      locationId: locationId,
-      customerId: customerId
+      locationId,
+      customerId
     }
   };
 }
@@ -210,12 +211,12 @@ function generatePaymentRequest(customerId, amount, currency, paymentSource, ord
     idempotencyKey: uuidv4(),
     sourceId: paymentSource,
     amountMoney: {
-      amount: amount,
-      currency: currency
+      amount,
+      currency
     },
-    orderId: orderId,
-    locationId: locationId,
-    customerId: customerId
+    orderId,
+    locationId,
+    customerId
   };
 }
 
@@ -226,7 +227,7 @@ function generatePaymentRequest(customerId, amount, currency, paymentSource, ord
 function generateGiftCardRequest() {
   return {
     idempotencyKey: uuidv4(),
-    locationId: locationId,
+    locationId,
     giftCard: {
       type: "DIGITAL"
     }
@@ -237,16 +238,16 @@ function generateGiftCardRequest() {
  * Helper function for generating a create gift card activity request.
  * This function builds the request that will be used in the POST "v2/gift-cards/activities" API call.
  */
- function generateGiftCardActivityRequest(activityName, gan, orderId, lineItemId) {
-  const activityObject = getActivityObject(activityName, orderId, lineItemId);
-  const [ key ] = Object.keys(activityObject);
-  const [ value ] = Object.values(activityObject);
+function generateGiftCardActivityRequest(activityType, giftCardGan, orderId, lineItemUid) {
+  const activityObject = getActivityObject(activityType, orderId, lineItemUid);
+  const [key] = Object.keys(activityObject);
+  const [value] = Object.values(activityObject);
   const request = {
     idempotencyKey: uuidv4(),
     giftCardActivity: {
-      giftCardGan: gan,
-      type: activityName,
-      locationId: locationId,
+      giftCardGan,
+      type: activityType,
+      locationId
     }
   };
   // Add the correct activity object to our request.
@@ -261,20 +262,20 @@ function generateGiftCardRequest() {
  * and LOAD (loading an existing gift card).
  * This functionality can be extended to other activities as well.
  */
-function getActivityObject(activityName, orderId, lineItemId) {
-  switch(activityName) {
+function getActivityObject(activityType, orderId, lineItemUid) {
+  switch (activityType) {
     case "ACTIVATE":
       return {
         activateActivityDetails: {
-          orderId: orderId,
-          lineItemUid: lineItemId
+          orderId,
+          lineItemUid
         }
       };
     case "LOAD":
       return {
         loadActivityDetails: {
-          orderId: orderId,
-          lineItemUid: lineItemId
+          orderId,
+          lineItemUid
         }
       };
     // Add more Gift Card Activities types you wish to support here!

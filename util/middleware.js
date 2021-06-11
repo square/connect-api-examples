@@ -12,7 +12,7 @@ async function checkLoginStatus(req, res, next) {
 
 /**
  * If the gift card being accessed does not belong to the customer
- * logged in, redirect to the login page
+ * logged in, redirect to the login page.
  * */
 async function checkCardOwner(req, res, next) {
   if (req.params.gan) {

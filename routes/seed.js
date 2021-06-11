@@ -18,12 +18,7 @@ const express = require("express");
 const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const {
-  giftCardsApi,
-  giftCardActivitiesApi,
-  customersApi,
-  ordersApi,
-  paymentsApi,
-  locationsApi
+  customersApi
 } = require("../util/square-client");
 
 const faker = require("faker");
