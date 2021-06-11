@@ -28,7 +28,7 @@ const {
 
 const faker = require("faker");
 const { checkLoginStatus, checkCustomerIdMatch, checkSandboxEnv } = require("../util/middleware");
-const referenceId = "GiftCardSampleApp";
+const REFERENCE_ID = "GiftCardSampleApp";
 
 /**
  * POST /seed/:customerId/create-card
@@ -60,14 +60,14 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
  */
  router.post("/create-customer", async (req, res, next) => {
   try {
-    const fakeNameParts = faker.name.findName().split(" ");
+    const [givenName, familyName] = faker.name.findName().split(" ");
 
     // Create a customer with a fake name.
     const { result: { customer } } = await customersApi.createCustomer({
       idempotencyKey: uuidv4(),
-      givenName: fakeNameParts[0],
-      familyName: fakeNameParts[1],
-      referenceId
+      givenName,
+      familyName,
+      referenceId: REFERENCE_ID
     });
 
     // Since listCustomers endpoint has a delay, we want to store this newly
