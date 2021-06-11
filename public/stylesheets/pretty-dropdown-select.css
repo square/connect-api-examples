@@ -44,6 +44,11 @@
   border-radius: 6px;
 }
 
+.pretty-dropdown__icon.flipped {
+  transform: rotate(180deg);
+  transition: all 0.3s ease-in-out;
+}
+
 .pretty-dropdown__options {
   width: 100%;
   margin: 0;

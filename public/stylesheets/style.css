@@ -111,6 +111,10 @@ form {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+.top-nav img {
+  margin-right: 15px;
+}
+
 .top-nav .btn-secondary {
   margin: 0;
   width: auto;
