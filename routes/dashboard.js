@@ -36,10 +36,13 @@ router.get("/", checkLoginStatus, async (req, res, next) => {
   // display a list of gift cards linked to the customer's account
   const deletion = req.query.deletion;
   try {
-    const {result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined,
+    let { result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined,
       undefined, req.session.customerId);
+    if (!giftCards) {
+      giftCards = [];
+    }
 
-    res.render("pages/dashboard", giftCards ? { giftCards, deletion } : { giftCards: [], deletion });
+    res.render("pages/dashboard", { giftCards, deletion });
   } catch (error) {
     console.log(error);
     next(error);
