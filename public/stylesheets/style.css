@@ -448,7 +448,7 @@ span.no-content {
 }
 
 .success-toast div {
-  position: absolute;
+  position: fixed;
   width: 206px;
   height: 48px;
   line-height: 48px;
@@ -458,12 +458,35 @@ span.no-content {
   box-sizing: border-box;
   border-radius: 50px;
   justify-content: center;
-  margin-top: 40px;
+  bottom: 60px;
+  background-color: white;
 }
 
 .success-toast img {
   vertical-align: middle;
   margin-right: 12px;
+}
+
+.developer-note {
+  justify-content: center;
+  display: flex;
+}
+
+.developer-note div {
+  width: 350px;
+  padding: 24px;
+  background-color: rgba(245, 246, 247, 1);
+  bottom: 60px;
+  position: fixed;
+  border-radius: 12px;
+}
+
+.developer-note div h5 {
+  margin-top: 0px;
+}
+
+.developer-note span {
+  color: #5F666C;
 }
 
 /**
