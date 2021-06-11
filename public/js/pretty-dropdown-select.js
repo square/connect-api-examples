@@ -208,6 +208,7 @@ class PrettyDropdownSelect {
   _showOptions() {
     if (!this.dropdownElement.classList.contains("pretty-dropdown__disabled")) {
       this.dropdownElement.querySelector(".pretty-dropdown__options-wrapper").classList.toggle("show");
+      this.dropdownElement.querySelector(".pretty-dropdown__icon").classList.toggle("flipped");
     }
   }
 }
