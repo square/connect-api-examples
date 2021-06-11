@@ -57,7 +57,6 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
  * POST /seed/create-customer
  *
  * This endpoint creates a test customer that can be used in the sample app.
- * It will automatically create a test card on file for that customer.
  */
  router.post("/create-customer", async (req, res, next) => {
   try {
