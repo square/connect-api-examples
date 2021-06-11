@@ -40,12 +40,10 @@ router.get("/", async (req, res, next) => {
 /**
  *  Renders a fake login page that shows a list of existing
  *  customers to choose from.
- */ 
+ */
 router.get("/login", async (req, res, next) => {
-  let customers;
   try {
-    const response = await customersApi.listCustomers();
-    customers = response.result.customers;
+    let { result: { customers } } = await customersApi.listCustomers();
     if (!customers) {
       customers = [];
     }
@@ -60,14 +58,14 @@ router.get("/login", async (req, res, next) => {
 /**
  * Mimics the login action, no actual authentication is implemented.
  * ** Do not copy this code in production. **
-*/ 
+*/
 router.post("/login", async (req, res, next) => {
   if (req.body.customer) {
     req.session.loggedIn = true;
     req.session.customerId = req.body.customer;
   }
   res.redirect("/");
-})
+});
 
 router.get("/logout", async (req, res, next) => {
   req.session.destroy();
