@@ -73,6 +73,16 @@ ul.pretty-dropdown__options li .pretty-dropdown__option:hover {
   cursor: pointer;
 }
 
+.pretty-dropdown__options li.option-selected:after {
+  content: "";
+  display: inline-block;
+  background: url("/images/selected.svg") center no-repeat;
+  width: 40px;
+  height: 40px;
+  margin-left: -40px;
+  margin-right: 0;
+}
+
 .pretty-dropdown__selected-values {
   display: flex;
   flex-direction: column;

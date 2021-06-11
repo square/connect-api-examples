@@ -177,7 +177,13 @@ class PrettyDropdownSelect {
   }
 
   _select(event) {
+    var currentSelected = this.dropdownElement.querySelector(".option-selected")
+    if (currentSelected) {
+      currentSelected.classList.remove("option-selected");
+    }
+    
     var listItem = event.target.closest("li");
+    listItem.classList.add("option-selected");
     var description = listItem.getAttribute("pretty-dropdown-description");
     var displayValue = listItem.querySelector("span").innerText;
     var value = listItem.getAttribute("pretty-dropdown-value");
