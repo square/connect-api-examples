@@ -45,6 +45,7 @@ router.get("/", async (req, res, next) => {
 // Renders a fake login page that is just a list
 // of existing customers to choose from.
 router.get("/login", async (req, res, next) => {
+  const customerCreated = req.query.customerCreated;
   let customers;
   try {
     const response = await customersApi.listCustomers();
@@ -53,7 +54,7 @@ router.get("/login", async (req, res, next) => {
       customers = [];
     }
 
-    res.render("pages/login", { customers })
+    res.render("pages/login", { customers, customerCreated })
   } catch(error) {
     console.log(error);
     next(error);

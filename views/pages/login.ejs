@@ -26,11 +26,20 @@
           Don’t forget you can manage Customers and Gift Cards using Square’s <a href="https://developer.squareup.com/explorer/square">API Explorer</a> to call the API. This sample
           app will update accordingly.
         </div>
+        <% if (customerCreated && customerCreated === "success" ) { %>
+          <div class="success-toast">
+            <div>
+              <img src="/images/success.svg">Created test customer!
+            </div>
+          </div>
+        <% } %>
       </div>
     </div>
 
     <div id="add-customer">
-      <button class="square-button btn-secondary">Add customer</button>
+      <form action="/seed/create-customer" method="POST">
+        <button class="square-button btn-secondary" type="submit">Add customer</button>
+      </form>
     </div>
 
     <% var customerData = getCustomersData(customers); %>

@@ -16,6 +16,7 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
+const { v4: uuidv4 } = require("uuid");
 const {
   giftCardsApi,
   giftCardActivitiesApi,
@@ -25,7 +26,9 @@ const {
   locationsApi
 } = require("../util/square-client");
 
+const faker = require("faker");
 const { checkLoginStatus, checkCustomerIdMatch, checkSandboxEnv } = require("../util/middleware");
+const referenceId = "GiftCardSampleApp";
 
 /**
  * POST /seed/:customerId/create-card
@@ -44,6 +47,36 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
 
     // Redirect to the add-funds page, which will now present the newly created card.
     res.redirect("/gift-card/" + gan + "/add-funds/?cardCreated=success");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+/**
+ * POST /seed/create-customer
+ *
+ * This endpoint creates a test customer that can be used in the sample app.
+ * It will automatically create a test card on file for that customer.
+ */
+ router.post("/create-customer", async (req, res, next) => {
+  try {
+    const fakeNameParts = faker.name.findName().split(" ");
+
+    // Create a customer with a fake name.
+    const { result: { customer } } = await customersApi.createCustomer({
+      idempotencyKey: uuidv4(),
+      givenName: fakeNameParts[0],
+      familyName: fakeNameParts[1],
+      referenceId
+    });
+
+    // Add test card on file for that customer.
+    await customersApi.createCustomerCard(customer.id, {
+      cardNonce: "cnon:card-nonce-ok"
+    });
+
+    res.redirect("/login?customerCreated=success");
   } catch (error) {
     console.error(error);
     next(error);
