@@ -29,8 +29,7 @@ const { checkLoginStatus } = require("../util/middleware");
 /**
  * GET /dashboard
  *
- * Lists all ACTIVE gift cards for a user. If the user does not have any
- * card, show a default page.
+ * Lists all gift cards for a user.
  */
 router.get("/", checkLoginStatus, async (req, res, next) => {
   // display a list of gift cards linked to the customer's account
