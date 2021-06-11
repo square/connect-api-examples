@@ -6,6 +6,7 @@
   position: relative;
   font-size: 14px;
   line-height: 22px;
+  cursor: pointer;
 }
 
 .pretty-dropdown__selected {
