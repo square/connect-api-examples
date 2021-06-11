@@ -42,7 +42,7 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
 
 /**
  * GET /gift-card/:gan/history
- * 
+ *
  * Displays the transaction history for a card
  */
  router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, next) => {
@@ -95,11 +95,11 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
  * (i.e. loading gift cards using an existing gift card).
  */
  router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+  const cardCreated = req.query.cardCreated;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
-    const cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
-
-    res.render("pages/add-funds", { cards, giftCard: res.locals.giftCard });
+    const cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");  
+    res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard, customerId: req.session.customerId, cardCreated });
   } catch (error) {
     console.error(error);
     next(error);
