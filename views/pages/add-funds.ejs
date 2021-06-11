@@ -67,6 +67,13 @@
           <input name="state" id="state__value" hidden=true type="text" value=<%=giftCard.state%> />
           <button id="pay-button" class="square-button" type="submit"></button>
         </form>
+        <% if (cardCreated && cardCreated === "success") { %>
+          <div class="success-toast">
+            <div>
+              <img src="/images/success.svg">Created test card!
+            </div>
+          </div>
+        <% } %>
       </div>
 
       <% if (cards.length === 0) { %>
@@ -75,7 +82,9 @@
         <span>This account currently does not have cards on file. 
           Click on the button below to add a card on file, this action is only supported in sandbox mode.
         </span>
-        <button class="square-button">Add card</button>
+        <form method="POST" action="/seed/<%= customerId %>/create-card?gan=<%= giftCard.gan %>">
+          <button class="square-button" type="submit">Add card</button>
+        </form>
       </div>
       <% } %>
 
