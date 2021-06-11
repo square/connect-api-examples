@@ -147,6 +147,7 @@ form {
 .dashboard {
   max-width: 724px;
   margin: 0 auto;
+  margin-bottom: 250px;
 }
 
 .dashboard__cards {
@@ -402,6 +403,8 @@ ul.transaction-history-list {
   border: 2.5px solid #006AFF;
   box-sizing: border-box;
   border-radius: 6px;
+  padding: 8px;
+  font-size: 14px;
 }
 
 #custom-amount {
