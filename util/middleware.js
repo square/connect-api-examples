@@ -56,9 +56,21 @@ async function checkSandboxEnv(req, res, next) {
   }
 }
 
+/**
+ * Verify that the card provided by the gan is inactive (i.e. NOT_ACTIVE).
+ */
+ async function checkInactiveCard(req, res, next) {
+  if (res.locals.giftCard.state !== "NOT_ACTIVE") {
+    res.redirect("/");
+  } else {
+    next();
+  }
+}
+
 module.exports = {
   checkLoginStatus,
   checkCardOwner,
   checkSandboxEnv,
-  checkCustomerIdMatch
+  checkCustomerIdMatch,
+  checkInactiveCard
 };

@@ -28,9 +28,14 @@
               </a>
               <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Delete card</li>
               <% } else { %>
-                <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Transaction
-                  history</li>
-                <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--critical">Delete card</li>
+                <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">
+                  Transaction history
+                </li>
+                <form name="deleteForm" action="/gift-card/<%= giftCard.gan %>/delete" method="POST">
+                  <li onclick="deleteForm.submit();" class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--critical">
+                    Delete card
+                  </li>
+                </form>
                 <% } %>
           </ul>
         </div>

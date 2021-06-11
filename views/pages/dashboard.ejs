@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -40,6 +40,13 @@
         </div>
       </form>
     </div>
+    <% if (deletion && deletion === "success") { %>
+      <div class="success-toast">
+        <div>
+          <img src="/images/success.svg">Card deleted successfully!
+        </div>
+      </div>
+    <% } %>
   </div>
 </body>
 

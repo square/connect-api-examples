@@ -26,7 +26,7 @@ const {
   paymentsApi,
 } = require("../util/square-client");
 
-const { checkLoginStatus, checkCardOwner } = require("../util/middleware");
+const { checkLoginStatus, checkCardOwner, checkInactiveCard } = require("../util/middleware");
 
 /**
  * GET /gift-card/:gan
@@ -51,6 +51,26 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
     const { result : { giftCardActivities } } = await giftCardActivitiesApi.listGiftCardActivities(giftCard.id);
 
     res.render("pages/history", { giftCard, giftCardActivities });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+/**
+ * POST /gift-card/:gan/delete
+ *
+ * "Deletes" a card by unlinking it from the customer.
+ * Card must be in NOT_ACTIVE state.
+ */
+ router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkInactiveCard, async (req, res, next) => {
+  try {
+    const giftCard = res.locals.giftCard;
+    const customerId = req.session.customerId;
+    await giftCardsApi.unlinkCustomerFromGiftCard(giftCard.id, { customerId });
+
+    // Redirect to the dashboard, with a successful deletion query parameter.
+    res.redirect("/dashboard/?deletion=success");
   } catch (error) {
     console.error(error);
     next(error);
