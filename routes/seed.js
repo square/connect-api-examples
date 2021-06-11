@@ -16,6 +16,7 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
+const { v4: uuidv4 } = require("uuid");
 const {
   giftCardsApi,
   giftCardActivitiesApi,
@@ -25,7 +26,9 @@ const {
   locationsApi
 } = require("../util/square-client");
 
+const faker = require("faker");
 const { checkLoginStatus, checkCustomerIdMatch, checkSandboxEnv } = require("../util/middleware");
+const REFERENCE_ID = "GiftCardSampleApp";
 
 /**
  * POST /seed/:customerId/create-card
@@ -44,6 +47,46 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
 
     // Redirect to the add-funds page, which will now present the newly created card.
     res.redirect("/gift-card/" + gan + "/add-funds/?cardCreated=success");
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+/**
+ * POST /seed/create-customer
+ *
+ * This endpoint creates a test customer that can be used in the sample app.
+ */
+ router.post("/create-customer", async (req, res, next) => {
+  try {
+    const [givenName, familyName] = faker.name.findName().split(" ");
+
+    // Create a customer with a fake name.
+    const { result: { customer } } = await customersApi.createCustomer({
+      idempotencyKey: uuidv4(),
+      givenName,
+      familyName,
+      referenceId: REFERENCE_ID
+    });
+
+    // Since listCustomers endpoint has a delay, we want to store this newly
+    // created customerId temporarily.
+    if (!req.session.missingCustomers) {
+      req.session.missingCustomers = [];
+    }
+
+    req.session.missingCustomers.push(
+      {
+        id: customer.id,
+        givenName: customer.givenName,
+        familyName: customer.familyName
+      }
+    );
+
+    res.redirect("/login?customerCreated=success&"
+     + "givenName=" + customer.givenName + "&"
+     + "familyName=" + customer.familyName);
   } catch (error) {
     console.error(error);
     next(error);

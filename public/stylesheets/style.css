@@ -451,6 +451,10 @@ span.no-content {
   margin-top: 60px;
 }
 
+.success-toast.success-toast--large div {
+  width: 285px;
+}
+
 .success-toast div {
   width: 206px;
   height: 48px;
