@@ -77,7 +77,12 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
     }
 
     req.session.missingCustomers.push(
-      { id: customer.id, givenName: customer.givenName, familyName: customer.familyName });
+      {
+        id: customer.id,
+        givenName: customer.givenName,
+        familyName: customer.familyName
+      }
+    );
 
     res.redirect("/login?customerCreated=success&"
      + "givenName=" + customer.givenName + "&"
