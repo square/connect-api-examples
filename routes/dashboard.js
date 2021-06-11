@@ -28,22 +28,20 @@ const { checkLoginStatus } = require("../util/middleware");
 
 /**
  * GET /dashboard
- * 
- * Lists all ACTIVE gift cards for a user. If the user does not have any 
- * card, show a default page.
+ *
+ * Lists all gift cards for a user.
  */
 router.get("/", checkLoginStatus, async (req, res, next) => {
-  // display a list of gift cards linked to the
-  // customer's account
+  // display a list of gift cards linked to the customer's account
+  const deletion = req.query.deletion;
   try {
-    // TODO: filter only active cards
-    const {result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, req.session.customerId);
-
+    let { result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined,
+      undefined, req.session.customerId);
     if (!giftCards) {
-      res.render("pages/dashboard", { giftCards: [] });
-    } else {
-      res.render("pages/dashboard", { giftCards });
+      giftCards = [];
     }
+
+    res.render("pages/dashboard", { giftCards, deletion });
   } catch (error) {
     console.log(error);
     next(error);

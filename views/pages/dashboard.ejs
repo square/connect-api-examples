@@ -1,7 +1,7 @@
 <html>
 
 <head>
-  <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -40,6 +40,14 @@
         </div>
       </form>
     </div>
+    
+    <% if (deletion && deletion === "success") { %>
+      <div class="success-toast">
+        <div>
+          <img src="/images/success.svg">Card deleted successfully!
+        </div>
+      </div>
+    <% } %>
 
     <div class="developer-note">
       <div>
@@ -47,7 +55,6 @@
         <span>Accept Gift Card payments on your site using Square’s Web payments SDK. <a href="https://developer.squareup.com/docs/web-payments/overview" target="_blank">Open guide</a></span>
       </div>
     </div>
-
   </div>
 </body>
 
