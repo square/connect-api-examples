@@ -34,6 +34,21 @@
             </div>
           </div>
         <% } %>
+
+        <%if (reset && reset === "success") { %>
+          <div class="success-toast success-toast--large">
+            <div>
+              <img src="/images/success.svg">Data was reset successfully!
+            </div>
+          </div>
+        <% } %>
+        
+        <div class="developer-note">
+          <div>
+            <h5>Developer note</h5>
+            <span>Quickly reset all customer data created within this sample app. <a onclick="alert('are you sure');"href="/seed/reset">Reset now</a></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
