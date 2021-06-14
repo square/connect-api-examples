@@ -116,7 +116,7 @@ router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkInactiveCard,
 router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const cardCreated = req.query.cardCreated;
   try {
-    let { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
+    const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
     let cards = [];
     if (customer.cards) {
       cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
