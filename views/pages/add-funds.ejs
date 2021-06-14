@@ -30,41 +30,41 @@
           </div>
         </div>
 
-        <div class="amount-bar-wrapper">
-          <h5>Amount</h5>
-          <div class="section__row">
-              <div id="amount-bar" class="amount-bar">
-                <button class="btn active" type="button" amount-bar-value="500" onclick="selectButton(this)">
-                </button>
-                <button class="btn" type="button" amount-bar-value="1000" onclick="selectButton(this)">
-                </button>
-                <button class="btn" type="button" amount-bar-value="1500" onclick="selectButton(this)">
-                </button>
-                <button class="btn" type="button" amount-bar-value="2000" onclick="selectButton(this)">
-                </button>
-                <button class="btn custom" type="button" amount-bar-value="0.00" onclick="selectButton(this)">
-                  Custom
-                </button>
+        <form class="form-control" action="/gift-card/<%= giftCard.gan %>/add-funds" method="POST">
+          <div class="amount-bar-wrapper">
+            <h5>Amount</h5>
+            <div class="section__row">
+                <div id="amount-bar" class="amount-bar">
+                  <button class="btn active" type="button" amount-bar-value="500" onclick="selectButton(this)">
+                  </button>
+                  <button class="btn" type="button" amount-bar-value="1000" onclick="selectButton(this)">
+                  </button>
+                  <button class="btn" type="button" amount-bar-value="1500" onclick="selectButton(this)">
+                  </button>
+                  <button class="btn" type="button" amount-bar-value="2000" onclick="selectButton(this)">
+                  </button>
+                  <button class="btn custom" type="button" amount-bar-value="0.00" onclick="selectButton(this)">
+                    Custom
+                  </button>
+              </div>
+            </div>
+
+            <div id="custom-amount">
+              <input id="custom-amount-text" type="number" placeholder="0.00" step="0.01"
+                oninput="updatePayButtonText(this)" />
             </div>
           </div>
 
-          <div id="custom-amount">
-            <input id="custom-amount-text" type="number" placeholder="0.00" step="0.01"
-              oninput="updatePayButtonText(this)" />
-          </div>
-        </div>
+          <div id="cards-on-file">
+            <h5>Pay with card on file</h5>
 
-        <div id="cards-on-file">
-          <h5>Pay with card on file</h5>
-
-          <div id="cards-on-file-dropdown">
+            <div id="cards-on-file-dropdown">
+            </div>
           </div>
-        </div>
-        <form class="form-control" action="/gift-card/<%= giftCard.gan %>/add-funds" method="POST">
-          <input name="cardId" id="pretty-dropdown__value" hidden=true type="text" value="" required />
-          <input name="amount" id="amount-bar__value" hidden=true type="text" value="5" required />
-          <input name="state" id="state__value" hidden=true type="text" value="<%= giftCard.state %>" required />
-          <button id="pay-button" class="square-button" type="submit"></button>
+            <input name="cardId" id="pretty-dropdown__value" hidden=true type="text" value="" required />
+            <input name="amount" id="amount-bar__value" hidden=true type="text" value="5" required />
+            <input name="state" id="state__value" hidden=true type="text" value="<%= giftCard.state %>" required />
+            <button id="pay-button" class="square-button" type="submit"></button>
         </form>
         <% if (cardCreated && cardCreated === "success") { %>
           <div class="success-toast">

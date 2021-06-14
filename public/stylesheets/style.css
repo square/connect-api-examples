@@ -536,7 +536,7 @@ span.no-content {
   z-index: 100;
 }
 
-.reset-loading_content {
+.loading_prompt-container {
   display: none;
   flex-direction: column;
   align-items: flex-start;

@@ -108,22 +108,18 @@ router.post("/reset", async (req, res, next) => {
       customers = [];
     }
 
-    const customerIds = customers.map(customer => customer.id);
+    let customersToDelete = customers.map(customer => customer.id);
 
      // Check if there are any missing customers that need to be added to the list of available customers.
      if (req.session.missingCustomers) {
       req.session.missingCustomers = req.session.missingCustomers
-        .filter(missingCustomer => !customerIds.includes(missingCustomer.id));
+        .filter(missingCustomer => !customersToDelete.includes(missingCustomer.id));
 
       // Those who aren't available yet, should be appended to our retrieved list of customers.
-      customers = customers.concat(req.session.missingCustomers);
+      customersToDelete = customersToDelete.concat(req.session.missingCustomers.map(customer => customer.id));
     }
 
-    if (customers.length > 0) {
-      const customersToDelete = customers.map(customer => {
-        return customer.id;
-      });
-
+    if (customersToDelete.length > 0)  {
       // Make request to get gift cards associated with each customer to be deleted.
       const giftCardsPromises = customersToDelete.map(id => {
         return giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, id);
@@ -167,18 +163,8 @@ router.post("/reset", async (req, res, next) => {
 
       // Make requests to deactivate all marked GANs.
       const giftCardDeactivationPromises = toDeactivate.map(gan => {
-        return giftCardActivitiesApi.createGiftCardActivity({
-          idempotencyKey: uuidv4(),
-          giftCardActivity: {
-            giftCardGan: gan,
-            locationId: locationId,
-            type: "DEACTIVATE",
-            deactivateActivityDetails: {
-              // In the future we will support other reasons.
-              reason: "SUSPICIOUS_ACTIVITY"
-            }
-          }
-        });
+        const giftCardDeactivationRequest = generateGiftCardDecativationRequest(gan);
+        return giftCardActivitiesApi.createGiftCardActivity(giftCardDeactivationRequest);
       });
 
       // Make requests to delete customers.
@@ -191,6 +177,9 @@ router.post("/reset", async (req, res, next) => {
 
       // Delete all customers.
       await Promise.all(customerDeletionPromises);
+
+      // Reset our "cache".
+      req.session.missingCustomers = [];
     }
 
     res.redirect("/login?reset=success");
@@ -200,6 +189,9 @@ router.post("/reset", async (req, res, next) => {
   }
 });
 
+/**
+ * Helper function to build a `search customers` API request payload.
+ */
 function generateSearchCustomersRequest() {
   return {
     query: {
@@ -207,6 +199,24 @@ function generateSearchCustomersRequest() {
         referenceId: {
           exact: REFERENCE_ID
         }
+      }
+    }
+  }
+}
+
+/**
+ * Helper function to build a `gift card activity` API request payload to deactivate a gift card.
+ */
+function generateGiftCardDecativationRequest(gan) {
+  return {
+    idempotencyKey: uuidv4(),
+    giftCardActivity: {
+      giftCardGan: gan,
+      locationId,
+      type: "DEACTIVATE",
+      deactivateActivityDetails: {
+        // In the future we will support other reasons.
+        reason: "SUSPICIOUS_ACTIVITY"
       }
     }
   }
