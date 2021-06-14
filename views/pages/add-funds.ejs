@@ -75,17 +75,27 @@
         <% } %>
       </div>
 
-      <% if (cards.length === 0) { %>
+
+      <% if (cards.length === 0 ) { %>
       <div id="no-card">
-        <h5>Add New Card</h5>
-        <span>This account currently does not have cards on file. 
-          Click on the button below to add a card on file, this action is only supported in sandbox mode.
-        </span>
-        <form method="POST" action="/seed/<%= customerId %>/create-card?gan=<%= giftCard.gan %>">
-          <button class="square-button" type="submit">Add card</button>
-        </form>
-      </div>
-      <% } %>
+        <% if ( process.env.ENVIRONMENT.toLowerCase() === "production" ) { %>
+          <h5>No cards on file</h5>
+          <div id="no-card--production">
+            This customer currently does not have cards on file. Add a card on file for the customer or switch to sandbox mode. <a href="https://developer.squareup.com/reference/square/customers-api/create-customer-card" target="_blank">Open guide</a>
+          </div>
+        <% } else { %>
+          <h5>Add new card</h5>
+          <div>
+            This account currently does not have cards on file. 
+            Click on the button below to add a card on file, this action is only supported in sandbox mode.
+          </div>
+
+          <form method="POST" action="/seed/<%= customerId %>/create-card?gan=<%= giftCard.gan %>">
+            <button class="square-button" type="submit">Add card</button>
+          </form>
+        <% }; %>
+      </div> 
+      <% }; %>
 
       <script src="/js/pretty-dropdown-select.js"></script>
       <script src="/js/amount-bar.js"></script>

@@ -510,8 +510,12 @@ span.no-content {
   margin: 0;
 }
 
-#no-card span {
+#no-card div, #add-customer div {
   font-size: 12px;
   line-height: 18px;
   color: rgba(0, 0, 0, 0.55);
+}
+
+#add-customer div, #no-card--production {
+  margin-bottom: 15px;
 }

@@ -38,11 +38,30 @@
     </div>
 
     <div id="add-customer">
+    <% if ( customers.length === 0 && process.env.ENVIRONMENT.toLowerCase() === "production" ) { %>
+      <h5>No customers available</h5>
+      <div>
+        You have no customers in your production environment. Please use the sandbox mode or create a customer with
+        cards on file in order to proceed. 
+        <a href="https://developer.squareup.com/reference/square/customers-api/create-customer" target="_blank">Open guide</a>
+      </div>
+      
+    <% } else if ( customers.length === 0 ) { %>
+      <h5>Create a customer</h5>
+      <div>
+        You have no customers in your Square application. Click the button below to create a test customer.
+      </div>
+
       <form action="/seed/create-customer" method="POST">
         <button class="square-button btn-secondary" type="submit">Add customer</button>
       </form>
+    <% } else { %>
+      <form action="/seed/create-customer" method="POST">
+        <button class="square-button btn-secondary" type="submit">Add customer</button>
+      </form>
+    <% }; %>
     </div>
-
+    
     <% var customerData = getCustomersData(customers); %>
     <script src="/js/pretty-dropdown-select.js"></script>
     <script>
