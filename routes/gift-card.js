@@ -117,7 +117,10 @@ router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res,
   const cardCreated = req.query.cardCreated;
   try {
     const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
-    const cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
+    let cards = [];
+    if (customer.cards) {
+      cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
+    }
     const giftCard = res.locals.giftCard;
     const customerId = req.session.customerId;
 
