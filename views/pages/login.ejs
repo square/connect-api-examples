@@ -43,26 +43,30 @@
           </div>
         <% } %>
 
-        <div class="shadow-overlay"></div>
-
-        <div class="loading_prompt-container">
-          <img class="rotate" src="/images/loading.svg">
-          <h3>Reset in progress. </h3>
-          <p>This might take up to a few seconds.</p>
-        </div>
-        
         <div class="developer-note">
           <div>
             <form id="reset-form" action="/seed/reset" method="POST">
               <h5>Developer note</h5>
               <span>Quickly reset all customer data created within this sample app.
-                <a onclick="createLoadingPrompt('reset-form')">Reset now</span>
+                <a onclick="createLoadingPrompt('reset-form')">
+                  Reset now
+                </a>
+              </span>
             </form>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="loading__shadow-overlay">
+    <div class="loading__container">
+      <img class="spinner" src="/images/loading.svg">
+      <h3>Reset in progress. </h3>
+      <p>This might take up to a few seconds.</p>
+    </div>
+  </div>
+
   <div id="add-customer">
     <% if ( customers.length === 0 && process.env.ENVIRONMENT.toLowerCase() === "production" ) { %>
       <h5>No customers available</h5>

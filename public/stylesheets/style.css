@@ -524,38 +524,29 @@ span.no-content {
   margin-bottom: 15px;
 }
 
-.shadow-overlay {
+.loading__shadow-overlay {
   display: none;
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  opacity: 0.5;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 100;
+  align-items: center;
+  justify-content: center;
 }
 
-.loading_prompt-container {
-  display: none;
-  flex-direction: column;
-  align-items: flex-start;
+.loading__container {
   padding: 32px;
-  position: absolute;
   width: 464px;
   height: 216px;
-  left: calc(50% - 464px/2);
-  top: 30%;
   background: #FFFFFF;
   border-radius: 12px;
-  flex: none;
-  order: 0;
-  flex-grow: 0;
-  margin: 0px 0px;
   z-index: 200;
 }
 
-.rotate {
+.spinner {
   animation: 2s linear 0s infinite normal none running rotation;
   height: 42px;
   width: 42px;
