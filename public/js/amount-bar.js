@@ -56,7 +56,9 @@ function hideCustomTextField() {
 // We will update both the `pay` button text and the actual data to send to our backend
 // accordingly.
 function updatePayButtonText(element) {
-  setAmountChosen(100 * element.value);
+  const valueInCents = 100 * element.value;
+  // Round in case of precision problems.
+  setAmountChosen(Math.round(valueInCents));
 }
 
 function setAmountChosen(amount) {
