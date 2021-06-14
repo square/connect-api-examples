@@ -97,14 +97,29 @@ router.post("/create-customer", async (req, res, next) => {
  * This endpoint resets all data changes that were introduced using this app.
  * This includes customers, cards on file, and gift cards.
  */
-router.get("/reset", async (req, res, next) => {
+router.post("/reset", async (req, res, next) => {
   try {
     // Get all customers with the reference ID of our sample app.
     // These are the customers we want to delete.
     const searchCustomersRequest = generateSearchCustomersRequest();
-    const { result: { customers } } = await customersApi.searchCustomers(searchCustomersRequest);
+    let { result: { customers } } = await customersApi.searchCustomers(searchCustomersRequest);
 
-    if (customers) {
+    if (!customers) {
+      customers = [];
+    }
+
+    const customerIds = customers.map(customer => customer.id);
+
+     // Check if there are any missing customers that need to be added to the list of available customers.
+     if (req.session.missingCustomers) {
+      req.session.missingCustomers = req.session.missingCustomers
+        .filter(missingCustomer => !customerIds.includes(missingCustomer.id));
+
+      // Those who aren't available yet, should be appended to our retrieved list of customers.
+      customers = customers.concat(req.session.missingCustomers);
+    }
+
+    if (customers.length > 0) {
       const customersToDelete = customers.map(customer => {
         return customer.id;
       });
@@ -176,8 +191,6 @@ router.get("/reset", async (req, res, next) => {
 
       // Delete all customers.
       await Promise.all(customerDeletionPromises);
-
-      req.session.missingCustomers = [];
     }
 
     res.redirect("/login?reset=success");

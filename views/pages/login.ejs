@@ -42,11 +42,22 @@
             </div>
           </div>
         <% } %>
+
+        <div class="shadow-overlay"></div>
+
+        <div class="reset-loading_content">
+          <img class="rotate" src="/images/loading.svg">
+          <h3>Reset in progress. </h3>
+          <p>This might take up to a few seconds.</p>
+        </div>
         
         <div class="developer-note">
           <div>
-            <h5>Developer note</h5>
-            <span>Quickly reset all customer data created within this sample app. <a onclick="alert('are you sure');"href="/seed/reset">Reset now</a></span>
+            <form name="myForm"action="/seed/reset" method="POST">
+              <h5>Developer note</h5>
+              <span>Quickly reset all customer data created within this sample app.
+                <a onclick="myForm.submit(); document.getElementsByClassName('shadow-overlay')[0].style.display='flex';document.getElementsByClassName('reset-loading_content')[0].style.display='flex';">Reset now</span>
+            </form>
           </div>
         </div>
       </div>
