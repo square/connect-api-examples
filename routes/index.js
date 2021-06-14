@@ -45,8 +45,7 @@ router.get("/login", async (req, res, next) => {
   const customerCreated = req.query.customerCreated;
   const customerCreatedGivenName = req.query.givenName;
   const customerCreatedFamilyName = req.query.familyName;
-  let customers;
-
+  const reset = req.query.reset;
   try {
     let { result: { customers } } = await customersApi.listCustomers();
     if (!customers) {
@@ -65,7 +64,7 @@ router.get("/login", async (req, res, next) => {
     }
 
     res.render("pages/login",
-      { customers, customerCreated, customerCreatedGivenName, customerCreatedFamilyName });
+      { customers, customerCreated, customerCreatedGivenName, customerCreatedFamilyName, reset });
   } catch(error) {
     console.log(error);
     next(error);
