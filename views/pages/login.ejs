@@ -23,14 +23,17 @@
           <button class="square-button" type="submit">Login</button>
         </form>
         <div class="message">
-          Don’t forget you can manage Customers and Gift Cards using Square’s <a href="https://developer.squareup.com/explorer/square" target="_blank">API Explorer</a> to call the API. This sample
+          Don’t forget you can manage Customers and Gift Cards using Square’s <a
+            href="https://developer.squareup.com/explorer/square" target="_blank">API Explorer</a> to call the API. This
+          sample
           app will update accordingly.
         </div>
-        <% if (customerCreatedGivenName && customerCreatedFamilyName &&
-                customerCreated && customerCreated === "success") { %>
+        <% if (customerCreatedGivenName && customerCreatedFamilyName && customerCreated && customerCreated==="success" )
+          { %>
           <div class="success-toast success-toast--large">
             <div>
-              <img src="/images/success.svg">Created customer <%= customerCreatedGivenName %> <%= customerCreatedFamilyName %>
+              <img src="/images/success.svg">Created customer <%= customerCreatedGivenName %>
+                <%= customerCreatedFamilyName %>
             </div>
           </div>
         <% } %>
@@ -38,37 +41,37 @@
     </div>
 
     <div id="add-customer">
-    <% if ( customers.length === 0 && process.env.ENVIRONMENT.toLowerCase() === "production" ) { %>
-      <h5>No customers available</h5>
-      <div>
-        You have no customers in your production environment. Please use the sandbox mode or create a customer with
-        cards on file in order to proceed. 
-        <a href="https://developer.squareup.com/reference/square/customers-api/create-customer" target="_blank">Open guide</a>
-      </div>
-      
-    <% } else if ( customers.length === 0 ) { %>
-      <h5>Create a customer</h5>
-      <div>
-        You have no customers in your Square application. Click the button below to create a test customer.
-      </div>
+      <% if ( customers.length===0 && process.env.ENVIRONMENT.toLowerCase()==="production" ) { %>
+        <h5>No customers available</h5>
+        <div>
+          You have no customers in your production environment. Please use the sandbox mode or create a customer with
+          cards on file in order to proceed.
+          <a href="https://developer.squareup.com/reference/square/customers-api/create-customer" target="_blank">Open
+            guide</a>
+        </div>
+      <% } else if ( customers.length===0 ) { %>
+        <h5>Create a customer</h5>
+        <div>
+          You have no customers in your Square application. Click the button below to create a test customer.
+        </div>
 
-      <form action="/seed/create-customer" method="POST">
-        <button class="square-button btn-secondary" type="submit">Add customer</button>
-      </form>
-    <% } else { %>
-      <form action="/seed/create-customer" method="POST">
-        <button class="square-button btn-secondary" type="submit">Add customer</button>
-      </form>
-    <% }; %>
+        <form action="/seed/create-customer" method="POST">
+          <button class="square-button btn-secondary" type="submit">Add customer</button>
+        </form>
+      <% } else { %>
+        <form action="/seed/create-customer" method="POST">
+          <button class="square-button btn-secondary" type="submit">Add customer</button>
+        </form>
+      <% }; %>
     </div>
-    
-    <% var customerData = getCustomersData(customers); %>
-    <script src="/js/pretty-dropdown-select.js"></script>
-    <script>
-      new PrettyDropdownSelect("login-dropdown",
-      <%- stringifyJSON(customerData) %>,
-      { placeholderImg: "/images/profile.svg", placeholder: "Select customer", addonIds:["add-customer"] });
-    </script>
+
+    <% var customerData=getCustomersData(customers); %>
+      <script src="/js/pretty-dropdown-select.js"></script>
+      <script>
+        new PrettyDropdownSelect("login-dropdown",
+        <% - stringifyJSON(customerData) %>,
+        { placeholderImg: "/images/profile.svg", placeholder: "Select customer", addonIds: ["add-customer"] });
+      </script>
 </body>
 
 </html>
