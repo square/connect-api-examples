@@ -36,8 +36,8 @@
         <% } %>
       </div>
     </div>
-
-    <div id="add-customer">
+  </div>
+  <div id="add-customer">
     <% if ( customers.length === 0 && process.env.ENVIRONMENT.toLowerCase() === "production" ) { %>
       <h5>No customers available</h5>
       <div>
@@ -60,15 +60,15 @@
         <button class="square-button btn-secondary" type="submit">Add customer</button>
       </form>
     <% }; %>
-    </div>
+  </div>
     
-    <% var customerData = getCustomersData(customers); %>
-    <script src="/js/pretty-dropdown-select.js"></script>
-    <script>
-      new PrettyDropdownSelect("login-dropdown",
-      <%- stringifyJSON(customerData) %>,
-      { placeholderImg: "/images/profile.svg", placeholder: "Select customer", addonIds:["add-customer"] });
-    </script>
+  <% var customerData = getCustomersData(customers); %>
+  <script src="/js/pretty-dropdown-select.js"></script>
+  <script>
+    new PrettyDropdownSelect("login-dropdown",
+    <%- stringifyJSON(customerData) %>,
+    { placeholderImg: "/images/profile.svg", placeholder: "Select customer", addonIds:["add-customer"] });
+  </script>
 </body>
 
 </html>
