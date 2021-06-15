@@ -1,5 +1,6 @@
 <%
-formatMoney = function(value, currency, isRounded, isLowestDenomination) {
+// Input value is always in the lowest denomination for the currency.
+formatMoney = function(value, currency, isRounded = false) {
   value = Number(value);
   // Create number formatter.
   const props = {
@@ -13,7 +14,8 @@ formatMoney = function(value, currency, isRounded, isLowestDenomination) {
     props.minimumFractionDigits = 0;
   }
 
-  if (isLowestDenomination && currency !== "JPY") {
+  // Some currencies don't need to use higher denominations to represent values.
+  if (currency !== "JPY") {
     value /= 100.0;
   }
 
@@ -166,6 +168,6 @@ getMaxByCurrency = function(maxAllowedInSmallestDenomination, currency) {
     return maxAllowedInSmallestDenomination;
   } 
 
-  return maxAllowedInSmallestDenomination / 100.0;
+  return Number(maxAllowedInSmallestDenomination) / 100.0;
 }
 %>

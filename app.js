@@ -30,7 +30,7 @@ app.locals.maxLimit = 200000;
 locationsApi.retrieveLocation(process.env[`SQUARE_LOCATION_ID`]).then(function(response) {
   app.locals.currency = response.result.location.currency;
 
-  // If the currency is one of the following currencies, we have to change our max limit.
+  // If the currency is one of the following currencies, we have to change our maximum allowed balance.
   switch (app.locals.currency) {
     case "JPY":
       app.locals.maxLimit = 50000;

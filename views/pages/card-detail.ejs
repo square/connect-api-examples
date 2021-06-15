@@ -54,7 +54,7 @@
 
       <div class="card-details">
         <h3 class="card-details__balance">
-          <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency, false, true) %>
+          <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %>
         </h3>
         
         <% if (giftCard.state==="PENDING" ) { %>

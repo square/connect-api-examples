@@ -35,15 +35,15 @@
             <h5>Amount</h5>
             <div class="section__row">
                 <div id="amount-bar" class="amount-bar">
-                  <button class="btn active" type="button" amount-bar-value="500" onclick="selectButton(this)">
+                  <button class="btn active" type="button" amount-bar-value="500" onclick="amountBar.selectButton(this)">
                   </button>
-                  <button class="btn" type="button" amount-bar-value="1000" onclick="selectButton(this)">
+                  <button class="btn" type="button" amount-bar-value="1000" onclick="amountBar.selectButton(this)">
                   </button>
-                  <button class="btn" type="button" amount-bar-value="1500" onclick="selectButton(this)">
+                  <button class="btn" type="button" amount-bar-value="1500" onclick="amountBar.selectButton(this)">
                   </button>
-                  <button class="btn" type="button" amount-bar-value="2000" onclick="selectButton(this)">
+                  <button class="btn" type="button" amount-bar-value="2000" onclick="amountBar.selectButton(this)">
                   </button>
-                  <button class="btn custom" type="button" amount-bar-value="0.00" onclick="selectButton(this)">
+                  <button class="btn custom" type="button" amount-bar-value="0.00" onclick="amountBar.selectButton(this)">
                     Custom
                   </button>
               </div>
@@ -57,7 +57,7 @@
                 step="<%= getMinAndStepByCurrency(giftCard.balanceMoney.currency) %>"
                 min="<%= getMinAndStepByCurrency(giftCard.balanceMoney.currency) %>"
                 max="<%= getMaxByCurrency(maxToAdd, giftCard.balanceMoney.currency) %>"
-                oninput="updatePayButtonText(this)" />
+                oninput="amountBar.updatePayButtonText(this)" />
             </div>
           </div>
 
@@ -123,7 +123,7 @@
       <% } %>
 
       <script>
-        initializeAmountBar("amount-bar", <%- formatMoney %>, "<%- giftCard.balanceMoney.currency %>", <%= maxToAdd %>);
+        var amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%- giftCard.balanceMoney.currency %>", <%= maxToAdd %>);
       </script>
   </body>
 
