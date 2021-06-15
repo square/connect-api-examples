@@ -322,49 +322,6 @@ ul.transaction-history-list {
 }
 
 /**
-  Card on file table
-*/
-
-.selected {
-  background-color: brown;
-  color: #fff;
-}
-
-.styled-table {
-  border-collapse: collapse;
-  margin: 25px 0;
-  font-size: 0.9em;
-  font-family: sans-serif;
-  min-width: 400px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-}
-
-.styled-table thead tr {
-  background-color: #009879;
-  color: #ffffff;
-  text-align: left;
-}
-
-.styled-table th,
-.styled-table td {
-  padding: 12px 15px;
-}
-
-.styled-table tbody tr {
-  border-bottom: thin solid #dddddd;
-}
-
-.styled-table tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
-}
-
-.styled-table tbody tr.active-row {
-  font-weight: bold;
-  color: #009879;
-  background-color: rgb(219, 247, 219);
-}
-
-/**
   Amount bar
 */
 
@@ -373,7 +330,7 @@ ul.transaction-history-list {
 }
 
 .amount-bar {
-  width: 352px;
+  width: 100%;
   height: 48px;
   border: 1px solid #DDDDDD;
   box-sizing: border-box;
@@ -405,7 +362,7 @@ ul.transaction-history-list {
 }
 
 #custom-amount-text {
-  width: 352px;
+  width: 100%;
   height: 48px;
   border: 2.5px solid #006AFF;
   box-sizing: border-box;
@@ -456,6 +413,7 @@ span.no-content {
   justify-content: center;
   display: flex;
   margin-top: 60px;
+  min-width: 350px;
 }
 
 .success-toast div {
@@ -466,14 +424,13 @@ span.no-content {
   border: 1px solid rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
   border-radius: 50px;
-  justify-content: center;
   background-color: white;
-  padding: 0 10px;
+  padding: 0 24px;
 }
 
 .success-toast img {
-  vertical-align: middle;
   margin-right: 12px;
+  vertical-align: middle;
 }
 
 .developer-note {
