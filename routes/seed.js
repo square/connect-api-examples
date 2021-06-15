@@ -83,8 +83,8 @@ router.post("/create-customer", async (req, res, next) => {
     );
 
     res.redirect("/login?customerCreated=success&"
-     + "givenName=" + customer.givenName + "&"
-     + "familyName=" + customer.familyName);
+      + "givenName=" + customer.givenName + "&"
+      + "familyName=" + customer.familyName);
   } catch (error) {
     console.error(error);
     next(error);
@@ -110,8 +110,8 @@ router.post("/reset", async (req, res, next) => {
 
     let customersToDelete = customers.map(customer => customer.id);
 
-     // Check if there are any missing customers that need to be added to the list of available customers.
-     if (req.session.missingCustomers) {
+    // Check if there are any missing customers that need to be added to the list of available customers.
+    if (req.session.missingCustomers) {
       req.session.missingCustomers = req.session.missingCustomers
         .filter(missingCustomer => !customersToDelete.includes(missingCustomer.id));
 
@@ -119,25 +119,22 @@ router.post("/reset", async (req, res, next) => {
       customersToDelete = customersToDelete.concat(req.session.missingCustomers.map(customer => customer.id));
     }
 
-    if (customersToDelete.length > 0)  {
+    if (customersToDelete.length > 0) {
       // Make request to get gift cards associated with each customer to be deleted.
-      const giftCardsPromises = customersToDelete.map(id => {
-        return giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, id);
-      });
+      const giftCardsPromises = customersToDelete.map(id => giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, id));
 
       const data = await Promise.all(giftCardsPromises);
 
       // Get all gift card objects related to customers we are about to delete.
       const set = new Set();
       const uniqueGiftCardObjects = data
-          .filter(body => body.result.giftCards)
-          .flatMap(body => {
-            return body.result.giftCards;
-          }).filter(giftCard => {
-            const exists = set.has(giftCard.id);
-            set.add(giftCard.id);
-            return !exists;
-          });
+        .filter(body => body.result.giftCards)
+        .flatMap(body => body.result.giftCards)
+        .filter(giftCard => {
+          const exists = set.has(giftCard.id);
+          set.add(giftCard.id);
+          return !exists;
+        });
 
       // Make requests to unlink cards from soon-to-be deleted customers.
       const toDeactivate = [];
@@ -151,11 +148,10 @@ router.post("/reset", async (req, res, next) => {
           toDeactivate.push(giftCard.gan);
         }
 
-        return idsToUnlink.map(customerId => {
-          return giftCardsApi.unlinkCustomerFromGiftCard(giftCard.id, {
-            customerId: customerId
-          })
-        });
+        return idsToUnlink.map(customerId => giftCardsApi.unlinkCustomerFromGiftCard(giftCard.id, {
+          customerId: customerId
+        })
+        );
       });
 
       // Unlink soon to be deleted customers.
@@ -168,9 +164,7 @@ router.post("/reset", async (req, res, next) => {
       });
 
       // Make requests to delete customers.
-      const customerDeletionPromises = customersToDelete.map(id => {
-        return customersApi.deleteCustomer(id);
-      });
+      const customerDeletionPromises = customersToDelete.map(id => customersApi.deleteCustomer(id));
 
       // Deactivate all gift cards.
       await Promise.all(giftCardDeactivationPromises);

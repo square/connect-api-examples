@@ -3,5 +3,5 @@ function createLoadingPrompt(formElementId) {
   document.getElementById(formElementId).submit();
 
   // Create the loading screen by exposing the prompt and shading the background.
-  document.getElementsByClassName('loading__shadow-overlay')[0].style.display='flex';
+  document.getElementsByClassName('loading__shadow-overlay')[0].style.display = "flex";
 }
