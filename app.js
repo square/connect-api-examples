@@ -55,6 +55,13 @@ app.use(session({
 	resave: true,
 	saveUninitialized: true
 }));
+
+app.use(function(req, res, next) {
+  res.locals.customerGivenName = req.session.customerGivenName;
+  res.locals.customerFamilyName = req.session.customerFamilyName;
+  next();
+});
+
 app.use(cookieParser());
 app.use("/", routes);
 
@@ -76,5 +83,6 @@ app.use(function (err, req, res, next) {
     error: err.errors ? JSON.stringify(err.errors, null, 4) : err.stack
   });
 });
+
 
 module.exports = app;

@@ -49,6 +49,13 @@ td {
   cursor: pointer;
 }
 
+
+button:disabled {
+  cursor: not-allowed;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.3);
+}
+
 .square-button {
   background-color: rgba(0, 106, 255, 1);
   color: white;
@@ -451,12 +458,7 @@ span.no-content {
   margin-top: 60px;
 }
 
-.success-toast.success-toast--large div {
-  width: 285px;
-}
-
 .success-toast div {
-  width: 206px;
   height: 48px;
   line-height: 48px;
   text-align: center;
@@ -466,6 +468,7 @@ span.no-content {
   border-radius: 50px;
   justify-content: center;
   background-color: white;
+  padding: 0 10px;
 }
 
 .success-toast img {
@@ -500,30 +503,8 @@ span.no-content {
 }
 
 /**
-*  Others
+*  Loading
 */
-#add-customer {
-  padding: 0px 24px 24px 24px;
-}
-
-#no-card {
-  padding: 8px 24px;
-}
-
-#add-customer button {
-  margin: 0;
-}
-
-#no-card div, #add-customer div {
-  font-size: 12px;
-  line-height: 18px;
-  color: rgba(0, 0, 0, 0.55);
-}
-
-#add-customer div, #no-card--production {
-  margin-bottom: 15px;
-}
-
 .loading__shadow-overlay {
   display: none;
   position: absolute;
@@ -560,4 +541,39 @@ span.no-content {
   to {
     transform: rotate(359deg);
   }
+}
+
+/**
+*  Others
+*/
+#add-customer {
+  padding: 0px 24px 24px 24px;
+}
+
+#no-card {
+  padding: 8px 24px;
+}
+
+#add-customer button {
+  margin: 0;
+}
+
+#no-card div, #add-customer div {
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+#add-customer div, #no-card--production {
+  margin-bottom: 15px;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout span {
+  margin: 0px 24px;
 }

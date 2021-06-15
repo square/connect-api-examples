@@ -121,9 +121,23 @@ getCustomersData = function(customers) {
     return {
     description: "Customer",
     value: customer.id,
-    displayValue: customer.givenName + " " + customer.familyName,
+    displayValue: getCustomerName(customer.givenName, customer.familyName),
     }
  });
+}
+
+getCustomerName = function(firstName, lastName, length = 40) {
+  let fullName = [firstName, lastName].join(" ").trim();
+  
+  if (length < 0) {
+    return fullName;
+  }
+
+  if (fullName.length > length) {
+    return fullName.substring(0, length) + "...";
+  }
+
+  return fullName;
 }
 
 getCardsData = function(cards) {

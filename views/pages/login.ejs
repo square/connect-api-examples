@@ -19,7 +19,7 @@
         <div id="login-dropdown">
         </div>
         <form action="/login" method="POST">
-          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value="" required />
+          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value=""/>
           <button class="square-button" type="submit">Login</button>
         </form>
         <div class="message">
@@ -93,7 +93,7 @@
   </div>
     
   <% var customerData = getCustomersData(customers); %>
-  <script src="/js/loading-prompt.js"></script>
+  <script src="/js/loading.js"></script>
   <script src="/js/pretty-dropdown-select.js"></script>
   <script>
     new PrettyDropdownSelect("login-dropdown",

@@ -1,3 +1,7 @@
+/**
+ * This file contains functions that handles the actions of the drop down menu
+ */
+
 function showMenuOptions() {
   document.querySelector(".pretty-dropdown-menu__list").classList.toggle("show");
 }
