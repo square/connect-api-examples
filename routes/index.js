@@ -15,7 +15,6 @@ limitations under the License.
 */
 
 const express = require("express");
-const { CustomersApi } = require("square");
 const router = express.Router();
 const {
   customersApi
