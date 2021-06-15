@@ -223,7 +223,8 @@ class PrettyDropdownSelect {
   }
 
   _configureElements() {
-    //
+    // configure the input listener for #pretty-dropdown__value and disable the
+    // submit button if the value is empty
     var valueInput = document.getElementById("pretty-dropdown__value");
     var submitButton = valueInput.closest("form").querySelector(":scope > button[type=submit]");
 

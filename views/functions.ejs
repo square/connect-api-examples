@@ -127,7 +127,7 @@ getCustomersData = function(customers) {
 }
 
 getCustomerName = function(firstName, lastName, length = 40) {
-  let fullName = [firstName, lastName].join(" ").trim();
+  const fullName = [firstName, lastName].join(" ").trim();
   
   if (length < 0) {
     return fullName;
