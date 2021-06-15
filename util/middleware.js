@@ -57,10 +57,10 @@ async function checkSandboxEnv(req, res, next) {
 }
 
 /**
- * Verify that the card provided by the gan is inactive (i.e. NOT_ACTIVE).
+ * Verify that the card provided by the gan is inactive (i.e. PENDING).
  */
  async function checkInactiveCard(req, res, next) {
-  if (res.locals.giftCard.state !== "NOT_ACTIVE") {
+  if (res.locals.giftCard.state !== "PENDING") {
     res.redirect("/");
   } else {
     next();
