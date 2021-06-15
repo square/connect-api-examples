@@ -7,7 +7,8 @@ var formatMoneyFunction;
  * The first parameter is the formatting function used.
  * The second parameter is the currency to be used.
  */
-function initializeAmountBar(elementId, formatMoneyFunction, currency) {
+function initializeAmountBar(elementId, formatMoneyFunction, currency, maxAllowedToAdd) {
+  console.log(maxAllowedToAdd);
   this.currency = currency;
   this.formatMoneyFunction = formatMoneyFunction;
   const buttons = document.getElementById(elementId).children;
@@ -18,11 +19,25 @@ function initializeAmountBar(elementId, formatMoneyFunction, currency) {
     // For each button that is not "custom", set the text to be formatted based on currency
     // Pass in true in order to achieve rounding, so text fits nicely. The actual function can be
     // found in functions.ejs.
-    buttons[i].textContent = this.formatMoneyFunction(buttons[i].getAttribute("amount-bar-value"), this.currency, true);
+    buttons[i].textContent = this.formatMoneyFunction(buttons[i].getAttribute("amount-bar-value"), this.currency, true, true);
+
+    if (buttons[i].getAttribute("amount-bar-value") > maxAllowedToAdd) {
+      buttons[i].disabled = true;
+      buttons[i].style.cursor = "not-allowed";
+    }
   }
 
-  // Set initial value for `pay` button and data.
-  setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
+  // Set initial value for `pay` button and data. If the first button is disabled
+  // (i.e. adding that amount would exceed the maximum gift card balance allowed),
+  // set the default to custom.
+  if (buttons[0].disabled) {
+    buttons[0].classList.remove("active");
+    buttons[buttons.length - 1].classList.add("active");
+    showCustomTextField();
+    setAmountChosen();
+  } else {
+    setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
+  }
 }
 
 /**
@@ -56,14 +71,11 @@ function hideCustomTextField() {
 // We will update both the `pay` button text and the actual data to send to our backend
 // accordingly.
 function updatePayButtonText(element) {
-  // Round in case of precision problems. If the amount is zero or negative,
-  // show 0 as the button text.
-  const valueInCents = (element.value > 0) ? Math.round(100 * element.value) : 0;
-  setAmountChosen(valueInCents);
+  setAmountChosen((element.value > 0 ? element.value : 0), false);
 }
 
-function setAmountChosen(amount) {
+function setAmountChosen(amount = 0, isLowestDenomination = true) {
   // We dont want rounding on our pay button, pass in false to our formatting function.
-  document.getElementById("pay-button").innerHTML = "Pay " + this.formatMoneyFunction(amount, this.currency, false);
-  document.getElementById("amount-bar__value").value = amount;
+  document.getElementById("pay-button").innerHTML = "Pay " + this.formatMoneyFunction(amount, this.currency, false, isLowestDenomination);
+  document.getElementById("amount-bar__value").value = (!isLowestDenomination) ? amount * 100 : amount;
 }
