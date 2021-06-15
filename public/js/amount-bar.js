@@ -56,9 +56,10 @@ function hideCustomTextField() {
 // We will update both the `pay` button text and the actual data to send to our backend
 // accordingly.
 function updatePayButtonText(element) {
-  const valueInCents = 100 * element.value;
-  // Round in case of precision problems.
-  setAmountChosen(Math.round(valueInCents));
+  // Round in case of precision problems. If the amount is zero or negative,
+  // show 0 as the button text.
+  const valueInCents = (element.value > 0) ? Math.round(100 * element.value) : 0;
+  setAmountChosen(valueInCents);
 }
 
 function setAmountChosen(amount) {
