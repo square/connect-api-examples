@@ -28,7 +28,6 @@ const {
 
 const { checkLoginStatus, checkCardOwner, checkInactiveCard } = require("../util/middleware");
 
-
 /**
  * POST /gift-card/create
  *
@@ -124,7 +123,11 @@ router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res,
     const giftCard = res.locals.giftCard;
     const customerId = req.session.customerId;
 
-    res.render("pages/add-funds", { cards, giftCard, customerId, cardCreated });
+    // Get the maximum allowed balance for a gift card based on the currency.
+    // Check `app.js` file for more information on max limits by currency.
+    const maxLimit = req.app.locals.maxLimit;
+
+    res.render("pages/add-funds", { cards, giftCard, customerId, cardCreated, maxLimit });
   } catch (error) {
     console.error(error);
     next(error);
