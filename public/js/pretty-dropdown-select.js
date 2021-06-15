@@ -29,8 +29,6 @@ class PrettyDropdownSelect {
    * }
    */
 
-  const 
-
   constructor(elementId, data = [], options = {}) {
     this.dropdownElement = document.getElementById(elementId);
     this.data = data;
