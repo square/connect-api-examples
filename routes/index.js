@@ -79,13 +79,26 @@ router.post("/login", async (req, res, next) => {
   if (req.body.customer) {
     req.session.loggedIn = true;
     req.session.customerId = req.body.customer;
+
+    try {
+      const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
+      req.session.customerGivenName = customer.givenName;
+      req.session.customerFamilyName = customer.familyName;
+    } catch(error) {
+      console.log(error);
+      next(error);
+    }
   }
+
   res.redirect("/");
 });
 
 router.get("/logout", async (req, res, next) => {
   req.session.customerId = null;
+  req.session.customerGivenName = null;
+  req.session.customerFamilyName = null;
   req.session.loggedIn = false;
+  
   res.redirect("/");
 });
 

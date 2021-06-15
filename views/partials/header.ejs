@@ -12,5 +12,9 @@
   <% } else { %>
     <a id="dashboard-link" href="/dashboard">Gift Card Dashboard</a>
   <% }; %>
-  <a href="/logout"><button class="square-button btn-secondary">Log Out</button></a>
+  <div class="logout">
+    <span><%= getCustomerName(customerGivenName, customerFamilyName, -1) %></span>
+    <a href="/logout"><button class="square-button btn-secondary">Log Out</button></a>
+  </div>
+  
 </div>

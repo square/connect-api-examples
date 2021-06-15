@@ -1,6 +1,8 @@
 
 class PrettyDropdownSelect {
   /**
+   * Class for handling the drop down selection elements
+   * 
    * 
    * @param {*} elementId - id of the element to build the dropdown in
    * @param {*} data      - data for options in the dropdown select
@@ -26,6 +28,7 @@ class PrettyDropdownSelect {
    *    placeholderImg: "/placeholder.svg"  // placeholder for img
    * }
    */
+
   constructor(elementId, data = [], options = {}) {
     this.dropdownElement = document.getElementById(elementId);
     this.data = data;
@@ -34,6 +37,7 @@ class PrettyDropdownSelect {
     this._buildDropdownElements();
     this._buildDropdownData();
     this._applyOptions();
+    this._configureElements();
 
 
     var self = this;
@@ -101,7 +105,11 @@ class PrettyDropdownSelect {
       // set the default values
       this.dropdownElement.querySelector(".pretty-dropdown__selected-description").innerText = this.data[0].description;
       this.dropdownElement.querySelector(".pretty-dropdown__selected-display-value").innerText = this.data[0].displayValue;
-      document.getElementById("pretty-dropdown__value").setAttribute("value", this.data[0].value);
+      var valueInput = document.getElementById("pretty-dropdown__value")
+      valueInput.setAttribute("value", this.data[0].value);
+      var event = new Event("input");
+      valueInput.dispatchEvent(event);
+
       if (this.data[0].img) {
         this.dropdownElement.querySelector(".pretty-dropdown__selected-image").querySelector("img").src = this.data[0].img;
       }
@@ -173,8 +181,7 @@ class PrettyDropdownSelect {
           this.dropdownElement.querySelector(".pretty-dropdown__options-wrapper").appendChild(element);
         }
       });
-    }
-
+    } 
   }
 
   _select(event) {
@@ -200,7 +207,10 @@ class PrettyDropdownSelect {
     }
   
     // Update the actual value to be submitted
-    document.getElementById("pretty-dropdown__value").setAttribute("value", value);
+    var valueInput = document.getElementById("pretty-dropdown__value")
+    valueInput.setAttribute("value", value);
+    var event = new Event("input");
+    valueInput.dispatchEvent(event);
 
     this._showOptions();
   }
@@ -210,5 +220,23 @@ class PrettyDropdownSelect {
       this.dropdownElement.querySelector(".pretty-dropdown__options-wrapper").classList.toggle("show");
       this.dropdownElement.querySelector(".pretty-dropdown__icon").classList.toggle("flipped");
     }
+  }
+
+  _configureElements() {
+    // configure the input listener for #pretty-dropdown__value and disable the
+    // submit button if the value is empty
+    var valueInput = document.getElementById("pretty-dropdown__value");
+    var submitButton = valueInput.closest("form").querySelector(":scope > button[type=submit]");
+
+    valueInput.addEventListener('input', function() {
+      if (valueInput.value !== "") {
+        submitButton.disabled = false;
+      } else {
+        submitButton.disabled = true;
+      }
+    });
+
+    var event = new Event("input");
+    valueInput.dispatchEvent(event);
   }
 }
