@@ -22,7 +22,7 @@
             <img src="/images/ellipsis.svg" />
           </button>
           <ul class="pretty-dropdown-menu__list">
-            <% if (giftCard.state !=="NOT_ACTIVE" ) { %>
+            <% if (giftCard.state !=="PENDING" ) { %>
               <a href="/gift-card/<%= giftCard.gan %>/history">
                 <li class="pretty-dropdown-menu__list-item">Transaction history</li>
               </a>
@@ -56,7 +56,7 @@
         <h3 class="card-details__balance">
           <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %>
         </h3>
-        <% if (giftCard.state==="NOT_ACTIVE" ) { %>
+        <% if (giftCard.state==="PENDING" ) { %>
           <div>Your card curently has no funds avalible. Add money to activate this card for use.</div>
         <% } else { %>
           <div>This card is active</div>

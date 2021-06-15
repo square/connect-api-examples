@@ -19,11 +19,13 @@ require('dotenv').config();
 
 const env = process.env[`ENVIRONMENT`].toLowerCase();
 const accessToken = process.env[`SQUARE_ACCESS_TOKEN`];
+const squareVersion = '2021-06-16';
 
 // Set Square credentials
 const config = {
   accessToken,
-  environment: env
+  environment: env,
+  squareVersion
 };
 
 // Extract instances of Api that are used

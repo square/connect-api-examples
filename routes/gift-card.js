@@ -89,7 +89,7 @@ router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, n
  * POST /gift-card/:gan/delete
  *
  * "Deletes" a card by unlinking it from the customer.
- * Card must be in NOT_ACTIVE state.
+ * Card must be in PENDING state.
  */
 router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkInactiveCard, async (req, res, next) => {
   try {
@@ -168,7 +168,7 @@ router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res
     // Load or activate the gift card based on its current state.
     // If the gift card is inactive, activate it with the amount given.
     // Otherwise, if the card is already active, load it with the amount given.
-    const giftCardActivity = giftCardState === "NOT_ACTIVE" ? "ACTIVATE" : "LOAD";
+    const giftCardActivity = giftCardState === "PENDING" ? "ACTIVATE" : "LOAD";
     const giftCardActivityRequest = generateGiftCardActivityRequest(giftCardActivity, gan, orderId, lineItemUid);
     await giftCardActivitiesApi.createGiftCardActivity(giftCardActivityRequest);
 
