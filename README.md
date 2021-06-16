@@ -95,7 +95,7 @@ However, the application does not perform any real login authentication. Instead
 
 **Note:** Do not copy this code in production, implement real authentication methods instead.
 
-1. When you enter **localhost:3000** in the browser, the following handler (in [index.js](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_subscription/routes/index.js#L39)) executes: 
+1. When you enter **localhost:3000** in the browser, the following handler (in index.js) executes: 
 
     ```
     router.get("/", async (req, res, next) => {
