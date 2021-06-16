@@ -123,12 +123,7 @@ router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res,
     const giftCard = res.locals.giftCard;
     const customerId = req.session.customerId;
 
-    // Get the maximum allowed amount to add to the current gift card.
-    // Check `app.js` file for more information on how to get max limits for balance by currency.
-    const maxLimit = req.app.locals.maxLimit;
-    const maxToAdd = maxLimit - Number(giftCard.balanceMoney.amount);
-
-    res.render("pages/add-funds", { cards, giftCard, customerId, cardCreated, maxToAdd });
+    res.render("pages/add-funds", { cards, giftCard, customerId, cardCreated });
   } catch (error) {
     console.error(error);
     next(error);

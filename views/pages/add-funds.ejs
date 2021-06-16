@@ -54,9 +54,9 @@
                 id="custom-amount-text"
                 type="number"
                 placeholder="0.00"
-                step="<%= getMinAndStepByCurrency(giftCard.balanceMoney.currency) %>"
-                min="<%= getMinAndStepByCurrency(giftCard.balanceMoney.currency) %>"
-                max="<%= getMaxByCurrency(maxToAdd, giftCard.balanceMoney.currency) %>"
+                step="<%= getMinAndStepByCurrency(currency) %>"
+                min="<%= getMinAndStepByCurrency(currency) %>"
+                max="<%= getMaxByCurrency(maxLimit - Number(giftCard.balanceMoney.amount), currency) %>"
                 oninput="amountBar.updatePayButtonText(this)" />
             </div>
           </div>
@@ -123,7 +123,7 @@
       <% } %>
 
       <script>
-        var amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%- giftCard.balanceMoney.currency %>", <%= maxToAdd %>);
+        var amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%- currency %>", <%= maxLimit - Number(giftCard.balanceMoney.amount) %>);
       </script>
   </body>
 
