@@ -112,7 +112,7 @@
       <script>
         new PrettySelectDropdown("cards-on-file-dropdown", 
         <%- stringifyJSON(cardsData) %>, 
-        {placeholder: "Select card", placeholderImg: "/images/no-card.svg"});
+        {placeholder: "Select card", placeholderImg: "/images/no-card.svg", disableSubmissionByDefault: <%= (maxLimit - Number(giftCard.balanceMoney.amount)) === 0 %>});
       </script>
       <% } else { %>
         <script>

@@ -26,6 +26,7 @@ class PrettySelectDropdown {
    *    addonIds: ["createCustomer"],     // additional elements added to the dropdown select list
    *    placeholder:  "Select customer"   // placeholder text to display
    *    placeholderImg: "/placeholder.svg"  // placeholder for img
+   *    disableSubmissionByDefault: true  // Whether the submission button should be disabled by default
    * }
    */
 
@@ -243,15 +244,22 @@ class PrettySelectDropdown {
 
   /**
    * configure the input listener for #pretty-dropdown__value and disable the
-   * submit button if the value of #pretty-dropdown__value is empty
+   * submit button if the value of #pretty-dropdown__value is empty.
+   * If the `disableSubmissionByDefault` option is present, its value will determine
+   * whether the submission button is disabled or not.
    */
   _configureElements() {
     var valueInput = document.getElementById("pretty-dropdown__value");
     var submitButton = valueInput.closest("form").querySelector(":scope > button[type=submit]");
+    var self = this;
 
     valueInput.addEventListener('input', function () {
       if (valueInput.value !== "") {
-        submitButton.disabled = false;
+        if(!self.options.disableSubmissionByDefault) {
+          // If this option is not present or set to false, the button should be enabled.
+          // Otherwise, we keep it disabled.
+          submitButton.disabled = false;
+        }
       } else {
         submitButton.disabled = true;
       }
