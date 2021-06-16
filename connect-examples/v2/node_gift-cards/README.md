@@ -1,87 +1,95 @@
-# gift-card-api-sample-app
+# Useful Links
 
-## **Overview**
+* [Node.js SDK Page](https://developer.squareup.com/docs/sdks/nodejs)
+* [Gift Cards API Overview](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api)
+* [Gift Cards API Reference](https://developer.squareup.com/reference/square/gift-cards-api)
+* [Gift Card Activities API Reference](https://developer.squareup.com/reference/square/gift-card-activities-api)
 
-This sample web application integrates the Square [Gift Cards API](https://developer.squareup.com/reference/square/gift-cards-api) and showcases its functionality, including:
+# Gift Card API Sample App
 
-*   Creating a gift card.
-*   Activating a gift card.
-*   Linking and unlinking a gift card to and from a customer. 
-*   Adding funds to a gift card.
-*   Viewing gift card activities.
+  - [Overview](#overview)
+  - [Test data](#test-data)
+  - [Setup](#setup)
+  - [Project organization](#project-organization)
+  - [Application flow](#application-flow)
 
-For an overview of the API, see [Gift Cards API Overview](https://developer.squareup.com/docs/gift-cards/using-gift-cards-api). 
+## Overview
 
-As an added feature, the application creates a barcode for each gift card. The functionality is not related to the Gift Cards API but illustrates a useful scenario: making payments directly with a gift card’s barcode on the Square POS.
+This sample web application is implemented using [Express](https://expressjs.com/). The purpose of this sample is to showcases the functionalities of the [Square Gift Cards API](https://developer.squareup.com/reference/square/gift-cards-api) and, including:
 
-The example application is fine for testing in the Square Sandbox. It does not implement features that are essential in the production environment, such as login authentication. For login, the application simply lists customers in the seller’s account (identified by the credentials you provide). You choose a customer and the application tracks the customer as logged in. 
+*   Creating a gift card
+*   Activating a gift card
+*   Linking and unlinking a gift card to and from a customer
+*   Adding funds to a gift card
+*   Viewing gift card activities
+
+This sample application also including sample code for generating gift cards' payment barcodes for Square POS using 3rd party libraries such as [bwip-js](https://github.com/metafloor/bwip-js).
 
 In addition to the Gift Cards API and the Gift Card Activities API, the application uses the following Square APIs for an integrated experience:
 
-* The [Orders API](https://developer.squareup.com/reference/square/orders-api) to create a gift card order.
-* The [Payments API](https://developer.squareup.com/reference/square/payments-api) to pay for the order.
-* The [Customers API](https://developer.squareup.com/reference/square/customers-api) to create customer profiles in the seller's Customer Directory. 
-* The [Locations API](https://developer.squareup.com/reference/square/locations-api) to find the seller’s currency to be used throughout the application.
+* The [Orders API](https://developer.squareup.com/reference/square/orders-api) to create a gift card order
+* The [Payments API](https://developer.squareup.com/reference/square/payments-api) to pay for the order
+* The [Customers API](https://developer.squareup.com/reference/square/customers-api) to create customer profiles in the seller's Customer Directory
+* The [Locations API](https://developer.squareup.com/reference/square/locations-api) to find the seller’s currency to be used throughout the application
 
-Before you begin, note the following:
+***Disclaimer***
 
-* **Application framework.** This sample uses Express (a web framework for Node.js). Node.js is used primarily because it is easy to set up and test. Otherwise, you can use any other Square-provided SDK. 
-
-* **Sandbox testing.** Application configuration allows you to test the application both in the Square Sandbox and in the production environment. For testing, the Sandbox is great because you do not charge your real credit card. Instead, you use a fake card that Square provides for the Sandbox environment.
+The sample application does not implement a login authentication mechanism that is suitable for production deployment. Instead, you are allow to login as any customer in the seller’s account under the credentials you provide. Please take this into consideration when using login/logout-related pieces of the source code.
 
 ## Setup
 
-1. Ensure that you have npm installed with Node.js version v10 or later (run `npm -v` in your terminal). If not, follow the instructions for your OS: [https://www.npmjs.com/get-npm](https://www.npmjs.com/get-npm) 
+1. Ensure that you have Node.js version v10 or later (run `npm -v` in your terminal). If not, follow the instructions for your OS: [https://nodejs.org](https://nodejs.org) 
 
 2. Set your credentials: 
-    1. You need a `.env` file to provide credentials. Square provides a `.env.example` file. You should make a copy and name it `.env`.
-    2. In the file, set the following:
-        1. Environment to Sandbox (for testing).
-        2. Provide other credentials for the Sandbox environment. 
+    1. Copy the `.env.example` file at the top of this directory and paste the file as `.env`
+    2. In the file, replace the placeholder texts with actual values for:
+        * `ENVIRONMENT` should be set to `sandbox` or `production` 
+        * `SQUARE_APPLICATION_ID` and `SQUARE_ACCESS_TOKEN` can be found under the *Credentials* tab in your Square application
+        * `SQUARE_LOCATION_ID` can be found under the *Locations* tabs in your Square application
  
-    For more information, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application). The Create an Application section explains introductory credentials information. 
+    Navigate to the [Developer Dashboard](https://developer.squareup.com/apps) to manage and retrieve credentials for Square applications. For more information on creating a Square application, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application).
 
-    **WARNING:** Remember to use your own credentials only for testing the sample application. If you plan to make a version of this sample application available for your own purposes, use the Square [OAuth API](https://developer.squareup.com/docs/oauth-api/overview) to safely manage access to Square accounts. 
+    **Warning:** Remember to use your own credentials only for testing the sample application. If you plan to make a version of this sample application available for your own purposes, use the Square [OAuth API](https://developer.squareup.com/docs/oauth-api/overview) to safely manage access to Square accounts. 
 
-3. Open your terminal and install the sample application's dependencies with the following command: 
+    **Sandbox testing:** You may configure this application to run using either Square `sandbox` and `production` environments and credentials. For testing, the `sandbox` environment is recommended because you can use a fake credit cards to test payments. To learn more about testing in the sandbox environment, refer to [Test in the Sandbox](https://developer.squareup.com/docs/testing/sandbox).
+
+3. From the directory `connect-examples/v2/node_gift-cards`, install the sample application's dependencies with the following command: 
  
    `npm install`
-4. Test the application and run the server. Depending on the content of the `.env` file, the application runs in the Square Sandbox or production environment.
+
+4. Run the application:
 
    `npm start` 
 
-5. Enter **localhost:3000** in your browser. Initially, you get a login page. You choose one of the customers to log in as. If the customer has previously created gift cards, the dashboard shows those gift cards. You can then explore the application and Gift Cards API. It is assumed that you have tested customers with cards on file for Sandbox testing. If not, see the next step.
+5. Go to http://localhost:3000 in your browser to explore the application
 
+## Test data
+
+In order to explore the full features of this sample application, you are expected to have existing customers with cards on file associated with your seller's account.
+
+If you configured your `.env` file to run in the `sandbox` environment, you will be able to create new customers and cards on file for each customer directly in the UI. In order to protect your `production` data, these features are disabled if you choose to run the application using the `production` environment.
+
+You may also reset test data created by the sample app by clicking on the reset link on the login page.
 
 ## Project organization
 
 This Express.js project is organized as follows:
 
-*   **.env.** Square provides a `.env.example` file. You should make a copy of this file and save it as `.env`. You should provide your credentials in the `.env` file.
-*   **/public.** Provides images, JavaScript, and CSS files used to render the pages.
-*   **/routes.** The following JavaScript files define the routes to handle requests:
-    *   **index.js.** Provides routes to handle all the login or logout requests for the initial page. 
-    *   **dashboard.js.** Provides a route to display customer gift cards. 
-    *   **gift-card.js.** Provides routes to manage gift cards. This includes gift card creation and managing gift card activities.
-    *   **seed.js.** Provides routes that are used only when you test this application in the Square Sandbox. The endpoints are used to create customers to the seller’s Customer Directory and to add cards (credit or debit) on files that are used to pay for gift cards. It also provides a route to clear the test data you create during this application testing.
-*   **/util.** Includes the following:
-    *   **square_client.js.** The utility code initializes the Square SDK client. 
-    *   **middleware.js.** Provides functions that are called in a router before the controller code. These functions verify that the customer has permissions to perform actions that the controller code performs.
-*   **/views.** Provides the view (.ejs) files.
-
-## Sample data
-
-You need a customer in the Customer Directory with a card on file to pay for a gift card order. When testing in the Square Sandbox, the application can provide sample data for you:
-
-*   The login page provides the following:
-    *   The **Select customer** drop-down menu provides an option to create a customer.
-    *   The page also provides the **Reset now** link to clear any previously created test data.
-*   As you test the application, when you create a gift card, you get an option to add a card on file. You can then use the card to pay for a gift card order.
+*   **.env** Square provides a `.env.example` file. You should make a copy of this file and save it as `.env`. You should provide your credentials in the `.env` file.
+*   **./public/** contains images, JavaScript, and CSS files used to render the pages.
+*   **./routes/** The following JavaScript files define the routes to handle requests:
+    *   **index.js** contains routes to handle all the login or logout requests
+    *   **dashboard.js** contains a route to display customers' gift cards
+    *   **gift-card.js** contains routes for managing gift cards. This includes gift card creation and managing gift card activities
+    *   **seed.js** contains routes for managing test data when using the `sandbox` environment
+*   **./util/** includes the following:
+    *   **square_client.js** an utility module for initializing the Square SDK client
+    *   **middleware.js** contains middleware functions for verifying permissions
+*   **./views/** contains template (.ejs) files.
 
 ## Application flow
 
 The application flow is explained with the assumption that you are familiar with [Express](https://expressjs.com/) (the web framework for Node.js).
-
 
 ### Login
 
@@ -137,7 +145,7 @@ However, the application does not perform any real login authentication. Instead
 
 ### Gift card dashboard
 
-Now that the customer is logged in, the handler `res.redirect("/") `calls `.redirect('/dashboard')` to redirect the request to the following controller (in dashboard.js):
+Once you are logged in as a customer, the handler `res.redirect("/") `calls `.redirect('/dashboard')` to redirect the request to the following controller (in dashboard.js):
 
 ```
 router.get("/", checkLoginStatus, async (req, res, next) => {

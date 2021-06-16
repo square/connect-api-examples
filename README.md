@@ -7,7 +7,7 @@ Square Connect API and templates to simplify use of our SDKs and APIs.
 ## In this repository
 
 * `connect-examples/oauth` - samples demonstrating OAuth functionality
-* `connect-examples/v1` - samples demonstrating Connect v1 functionality
+* `connect-examples/v1_deprecated` - DEPRECATED: samples demonstrating Connect v1 functionality
 * `connect-examples/v2` - samples demonstrating Connect v2 functionality
 * `templates/` - code blocks and function definitions to simplify common usage
 
