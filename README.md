@@ -34,7 +34,7 @@ Before you begin, note the following:
 1. Ensure that you have npm installed with Node.js version v10 or later (run `npm -v` in your terminal). If not, follow the instructions for your OS: [https://www.npmjs.com/get-npm](https://www.npmjs.com/get-npm) 
 
 2. Set your credentials: 
-    1. You need a .env file to provide credentials. Square provides a .env.example file. You should make a copy and name it .env. 
+    1. You need a `.env` file to provide credentials. Square provides a `.env.example` file. You should make a copy and name it `.env`.
     2. In the file, set the following:
         1. Environment to Sandbox (for testing).
         2. Provide other credentials for the Sandbox environment. 
@@ -46,7 +46,7 @@ Before you begin, note the following:
 3. Open your terminal and install the sample application's dependencies with the following command: 
  
    `npm install`
-4. Test the application and run the server. Depending on the content of the .env file, the application runs in the Square Sandbox or production environment. 
+4. Test the application and run the server. Depending on the content of the `.env` file, the application runs in the Square Sandbox or production environment.
 
    `npm start` 
 
@@ -57,7 +57,7 @@ Before you begin, note the following:
 
 This Express.js project is organized as follows:
 
-*   **.env.** Square provides a .env.example file. You should make a copy of this file and save it as .env. You should provide your credentials in the .env file.
+*   **.env.** Square provides a `.env.example` file. You should make a copy of this file and save it as `.env`. You should provide your credentials in the `.env` file.
 *   **/public.** Provides images, JavaScript, and CSS files used to render the pages.
 *   **/routes.** The following JavaScript files define the routes to handle requests:
     *   **index.js.** Provides routes to handle all the login or logout requests for the initial page. 
