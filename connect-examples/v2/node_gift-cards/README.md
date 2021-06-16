@@ -202,7 +202,6 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
     next(error);
   }
 });
-
 ```
 
 The above handler makes the following Gift Cards API calls: 
