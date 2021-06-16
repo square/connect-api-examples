@@ -117,13 +117,12 @@ getImageForBrand = function(brand) {
 }
 
 getCustomersData = function(customers) {
-  return customers.map((customer) => {
-    return {
+  return customers.map(customer => ({
     description: "Customer",
     value: customer.id,
     displayValue: getCustomerName(customer.givenName, customer.familyName),
-    }
- });
+    })
+  );
 }
 
 getCustomerName = function(firstName, lastName, length = 40) {
@@ -137,13 +136,12 @@ getCustomerName = function(firstName, lastName, length = 40) {
 }
 
 getCardsData = function(cards) {
-  return cards.map((card) => {
-    return {
+  return cards.map(card => ({
     img: getImageForBrand(card.cardBrand),
     value: card.id,
     displayValue: capitalize(card.cardBrand) + " ●●●● " + card.last4,
     description: capitalize(card.cardBrand)
-    }
-  });
+    })
+  );
 }
 %>
