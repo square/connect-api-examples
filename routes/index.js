@@ -65,7 +65,7 @@ router.get("/login", async (req, res, next) => {
 
     res.render("pages/login",
       { customers, customerCreated, customerCreatedGivenName, customerCreatedFamilyName, reset });
-  } catch(error) {
+  } catch (error) {
     console.error(error);
     next(error);
   }
@@ -84,7 +84,7 @@ router.post("/login", async (req, res, next) => {
       const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
       req.session.customerGivenName = customer.givenName;
       req.session.customerFamilyName = customer.familyName;
-    } catch(error) {
+    } catch (error) {
       console.error(error);
       next(error);
     }

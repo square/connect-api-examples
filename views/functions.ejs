@@ -3,8 +3,10 @@
 /**
  * This function formats money amount based on the currency used.
  * You can pass in a flag for whether you want the values rounded or not.
+ * Value should be in the lowest denomination for the currency.
  */
-formatMoney = function(value, currency, isRounded) {
+formatMoney = function(value, currency, isRounded = false) {
+  let valueAsNumber = Number(value);
   // Create number formatter.
   const props = {
     style: 'currency',
@@ -16,9 +18,15 @@ formatMoney = function(value, currency, isRounded) {
     props.maximumFractionDigits = 0;
     props.minimumFractionDigits = 0;
   }
+
+  // Some currencies don't need to use higher denominations to represent values.
+  if (currency !== "JPY") {
+    valueAsNumber /= 100.0;
+  }
+
   var formatter = new Intl.NumberFormat('en-US', props);
 
-  return formatter.format(Number(value)/100.0);
+  return formatter.format(valueAsNumber);
 }
 
 /**
@@ -143,13 +151,12 @@ getImageForBrand = function(brand) {
  * A function to build data from a list of Customer objects for the select dropdown element.
  */
 getCustomersData = function(customers) {
-  return customers.map((customer) => {
-    return {
+  return customers.map(customer => ({
     description: "Customer",
     value: customer.id,
     displayValue: getCustomerName(customer.givenName, customer.familyName),
-    }
- });
+    })
+  );
 }
 
 /**
@@ -170,13 +177,28 @@ getCustomerName = function(firstName, lastName, length = 40) {
  * A function to build data from a list of Cards objects for the select dropdown element.
  */
 getCardsData = function(cards) {
-  return cards.map((card) => {
-    return {
+  return cards.map(card => ({
     img: getImageForBrand(card.cardBrand),
     value: card.id,
     displayValue: capitalize(card.cardBrand) + " ●●●● " + card.last4,
     description: capitalize(card.cardBrand)
-    }
-  });
+    })
+  );
+}
+
+getMinAndStepByCurrency = function(currency) {
+  if (currency === "JPY") {
+    return 1;
+  } 
+
+  return 0.01;
+}
+
+getMaxByCurrency = function(maxAllowedInSmallestDenomination, currency) {
+  if (currency === "JPY") {
+    return maxAllowedInSmallestDenomination;
+  } 
+
+  return Number(maxAllowedInSmallestDenomination) / 100.0;
 }
 %>
