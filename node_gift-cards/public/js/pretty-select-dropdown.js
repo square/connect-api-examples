@@ -197,8 +197,8 @@ class PrettySelectDropdown {
   /**
    * Selects an option and sets the value of #pretty-dropdown__value
    * to that of the selected option
-   * 
-   * @param {*} event 
+   *
+   * @param {*} event
    */
   _select(event) {
     var currentSelected = this.dropdownElement.querySelector(".option-selected")
