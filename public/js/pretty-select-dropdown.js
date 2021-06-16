@@ -1,5 +1,5 @@
 
-class PrettyDropdownSelect {
+class PrettySelectDropdown {
   /**
    * Class for handling the drop down selection elements
    * 
@@ -51,6 +51,9 @@ class PrettyDropdownSelect {
     }
   }
 
+  /**
+   * Build the select dropdown elements
+   */
   _buildDropdownElements() {
     this.dropdownElement.classList.add("pretty-dropdown");
 
@@ -99,6 +102,9 @@ class PrettyDropdownSelect {
     this.dropdownElement.appendChild(dropdownOptionsWrapper);
   }
 
+  /**
+   * Create the select options using this.data
+   */
   _buildDropdownData() {
     // if data length is > 0, then build the options list
     if (this.data.length > 0) {
@@ -107,8 +113,8 @@ class PrettyDropdownSelect {
       this.dropdownElement.querySelector(".pretty-dropdown__selected-display-value").innerText = this.data[0].displayValue;
       var valueInput = document.getElementById("pretty-dropdown__value")
       valueInput.setAttribute("value", this.data[0].value);
-      var event = new Event("input");
-      valueInput.dispatchEvent(event);
+      var inputEvent = new Event("input");
+      valueInput.dispatchEvent(inputEvent);
 
       if (this.data[0].img) {
         this.dropdownElement.querySelector(".pretty-dropdown__selected-image").querySelector("img").src = this.data[0].img;
@@ -157,6 +163,9 @@ class PrettyDropdownSelect {
     }
   }
 
+  /**
+   * Apply any options specified
+   */
   _applyOptions() {
     if (this.options.placeholderImg) {
       this.dropdownElement
@@ -174,6 +183,7 @@ class PrettyDropdownSelect {
       document.getElementById("pretty-dropdown__value").setAttribute("value", "");
     }
 
+    // Add elements with certain IDs to the pretty-dropdown__options-wrapper
     if (this.options.addonIds) {
       this.options.addonIds.forEach(id => {
         var element = document.getElementById(id);
@@ -184,6 +194,12 @@ class PrettyDropdownSelect {
     }
   }
 
+  /**
+   * Selects an option and sets the value of #pretty-dropdown__value
+   * to that of the selected option
+   * 
+   * @param {*} event 
+   */
   _select(event) {
     var currentSelected = this.dropdownElement.querySelector(".option-selected")
     if (currentSelected) {
@@ -209,12 +225,15 @@ class PrettyDropdownSelect {
     // Update the actual value to be submitted
     var valueInput = document.getElementById("pretty-dropdown__value")
     valueInput.setAttribute("value", value);
-    var event = new Event("input");
-    valueInput.dispatchEvent(event);
+    var inputEvent = new Event("input");
+    valueInput.dispatchEvent(inputEvent);
 
     this._showOptions();
   }
 
+  /**
+   * Toggles open the select options
+   */
   _showOptions() {
     if (!this.dropdownElement.classList.contains("pretty-dropdown__disabled")) {
       this.dropdownElement.querySelector(".pretty-dropdown__options-wrapper").classList.toggle("show");
@@ -222,9 +241,11 @@ class PrettyDropdownSelect {
     }
   }
 
+  /**
+   * configure the input listener for #pretty-dropdown__value and disable the
+   * submit button if the value of #pretty-dropdown__value is empty
+   */
   _configureElements() {
-    // configure the input listener for #pretty-dropdown__value and disable the
-    // submit button if the value is empty
     var valueInput = document.getElementById("pretty-dropdown__value");
     var submitButton = valueInput.closest("form").querySelector(":scope > button[type=submit]");
 
@@ -236,7 +257,7 @@ class PrettyDropdownSelect {
       }
     });
 
-    var event = new Event("input");
-    valueInput.dispatchEvent(event);
+    var inputEvent = new Event("input");
+    valueInput.dispatchEvent(inputEvent);
   }
 }
