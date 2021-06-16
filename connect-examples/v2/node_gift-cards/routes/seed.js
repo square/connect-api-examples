@@ -20,7 +20,8 @@ const { v4: uuidv4 } = require("uuid");
 const {
   customersApi,
   giftCardsApi,
-  giftCardActivitiesApi
+  giftCardActivitiesApi,
+  cardsApi
 } = require("../util/square-client");
 
 const locationId = process.env[`SQUARE_LOCATION_ID`];
@@ -40,8 +41,9 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
   try {
     const customerId = req.params.customerId;
     const gan = req.query.gan;
-    const cardNonce = "cnon:card-nonce-ok"
-    await customersApi.createCustomerCard(customerId, { cardNonce });
+
+    const createCardRequest = generateCreateCardRequest(customerId);
+    await cardsApi.createCard(createCardRequest);
 
     // Redirect to the add-funds page, which will now present the newly created card.
     res.redirect("/gift-card/" + gan + "/add-funds/?cardCreated=success");
@@ -212,6 +214,19 @@ function generateGiftCardDecativationRequest(gan) {
         // In the future we will support other reasons.
         reason: "SUSPICIOUS_ACTIVITY"
       }
+    }
+  }
+}
+
+/**
+ * Helper function to build a `create card` API request payload to create a test card on file.
+ */
+function generateCreateCardRequest(customerId) {
+  return {
+    idempotencyKey: uuidv4(),
+    sourceId: "cnon:card-nonce-ok",
+    card: {
+      customerId
     }
   }
 }

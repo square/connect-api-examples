@@ -21,9 +21,9 @@ const locationId = process.env[`SQUARE_LOCATION_ID`];
 const {
   giftCardsApi,
   giftCardActivitiesApi,
-  customersApi,
   ordersApi,
   paymentsApi,
+  cardsApi
 } = require("../util/square-client");
 
 const { checkLoginStatus, checkCardOwner, checkPendingCard } = require("../util/middleware");
@@ -108,20 +108,18 @@ router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkPendingCard, 
  * GET /gift-card/:gan/add-funds
  *
  * Renders the `add funds` page.
- * This endpoint retrieves all cards on file for the customer currently logged in.
- * You can add additional logic to filter out payment methods that might not be allowed
- * (i.e. loading gift cards using an existing gift card).
+ * This endpoint retrieves all cards (credit/debit) on file for the customer currently logged in.
  */
 router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const cardCreated = req.query.cardCreated;
+  const giftCard = res.locals.giftCard;
+  const customerId = req.session.customerId;
+
   try {
-    const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
-    let cards = [];
-    if (customer.cards) {
-      cards = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
+    let { result: { cards } } = await cardsApi.listCards(undefined, customerId);
+    if (!cards) {
+      cards = [];
     }
-    const giftCard = res.locals.giftCard;
-    const customerId = req.session.customerId;
 
     res.render("pages/add-funds", { cards, giftCard, customerId, cardCreated });
   } catch (error) {
