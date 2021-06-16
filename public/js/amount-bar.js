@@ -98,9 +98,11 @@ class AmountBar {
    */
   configureButtons(buttons) {
     for (var i = 0; i < buttons.length; i++) {
+      buttons[i].onclick = this.selectButton.bind(this, buttons[i]);
       if (buttons[i].classList.contains("custom")) {
         continue;
       }
+
       // For each button that is not "custom", set the text to be formatted based on currency.
       // Pass in true in order to achieve rounding, so text fits nicely. The actual function can be
       // found in `functions.ejs`.

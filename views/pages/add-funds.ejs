@@ -35,15 +35,15 @@
             <h5>Amount</h5>
             <div class="section__row">
                 <div id="amount-bar" class="amount-bar">
-                  <button class="btn active" type="button" amount-bar-value="500" onclick="amountBar.selectButton(this)">
+                  <button class="btn active" type="button" amount-bar-value="500">
                   </button>
-                  <button class="btn" type="button" amount-bar-value="1000" onclick="amountBar.selectButton(this)">
+                  <button class="btn" type="button" amount-bar-value="1000">
                   </button>
-                  <button class="btn" type="button" amount-bar-value="1500" onclick="amountBar.selectButton(this)">
+                  <button class="btn" type="button" amount-bar-value="1500">
                   </button>
-                  <button class="btn" type="button" amount-bar-value="2000" onclick="amountBar.selectButton(this)">
+                  <button class="btn" type="button" amount-bar-value="2000">
                   </button>
-                  <button class="btn custom" type="button" amount-bar-value="0.00" onclick="amountBar.selectButton(this)">
+                  <button class="btn custom" type="button" amount-bar-value="0.00">
                     Custom
                   </button>
               </div>
@@ -123,7 +123,7 @@
       <% } %>
 
       <script>
-        const amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%- currency %>", <%= maxLimit - Number(giftCard.balanceMoney.amount) %>);
+        const amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%= currency %>", <%= maxLimit - Number(giftCard.balanceMoney.amount) %>);
       </script>
   </body>
 
