@@ -34,7 +34,7 @@ In addition to the Gift Cards API and the Gift Card Activities API, the applicat
 
 ***Disclaimer***
 
-The sample application does not implement a login authentication mechanism that is suitable for production deployment. Instead, you are allow to login as any customer in the seller’s account under the credentials you provide. Please take this into consideration when using login/logout-related pieces of the source code.
+The sample application does not implement a login authentication mechanism that is suitable for production deployment. Instead, you are allowed to login as any customer in the seller’s account under the credentials you provide. Please take this into consideration when using login/logout-related pieces of the source code.
 
 ## Setup
 
@@ -51,7 +51,7 @@ The sample application does not implement a login authentication mechanism that 
 
     **Warning:** Remember to use your own credentials only for testing the sample application. If you plan to make a version of this sample application available for your own purposes, use the Square [OAuth API](https://developer.squareup.com/docs/oauth-api/overview) to safely manage access to Square accounts. 
 
-    **Sandbox testing:** You may configure this application to run using either Square `sandbox` and `production` environments and credentials. For testing, the `sandbox` environment is recommended because you can use a fake credit cards to test payments. To learn more about testing in the sandbox environment, refer to [Test in the Sandbox](https://developer.squareup.com/docs/testing/sandbox).
+    **Sandbox testing:** You may configure this application to run using either Square `sandbox` and `production` environments and credentials. For testing, the `sandbox` environment is recommended because you can use a fake credit or debit cards to test payments. To learn more about testing in the sandbox environment, refer to [Test in the Sandbox](https://developer.squareup.com/docs/testing/sandbox).
 
 3. From the directory `connect-examples/v2/node_gift-cards`, install the sample application's dependencies with the following command: 
  
@@ -75,16 +75,16 @@ You may also reset test data created by the sample app by clicking on the reset 
 
 This Express.js project is organized as follows:
 
-*   **.env** Square provides a `.env.example` file. You should make a copy of this file and save it as `.env`. You should provide your credentials in the `.env` file.
-*   **./public/** contains images, JavaScript, and CSS files used to render the pages.
-*   **./routes/** The following JavaScript files define the routes to handle requests:
-    *   **index.js** contains routes to handle all the login or logout requests
-    *   **dashboard.js** contains a route to display customers' gift cards
-    *   **gift-card.js** contains routes for managing gift cards. This includes gift card creation and managing gift card activities
-    *   **seed.js** contains routes for managing test data when using the `sandbox` environment
+* **.env** Square provides a `.env.example` file. You should make a copy of this file and save it as `.env`. You should provide your credentials in the `.env` file.
+* **./public/** contains images, JavaScript, and CSS files used to render the pages.
+* **./routes/** The following JavaScript files define the routes to handle requests:
+    * **index.js** contains routes to handle all the login or logout requests
+    * **dashboard.js** contains a route to display customers' gift cards
+    * **gift-card.js** contains routes for managing gift cards. This includes gift card creation and managing gift card activities
+    * **seed.js** contains routes for managing test data when using the `sandbox` environment
 *   **./util/** includes the following:
-    *   **square_client.js** an utility module for initializing the Square SDK client
-    *   **middleware.js** contains middleware functions for verifying permissions
+    * **square_client.js** an utility module for initializing the Square SDK client
+    * **middleware.js** contains middleware functions for verifying permissions
 *   **./views/** contains template (.ejs) files.
 
 ## Application flow
@@ -93,19 +93,17 @@ The application flow is explained with the assumption that you are familiar with
 
 ### Login
 
-The application relies on a logged in customer. For example:
+<img src="./bin/images/gift-cards-api-app-10.png" width="300"/>
 
-* The dashboard shows gift cards on file for the logged in customer.
-* When you add a new gift card, the application links it to the logged in customer.
+Many API calls used in this sample app requires a customer ID. The customer ID is set when you log in as one of the customers on the login page and it is used for the following actions:
+* Retrieving a list of gift cards for the customer using the [List gift cards API](https://developer.squareup.com/reference/square/gift-cards-api/list-gift-cards)
+* Creating a new gift card and linking it to a customer using the [Link customer to gift card API](https://developer.squareup.com/reference/square/gift-cards-api/link-customer-to-gift-card)
 
-However, the application does not perform any real login authentication. Instead, the application first retrieves all customer profiles from the seller’s account (the seller whose credentials you provided in the config file). The application then shows a login page with the customer list. You choose a customer to log in. The application saves the customer ID for the session as the logged in customer. 
+If you are not logged in, you will be redirected to the _/login_ page, where the [List customers API](https://developer.squareup.com/reference/square/customers-api/list-customers) is called to retreive a list of customers under the seller's account.
 
+After logging in as a customer, the customer ID and login status is stored in a session, then you are redirected to the _/dashboard_. See code in [index.js](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/routes/index.js):
 
-**Note:** Do not copy this code in production, implement real authentication methods instead.
-
-1. When you enter **localhost:3000** in the browser, the following handler (in index.js) executes: 
-
-    ```
+  ```
     router.get("/", async (req, res, next) => {
       if (req.session.loggedIn) {
         res.redirect('/dashboard');
@@ -113,79 +111,76 @@ However, the application does not perform any real login authentication. Instead
         res.redirect('/login');
       }
     });
-    ```
-    Depending on whether the customer is logged in, the handler redirects to one of the following paths: _/dashboard_ (see next section) or _/login_. Assuming that the user is not logged in, the handler calls `res.redirect('/login'); `to render a login page. 
 
-    ```
     router.get("/login", async (req, res, next) => {
      let customers;
      try {
        const response = await customersApi.listCustomers();
        customers = response.result.customers;
+       ...
 
        res.render("pages/login", {customers})
      } catch(error) {
-       console.log(error);
        next(error);
      }
     });
-    ```
-    This handler function calls `listCustomers` (Customers API) to get a list of customers using the Customers API and then renders the login page. An example screenshot is shown: 
 
-    <img src="./bin/images/gift-cards-api-app-10.png" width="300"/>
+  /** Please do not copy the following code for authentication **/
+  router.post("/login", async (req, res, next) => {
+    if (req.body.customer) {
+      req.session.loggedIn = true;
+      req.session.customerId = req.body.customer;
+      ...
+    }
 
+    res.redirect("/");
+  });
+  ```
+**Important:** The login code in this example application does not perform any real authentication. In production, you need to write the necessary code.
 
-2. If you are running the application for the first time, you first choose **Add customer** from the **Select customer** drop-down menu to create a new customer.
+#### Adding new customers
 
-    Note that you can choose **Reset now** to delete previously created sample data that the application created.
+If you are running the application in `sandbox` environment, you may create test customers by clicking the *Add customer* button from the *Select customer* select drop-down.
 
-3. You choose a customer from the drop-down menu and choose **Login**. The button click form action (see pages/login.ejs) calls the `router.post("/login", async (req, res, next))` router in index.js. The controller stores the customer ID in the session and redirects back to the handler `res.redirect("/") `to render the gift card dashboard.
-
-**IMPORTANT:** The login code in this example application does not perform any real authentication. In production, you need to write the necessary code.
+You can click on *Reset now* on the login page to delete customer data created by the application.
 
 ### Gift card dashboard
 
-Once you are logged in as a customer, the handler `res.redirect("/") `calls `.redirect('/dashboard')` to redirect the request to the following controller (in dashboard.js):
+Once you are logged in as a customer, you are then redirected to the _/dashboard_ page. This page displays a list of gift cards that are retrieved using the [List gift cards API](https://developer.squareup.com/reference/square/gift-cards-api/list-gift-cards). See code in [dashboard.js](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/routes/dashboard.js)
 
 ```
 router.get("/", checkLoginStatus, async (req, res, next) => {
-  // display a list of gift cards linked to the
-  // customer's account
+  // display a list of gift cards linked to the customer's account
+  const deletion = req.query.deletion;
   try {
-    const {result : { giftCards } } = await giftCardsApi.listGiftCards(undefined, undefined, undefined, undefined, req.session.customerId);
-
+    let { result: { giftCards } } = await giftCardsApi.listGiftCards(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      req.session.customerId);
     if (!giftCards) {
-      res.render("pages/dashboard", { giftCards: [] });
-    } else {
-      res.render("pages/dashboard", { giftCards });
+      giftCards = [];
     }
+
+    res.render("pages/dashboard", { giftCards, deletion });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 });
 ```
-After `checkLoginStatus` (see middleware.js) verifies that the customer is logged in, the handler calls `listGiftCards` (Gift Cards API) to retrieve gift cards linked to the customer. These cards are displayed on the dashboard view.  
+The following [middleware](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/util/middleware.js) are executed to verify permissions:
+* `checkLoginStatus` verifies that the customer is logged in
  
-The following example screenshot shows a dashboard with no gift cards and a button to create more. 
+The following screenshot shows a dashboard with no gift cards and a button to create more. 
 
 <img src="./bin/images/gift-cards-api-app-20.png" width="300"/>
 
-The gift card dashboard enables the following: 
+### Add a new gift card
 
-*   **Add a new gift card.** The application creates a gift card (see [CreateGiftCard](https://developer.squareup.com/reference/square/gift-cards-api/create-gift-card)) and links it to the customer (see [LinkCustomerToGiftCard](https://developer.squareup.com/reference/square/gift-cards-api/link-customer-to-gift-card)).
-*   **View specific gift card details and manage gift card activities.** After you create one or more gift cards, you can view gift card details such as the balance amount (see [RetrieveGiftCardFromGAN](https://developer.squareup.com/reference/square/gift-cards-api/retrieve-gift-card-from-gan)), view the transaction history (see [ListGiftCardActivities](https://developer.squareup.com/reference/square/gift-card-activities-api/list-gift-card-activities)), and add funds to a gift card. Adding funds involves a series of steps, including creating an order using the Orders API, taking a payment using Payments API, and using the Gift Cards API (see [CreateGiftCardActivity](https://developer.squareup.com/reference/square/gift-card-activities-api/create-gift-card-activity)) to load funds.
+From the */dashboard* page, you may add a new gift card. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L38);
 
-The following sections explain the application flow for these dashboard activities: creating a gift card and adding funds to it.
-
-### Add a new gift card 
-This section explains using the dashboard to add a gift card and link it to the customer profile.
-
-1. Make sure the dashboard is open. If not, choose **Gift Card Dashboard** to open it. 
-
-2. Choose **Add Gift Card**. The button click form action (see pages/dashboard.ejs) calls the following handler (in gift-cards.js):  
-
-    ```
+  ```
    router.post("/create", checkLoginStatus, async (req, res, next) => {
      try {
        // The following information will come from the request/session.
@@ -207,28 +202,19 @@ This section explains using the dashboard to add a gift card and link it to the 
        next(error);
      }
    });
-   ```
-   The controller makes the following Gift Cards API calls: 
 
-    *   `createGiftCard`. Create a gift card (with no funds and pending activation).
-    *   `linkCustomerToGiftCard`. Links the gift card to the logged in customer.
+  ```
 
-    The controller then redirects back to the card details page (`pages/card-detail`).
+The above handler makes the following Gift Cards API calls: 
 
+  *   `createGiftCard`: Create a gift card with no funds and pending activation using the [Create gift card API](https://developer.squareup.com/reference/square/gift-cards-api/create-gift-card)
+  *   `linkCustomerToGiftCard`: Links the gift card to the logged in customer using the [Link customer to gift card API](https://developer.squareup.com/reference/square/gift-cards-api/link-customer-to-gift-card)
 
-     `router.get("/:gan", checkLoginStatus, checkCardOwner, async(...))` 
+### Card details page
 
-     <img src="./bin/images/gift-cards-api-app-30.png" width="300"/>
+<img src="./bin/images/gift-cards-api-app-30.png" width="300"/>
 
-3. Choose **Dashboard** to return to the dashboard. The dashboard now shows the newly added card. At this time, the card is not activated and it has no funds. The next section explains the details.
-
-### Add funds to a gift card 
-
-This section explains the application flow for activating the gift card and adding funds.
-
-1. Make sure the dashboard is open. If not, choose **Gift Card Dashboard** to open it.
-2. Choose the card you created in the preceding step.    
-   The button click action calls the following router (in gift-card.js).
+Once a new gift card is created, you are redirect to the card's details page; you may also access this page through the dashboard. At this time, the card is not activated and it has no funds. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L63)
    ```
    router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
       const giftCard = res.locals.giftCard;
@@ -237,81 +223,95 @@ This section explains the application flow for activating the gift card and addi
       res.render("pages/card-detail", { giftCard, payment });
     });
    ```
-    After the functions `checkLoginStatus `and `checkCardOwner` (in middleware.js) verify that the customer is still logged in and the card requested is linked to the customer, the handler function executes. It calls `res.render("pages/card-detail")` to compile the template and render the gift card HTML. 
 
-3. On the **Gift Card** page, choose **Add Funds**. The button click form action calls the following handler (in gift-cards.js.): 
+### Add funds to a gift card 
 
-    ```
-    router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
-     const gan = req.params.gan;
-     try {
-       const { result: { customer } } = await customersApi.retrieveCustomer(req.session.customerId);
-       const creditCardsOnFile = customer.cards.filter(card => card.cardBrand !== "SQUARE_GIFT_CARD");
-       res.render("pages/add-funds", { cards: creditCardsOnFile, gan, giftCard: res.locals.giftCard });
-     } catch (error) {
-       console.error(error);
-       next(error);
-     }
-   });
-   ```
+From the card's details page described above, you may add funds to the gift card using a credit or debit card on file by clicking on the _Add Funds_ button. 
 
-    This example application allows customers to use credit or debit cards on file to pay for adding funds to the gift card. The customer might have gift cards on file, but the application does not allow using a gift card on file to load funds on another gift card. 
+The customer's cards on file are retrieved using the [List cards API](https://developer.squareup.com/reference/square/cards-api/list-cards). See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L113):
 
-    The controller code does the following:
-    *   Calls `retrieveCustomer` (Customers API) to retrieve customer information that includes cards on file.
-    *   Calls `res.render("pages/add-funds"...)` to compile the template and render the resulting **Add funds** HTML. An example is shown: 
+```
+router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+  const cardCreated = req.query.cardCreated;
+  const giftCard = res.locals.giftCard;
+  const customerId = req.session.customerId;
 
-    <img src="./bin/images/gift-cards-api-app-40.png" width="300"/>
+  try {
+    let { result: { cards } } = await cardsApi.listCards(undefined, customerId);
+    if (!cards) {
+      cards = [];
+    }
 
-4. You choose the amount to add and a card on file from the drop-down menu that you want charged. If there is no card on file, choose **Add card** to create a card on file. Then select the card on file and choose **Pay**.  
-The button click form action calls the following handler (in gift-cards.js.):
+    res.render("pages/add-funds", { cards, giftCard, customerId, cardCreated });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+```
+The following [middleware](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/util/middleware.js) are executed to verify permissions:
+* `checkLoginStatus` verifies that the customer is logged in
+* `checkCardOwner` verified that the card being accessed belongs to the logged in customer
 
-   ```
-   router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
-     try {
-       // The following information will come from the request/session.
-       const customerId = req.session.customerId;
-       const amount = req.body.amount;
-       const paymentSource = req.body.cardId;
-       const giftCardState = req.body.state;
-       const gan = req.params.gan;
+This example application only allows customers to use credit or debit cards on file to pay for adding funds to gift cards. You cannot pay for gift cards using other gift cards.
 
-       // Get the currency to be used for the order/payment.
-       const currency = req.app.locals.currency;
+<img src="./bin/images/gift-cards-api-app-40.png" width="300"/>
 
-       // The following code runs the order/payment flow.
-       // Await order call, as payment needs order information.
-       const orderRequest = generateOrderRequest(customerId, amount, currency);
-       const { result: { order } } = await ordersApi.createOrder(orderRequest);
+Then you can choose the amount to add and select a card on file from the select drop-down to pay with. If there is no card on file, you may click on the _Add card_ button to create a card on file under the `sandbox` environment. Click on the _Pay_ button to submit the payment. 
 
-       // Extract useful information from the order.
-       const orderId = order.id;
-       const lineItemId = order.lineItems[0].uid;
+The following APIs are used to add funds to a gift card:
+* `createOrder` creates an order with a line item that has `item_type` set to GIFT_CARD using the [Create order API](https://developer.squareup.com/reference/square/orders-api/create-order)
+* `createPayment` takes payment by charging the specified card on file using the [Create payment API](https://developer.squareup.com/reference/square/payments-api/create-payment)
+* `createGiftCardActivity` load funds on the gift card using the [Create gift card activity API](https://developer.squareup.com/reference/square/gift-card-activities-api/create-gift-card-activity). In the request, the activity type is set appropriately. For example, LOAD to load funds or ACTIVATE to activate the gift card.
 
-       // We have the order response, we can move on to the payment.
-       const paymentRequest = generatePaymentRequest(customerId, amount, currency, paymentSource, orderId);
-       await paymentsApi.createPayment(paymentRequest);
+See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L140)
 
-       // Load or activate the gift card based on its current state.
-       // If the gift card is pending, activate it with the amount given.
-       // Otherwise, if the card is already active, load it with the amount given.
-       const giftCardActivity = giftCardState === "PENDING" ? "ACTIVATE" : "LOAD";
-       const giftCardActivityRequest = generateGiftCardActivityRequest(giftCardActivity, gan, orderId, lineItemId);
-       await giftCardActivitiesApi.createGiftCardActivity(giftCardActivityRequest);
+```
+router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+  try {
+    // The following information will come from the request/session.
+    const customerId = req.session.customerId;
+    const amount = req.body.amount;
+    const paymentSource = req.body.cardId;
+    const giftCardState = req.body.state;
+    const gan = req.params.gan;
 
-       // Redirect to GET /gift-card/:gan, which will render the card-detail page, with a success message.
-       res.redirect("/gift-card/" + gan + "/?payment=success");
-     } catch (error) {
-       console.error(error);
-       next(error);
-     }
-   });
-   ```
-   After the `checkLoginStatus` and `checkCardOwner` functions verify that the customer is logged in and the card being loaded belongs to the logged in customer, the controller function executes. It makes the following API calls: 
-   
-   *   `createOrder (Orders API)`. Create an order with a line item that has `item_type` set to GIFT_CARD because you are creating this order to add money to the gift card. 
-   *   `createPayment (Payments API)`. Take payment by charging the specified card on file. 
-   *   `createGiftCardActivity (GiftCardActivities API)`. Load funds on the gift card by calling this endpoint. In the request, the activity type is set appropriately. For example, LOAD to load funds or ACTIVATE to activate the gift card.
+    // Get the currency to be used for the order/payment.
+    const currency = req.app.locals.currency;
+
+    // The following code runs the order/payment flow.
+    // Await order call, as payment needs order information.
+    const orderRequest = generateOrderRequest(customerId, amount, currency);
+    const { result: { order } } = await ordersApi.createOrder(orderRequest);
+
+    // Extract useful information from the order.
+    const orderId = order.id;
+    const lineItemUid = order.lineItems[0].uid;
+
+    // We have the order response, we can move on to the payment.
+    const paymentRequest = generatePaymentRequest(customerId, amount, currency, paymentSource, orderId);
+    await paymentsApi.createPayment(paymentRequest);
+
+    // Load or activate the gift card based on its current state.
+    // If the gift card is pending, activate it with the amount given.
+    // Otherwise, if the card is already active, load it with the amount given.
+    const giftCardActivity = giftCardState === "PENDING" ? "ACTIVATE" : "LOAD";
+    const giftCardActivityRequest = generateGiftCardActivityRequest(giftCardActivity, gan, orderId, lineItemUid);
+    await giftCardActivitiesApi.createGiftCardActivity(giftCardActivityRequest);
+
+    // Redirect to GET /gift-card/:gan, which will render the card-detail page, with a success message.
+    res.redirect("/gift-card/" + gan + "/?payment=success");
+  } catch (error) {
+    next(error);
+  }
+});
+```
+
+**Note:** Gift cards have different maximum amount limits based on the currency of your seller account. You will not able to pay successfully if a card has reached its limit. In this app we prevent this error from the frontend.
+
+The following [middleware](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/util/middleware.js) are executed to verify permissions:
+* `checkLoginStatus` verifies that the customer is logged in
+* `checkCardOwner` verified that the card being accessed belongs to the logged in customer
 
 
 
