@@ -127,5 +127,12 @@ class AmountBar {
     } else {
       this.setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
     }
+
+    // Set the text for the `pay button` in the case where the maximum balance has been reached.
+    // Disable the custom amount text field as well.
+    if (this.maxAllowedToAdd === 0) {
+      document.getElementById("pay-button").innerHTML = "Maximum gift card balance reached";
+      document.getElementById("custom-amount-text").disabled = true;
+    }
   }
 }
