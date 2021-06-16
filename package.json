@@ -5,9 +5,7 @@
   "main": "app.js",
   "private": true,
   "scripts": {
-    "start": "nodemon -e js ./bin/www",
-    "seed": "node ./bin/script/seed-data.js generate",
-    "clear": "node ./bin/script/seed-data.js clear"
+    "start": "nodemon -e js ./bin/www"
   },
   "keywords": [
     "gift",
@@ -29,5 +27,8 @@
     "nodemon": "^2.0.7",
     "square": "^12.0.0",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.28.0"
   }
 }

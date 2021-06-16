@@ -3,7 +3,7 @@
 
   <head>
     <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
-    <link href="/stylesheets/pretty-dropdown-select.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/pretty-select-dropdown.css" rel="stylesheet" type="text/css">
   </head>
 
   <body>
@@ -103,20 +103,20 @@
       </div> 
       <% }; %>
 
-      <script src="/js/pretty-dropdown-select.js"></script>
+      <script src="/js/pretty-select-dropdown.js"></script>
       <script src="/js/amount-bar.js"></script>
 
       <% var cardsData = getCardsData(cards); %>
 
       <% if (cards.length > 0) { %>
       <script>
-        new PrettyDropdownSelect("cards-on-file-dropdown", 
+        new PrettySelectDropdown("cards-on-file-dropdown", 
         <%- stringifyJSON(cardsData) %>, 
         {placeholder: "Select card", placeholderImg: "/images/no-card.svg"});
       </script>
       <% } else { %>
         <script>
-          new PrettyDropdownSelect("cards-on-file-dropdown",
+          new PrettySelectDropdown("cards-on-file-dropdown",
           <%- stringifyJSON(cardsData) %>,
           {placeholder: "Select card", placeholderImg: "/images/no-card.svg", addonIds:["no-card"]});
         </script>
