@@ -9,11 +9,12 @@
         "sourceType": "module"
     },
     "rules": {
-      "no-unused-vars": ["error", { "argsIgnorePattern": "next" }]
+      "no-unused-vars": "off"
     },
     "globals": {
       "process": true,
       "require": true,
-      "module": true
+      "module": true,
+      "bwipjs": true
     }
 }
