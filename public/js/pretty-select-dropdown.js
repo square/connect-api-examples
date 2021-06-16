@@ -2,14 +2,14 @@
 class PrettySelectDropdown {
   /**
    * Class for handling the drop down selection elements
-   * 
-   * 
+   *
+   *
    * @param {*} elementId - id of the element to build the dropdown in
    * @param {*} data      - data for options in the dropdown select
    * @param {*} options   - options for additonal configuration
-   * 
+   *
    * example `data`:
-   * [ { 
+   * [ {
    *    img: "/example1.png",
    *    description: "Customer",
    *    value: "123456",
@@ -20,7 +20,7 @@ class PrettySelectDropdown {
    *    value: "123457",
    *    displayValue: "Sailor Moon"
    * }]
-   * 
+   *
    * example `options`: {
    *    disabled: false,                  // whether the dropdown is disabled
    *    addonIds: ["createCustomer"],     // additional elements added to the dropdown select list

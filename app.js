@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
 const { v4: uuidv4 } = require("uuid");
 
 const express = require("express");
@@ -26,10 +27,23 @@ const app = express();
 // Set currency to be used in the app, default to USD.
 const { locationsApi } = require("./util/square-client");
 app.locals.currency = "USD";
+app.locals.maxLimit = 200000;
 locationsApi.retrieveLocation(process.env[`SQUARE_LOCATION_ID`]).then(function(response) {
   app.locals.currency = response.result.location.currency;
+
+  // If the currency is one of the following currencies, we have to change our maximum allowed balance.
+  switch (app.locals.currency) {
+    case "JPY":
+      app.locals.maxLimit = 50000;
+      break;
+    case "GBP", "EUR":
+      app.locals.maxLimit = 75000;
+      break;
+    default:
+      app.locals.maxLimit = 200000;
+  }
 }).catch(function(error) {
-  if (error.statusCode == "401") {
+  if (error.statusCode === "401") {
     console.error("Configuration has failed. Please verify `.env` file is correct.");
   }
   process.exit(1);

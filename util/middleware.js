@@ -1,7 +1,27 @@
+/*
+Copyright 2021 Square Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 const {
   giftCardsApi
 } = require("./square-client");
 
+/**
+ * Verify that the a user is currently logged in.
+ * If there is no user logged in, we redirect to the login page.
+ */
 async function checkLoginStatus(req, res, next) {
   if (!req.session.loggedIn) {
     res.redirect("/login");
@@ -13,7 +33,7 @@ async function checkLoginStatus(req, res, next) {
 /**
  * If the gift card being accessed does not belong to the customer
  * logged in, redirect to the login page.
- * */
+ */
 async function checkCardOwner(req, res, next) {
   if (req.params.gan) {
     try {
@@ -57,9 +77,9 @@ async function checkSandboxEnv(req, res, next) {
 }
 
 /**
- * Verify that the card provided by the gan is inactive (i.e. PENDING).
+ * Verify that the card provided by the gan is pending (i.e. PENDING).
  */
- async function checkInactiveCard(req, res, next) {
+ async function checkPendingCard(req, res, next) {
   if (res.locals.giftCard.state !== "PENDING") {
     res.redirect("/");
   } else {
@@ -72,5 +92,5 @@ module.exports = {
   checkCardOwner,
   checkSandboxEnv,
   checkCustomerIdMatch,
-  checkInactiveCard
+  checkPendingCard
 };

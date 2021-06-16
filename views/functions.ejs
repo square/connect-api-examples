@@ -1,5 +1,12 @@
 <%
-formatMoney = function(value, currency, isRounded) {
+
+/**
+ * This function formats money amount based on the currency used.
+ * You can pass in a flag for whether you want the values rounded or not.
+ * Value should be in the lowest denomination for the currency.
+ */
+formatMoney = function(value, currency, isRounded = false) {
+  let valueAsNumber = Number(value);
   // Create number formatter.
   const props = {
     style: 'currency',
@@ -11,15 +18,27 @@ formatMoney = function(value, currency, isRounded) {
     props.maximumFractionDigits = 0;
     props.minimumFractionDigits = 0;
   }
+
+  // Some currencies don't need to use higher denominations to represent values.
+  if (currency !== "JPY") {
+    valueAsNumber /= 100.0;
+  }
+
   var formatter = new Intl.NumberFormat('en-US', props);
 
-  return formatter.format(Number(value)/100.0);
+  return formatter.format(valueAsNumber);
 }
 
+/**
+ * A function to format dates.
+ */
 formatDate = function(date) {
   return date.split("T")[0];
 }
 
+/**
+ * A function to get a text description of an activity based on its state.
+ */
 getActivityType = function(activity) {
   let type = activity.type;
 
@@ -45,6 +64,9 @@ getActivityType = function(activity) {
   }
 } 
 
+/**
+ * A function to extract the Money object from a GiftCardActivity object based on the activity type.
+ */
 getActivityMoney = function(activity) {
   let type = activity.type;
   let money;
@@ -79,12 +101,18 @@ getActivityMoney = function(activity) {
   }
 } 
 
+/**
+ * A helper function to stringify JSON objects that contains bigint.
+ */
 stringifyJSON = function(data) {
   return JSON.stringify(data, (key, value) =>
     typeof value === "bigint" ? value.toString() : value
   );
 }
 
+/**
+ * A function to captialize a certain value (VISA -> Visa, AMERICAN_EXPRESS -> American Express).
+ */
 capitalize = function(str) {
   if(str.includes("_")) {
     const words = str.split("_");
@@ -93,6 +121,9 @@ capitalize = function(str) {
   return str.charAt(0).toUpperCase() + str.toLowerCase().slice(1);
 }
 
+/**
+ * A function to return the path to the credit card brand logo based on the brand name.
+ */
 getImageForBrand = function(brand) {
   // Wiring the images for each card type. 
   // If path changes or you want to support more cards, change the code here.
@@ -107,7 +138,7 @@ getImageForBrand = function(brand) {
       name = "mastercard";
       break;
     case "AMERICAN_EXPRESS":
-      name = "apex"
+      name = "amex"
       break;
     default:
       break;
@@ -116,6 +147,9 @@ getImageForBrand = function(brand) {
   return prefix + name + extension;
 }
 
+/**
+ * A function to build data from a list of Customer objects for the select dropdown element.
+ */
 getCustomersData = function(customers) {
   return customers.map(customer => ({
     description: "Customer",
@@ -125,6 +159,10 @@ getCustomersData = function(customers) {
   );
 }
 
+/**
+ * A function to sanitize the customer display name given first and last name parameters.
+ * The length parameter is used to determine the length at which to truncate the string.
+ */
 getCustomerName = function(firstName, lastName, length = 40) {
   const fullName = [firstName, lastName].join(" ").trim();
   
@@ -135,6 +173,9 @@ getCustomerName = function(firstName, lastName, length = 40) {
   return fullName;
 }
 
+/**
+ * A function to build data from a list of Cards objects for the select dropdown element.
+ */
 getCardsData = function(cards) {
   return cards.map(card => ({
     img: getImageForBrand(card.cardBrand),
@@ -143,5 +184,21 @@ getCardsData = function(cards) {
     description: capitalize(card.cardBrand)
     })
   );
+}
+
+getMinAndStepByCurrency = function(currency) {
+  if (currency === "JPY") {
+    return 1;
+  } 
+
+  return 0.01;
+}
+
+getMaxByCurrency = function(maxAllowedInSmallestDenomination, currency) {
+  if (currency === "JPY") {
+    return maxAllowedInSmallestDenomination;
+  } 
+
+  return Number(maxAllowedInSmallestDenomination) / 100.0;
 }
 %>

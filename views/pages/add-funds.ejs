@@ -35,23 +35,29 @@
             <h5>Amount</h5>
             <div class="section__row">
                 <div id="amount-bar" class="amount-bar">
-                  <button class="btn active" type="button" amount-bar-value="500" onclick="selectButton(this)">
+                  <button class="btn active" type="button" amount-bar-value="500">
                   </button>
-                  <button class="btn" type="button" amount-bar-value="1000" onclick="selectButton(this)">
+                  <button class="btn" type="button" amount-bar-value="1000">
                   </button>
-                  <button class="btn" type="button" amount-bar-value="1500" onclick="selectButton(this)">
+                  <button class="btn" type="button" amount-bar-value="1500">
                   </button>
-                  <button class="btn" type="button" amount-bar-value="2000" onclick="selectButton(this)">
+                  <button class="btn" type="button" amount-bar-value="2000">
                   </button>
-                  <button class="btn custom" type="button" amount-bar-value="0.00" onclick="selectButton(this)">
+                  <button class="btn custom" type="button" amount-bar-value="0.00">
                     Custom
                   </button>
               </div>
             </div>
 
             <div id="custom-amount">
-              <input id="custom-amount-text" type="number" placeholder="0.00" step="0.01" min="0.01"
-                oninput="updatePayButtonText(this)" />
+              <input
+                id="custom-amount-text"
+                type="number"
+                placeholder="0.00"
+                step="<%= getMinAndStepByCurrency(currency) %>"
+                min="<%= getMinAndStepByCurrency(currency) %>"
+                max="<%= getMaxByCurrency(maxLimit - Number(giftCard.balanceMoney.amount), currency) %>"
+                oninput="amountBar.updatePayButtonText(this)" />
             </div>
           </div>
 
@@ -117,7 +123,7 @@
       <% } %>
 
       <script>
-        initializeAmountBar("amount-bar", <%- formatMoney %>, "<%- giftCard.balanceMoney.currency %>");
+        const amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%= currency %>", <%= maxLimit - Number(giftCard.balanceMoney.amount) %>);
       </script>
   </body>
 
