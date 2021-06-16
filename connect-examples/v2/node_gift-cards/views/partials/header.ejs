@@ -1,0 +1,20 @@
+<% include("../functions") %> 
+<div class="top-nav">
+  <% if (typeof link != "undefined") { %>
+    <div>
+      <a href="<%= link.url %>">
+        <button class="square-button btn-secondary">
+          <img src="/images/left-arrow.svg" />
+          <%= link.name %>
+        </button>
+      </a>
+    </div>
+  <% } else { %>
+    <a id="dashboard-link" href="/dashboard">Gift Card Dashboard</a>
+  <% }; %>
+  <div class="logout">
+    <span><%= getCustomerName(customerGivenName, customerFamilyName, -1) %></span>
+    <a href="/logout"><button class="square-button btn-secondary">Log Out</button></a>
+  </div>
+  
+</div>

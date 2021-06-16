@@ -1,0 +1,535 @@
+/**
+* This file contains styling for the core components of the app.
+*/
+
+body {
+  font-size: 14px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.9);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+  font-size: 52px;
+  line-height: 60px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+}
+
+h3 {
+  font-size: 32px;
+  line-height: 40px;
+  margin: 0;
+}
+
+h4 {
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 0.006em;
+  margin: 0;
+}
+
+h5 {
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.006em;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+a:visited {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+td {
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}
+
+
+button:disabled {
+  cursor: not-allowed;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.square-button {
+  background-color: rgba(0, 106, 255, 1);
+  color: white;
+  border-width: 0;
+  width: 100%;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  border-radius: 6px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-secondary {
+  background-color: rgba(0, 0, 0, 0.05);;
+  height: 40px;
+  padding: 16px;
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: bold;
+}
+
+form {
+  margin-bottom: 0;
+}
+
+.window-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+*, :after, :before {
+  box-sizing: border-box;
+}
+
+.hidden {
+  display: none;
+}
+
+/**
+  Header
+*/
+
+.top-nav {
+  font-size: 14px;
+  line-height: 24px;
+  position: relative;
+  font-weight: bold;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.top-nav img {
+  margin-right: 15px;
+}
+
+.top-nav .btn-secondary {
+  margin: 0;
+  width: auto;
+}
+
+/**
+  Content
+*/
+
+.content__wrapper {
+  width: 350px;
+  margin: auto;
+}
+
+.content__title-wrapper {
+  margin-top: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/**
+  Dashboard
+**/
+
+.dashboard {
+  max-width: 724px;
+  margin: 0 auto;
+  margin-bottom: 250px;
+}
+
+.dashboard__cards {
+  display: grid;
+  justify-items: center;
+  grid-template-columns: repeat(2,1fr);
+  column-gap: 24px;
+  row-gap: 24px;
+}
+
+.dashboard__cards_card-balance, .card-details__balance {
+  margin-top: 16px;
+  font-weight: bold;
+}
+
+.dashboard-cards__new-card {
+  border: 1px dashed #CCCCCC;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  font-weight: bold;
+  background-color: white;
+  color: #5F666C;
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/**
+  Card
+*/
+
+.card {
+  width: 350px;
+  height: 220px;
+  margin-top: 32px;
+  border-radius: 11px;
+}
+
+.card__card-front img {
+  width: 100%;
+  height: 100%;
+}
+
+.card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  border-radius: 11px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.16);
+}
+
+.card__card-front, .card__card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+.card:hover .card__inner-flip {
+  transform: rotateY(180deg);
+}
+
+.card__card-front {
+  background: #32373C;
+  border-radius: 11px;
+}
+
+.card__card-back {
+  background-color: white;
+  transform: rotateY(180deg);
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-details {
+  margin-top: 32px;
+}
+
+.card-details__info {
+  margin: 32px auto;
+}
+
+.card-details__info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section__row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-details__info-label {
+  font-weight: bold;
+}
+
+/**
+  Login Page
+*/
+
+#login-container .pretty-dropdown {
+  width: 350px;
+}
+
+#login-container .eyebrow {
+  color: #5F666C;
+  font-size: 16px;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+#login-container .content__wrapper {
+  width: 400px;
+  margin: auto;
+}
+
+#login-container .message {
+  font-size: 12px;
+  line-height: 18px;
+  color: #5F666C;
+  width: 350px;
+}
+
+#login {
+  width: 350px;
+}
+
+#login .pretty-dropdown__selected-image {
+  background-color: rgba(0, 106, 255, 0.1);
+}
+
+/**
+  Transaction history
+*/
+
+ul.transaction-history-list {
+  margin: 12px auto;
+  padding: 0;
+}
+
+.transaction-history-list li {
+  padding: 12px 0px;
+  list-style-type: none;
+  display: block;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.transaction-history-list li:last-child {
+  border-bottom: 0;
+}
+
+.transaction-history-list li .transaction-history-detail__money {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+/**
+  Amount bar
+*/
+
+.amount-bar-wrapper {
+  margin-bottom: 24px;
+}
+
+.amount-bar {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #DDDDDD;
+  box-sizing: border-box;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.amount-bar button {
+  float: left;
+  border: 1px solid #DDDDDD;
+  cursor: pointer;
+  height: 100%;
+  width: 20%;
+  background-color: #ffffff;
+  color: rgba(0, 0, 0, 0.9);
+  font-size: 14px;
+  line-height: 24px;
+  border-bottom: none;
+  border-top: none;
+  border-right: none;
+}
+
+.amount-bar button:first-child {
+  border-left: none;
+  border-radius: 6px 0px 0px 6px;
+}
+
+.amount-bar button:last-child {
+  border-radius: 0px 6px 6px 0px;
+}
+
+#custom-amount-text {
+  width: 100%;
+  height: 48px;
+  border: 2.5px solid #006AFF;
+  box-sizing: border-box;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+#custom-amount {
+  display: none;
+  width: 350px;
+  height: 50px;
+  margin-top: 20px;
+  border-radius: 11px;
+}
+
+#custom-amount.show {
+  display: block;
+}
+
+.btn.active {
+  background-color: #32373C;
+  color: #ffffff;
+}
+
+#card-details__content h5 {
+  display: inline
+}
+
+#cards-pretty-dropdown-title {
+  float: left;
+}
+
+/**
+  Cards on file
+*/
+
+#cards-on-file-dropdown .pretty-dropdown__selected-image {
+  background-color: none;
+}
+
+span.no-content {
+  color: rgb(158 150 150);
+  font-weight: normal !important;
+}
+
+.success-toast {
+  justify-content: center;
+  display: flex;
+  margin-top: 60px;
+  min-width: 350px;
+}
+
+.success-toast div {
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  border-radius: 50px;
+  background-color: white;
+  padding: 0 24px;
+}
+
+.success-toast img {
+  margin-right: 12px;
+  vertical-align: middle;
+}
+
+.developer-note {
+  justify-content: center;
+  display: flex;
+  background-color: white;
+  margin-top: 60px;
+}
+
+.developer-note div {
+  width: 350px;
+  padding: 24px;
+  background-color: rgba(245, 246, 247, 1);
+  border-radius: 12px;
+}
+
+.developer-note div h5 {
+  margin-top: 0px;
+}
+
+.developer-note span {
+  color: #5F666C;
+}
+
+.developer-note a {
+  cursor: pointer;
+}
+
+/**
+*  Loading
+*/
+.loading__shadow-overlay {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading__container {
+  padding: 32px;
+  width: 464px;
+  height: 216px;
+  background: #FFFFFF;
+  border-radius: 12px;
+  z-index: 200;
+}
+
+.spinner {
+  animation: 2s linear 0s infinite normal none running rotation;
+  height: 42px;
+  width: 42px;
+  margin-bottom: 25px;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+/**
+*  Others
+*/
+#add-customer {
+  padding: 0px 24px 24px 24px;
+}
+
+#no-card {
+  padding: 8px 24px;
+}
+
+#add-customer button {
+  margin: 0;
+}
+
+#no-card div, #add-customer div {
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+#add-customer div, #no-card--production {
+  margin-bottom: 15px;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout span {
+  margin: 0px 24px;
+}

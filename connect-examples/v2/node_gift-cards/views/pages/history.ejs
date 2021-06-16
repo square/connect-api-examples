@@ -1,0 +1,43 @@
+<html>
+
+<head>
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header", {link: {name:"Manage gift card", url:"/gift-card/"+giftCard.gan}}); %>
+  </header>
+  <div class="content">
+    <div class="content__wrapper">
+      <div class="content__title-wrapper">
+        <div class="content__title">
+          <h4>Transaction history</h4>
+          <div>Card number <%= giftCard.gan %></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__inner">
+          <div class="card__card-front">
+            <img src="/images/giftCardImage.png" />
+          </div>
+        </div>
+      </div>
+      <div>
+        <ul class="transaction-history-list">
+          <% giftCardActivities.forEach(function(activity) { %>
+            <li>
+              <div class="transaction-history-detail__money">
+                <div><%= getActivityType(activity) %></div>
+                <div><%= getActivityMoney(activity) %></div>
+              </div>
+              <div class="transaction-history-detail__date">
+                <%= formatDate(activity.createdAt) %>
+              </div>
+            </li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
+
+  </div>

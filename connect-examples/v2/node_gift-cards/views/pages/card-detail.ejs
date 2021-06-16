@@ -1,0 +1,96 @@
+<html>
+
+<head>
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/pretty-dropdown-menu.css" rel="stylesheet" type="text/css">
+  <script src="/js/bwip-js-min.js"></script>
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header", {link: {name:"Dashboard", url:"/dashboard"}}); %>
+  </header>
+  <div class="content">
+    <div class="content__wrapper">
+      <div class="content__title-wrapper">
+        <div class="content__title">
+          <h4>Gift Card</h4>
+          Created on <%= formatDate(giftCard.createdAt) %>
+        </div>
+        <div class="pretty-dropdown-menu" onclick="showMenuOptions()">
+          <button class="btn-secondary square-button">
+            <img src="/images/ellipsis.svg" />
+          </button>
+          <ul class="pretty-dropdown-menu__list">
+            <% if (giftCard.state !=="PENDING" ) { %>
+              <a href="/gift-card/<%= giftCard.gan %>/history">
+                <li class="pretty-dropdown-menu__list-item">Transaction history</li>
+              </a>
+              <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">Delete card</li>
+              <% } else { %>
+                <li class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--disabled">
+                  Transaction history
+                </li>
+                <form name="deleteForm" action="/gift-card/<%= giftCard.gan %>/delete" method="POST">
+                  <li onclick="deleteForm.submit();" class="pretty-dropdown-menu__list-item pretty-dropdown-menu__list-item--critical">
+                    Delete card
+                  </li>
+                </form>
+                <% } %>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__inner card__inner-flip">
+          <div class="card__card-front">
+            <img src="/images/giftCardImage.png" />
+          </div>
+          <div class="card__card-back">
+          <img id="barcode">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-details">
+        <h3 class="card-details__balance">
+          <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %>
+        </h3>
+        
+        <% if (giftCard.state==="PENDING" ) { %>
+          <div>Your card curently has no funds available. Add funds to activate this card for use.</div>
+        <% } else { %>
+          <div>This card is active</div>
+        <% } %>
+        <div class="card-details__info">
+          <div class="card-details__info-row">
+            <div class="card-details__info-label">
+              Card number
+            </div>
+            <div class="card-details__info-value">
+              <%= giftCard.gan %>
+            </div>
+          </div>
+        </div>
+        <a href="/gift-card/<%= giftCard.gan %>/add-funds">
+           <button class="square-button" type="submit">Add Funds</button>
+        </a>
+        <% if (payment && payment==="success" ) { %>
+          <div class="success-toast">
+            <div>
+              <img src="/images/success.svg">Payment successful!
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/pretty-dropdown-menu.js"></script>
+  <script src="/js/generate-barcode.js"></script>
+  <script>
+    generateBarCode("barcode", "<%= giftCard.gan %>");
+  </script>
+</body>
+
+</html>
