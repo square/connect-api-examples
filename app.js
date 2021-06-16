@@ -39,10 +39,10 @@ locationsApi.retrieveLocation(process.env[`SQUARE_LOCATION_ID`]).then(function(r
       app.locals.maxLimit = 75000;
       break;
     default:
-      app.locals.maxLimit = 200000
+      app.locals.maxLimit = 200000;
   }
 }).catch(function(error) {
-  if (error.statusCode == "401") {
+  if (error.statusCode === "401") {
     console.error("Configuration has failed. Please verify `.env` file is correct.");
   }
   process.exit(1);

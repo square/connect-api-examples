@@ -54,9 +54,6 @@ class AmountBar {
     document.getElementById("custom-amount-text").required = false;
   }
 
-  // This function will run every time a character is typed in our "custom" text field.
-  // We will update both the `pay` button text and the actual data to send to our backend
-  // accordingly.
   /**
    * A function that will run every time a character is typed in our `Custom` text field.
    * We will update both the `pay button` text, as well as the actual data to be sent to the backend.
