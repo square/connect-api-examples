@@ -57,7 +57,7 @@ getActivityType = function(activity) {
 } 
 
 /**
- * A function to extract the money associated with each activity based on its type.
+ * A function to extract the Money object from a GiftCardActivity object based on the activity type.
  */
 getActivityMoney = function(activity) {
   let type = activity.type;
@@ -94,7 +94,7 @@ getActivityMoney = function(activity) {
 } 
 
 /**
- * A function to stringify a given JSON object.
+ * A helper function to stringify JSON objects that contains bigint.
  */
 stringifyJSON = function(data) {
   return JSON.stringify(data, (key, value) =>
@@ -140,7 +140,7 @@ getImageForBrand = function(brand) {
 }
 
 /**
- * A function to get the core customer data from a list of customer objects.
+ * A function to build data from a list of Customer objects for the select dropdown element.
  */
 getCustomersData = function(customers) {
   return customers.map((customer) => {
@@ -153,9 +153,8 @@ getCustomersData = function(customers) {
 }
 
 /**
- * A function to get the customer disaply name given first and last name parameters.
- * The length parameter is used to determine at what point we don't show the full name
- * of the user (in case it is too long).
+ * A function to sanitize the customer display name given first and last name parameters.
+ * The length parameter is used to determine the length at which to truncate the string.
  */
 getCustomerName = function(firstName, lastName, length = 40) {
   const fullName = [firstName, lastName].join(" ").trim();
@@ -168,7 +167,7 @@ getCustomerName = function(firstName, lastName, length = 40) {
 }
 
 /**
- * A function to get the core cards data from a list of card objects.
+ * A function to build data from a list of Cards objects for the select dropdown element.
  */
 getCardsData = function(cards) {
   return cards.map((card) => {

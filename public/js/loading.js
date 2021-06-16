@@ -1,11 +1,11 @@
 /**
- * This file contains code to create the loading prompt as part of the `reset` functionality.
+ * This file contains code to create the loading screen as part of the `reset` functionality.
  */
 
-function createLoadingPrompt(formElementId) {
+function createLoadingScreen(formElementId) {
   // Submit the form.
   document.getElementById(formElementId).submit();
 
-  // Create the loading screen by exposing the prompt and shading the background.
+  // Create the loading screen by exposing the screen and shading the background.
   document.getElementsByClassName('loading__shadow-overlay')[0].style.display='flex';
 }
