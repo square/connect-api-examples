@@ -28,7 +28,6 @@ const {
 
 const { checkLoginStatus, checkCardOwner, checkInactiveCard } = require("../util/middleware");
 
-
 /**
  * POST /gift-card/create
  *

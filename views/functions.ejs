@@ -1,5 +1,7 @@
 <%
-formatMoney = function(value, currency, isRounded) {
+// Input value is always in the lowest denomination for the currency.
+formatMoney = function(value, currency, isRounded = false) {
+  let valueAsNumber = Number(value);
   // Create number formatter.
   const props = {
     style: 'currency',
@@ -11,9 +13,15 @@ formatMoney = function(value, currency, isRounded) {
     props.maximumFractionDigits = 0;
     props.minimumFractionDigits = 0;
   }
+
+  // Some currencies don't need to use higher denominations to represent values.
+  if (currency !== "JPY") {
+    valueAsNumber /= 100.0;
+  }
+
   var formatter = new Intl.NumberFormat('en-US', props);
 
-  return formatter.format(Number(value)/100.0);
+  return formatter.format(valueAsNumber);
 }
 
 formatDate = function(date) {
@@ -143,5 +151,21 @@ getCardsData = function(cards) {
     description: capitalize(card.cardBrand)
     })
   );
+}
+
+getMinAndStepByCurrency = function(currency) {
+  if (currency === "JPY") {
+    return 1;
+  } 
+
+  return 0.01;
+}
+
+getMaxByCurrency = function(maxAllowedInSmallestDenomination, currency) {
+  if (currency === "JPY") {
+    return maxAllowedInSmallestDenomination;
+  } 
+
+  return Number(maxAllowedInSmallestDenomination) / 100.0;
 }
 %>
