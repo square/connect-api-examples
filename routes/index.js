@@ -66,7 +66,7 @@ router.get("/login", async (req, res, next) => {
     res.render("pages/login",
       { customers, customerCreated, customerCreatedGivenName, customerCreatedFamilyName, reset });
   } catch(error) {
-    console.log(error);
+    console.error(error);
     next(error);
   }
 });
@@ -85,7 +85,7 @@ router.post("/login", async (req, res, next) => {
       req.session.customerGivenName = customer.givenName;
       req.session.customerFamilyName = customer.familyName;
     } catch(error) {
-      console.log(error);
+      console.error(error);
       next(error);
     }
   }
@@ -98,7 +98,7 @@ router.get("/logout", async (req, res, next) => {
   req.session.customerGivenName = null;
   req.session.customerFamilyName = null;
   req.session.loggedIn = false;
-  
+
   res.redirect("/");
 });
 

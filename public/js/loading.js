@@ -1,3 +1,7 @@
+/**
+ * This file contains code to create the loading prompt as part of the `reset` functionality.
+ */
+
 function createLoadingPrompt(formElementId) {
   // Submit the form.
   document.getElementById(formElementId).submit();
