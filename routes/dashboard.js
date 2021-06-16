@@ -42,7 +42,7 @@ router.get("/", checkLoginStatus, async (req, res, next) => {
 
     res.render("pages/dashboard", { giftCards, deletion });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     next(error);
   }
 });

@@ -26,13 +26,13 @@ const {
   paymentsApi,
 } = require("../util/square-client");
 
-const { checkLoginStatus, checkCardOwner, checkInactiveCard } = require("../util/middleware");
+const { checkLoginStatus, checkCardOwner, checkPendingCard } = require("../util/middleware");
 
 /**
  * POST /gift-card/create
  *
  * Creates a gift card for the logged in customer.
- * It will create an inactive gift card with 0 balance,
+ * It will create a pending gift card with 0 balance,
  * and link it to the logged in customer.
  */
 router.post("/create", checkLoginStatus, async (req, res, next) => {
@@ -40,7 +40,7 @@ router.post("/create", checkLoginStatus, async (req, res, next) => {
     // The following information will come from the request/session.
     const customerId = req.session.customerId;
 
-    // Create an inactive gift card.
+    // Create a pending gift card.
     const giftCardRequest = generateGiftCardRequest();
     const { result: { giftCard } } = await giftCardsApi.createGiftCard(giftCardRequest);
 
@@ -90,7 +90,7 @@ router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, n
  * "Deletes" a card by unlinking it from the customer.
  * Card must be in PENDING state.
  */
-router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkInactiveCard, async (req, res, next) => {
+router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkPendingCard, async (req, res, next) => {
   try {
     const giftCard = res.locals.giftCard;
     const customerId = req.session.customerId;
@@ -165,7 +165,7 @@ router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res
     await paymentsApi.createPayment(paymentRequest);
 
     // Load or activate the gift card based on its current state.
-    // If the gift card is inactive, activate it with the amount given.
+    // If the gift card is pending, activate it with the amount given.
     // Otherwise, if the card is already active, load it with the amount given.
     const giftCardActivity = giftCardState === "PENDING" ? "ACTIVATE" : "LOAD";
     const giftCardActivityRequest = generateGiftCardActivityRequest(giftCardActivity, gan, orderId, lineItemUid);

@@ -1,3 +1,8 @@
+/**
+ * This file contains functionality to create a Square gift card barcode based on the gan.
+ * This barcode can be used for redeeming gift cards at Square POS.
+ */
+
 function generateBarCode(elementId, value) {
   const squareGiftCardBarcodeId = "sqgc://" + value;
   let canvas = document.createElement('canvas');
