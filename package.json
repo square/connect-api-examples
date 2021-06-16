@@ -3,14 +3,11 @@
   "version": "1.0.0",
   "description": "A sample app demonstrating use of Square Gift Card API",
   "main": "app.js",
+  "private": true,
   "scripts": {
     "start": "nodemon -e js ./bin/www",
     "seed": "node ./bin/script/seed-data.js generate",
     "clear": "node ./bin/script/seed-data.js clear"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/squareup/gift-card-api-sample-app.git"
   },
   "keywords": [
     "gift",
@@ -20,10 +17,6 @@
   ],
   "author": "barakj, emmac",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/squareup/gift-card-api-sample-app/issues"
-  },
-  "homepage": "https://github.com/squareup/gift-card-api-sample-app#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
