@@ -103,39 +103,39 @@ If you are not logged in, you will be redirected to the _/login_ page, where the
 
 After logging in as a customer, the customer ID and login status is stored in a session, then you are redirected to the _/dashboard_. See code in [index.js](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/routes/index.js):
 
-  ```
-    router.get("/", async (req, res, next) => {
-      if (req.session.loggedIn) {
-        res.redirect('/dashboard');
-      } else {
-        res.redirect('/login');
-      }
-    });
+```
+router.get("/", async (req, res, next) => {
+  if (req.session.loggedIn) {
+    res.redirect('/dashboard');
+  } else {
+    res.redirect('/login');
+  }
+});
 
-    router.get("/login", async (req, res, next) => {
-     let customers;
-     try {
-       const response = await customersApi.listCustomers();
-       customers = response.result.customers;
-       ...
+router.get("/login", async (req, res, next) => {
+  let customers;
+  try {
+    const response = await customersApi.listCustomers();
+    customers = response.result.customers;
+    ...
 
-       res.render("pages/login", {customers})
-     } catch(error) {
-       next(error);
-     }
-    });
+    res.render("pages/login", {customers})
+  } catch(error) {
+    next(error);
+  }
+});
 
-  /** Please do not copy the following code for authentication **/
-  router.post("/login", async (req, res, next) => {
-    if (req.body.customer) {
-      req.session.loggedIn = true;
-      req.session.customerId = req.body.customer;
-      ...
-    }
+/** Please do not copy the following code for authentication **/
+router.post("/login", async (req, res, next) => {
+  if (req.body.customer) {
+    req.session.loggedIn = true;
+    req.session.customerId = req.body.customer;
+    ...
+  }
 
-    res.redirect("/");
-  });
-  ```
+  res.redirect("/");
+});
+```
 **Important:** The login code in this example application does not perform any real authentication. In production, you need to write the necessary code.
 
 #### Adding new customers
@@ -180,30 +180,30 @@ The following screenshot shows a dashboard with no gift cards and a button to cr
 
 From the */dashboard* page, you may add a new gift card. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L38);
 
-  ```
-   router.post("/create", checkLoginStatus, async (req, res, next) => {
-     try {
-       // The following information will come from the request/session.
-       const customerId = req.session.customerId;
+```
+router.post("/create", checkLoginStatus, async (req, res, next) => {
+  try {
+    // The following information will come from the request/session.
+    const customerId = req.session.customerId;
 
-       // Create an inactive gift card.
-       const giftCardRequest = generateGiftCardRequest();
-       const { result: { giftCard }} = await giftCardsApi.createGiftCard(giftCardRequest);
+    // Create an inactive gift card.
+    const giftCardRequest = generateGiftCardRequest();
+    const { result: { giftCard }} = await giftCardsApi.createGiftCard(giftCardRequest);
 
-       // Now link it to the customer logged in!
-       await giftCardsApi.linkCustomerToGiftCard(giftCard.id, {
-         customerId
-       });
+    // Now link it to the customer logged in!
+    await giftCardsApi.linkCustomerToGiftCard(giftCard.id, {
+      customerId
+    });
 
-       // Redirect to GET /gift-card/:gan, which will render the card-detail page.
-       res.redirect("/gift-card/" + giftCard.gan);
-     } catch (error) {
-       console.error(error);
-       next(error);
-     }
-   });
+    // Redirect to GET /gift-card/:gan, which will render the card-detail page.
+    res.redirect("/gift-card/" + giftCard.gan);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
-  ```
+```
 
 The above handler makes the following Gift Cards API calls: 
 
@@ -215,14 +215,49 @@ The above handler makes the following Gift Cards API calls:
 <img src="./bin/images/gift-cards-api-app-30.png" width="300"/>
 
 Once a new gift card is created, you are redirect to the card's details page; you may also access this page through the dashboard. At this time, the card is not activated and it has no funds. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L63)
-   ```
-   router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
-      const giftCard = res.locals.giftCard;
-      const payment = req.query.payment;
 
-      res.render("pages/card-detail", { giftCard, payment });
-    });
-   ```
+```
+router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+  const giftCard = res.locals.giftCard;
+  const payment = req.query.payment;
+
+  res.render("pages/card-detail", { giftCard, payment });
+});
+```
+
+### Delete gift card
+The Square Gift Card API does not support deleting a gift card. However, in this application, this delete operation is done by unlinking the gift card from a customer using the [Unlink gift card from customer API](https://developer.squareup.com/reference/square/gift-cards-api/unlink-customer-from-gift-card). From the gift card's details page described above, you may delete a gift card if it has not been activated yet (no funds was ever added) by clicking on the ellipsis menu and clicking the *Delete Gift card* button. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L93)
+
+```
+router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkPendingCard, async (req, res, next) => {
+  try {
+    const giftCard = res.locals.giftCard;
+    const customerId = req.session.customerId;
+    await giftCardsApi.unlinkCustomerFromGiftCard(giftCard.id, { customerId });
+
+    // Redirect to the dashboard, with a successful deletion query parameter.
+    res.redirect("/dashboard/?deletion=success");
+  } catch (error) {
+    next(error);
+  }
+});
+```
+
+### View transaction history
+Once a gift card is activated, you may view the transaction history of a gift card by clicking on the ellipsis menu on a gift card's details page and then clicking the *Transaction history* button. You are then directed to the */gift-card/:gan/history* page where a list of gift card activities is retrieved and displayed using the [List gift card activities API](https://developer.squareup.com/reference/square/gift-card-activities-api/list-gift-card-activities). See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L75)
+
+```
+router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, next) => {
+  try {
+    const giftCard = res.locals.giftCard;
+    const { result: { giftCardActivities } } = await giftCardActivitiesApi.listGiftCardActivities(giftCard.id);
+
+    res.render("pages/history", { giftCard, giftCardActivities });
+  } catch (error) {
+    next(error);
+  }
+});
+```
 
 ### Add funds to a gift card 
 
@@ -249,6 +284,7 @@ router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res,
   }
 });
 ```
+
 The following [middleware](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/util/middleware.js) are executed to verify permissions:
 * `checkLoginStatus` verifies that the customer is logged in
 * `checkCardOwner` verified that the card being accessed belongs to the logged in customer
