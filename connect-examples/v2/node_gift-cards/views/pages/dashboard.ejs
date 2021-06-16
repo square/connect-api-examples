@@ -1,0 +1,65 @@
+<html>
+
+<head>
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+
+  <div class="dashboard">
+    <div class="content__title-wrapper">
+      <div class="content__title">
+        <h3>Gift Cards</h3>
+        <% if (giftCards.length===0) { %>
+          <div>You currently don't have any Gift Cards avalible for use. Get started by adding one.</div>
+        <% }; %>
+      </div>
+    </div>
+
+    <div class="dashboard__cards">
+      <% giftCards.forEach(function(giftCard) { %>
+        <div class="dashboard__cards_card-wrapper">
+          <a href="/gift-card/<%= giftCard.gan %>">
+            <div class="card">
+              <div class="card__inner">
+                <div class="card__card-front">
+                  <img src="/images/giftCardImage.png" />
+                </div>
+              </div>
+            </div>
+          </a>
+          <div class="dashboard__cards_card-balance">
+            Card balance: <%= formatMoney(giftCard.balanceMoney.amount, giftCard.balanceMoney.currency) %>
+          </div>
+        </div>
+      <%}); %>
+        <form class="form-control" action="/gift-card/create" method="POST">
+          <div class="card">
+            <input class="dashboard-cards__card dashboard-cards__new-card" type="submit" value="+ Add Gift Card" />
+          </div>
+        </form>
+    </div>
+
+    <% if (deletion && deletion==="success" ) { %>
+      <div class="success-toast">
+        <div>
+          <img src="/images/success.svg">Card deleted successfully!
+        </div>
+      </div>
+    <% } %>
+
+    <div class="developer-note">
+      <div>
+        <h5>Developer note</h5>
+        <span>Accept Gift Card payments on your site using Square’s Web payments SDK. 
+          <a href="https://developer.squareup.com/docs/web-payments/overview" target="_blank">Open guide</a>
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

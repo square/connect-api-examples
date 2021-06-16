@@ -1,0 +1,105 @@
+<html>
+
+<head>
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/pretty-select-dropdown.css" rel="stylesheet" type="text/css">
+  <% include("../functions") %>
+</head>
+
+<body>
+  <div class="window-container" id="login-container">
+    <div class="content__wrapper">
+      <span class="eyebrow">Square Developer</span>
+      <h1>Gift Card Sample App</h1>
+      <span>You can easily manage your gift cards with Square Gift Cards. This sample app
+        demonstrates how Square Gift Cards API may be used by a customer to manage their gift cards.
+      </span>
+      <div id="login">
+        <h5>Login</h5>
+        <div id="login-dropdown">
+        </div>
+        <form action="/login" method="POST">
+          <input name="customer" id="pretty-dropdown__value" hidden=true type="text" value=""/>
+          <button class="square-button" type="submit">Login</button>
+        </form>
+        <div class="message">
+          Don’t forget you can manage Customers and Gift Cards using Square’s <a href="https://developer.squareup.com/explorer/square" target="_blank">API Explorer</a> to call the API. This sample
+          app will update accordingly.
+        </div>
+        <% if (customerCreatedGivenName && customerCreatedFamilyName &&
+                customerCreated && customerCreated === "success") { %>
+          <div class="success-toast success-toast--large">
+            <div>
+              <img src="/images/success.svg">Created customer <%= customerCreatedGivenName %> <%= customerCreatedFamilyName %>
+            </div>
+          </div>
+        <% } %>
+
+        <%if (reset && reset === "success") { %>
+          <div class="success-toast">
+            <div>
+              <img src="/images/success.svg">Data was reset successfully!
+            </div>
+          </div>
+        <% } %>
+
+        <div class="developer-note">
+          <div>
+            <form id="reset-form" action="/seed/reset" method="POST">
+              <h5>Developer note</h5>
+              <span>Quickly reset all customer data created within this sample app.
+                <a onclick="createLoadingScreen('reset-form')">
+                  Reset now
+                </a>
+              </span>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading__shadow-overlay">
+    <div class="loading__container">
+      <img class="spinner" src="/images/loading.svg">
+      <h3>Reset in progress. </h3>
+      <p>This might take up to a few seconds.</p>
+    </div>
+  </div>
+
+  <div id="add-customer">
+    <% if ( customers.length === 0 && process.env.ENVIRONMENT.toLowerCase() === "production" ) { %>
+      <h5>No customers available</h5>
+      <div>
+        You have no customers in your production environment. Please use the sandbox mode or create a customer with
+        cards on file in order to proceed. 
+        <a href="https://developer.squareup.com/reference/square/customers-api/create-customer" target="_blank">Open guide</a>
+      </div>
+      
+    <% } else if ( customers.length === 0 ) { %>
+      <h5>Create a customer</h5>
+      <div>
+        You have no customers in your Square application. Click the button below to create a test customer.
+      </div>
+
+      <form action="/seed/create-customer" method="POST">
+        <button class="square-button btn-secondary" type="submit">Add customer</button>
+      </form>
+    <% } else { %>
+      <form action="/seed/create-customer" method="POST">
+        <button class="square-button btn-secondary" type="submit">Add customer</button>
+      </form>
+    <% }; %>
+  </div>
+    
+  <% var customerData = getCustomersData(customers); %>
+  <script src="/js/loading.js"></script>
+  <script src="/js/pretty-select-dropdown.js"></script>
+  <script>
+    new PrettySelectDropdown("login-dropdown",
+    <%- stringifyJSON(customerData) %>,
+    { placeholderImg: "/images/profile.svg", placeholder: "Select customer", addonIds:["add-customer"] });
+  </script>
+</body>
+
+</html>

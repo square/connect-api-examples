@@ -1,0 +1,130 @@
+<% include("../functions") %>
+  <html>
+
+  <head>
+    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/pretty-select-dropdown.css" rel="stylesheet" type="text/css">
+  </head>
+
+  <body>
+    <header>
+      <%- include("../partials/header", {link: {name:"Manage gift card", url:"/gift-card/"+giftCard.gan}}); %>
+    </header>
+    <div class="content">
+      <div class="content__wrapper">
+        <div class="content__title-wrapper">
+          <div class="content__title">
+            <h4>Add funds</h4>
+            <div id="card-details__content">
+              <h5>Card number </h5>
+              <%= giftCard.gan %>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card__inner">
+            <div class="card__card-front">
+              <img src="/images/giftCardImage.png" />
+            </div>
+          </div>
+        </div>
+
+        <form class="form-control" action="/gift-card/<%= giftCard.gan %>/add-funds" method="POST">
+          <div class="amount-bar-wrapper">
+            <h5>Amount</h5>
+            <div class="section__row">
+                <div id="amount-bar" class="amount-bar">
+                  <button class="btn active" type="button" amount-bar-value="500">
+                  </button>
+                  <button class="btn" type="button" amount-bar-value="1000">
+                  </button>
+                  <button class="btn" type="button" amount-bar-value="1500">
+                  </button>
+                  <button class="btn" type="button" amount-bar-value="2000">
+                  </button>
+                  <button class="btn custom" type="button" amount-bar-value="0.00">
+                    Custom
+                  </button>
+              </div>
+            </div>
+
+            <div id="custom-amount">
+              <input
+                id="custom-amount-text"
+                type="number"
+                placeholder="0.00"
+                step="<%= getMinAndStepByCurrency(currency) %>"
+                min="<%= getMinAndStepByCurrency(currency) %>"
+                max="<%= getMaxByCurrency(maxLimit - Number(giftCard.balanceMoney.amount), currency) %>"
+                oninput="amountBar.updatePayButtonText(this)" />
+            </div>
+          </div>
+
+          <div id="cards-on-file">
+            <h5>Pay with card on file</h5>
+
+            <div id="cards-on-file-dropdown">
+            </div>
+          </div>
+            <input name="cardId" id="pretty-dropdown__value" hidden=true type="text" value="" />
+            <input name="amount" id="amount-bar__value" hidden=true type="text" value="5" required />
+            <input name="state" id="state__value" hidden=true type="text" value="<%= giftCard.state %>" required />
+            <button id="pay-button" class="square-button" type="submit"></button>
+        </form>
+        <% if (cardCreated && cardCreated === "success") { %>
+          <div class="success-toast">
+            <div>
+              <img src="/images/success.svg">Created test card!
+            </div>
+          </div>
+        <% } %>
+      </div>
+
+
+      <% if (cards.length === 0 ) { %>
+      <div id="no-card">
+        <% if ( process.env.ENVIRONMENT.toLowerCase() === "production" ) { %>
+          <h5>No cards on file</h5>
+          <div id="no-card--production">
+            This customer currently does not have cards on file. Add a card on file for the customer or switch to sandbox mode. <a href="https://developer.squareup.com/reference/square/customers-api/create-customer-card" target="_blank">Open guide</a>
+          </div>
+        <% } else { %>
+          <h5>Add new card</h5>
+          <div>
+            This account currently does not have cards on file. 
+            Click on the button below to add a card on file, this action is only supported in sandbox mode.
+          </div>
+
+          <form method="POST" action="/seed/<%= customerId %>/create-card?gan=<%= giftCard.gan %>">
+            <button class="square-button" type="submit">Add card</button>
+          </form>
+        <% }; %>
+      </div> 
+      <% }; %>
+
+      <script src="/js/pretty-select-dropdown.js"></script>
+      <script src="/js/amount-bar.js"></script>
+
+      <% var cardsData = getCardsData(cards); %>
+
+      <% if (cards.length > 0) { %>
+      <script>
+        new PrettySelectDropdown("cards-on-file-dropdown", 
+        <%- stringifyJSON(cardsData) %>, 
+        {placeholder: "Select card", placeholderImg: "/images/no-card.svg"});
+      </script>
+      <% } else { %>
+        <script>
+          new PrettySelectDropdown("cards-on-file-dropdown",
+          <%- stringifyJSON(cardsData) %>,
+          {placeholder: "Select card", placeholderImg: "/images/no-card.svg", addonIds:["no-card"]});
+        </script>
+      <% } %>
+
+      <script>
+        const amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%= currency %>", <%= maxLimit - Number(giftCard.balanceMoney.amount) %>);
+      </script>
+  </body>
+
+  </html>

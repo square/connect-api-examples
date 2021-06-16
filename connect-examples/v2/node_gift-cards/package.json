@@ -1,0 +1,34 @@
+{
+  "name": "gift-card-api-sample-app",
+  "version": "1.0.0",
+  "description": "A sample app demonstrating use of Square Gift Card API",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "start": "nodemon -e js ./bin/www"
+  },
+  "keywords": [
+    "gift",
+    "cards",
+    "sample",
+    "app"
+  ],
+  "author": "barakj, emmac",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "faker": "^5.5.3",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7",
+    "square": "^12.0.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.28.0"
+  }
+}
