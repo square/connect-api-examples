@@ -60,7 +60,7 @@ You can then visit [`localhost:8000`](http://localhost:8000) in your browser to 
 If you're using your sandbox credentials, you can test a valid credit card
 payment by providing the following card information in the form:
 
-* Card Number `4532 7597 3454 5858`
+* Card Number `4111 1111 1111 1111`
 * Card CVV `111`
 * Card Expiration (Any time in the future)
 * Card Postal Code (Any valid US postal code)
