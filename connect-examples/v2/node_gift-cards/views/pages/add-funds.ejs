@@ -115,11 +115,11 @@
         {placeholder: "Select card", placeholderImg: "/images/no-card.svg"});
       </script>
       <% } else { %>
-        <script>
-          new PrettySelectDropdown("cards-on-file-dropdown",
+      <script>
+        const dropdown = new PrettySelectDropdown("cards-on-file-dropdown",
           <%- stringifyJSON(cardsData) %>,
           {placeholder: "Select card", placeholderImg: "/images/no-card.svg", addonIds:["no-card"]});
-        </script>
+      </script>
       <% } %>
 
       <script>
