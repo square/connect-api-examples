@@ -35,7 +35,7 @@ window.createPayment = async function(token) {
   });
 
   try {
-    const response = await fetch('process-payment', {
+    const response = await fetch('process-payment.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
