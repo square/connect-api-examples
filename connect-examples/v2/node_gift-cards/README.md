@@ -8,14 +8,14 @@
 # Gift Card API Sample App
 
 - [Overview](#overview)
-- [Test data](#test-data)
 - [Setup](#setup)
+- [Test data](#test-data)
 - [Project organization](#project-organization)
 - [Application flow](#application-flow)
 
 ## Overview
 
-This sample web application is implemented using [Express](https://expressjs.com/). The purpose of this sample is to showcase the functionalities of the [Square Gift Cards API](https://developer.squareup.com/reference/square/gift-cards-api) and, including:
+This sample web application is implemented using [Express](https://expressjs.com/). The purpose of this sample is to showcase the functionalities of the [Square Gift Cards API](https://developer.squareup.com/reference/square/gift-cards-api), including:
 
 - Creating a gift card
 - Activating a gift card
@@ -52,7 +52,7 @@ The sample application does not implement a login authentication mechanism that 
 
    **Warning:** Remember to use your credentials only for testing the sample application. If you plan to make a version of this sample application available for your purposes, use the Square [OAuth API](https://developer.squareup.com/docs/oauth-api/overview) to safely manage access to Square accounts.
 
-   **Sandbox testing:** You may configure this application to run using either Square `sandbox` and `production` environments and credentials. For testing, the `sandbox` environment is recommended because you can use fake credit or debit cards to test payments. To learn more about testing in the sandbox environment, refer to [Test in the Sandbox](https://developer.squareup.com/docs/testing/sandbox).
+   **Sandbox testing:** You may configure this application to run using either Square `sandbox` or `production` environments and credentials. For testing, the `sandbox` environment is recommended because you can use fake credit or debit cards to test payments. To learn more about testing in the sandbox environment, refer to [Test in the Sandbox](https://developer.squareup.com/docs/testing/sandbox).
 
 3. From the directory `connect-examples/v2/node_gift-cards`, install the sample application's dependencies with the following command:
 
