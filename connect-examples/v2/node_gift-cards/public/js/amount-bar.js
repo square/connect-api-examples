@@ -8,10 +8,11 @@ class AmountBar {
    * @param {*} currency - The currency to be used.
    * @param {*} maxAllowedToAdd - The maximum allowed money value to be added to the gift card.
    */
-  constructor(elementId, formatMoneyFunction, currency, maxAllowedToAdd) {
+  constructor(elementId, formatMoneyFunction, currency, maxAllowedToAdd, dropdown) {
     this.currency = currency;
     this.formatMoneyFunction = formatMoneyFunction;
     this.maxAllowedToAdd = maxAllowedToAdd;
+    this.dropdown = dropdown;
 
     const buttons = document.getElementById(elementId).children;
     this.configureButtons(buttons);
@@ -81,14 +82,38 @@ class AmountBar {
    * 1. The 'pay button' text, in which the amount should be based on the most commonly used denomination.
    * 2. The `amount-bar__value` value, which is the value that will be sent to the backend in case of a submit, and
    *    should be in the lowest denomination.
+   * This function also coordinates with the dropdown on what the global state of the pay button should be (i.e. should it be disabled or enabled)
+   * based on the current value we are about to send to the backend.
    *
    * @param {*} amount - The amount to display on the button and to send to our backend.
    * Note that this parameter is expected to be in the lowest denomination possible for the currency provided.
    */
   setAmountChosen(amount = 0) {
-    // We dont want rounding on our pay button, pass in false to our formatting function.
-    document.getElementById("pay-button").innerHTML = "Pay " + this.formatMoneyFunction(amount, this.currency, false);
+    const valueInput = document.getElementById("pretty-dropdown__value");
+    let disableFlag = true;
+
+    // Check the current state. The button text will change based on that.
+    if (this.maxAllowedToAdd == 0) {
+      document.getElementById("pay-button").innerHTML = "Maximum gift card balance reached";
+    } else if (amount > this.maxAllowedToAdd) {
+      document.getElementById("pay-button").innerHTML = "Funds would exceed maximum balance allowed";
+    } else {
+      // We dont want rounding on our pay button, pass in false to our formatting function.
+      document.getElementById("pay-button").innerHTML = "Pay " + this.formatMoneyFunction(amount, this.currency, false);
+      disableFlag = false;
+    }
+
+    // If a credit card on file was selected, we apply the disable/enable flag to the state of the `pay button`.
+    if (valueInput.value !== "") {
+      document.getElementById("pay-button").disabled = disableFlag;
+    }
+
+    // Update data to send to backend
     document.getElementById("amount-bar__value").value = amount;
+
+    // Remove and re-add an event listener with the new disable override. If this flag is true, the button will not be enabled.
+    this.dropdown.removeInputEventListener();
+    this.dropdown.addInputEventListener(disableFlag);
   }
 
   /**
@@ -107,32 +132,9 @@ class AmountBar {
       // Pass in true in order to achieve rounding, so text fits nicely. The actual function can be
       // found in `functions.ejs`.
       buttons[i].textContent = this.formatMoneyFunction(buttons[i].getAttribute("amount-bar-value"), this.currency, true);
-
-      // If the maximum amount we can add is greater than the current button amount, disable it.
-      if (buttons[i].getAttribute("amount-bar-value") > this.maxAllowedToAdd) {
-        buttons[i].disabled = true;
-        buttons[i].style.cursor = "not-allowed";
-      }
     }
 
-    // Set initial value for `pay` button and data. If the first button is disabled
-    // (i.e. adding that amount would exceed the maximum gift card balance allowed),
-    // set the default selected button to 'custom', and show the text field. Otherwise,
-    // use the first button value.
-    if (buttons[0].disabled) {
-      buttons[0].classList.remove("active");
-      buttons[buttons.length - 1].classList.add("active");
-      this.showCustomTextField();
-      this.setAmountChosen();
-    } else {
-      this.setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
-    }
-
-    // Set the text for the `pay button` in the case where the maximum balance has been reached.
-    // Disable the custom amount text field as well.
-    if (this.maxAllowedToAdd === 0) {
-      document.getElementById("pay-button").innerHTML = "Maximum gift card balance reached";
-      document.getElementById("custom-amount-text").disabled = true;
-    }
+    // set Initial amount chosen.
+    this.setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
   }
 }

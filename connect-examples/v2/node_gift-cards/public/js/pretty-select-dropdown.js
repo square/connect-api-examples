@@ -1,4 +1,3 @@
-
 class PrettySelectDropdown {
   /**
    * Class for handling the drop down selection elements
@@ -26,7 +25,6 @@ class PrettySelectDropdown {
    *    addonIds: ["createCustomer"],     // additional elements added to the dropdown select list
    *    placeholder:  "Select customer"   // placeholder text to display
    *    placeholderImg: "/placeholder.svg"  // placeholder for img
-   *    disableSubmissionByDefault: true  // Whether the submission button should be disabled by default
    * }
    */
 
@@ -245,27 +243,44 @@ class PrettySelectDropdown {
   /**
    * configure the input listener for #pretty-dropdown__value and disable the
    * submit button if the value of #pretty-dropdown__value is empty.
-   * If the `disableSubmissionByDefault` option is present, its value will determine
-   * whether the submission button is disabled or not.
    */
   _configureElements() {
-    var valueInput = document.getElementById("pretty-dropdown__value");
-    var submitButton = valueInput.closest("form").querySelector(":scope > button[type=submit]");
-    var self = this;
+    this.valueInput = document.getElementById("pretty-dropdown__value");
+    this.submitButton = this.valueInput.closest("form").querySelector(":scope > button[type=submit]");
+    this.addInputEventListener();
+  }
 
-    valueInput.addEventListener('input', function () {
-      if (valueInput.value !== "") {
-        if(!self.options.disableSubmissionByDefault) {
-          // If this option is not present or set to false, the button should be enabled.
-          // Otherwise, we keep it disabled.
-          submitButton.disabled = false;
-        }
-      } else {
-        submitButton.disabled = true;
-      }
-    });
+  /**
+   * Removes the input event listener specified by the `handler` function.
+   */
+  removeInputEventListener() {
+    this.valueInput.removeEventListener("input", this.handler.bind(this));
+  }
 
+  /**
+   * Adds the input event listener to the dropdown, and runs the code specified in `handler` function.
+   * If the disable parameter is set to true, the button for submission will always be disabled.
+   *
+   * @param {*} disable - a flag for whether or not the button should be disabled.
+   */
+  addInputEventListener(disable = false) {
+    this.disableOverride = disable;
+    this.valueInput.addEventListener("input", this.handler.bind(this));
     var inputEvent = new Event("input");
-    valueInput.dispatchEvent(inputEvent);
+    this.valueInput.dispatchEvent(inputEvent);
+  }
+
+  /**
+   * The input event handler function to change the state of the submit button.
+   */
+  handler() {
+    if (this.valueInput.value !== "") {
+      // Check if there is an override to always disable the button. If that's the case, don't enable.
+      if(!this.disableOverride) {
+        this.submitButton.disabled = false;
+      }
+    } else {
+      this.submitButton.disabled = true;
+    }
   }
 }

@@ -110,9 +110,9 @@
 
       <% if (cards.length > 0) { %>
       <script>
-        new PrettySelectDropdown("cards-on-file-dropdown", 
+        const dropdown = new PrettySelectDropdown("cards-on-file-dropdown",
         <%- stringifyJSON(cardsData) %>, 
-        {placeholder: "Select card", placeholderImg: "/images/no-card.svg", disableSubmissionByDefault: <%= (maxLimit - Number(giftCard.balanceMoney.amount)) === 0 %>});
+        {placeholder: "Select card", placeholderImg: "/images/no-card.svg"});
       </script>
       <% } else { %>
         <script>
@@ -123,7 +123,7 @@
       <% } %>
 
       <script>
-        const amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%= currency %>", <%= maxLimit - Number(giftCard.balanceMoney.amount) %>);
+        const amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%= currency %>", <%= maxLimit - Number(giftCard.balanceMoney.amount) %>, dropdown);
       </script>
   </body>
 
