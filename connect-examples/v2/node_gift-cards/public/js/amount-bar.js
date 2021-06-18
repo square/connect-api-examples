@@ -90,7 +90,7 @@ class AmountBar {
     let payButton = document.getElementById("pay-button")
     if (amount > this.maxAllowedToAdd) {
       payButton.innerHTML = "Amount exceeds maximum balance allowed";
-      
+
       if (payButton.disabled === true && payButton.getAttribute("force-disabled") === "false") {
         // if button was already disabled and and was not force disabled by amount bar, set force-disabled to false
         // and leave the button in disabled state 
@@ -132,12 +132,27 @@ class AmountBar {
       // Pass in true in order to achieve rounding, so text fits nicely. The actual function can be
       // found in `functions.ejs`.
       buttons[i].textContent = this.formatMoneyFunction(buttons[i].getAttribute("amount-bar-value"), this.currency, true);
+
+      // If the maximum amount we can add is greater than the current button amount, disable it.
+      if (buttons[i].getAttribute("amount-bar-value") > this.maxAllowedToAdd) {
+        buttons[i].disabled = true;
+        buttons[i].style.cursor = "not-allowed";
+      }
     }
+
+
 
     // Set initial value for `pay` button and data. If the first button is disabled
     // (i.e. adding that amount would exceed the maximum gift card balance allowed),
     // set the default selected button to 'custom', and show the text field. Otherwise,
     // use the first button value.
-    this.setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
+    if (buttons[0].disabled) {
+      buttons[0].classList.remove("active");
+      buttons[buttons.length - 1].classList.add("active");
+      this.showCustomTextField();
+      this.setAmountChosen();
+    } else {
+      this.setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
+    }
   }
 }
