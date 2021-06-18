@@ -87,8 +87,33 @@ class AmountBar {
    */
   setAmountChosen(amount = 0) {
     // We dont want rounding on our pay button, pass in false to our formatting function.
-    document.getElementById("pay-button").innerHTML = "Pay " + this.formatMoneyFunction(amount, this.currency, false);
-    document.getElementById("amount-bar__value").value = amount;
+    let payButton = document.getElementById("pay-button")
+    if (amount > this.maxAllowedToAdd) {
+      payButton.innerHTML = "Amount exceeds maximum balance allowed";
+      
+      if (payButton.disabled === true && payButton.getAttribute("force-disabled") === "false") {
+        // if button was already disabled and and was not force disabled by amount bar, set force-disabled to false
+        // and leave the button in disabled state 
+        payButton.setAttribute("force-disabled", "false");
+      } else {
+        // force disable the pay button if amount exceeds max balance allowed
+        payButton.setAttribute("force-disabled", "true");
+        payButton.disabled = true;
+      }
+
+      payButton.setAttribute("should-be-disabled", "true");
+    } else {
+      payButton.innerHTML = "Pay " + this.formatMoneyFunction(amount, this.currency, false);
+      document.getElementById("amount-bar__value").value = amount;
+
+      // only enable the button if the button was previously force disabled by amount bar
+      if (payButton.getAttribute("force-disabled") === "true") {
+        payButton.setAttribute("force-disabled", "false");
+        payButton.disabled = false;
+      }
+
+      payButton.setAttribute("should-be-disabled", "false");
+    }
   }
 
   /**
@@ -107,25 +132,12 @@ class AmountBar {
       // Pass in true in order to achieve rounding, so text fits nicely. The actual function can be
       // found in `functions.ejs`.
       buttons[i].textContent = this.formatMoneyFunction(buttons[i].getAttribute("amount-bar-value"), this.currency, true);
-
-      // If the maximum amount we can add is greater than the current button amount, disable it.
-      if (buttons[i].getAttribute("amount-bar-value") > this.maxAllowedToAdd) {
-        buttons[i].disabled = true;
-        buttons[i].style.cursor = "not-allowed";
-      }
     }
 
     // Set initial value for `pay` button and data. If the first button is disabled
     // (i.e. adding that amount would exceed the maximum gift card balance allowed),
     // set the default selected button to 'custom', and show the text field. Otherwise,
     // use the first button value.
-    if (buttons[0].disabled) {
-      buttons[0].classList.remove("active");
-      buttons[buttons.length - 1].classList.add("active");
-      this.showCustomTextField();
-      this.setAmountChosen();
-    } else {
-      this.setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
-    }
+    this.setAmountChosen(buttons[0].getAttribute("amount-bar-value"));
   }
 }

@@ -250,7 +250,7 @@ class PrettySelectDropdown {
     var submitButton = valueInput.closest("form").querySelector(":scope > button[type=submit]");
 
     valueInput.addEventListener('input', function () {
-      if (valueInput.value !== "") {
+      if (valueInput.value !== "" && submitButton.getAttribute("should-be-disabled") !== "true") {
         submitButton.disabled = false;
       } else {
         submitButton.disabled = true;
