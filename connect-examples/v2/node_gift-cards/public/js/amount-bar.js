@@ -91,29 +91,16 @@ class AmountBar {
     if (amount > this.maxAllowedToAdd) {
       payButton.innerHTML = "Amount exceeds maximum balance allowed";
 
-      if (payButton.disabled === true && payButton.getAttribute("force-disabled") === "false") {
-        // if button was already disabled and and was not force disabled by amount bar, set force-disabled to false
-        // and leave the button in disabled state 
-        payButton.setAttribute("force-disabled", "false");
-      } else {
-        // force disable the pay button if amount exceeds max balance allowed
-        payButton.setAttribute("force-disabled", "true");
-        payButton.disabled = true;
-      }
-
-      payButton.setAttribute("should-be-disabled", "true");
+      payButton.setAttribute("disabled-by-amount", "true");
     } else {
       payButton.innerHTML = "Pay " + this.formatMoneyFunction(amount, this.currency, false);
       document.getElementById("amount-bar__value").value = amount;
 
-      // only enable the button if the button was previously force disabled by amount bar
-      if (payButton.getAttribute("force-disabled") === "true") {
-        payButton.setAttribute("force-disabled", "false");
-        payButton.disabled = false;
-      }
-
-      payButton.setAttribute("should-be-disabled", "false");
+      payButton.setAttribute("disabled-by-amount", "false");
     }
+
+    // HACK: control button in combination with logic from the select dropdown
+    payButton.disabled = payButton.getAttribute("disabled-by-amount") === "true" || payButton.getAttribute("disabled-by-dropdown") === "true";
   }
 
   /**
@@ -139,8 +126,6 @@ class AmountBar {
         buttons[i].style.cursor = "not-allowed";
       }
     }
-
-
 
     // Set initial value for `pay` button and data. If the first button is disabled
     // (i.e. adding that amount would exceed the maximum gift card balance allowed),

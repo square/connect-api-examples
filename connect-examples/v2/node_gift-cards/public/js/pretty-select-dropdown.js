@@ -180,7 +180,11 @@ class PrettySelectDropdown {
     if (this.options.placeholder) {
       this.dropdownElement.querySelector(".pretty-dropdown__selected-description").innerText = this.options.placeholder;
       this.dropdownElement.querySelector(".pretty-dropdown__selected-display-value").innerText = null;
-      document.getElementById("pretty-dropdown__value").setAttribute("value", "");
+      var valueInput = document.getElementById("pretty-dropdown__value")
+      valueInput.setAttribute("value", "");
+      
+      var inputEvent = new Event("input");
+      valueInput.dispatchEvent(inputEvent);
     }
 
     // Add elements with certain IDs to the pretty-dropdown__options-wrapper
@@ -248,13 +252,22 @@ class PrettySelectDropdown {
   _configureElements() {
     var valueInput = document.getElementById("pretty-dropdown__value");
     var submitButton = valueInput.closest("form").querySelector(":scope > button[type=submit]");
+    submitButton.setAttribute("disabled-by-dropdown", submitButton.disabled.toString());
 
     valueInput.addEventListener('input', function () {
-      if (valueInput.value !== "" && submitButton.getAttribute("should-be-disabled") !== "true") {
-        submitButton.disabled = false;
+      if (valueInput.value !== "") {
+        submitButton.setAttribute("disabled-by-dropdown", "false");
       } else {
-        submitButton.disabled = true;
+        submitButton.setAttribute("disabled-by-dropdown", "true");
       }
+
+      // HACK: control button in combination with logic from the amount bar
+      if (submitButton.getAttribute("disabled-by-amount")) {
+        submitButton.disabled = submitButton.getAttribute("disabled-by-amount") === "true" || submitButton.getAttribute("disabled-by-dropdown") === "true";
+      } else {
+        submitButton.disabled = submitButton.getAttribute("disabled-by-dropdown") === "true";
+      }
+      
     });
 
     var inputEvent = new Event("input");
