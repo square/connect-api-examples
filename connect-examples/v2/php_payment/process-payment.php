@@ -27,6 +27,8 @@ $json = file_get_contents('php://input');
 $data = json_decode($json);
 $token = $data->token;
 
+$access_token = getenv('SQUARE_ACCESS_TOKEN');
+
 $square_client = new SquareClient([
   'accessToken' => $access_token,  
   'environment' => getenv('ENVIRONMENT')
