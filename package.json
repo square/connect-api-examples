@@ -5,7 +5,7 @@
   "main": "app.js",
   "private": true,
   "scripts": {
-    "seed": "NODE_ENV=sandbox node ./bin/script/seed-data.js generate",
+    "seed": "node ./bin/script/seed-data.js generate",
     "start": "nodemon -e js ./bin/www"
   },
   "author": "barakj, emmac, azlee",

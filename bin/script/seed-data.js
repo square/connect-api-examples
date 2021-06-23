@@ -29,7 +29,7 @@ const config = {
 // Configure catalog & team API instance
 const {
   catalogApi,
-  teamApi
+  teamApi,
 } = new Client(config);
 
 /**
@@ -42,12 +42,11 @@ const {
 async function createAppointmentServices(teamMemberIds) {
   const serviceNames = ["Hair Color Treatment", "Women's Haircut", "Men's Haircut", "Shampoo & Blow Dry"];
   try {
-    for (const serviceName of serviceNames) {
-      const idempotencyKey = uuidv4();
-      await catalogApi.upsertCatalogObject({
-        idempotencyKey,
+    Promise.all(serviceNames.map(serviceName => {
+      catalogApi.upsertCatalogObject({
+        idempotencyKey: uuidv4(),
         object: {
-          id: `#${idempotencyKey}`,
+          id: `#${uuidv4()}`,
           itemData: {
             name: serviceName,
             productType: "APPOINTMENTS_SERVICE",
@@ -59,7 +58,7 @@ async function createAppointmentServices(teamMemberIds) {
                   inventoryAlertType: "NONE",
                   name: "Regular",
                   pricingType: "VARIABLE_PRICING",
-                  serviceDuration: 3600000, // 30 minutes
+                  serviceDuration: 1800000, // 30 minutes
                   teamMemberIds,
                 },
                 presentAtAllLocations: true,
@@ -69,8 +68,10 @@ async function createAppointmentServices(teamMemberIds) {
           },
           type: "ITEM",
         }
-      });
-    }
+      }
+      );
+    }));
+    console.log("Creation of appointment services succeeded");
   } catch (error) {
     console.error("Creating appointment services failed: ", error);
   }
@@ -97,13 +98,19 @@ async function createTeamMembers() {
   ];
   const teamMemberIds = [];
   try {
-    for (const newTeamMember of teamMembers) {
-      const { result : { teamMember } } = await teamApi.createTeamMember({
+    Promise.all(teamMembers.map(newTeamMember =>
+      teamApi.createTeamMember({
         idempotencyKey: uuidv4(),
         teamMember: newTeamMember
-      });
-      teamMemberIds.push(teamMember.id);
-    }
+      })
+    ))
+      .then(responses => {
+        responses.map(response => {
+          const { teamMember } = response.result;
+          teamMemberIds.push(teamMember.id);
+        })
+      })
+    console.log("Creation of team members succeeded");
   } catch (error) {
     console.error("Creating team members failed: ", error);
   }
