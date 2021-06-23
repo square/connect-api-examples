@@ -42,7 +42,7 @@ const {
 async function createAppointmentServices(teamMemberIds) {
   const serviceNames = ["Hair Color Treatment", "Women's Haircut", "Men's Haircut", "Shampoo & Blow Dry"];
   try {
-    Promise.all(serviceNames.map(serviceName => {
+    await Promise.all(serviceNames.map(serviceName => {
       catalogApi.upsertCatalogObject({
         idempotencyKey: uuidv4(),
         object: {
@@ -98,18 +98,16 @@ async function createTeamMembers() {
   ];
   const teamMemberIds = [];
   try {
-    Promise.all(teamMembers.map(newTeamMember =>
+    const responses = await Promise.all(teamMembers.map(newTeamMember =>
       teamApi.createTeamMember({
         idempotencyKey: uuidv4(),
         teamMember: newTeamMember
       })
-    ))
-      .then(responses => {
-        responses.map(response => {
-          const { teamMember } = response.result;
-          teamMemberIds.push(teamMember.id);
-        })
-      })
+    ));
+    responses.map(response => {
+      const { teamMember } = response.result;
+      teamMemberIds.push(teamMember.id);
+    });
     console.log("Creation of team members succeeded");
   } catch (error) {
     console.error("Creating team members failed: ", error);
