@@ -95,8 +95,8 @@ async function createTeamMembers() {
       givenName: "Amy",
     }
   ];
+  const teamMemberIds = [];
   try {
-    const teamMemberIds = [];
     for (const newTeamMember of teamMembers) {
       const { result : { teamMember } } = await teamApi.createTeamMember({
         idempotencyKey: uuidv4(),
@@ -104,10 +104,10 @@ async function createTeamMembers() {
       });
       teamMemberIds.push(teamMember.id);
     }
-    return teamMemberIds;
   } catch (error) {
     console.error("Creating team members failed: ", error);
   }
+  return teamMemberIds;
 }
 
 /*
@@ -118,7 +118,9 @@ program
   .description("creates two team members using team API and hair services using catalog API")
   .action(async() => {
     const teamMembers = await createTeamMembers();
-    createAppointmentServices(teamMembers)
+    if (teamMembers) {
+      createAppointmentServices(teamMembers)
+    }
   });
 
 program.parse(process.argv);
