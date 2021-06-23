@@ -5,6 +5,7 @@
   "main": "app.js",
   "private": true,
   "scripts": {
+    "seed": "NODE_ENV=sandbox node ./bin/script/seed-data.js generate",
     "start": "nodemon -e js ./bin/www"
   },
   "author": "barakj, emmac, azlee",
@@ -12,12 +13,15 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
+    "commander": "^7.2.0",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
-    "square": "^12.0.0"
+    "readline": "^1.3.0",
+    "square": "^12.0.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "^7.29.0"
