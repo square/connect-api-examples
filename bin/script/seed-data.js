@@ -22,8 +22,8 @@ require("dotenv").config()
 
 // We don't recommend to run this script in the production environment
 const config = {
+  accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Sandbox,
-  accessToken: process.env.SQUARE_ACCESS_TOKEN
 }
 
 // Configure catalog & team API instance
@@ -85,14 +85,14 @@ async function createAppointmentServices(teamMemberIds) {
 async function createTeamMembers() {
   const teamMembers = [
     {
-      givenName: "John",
+      emailAddress: "johnsmith1234@square-example.com",
       familyName: "Smith",
-      emailAddress: "johnsmith1234@square-example.com"
+      givenName: "John",
     },
     {
-      givenName: "Amy",
+      emailAddress: "amyjohnson1234@square-example.com",
       familyName: "Johnson",
-      emailAddress: "amyjohnson1234@square-example.com"
+      givenName: "Amy",
     }
   ];
   try {

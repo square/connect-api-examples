@@ -16,6 +16,7 @@
             "destructuring": "any",
             "ignoreReadBeforeAssign": false
         }],
-        "quotes": ["error", "double"]
+        "quotes": ["error", "double"],
+        "sort-keys": ["error"]
     }
 }
