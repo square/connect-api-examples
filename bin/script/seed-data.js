@@ -42,7 +42,7 @@ const {
 async function createAppointmentServices(teamMemberIds) {
   const serviceNames = ["Hair Color Treatment", "Women's Haircut", "Men's Haircut", "Shampoo & Blow Dry"];
   try {
-    for (let serviceName of serviceNames) {
+    for (const serviceName of serviceNames) {
       const idempotencyKey = uuidv4();
       await catalogApi.upsertCatalogObject({
         idempotencyKey,
@@ -96,8 +96,8 @@ async function createTeamMembers() {
     }
   ];
   try {
-    let teamMemberIds = [];
-    for (let newTeamMember of teamMembers) {
+    const teamMemberIds = [];
+    for (const newTeamMember of teamMembers) {
       const { result : { teamMember } } = await teamApi.createTeamMember({
         idempotencyKey: uuidv4(),
         teamMember: newTeamMember

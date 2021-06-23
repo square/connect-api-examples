@@ -9,5 +9,13 @@
         "ecmaVersion": 12
     },
     "rules": {
+        "indent": ["error", 2],
+        "object-curly-spacing": ["error","always"],
+        "no-unused-vars": ["warn"],
+            "prefer-const": ["warn", {
+            "destructuring": "any",
+            "ignoreReadBeforeAssign": false
+        }],
+        "quotes": ["error", "double"]
     }
 }
