@@ -46,13 +46,13 @@ async function createAppointmentServices(teamMemberIds) {
       catalogApi.upsertCatalogObject({
         idempotencyKey: uuidv4(),
         object: {
-          id: `#${uuidv4()}`,
+          id: uuidv4(),
           itemData: {
             name: serviceName,
             productType: "APPOINTMENTS_SERVICE",
             variations: [
               {
-                id: `#${uuidv4()}`,
+                id: uuidv4(),
                 itemVariationData: {
                   availableForBooking: true,
                   inventoryAlertType: "NONE",
