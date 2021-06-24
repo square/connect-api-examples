@@ -99,7 +99,7 @@ class AmountBar {
       payButton.setAttribute("disabled-by-amount", "false");
     }
 
-    // HACK: control button in combination with logic from the select dropdown
+    // NOTE: The following logic is used specifically for coordinating logic between the dropdown and the pay button
     payButton.disabled = payButton.getAttribute("disabled-by-amount") === "true" || payButton.getAttribute("disabled-by-dropdown") === "true";
   }
 

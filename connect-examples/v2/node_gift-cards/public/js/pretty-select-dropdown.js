@@ -261,7 +261,7 @@ class PrettySelectDropdown {
         submitButton.setAttribute("disabled-by-dropdown", "true");
       }
 
-      // HACK: control button in combination with logic from the amount bar
+      // NOTE: The following logic is used specifically for coordinating logic between the dropdown and the pay button
       if (submitButton.getAttribute("disabled-by-amount")) {
         submitButton.disabled = submitButton.getAttribute("disabled-by-amount") === "true" || submitButton.getAttribute("disabled-by-dropdown") === "true";
       } else {
