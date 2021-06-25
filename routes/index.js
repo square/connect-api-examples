@@ -14,8 +14,11 @@ limitations under the License.
 const express = require("express");
 const router = express.Router();
 
+const servicesRoute = require("./services");
+router.use("/services", servicesRoute);
+
 router.get("/", async (req, res, next) => {
-  res.send("HELLO WORLD");
+  res.redirect("/services");
 });
 
 module.exports = router;

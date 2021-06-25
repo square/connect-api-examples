@@ -1,0 +1,20 @@
+<html>
+
+<head>
+</head>
+
+<body>
+  <p> landing page </p>
+  <div class="services">
+    <% items.forEach(function(item) { %>
+      <div class="dashboard__cards_card-wrapper">
+        <a href="/services/<%= item.id %>/staff">
+          <%= item.itemData.name %>
+          <%= item.itemData.description %>
+          $<%= item.itemData.variations[0].itemVariationData.priceMoney.amount %>
+        </a>
+      </div>
+    <%}); %>
+</body>
+
+</html>
