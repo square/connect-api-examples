@@ -86,7 +86,7 @@ async function createAppointmentServices(teamMemberIds) {
     }
 
     // create appointment services
-    const newservices = await Promise.all(services.map(service => {
+    await Promise.all(services.map(service => {
       catalogApi.upsertCatalogObject({
         idempotencyKey: uuidv4(),
         object: {
