@@ -87,8 +87,20 @@ class AmountBar {
    */
   setAmountChosen(amount = 0) {
     // We dont want rounding on our pay button, pass in false to our formatting function.
-    document.getElementById("pay-button").innerHTML = "Pay " + this.formatMoneyFunction(amount, this.currency, false);
-    document.getElementById("amount-bar__value").value = amount;
+    let payButton = document.getElementById("pay-button")
+    if (amount > this.maxAllowedToAdd) {
+      payButton.innerHTML = "Amount exceeds maximum balance allowed";
+
+      payButton.setAttribute("disabled-by-amount", "true");
+    } else {
+      payButton.innerHTML = "Pay " + this.formatMoneyFunction(amount, this.currency, false);
+      document.getElementById("amount-bar__value").value = amount;
+
+      payButton.setAttribute("disabled-by-amount", "false");
+    }
+
+    // NOTE: The following logic is used specifically for coordinating logic between the dropdown and the pay button
+    payButton.disabled = payButton.getAttribute("disabled-by-amount") === "true" || payButton.getAttribute("disabled-by-dropdown") === "true";
   }
 
   /**
