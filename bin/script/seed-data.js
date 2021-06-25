@@ -38,14 +38,16 @@ const {
  * @param {*} locationId
  * @returns {Location} location specified in .env file
  */
-async function retrieveLocation() {
-  const locationId = process.env.SQUARE_LOCATION_ID;
+async function retrieveLocation(locationId) {
   try {
     const { result: { location } } = await locationsApi.retrieveLocation(locationId);
     console.log(`Retriving location ${locationId} succeeded`);
     return location;
   } catch (error) {
-    console.error(`Retriving the location ${locationId} failed: `, error)
+    if (error.statusCode === 401) {
+      console.error("Unauthorized error - verify that your access token is for the sandbox environment");
+    }
+    console.error(`Retriving the location ${locationId} failed: `, error);
   }
 }
 
@@ -55,8 +57,9 @@ async function retrieveLocation() {
  * https://squareupsandbox.com/dashboard/items/services
  * https://squareup.com/dashboard/items/services
  * @param {String[]} teamMemberIds - team member ids to assign to services
+ * @param {Location} location - location to assign services to
  */
-async function createAppointmentServices(teamMemberIds) {
+async function createAppointmentServices(teamMemberIds, location) {
   const services = [
     {
       amount: 6400,
@@ -77,14 +80,6 @@ async function createAppointmentServices(teamMemberIds) {
     }
   ];
   try {
-    // get location so we can get the currency
-    const location = await retrieveLocation();
-
-    if (!location) {
-      console.error("No location available - please verify your location id is defined in the .env file");
-      return;
-    }
-
     // create appointment services
     await Promise.all(services.map(service => {
       catalogApi.upsertCatalogObject({
@@ -133,9 +128,10 @@ async function createAppointmentServices(teamMemberIds) {
  * Creates two team members and returns the ids of the new team members.
  * Visit for more information:
  * https://developer.squareup.com/reference/square/team-api/create-team-member
+ * @param {String} locationId
  * @returns {String[]} array of the new team members' ids
  */
-async function createTeamMembers() {
+async function createTeamMembers(locationId) {
   const teamMembers = [
     {
       emailAddress: "johnsmith1234@square-example.com",
@@ -153,7 +149,13 @@ async function createTeamMembers() {
     const responses = await Promise.all(teamMembers.map(newTeamMember =>
       teamApi.createTeamMember({
         idempotencyKey: uuidv4(),
-        teamMember: newTeamMember
+        teamMember: {
+          assignedLocations: {
+            assignmentType: "EXPLICIT_LOCATIONS",
+            location_ids: [locationId],
+          },
+          ...newTeamMember
+        },
       })
     ));
     responses.map(response => {
@@ -163,9 +165,6 @@ async function createTeamMembers() {
     console.log("Creation of team members succeeded");
   } catch (error) {
     console.error("Creating team members failed: ", error);
-    if (error.statusCode === 401) {
-      console.error("Unauthorized error - verify that your access token is for the sandbox environment");
-    }
   }
   return teamMemberIds;
 }
@@ -177,9 +176,18 @@ program
   .command("generate")
   .description("creates two team members using team API and hair services using catalog API")
   .action(async() => {
-    const teamMembers = await createTeamMembers();
+    // retrieve the location
+    const locationId = process.env.SQUARE_LOCATION_ID;
+    const location = await retrieveLocation(locationId);
+    if (!location) {
+      console.error("Fetching location failed. Exiting script");
+      return;
+    }
+    // create team members
+    const teamMembers = await createTeamMembers(location.id);
     if (teamMembers.length > 0) {
-      createAppointmentServices(teamMembers)
+      // create appointment services
+      createAppointmentServices(teamMembers, location)
     }
   });
 
