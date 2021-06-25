@@ -18,13 +18,13 @@ limitations under the License.
 const { Client, Environment } = require("square");
 const { v4: uuidv4 } = require("uuid");
 const { program } = require("commander");
-require("dotenv").config()
+require("dotenv").config();
 
 // We don't recommend to run this script in the production environment
 const config = {
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Sandbox,
-}
+};
 
 // Configure catalog & team API instance
 const {
@@ -35,8 +35,8 @@ const {
 
 /**
  * Retrieve the location
- * @param {*} locationId
- * @returns {Location} location specified in .env file
+ * @param {String} locationId
+ * @returns {Location}
  */
 async function retrieveLocation(locationId) {
   try {
@@ -187,7 +187,7 @@ program
     const teamMembers = await createTeamMembers(location.id);
     if (teamMembers.length > 0) {
       // create appointment services
-      createAppointmentServices(teamMembers, location)
+      createAppointmentServices(teamMembers, location);
     }
   });
 

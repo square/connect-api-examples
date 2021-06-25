@@ -17,6 +17,7 @@
             "ignoreReadBeforeAssign": false
         }],
         "quotes": ["error", "double"],
+        "semi": ["error"],
         "sort-keys": ["error"]
     }
 }
