@@ -81,7 +81,7 @@ async function createAppointmentServices(teamMemberIds, location) {
   ];
   try {
     // create appointment services
-    await Promise.all(services.map(service => {
+    const services2 = await Promise.all(services.map(service =>
       catalogApi.upsertCatalogObject({
         idempotencyKey: uuidv4(),
         object: {
@@ -114,10 +114,9 @@ async function createAppointmentServices(teamMemberIds, location) {
           presentAtAllLocations: false,
           presentAtLocationIds: [location.id],
           type: "ITEM",
-        }
-      }
-      );
-    }));
+        },
+      })
+    ));
     console.log("Creation of appointment services succeeded");
   } catch (error) {
     console.error("Creating appointment services failed: ", error);
@@ -154,7 +153,7 @@ async function createTeamMembers(locationId) {
             assignmentType: "EXPLICIT_LOCATIONS",
             location_ids: [locationId],
           },
-          ...newTeamMember
+          ...newTeamMember,
         },
       })
     ));
