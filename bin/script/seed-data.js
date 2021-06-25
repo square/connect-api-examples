@@ -29,8 +29,25 @@ const config = {
 // Configure catalog & team API instance
 const {
   catalogApi,
+  locationsApi,
   teamApi,
 } = new Client(config);
+
+/**
+ * Retrieve the location
+ * @param {*} locationId
+ * @returns {Location} location specified in .env file
+ */
+async function retrieveLocation() {
+  const locationId = process.env.SQUARE_LOCATION_ID;
+  try {
+    const { result: { location } } = await locationsApi.retrieveLocation(locationId);
+    console.log(`Retriving location ${locationId} succeeded`);
+    return location;
+  } catch (error) {
+    console.error(`Retriving the location ${locationId} failed: `, error)
+  }
+}
 
 /**
  * Creates the appointment services using Catalog API
@@ -40,15 +57,43 @@ const {
  * @param {String[]} teamMemberIds - team member ids to assign to services
  */
 async function createAppointmentServices(teamMemberIds) {
-  const serviceNames = ["Hair Color Treatment", "Women's Haircut", "Men's Haircut", "Shampoo & Blow Dry"];
+  const services = [
+    {
+      amount: 6400,
+      description: "Leave-in treatment that will instantly intensity your hair color radiance. Will result in increased shine.",
+      name: "Hair Color Treatment"
+    }, {
+      amount: 3500,
+      description: "Any women's haircut - examples include bobs, pixie, shag, bangs, layers, etc.",
+      name: "Women's Haircut"
+    }, {
+      amount: 3000,
+      description: "Any men's haircut - examples include blunt cut fringe, buzzcut, undercut, etc.",
+      name: "Men's Haircut"
+    }, {
+      amount: 4900,
+      description: "We will shampoo and blow dry your hair in a style that suits your hair and personality.",
+      name: "Shampoo & Blow Dry"
+    }
+  ];
   try {
-    await Promise.all(serviceNames.map(serviceName => {
+    // get location so we can get the currency
+    const location = await retrieveLocation();
+
+    if (!location) {
+      console.error("No location available - please verify your location id is defined in the .env file");
+      return;
+    }
+
+    // create appointment services
+    const newservices = await Promise.all(services.map(service => {
       catalogApi.upsertCatalogObject({
         idempotencyKey: uuidv4(),
         object: {
           id: `#${uuidv4()}`,
           itemData: {
-            name: serviceName,
+            description: service.description,
+            name: service.name,
             productType: "APPOINTMENTS_SERVICE",
             variations: [
               {
@@ -57,15 +102,22 @@ async function createAppointmentServices(teamMemberIds) {
                   availableForBooking: true,
                   inventoryAlertType: "NONE",
                   name: "Regular",
-                  pricingType: "VARIABLE_PRICING",
+                  priceMoney: {
+                    amount: service.amount,
+                    currency: location.currency,
+                  },
+                  pricingType: "FIXED_PRICING",
                   serviceDuration: 1800000, // 30 minutes
                   teamMemberIds,
                 },
-                presentAtAllLocations: true,
+                presentAtAllLocations: false,
+                presentAtLocationIds: [location.id],
                 type: "ITEM_VARIATION",
               }
-            ]
+            ],
           },
+          presentAtAllLocations: false,
+          presentAtLocationIds: [location.id],
           type: "ITEM",
         }
       }
@@ -111,6 +163,9 @@ async function createTeamMembers() {
     console.log("Creation of team members succeeded");
   } catch (error) {
     console.error("Creating team members failed: ", error);
+    if (error.statusCode === 401) {
+      console.error("Unauthorized error - verify that your access token is for the sandbox environment");
+    }
   }
   return teamMemberIds;
 }
@@ -123,7 +178,7 @@ program
   .description("creates two team members using team API and hair services using catalog API")
   .action(async() => {
     const teamMembers = await createTeamMembers();
-    if (teamMembers) {
+    if (teamMembers.length > 0) {
       createAppointmentServices(teamMembers)
     }
   });
