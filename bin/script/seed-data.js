@@ -13,9 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/* eslint no-console: 0 */
-
 const { Client, Environment } = require("square");
+const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
 const { program } = require("commander");
 require("dotenv").config();
@@ -151,7 +150,7 @@ async function createTeamMembers(locationId) {
         teamMember: {
           assignedLocations: {
             assignmentType: "EXPLICIT_LOCATIONS",
-            location_ids: [locationId],
+            locationIds: [locationId],
           },
           ...newTeamMember,
         },
@@ -166,6 +165,100 @@ async function createTeamMembers(locationId) {
     console.error("Creating team members failed: ", error);
   }
   return teamMemberIds;
+}
+
+/**
+ * Search team members assigned to the location
+ * @param {String} locationId
+ * @return {TeamMember[]}
+ */
+async function searchTeamMembers(locationId) {
+  try {
+    const { result: { teamMembers } } = await teamApi.searchTeamMembers({
+      query: {
+        filter: {
+          locationIds: [ locationId ],
+        },
+      },
+    });
+    return teamMembers;
+  } catch (error) {
+    console.error(`Searching for team members for location ${locationId} failed: `, error);
+  }
+}
+
+/**
+ * Deactivates the team members for the location
+ * @param {String} locationId
+ */
+async function deactivateTeamMembers(locationId) {
+  try {
+    const teamMembers = await searchTeamMembers(locationId);
+    if (!teamMembers || !teamMembers.length) {
+      console.log(`No team members for location ${locationId} to deactivate.`);
+      return;
+    }
+    const teamMembersMap = {};
+    for (const teamMember of teamMembers) {
+      teamMembersMap[teamMember.id] = {
+        teamMember: {
+          status: "INACTIVE",
+        },
+      };
+    }
+    const { result } = await teamApi.bulkCreateTeamMembers({
+      teamMembers: teamMembersMap
+    });
+    const deactivatedTeamMembers = [];
+    for (const teamMemberId in result.teamMembers) {
+      deactivatedTeamMembers.push(teamMemberId);
+    }
+    console.log("Successfully deactivated team members ", deactivatedTeamMembers);
+  } catch (error) {
+    console.error(`Deactivating team members for location ${locationId} failed: `, error);
+  }
+}
+
+/**
+ * Search for catalog items with the specified product type and location id
+ * @param {String} locationId
+ * @param {String} productType
+ * @returns {CatalogObject[]}
+ */
+async function searchCatalogItems(locationId, productType) {
+  try {
+    const { result: { items } } = await catalogApi.searchCatalogItems({
+      enabledLocationIds: [ locationId ],
+      productTypes: [ productType ],
+    });
+    console.info(`Successfully retrieved catalog items with product type ${productType} and locationId ${locationId}`);
+    return items;
+  } catch (error) {
+    console.error(`Searching for catalog items with product type ${productType} and locationId ${locationId} failed: `, error);
+  }
+}
+
+/**
+ * Delete all appointment service items for the location
+ * WARNING: This is permanent and irreversable
+ * @param {*} locationId
+ */
+async function clearAppointmentServices(locationId) {
+  try {
+    // get appointment services for the location
+    const serviceItems = await searchCatalogItems(locationId, "APPOINTMENTS_SERVICE");
+    // delete the appointment services
+    if (serviceItems && serviceItems.length > 0) {
+      const { result: { deletedObjectIds } } = await catalogApi.batchDeleteCatalogObjects({
+        objectIds: serviceItems.map((item) => item.id)
+      });
+      console.log("Successfully deleted catalog items ", deletedObjectIds);
+    } else {
+      console.log(`No appointment services to delete for location ${locationId}`);
+    }
+  } catch (error) {
+    console.error(`Failed to clear appointment services for location ${locationId}`, error);
+  }
 }
 
 /*
@@ -188,6 +281,28 @@ program
       // create appointment services
       createAppointmentServices(teamMembers, location);
     }
+  });
+
+program
+  .command("clear")
+  .description("clears the team members and appointment services assigned to the location")
+  .action(async() => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    const locationId = process.env.SQUARE_LOCATION_ID;
+    rl.question(`Are you sure you want to clear all appointment services for location ${locationId}? (y/n)`, async(ans) => {
+      if (ans.toUpperCase() === "Y") {
+        // deactivate team members
+        await deactivateTeamMembers(locationId);
+        // clear appointment services
+        await clearAppointmentServices(locationId);
+      } else if (ans.toUpperCase() === "N") {
+        console.log("Aborting clear.");
+      }
+      rl.close();
+    });
   });
 
 program.parse(process.argv);

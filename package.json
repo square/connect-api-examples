@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "seed": "node ./bin/script/seed-data.js generate",
+    "clear": "node ./bin/script/seed-data.js clear",
     "start": "nodemon -e js ./bin/www"
   },
   "author": "barakj, emmac, azlee",
