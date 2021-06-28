@@ -13,6 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+
+const sampleData = require("./service-items.json");
 const { Client, Environment } = require("square");
 const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
@@ -31,6 +33,9 @@ const {
   locationsApi,
   teamApi,
 } = new Client(config);
+
+// assign a SKU to all the hair appointment services so we can search & delete them later on
+const HAIR_SERVICES_SKU = "HAIR-SERVICE";
 
 /**
  * Retrieve the location
@@ -59,63 +64,30 @@ async function retrieveLocation(locationId) {
  * @param {Location} location - location to assign services to
  */
 async function createAppointmentServices(teamMemberIds, location) {
-  const services = [
-    {
-      amount: 6400,
-      description: "Leave-in treatment that will instantly intensity your hair color radiance. Will result in increased shine.",
-      name: "Hair Color Treatment"
-    }, {
-      amount: 3500,
-      description: "Any women's haircut - examples include bobs, pixie, shag, bangs, layers, etc.",
-      name: "Women's Haircut"
-    }, {
-      amount: 3000,
-      description: "Any men's haircut - examples include blunt cut fringe, buzzcut, undercut, etc.",
-      name: "Men's Haircut"
-    }, {
-      amount: 4900,
-      description: "We will shampoo and blow dry your hair in a style that suits your hair and personality.",
-      name: "Shampoo & Blow Dry"
+  const items = [];
+  for (const itemId in sampleData) {
+    // set the currency and team members and location for the item
+    const item = sampleData[itemId];
+    item.presentAtLocationIds = [ location.id ];
+    const { itemData: { variations } } = item;
+    for (const variation of variations) {
+      variation.presentAtLocationIds = [ location.id ];
+      variation.itemVariationData.sku = HAIR_SERVICES_SKU;
+      variation.itemVariationData.priceMoney.currency = location.currency;
+      variation.itemVariationData.teamMemberIds = teamMemberIds;
     }
-  ];
+    items.push(item);
+  }
   try {
     // create appointment services
-    await Promise.all(services.map(service =>
-      catalogApi.upsertCatalogObject({
-        idempotencyKey: uuidv4(),
-        object: {
-          id: `#${uuidv4()}`,
-          itemData: {
-            description: service.description,
-            name: service.name,
-            productType: "APPOINTMENTS_SERVICE",
-            variations: [
-              {
-                id: `#${uuidv4()}`,
-                itemVariationData: {
-                  availableForBooking: true,
-                  inventoryAlertType: "NONE",
-                  name: "Regular",
-                  priceMoney: {
-                    amount: service.amount,
-                    currency: location.currency,
-                  },
-                  pricingType: "FIXED_PRICING",
-                  serviceDuration: 1800000, // 30 minutes
-                  teamMemberIds,
-                },
-                presentAtAllLocations: false,
-                presentAtLocationIds: [location.id],
-                type: "ITEM_VARIATION",
-              }
-            ],
-          },
-          presentAtAllLocations: false,
-          presentAtLocationIds: [location.id],
-          type: "ITEM",
-        },
-      })
-    ));
+    await catalogApi.batchUpsertCatalogObjects({
+      batches: [
+        {
+          objects: items,
+        }
+      ],
+      idempotencyKey: uuidv4(),
+    });
     console.log("Creation of appointment services succeeded");
   } catch (error) {
     console.error("Creating appointment services failed: ", error);
@@ -150,7 +122,7 @@ async function createTeamMembers(locationId) {
         teamMember: {
           assignedLocations: {
             assignmentType: "EXPLICIT_LOCATIONS",
-            locationIds: [locationId],
+            locationIds: [ locationId ],
           },
           ...newTeamMember,
         },
@@ -168,20 +140,21 @@ async function createTeamMembers(locationId) {
 }
 
 /**
- * Search team members assigned to the location
+ * Search active team members assigned to the location
  * @param {String} locationId
  * @return {TeamMember[]}
  */
-async function searchTeamMembers(locationId) {
+async function searchActiveTeamMembers(locationId) {
   try {
     const { result: { teamMembers } } = await teamApi.searchTeamMembers({
       query: {
         filter: {
           locationIds: [ locationId ],
+          status: "ACTIVE",
         },
       },
     });
-    return teamMembers;
+    return teamMembers.slice(25);
   } catch (error) {
     console.error(`Searching for team members for location ${locationId} failed: `, error);
   }
@@ -193,7 +166,7 @@ async function searchTeamMembers(locationId) {
  */
 async function deactivateTeamMembers(locationId) {
   try {
-    const teamMembers = await searchTeamMembers(locationId);
+    const teamMembers = await searchActiveTeamMembers(locationId);
     if (!teamMembers || !teamMembers.length) {
       console.log(`No team members for location ${locationId} to deactivate.`);
       return;
@@ -206,7 +179,7 @@ async function deactivateTeamMembers(locationId) {
         },
       };
     }
-    const { result } = await teamApi.bulkCreateTeamMembers({
+    const { result } = await teamApi.bulkUpdateTeamMembers({
       teamMembers: teamMembersMap
     });
     const deactivatedTeamMembers = [];
@@ -220,16 +193,18 @@ async function deactivateTeamMembers(locationId) {
 }
 
 /**
- * Search for catalog items with the specified product type and location id
+ * Search for catalog items with the specified product type and location id and sku
  * @param {String} locationId
  * @param {String} productType
+ * @param {String} sku
  * @returns {CatalogObject[]}
  */
-async function searchCatalogItems(locationId, productType) {
+async function searchCatalogItems(locationId, productType, sku) {
   try {
     const { result: { items } } = await catalogApi.searchCatalogItems({
       enabledLocationIds: [ locationId ],
       productTypes: [ productType ],
+      textFilter: sku,
     });
     console.info(`Successfully retrieved catalog items with product type ${productType} and locationId ${locationId}`);
     return items;
@@ -245,8 +220,8 @@ async function searchCatalogItems(locationId, productType) {
  */
 async function clearAppointmentServices(locationId) {
   try {
-    // get appointment services for the location
-    const serviceItems = await searchCatalogItems(locationId, "APPOINTMENTS_SERVICE");
+    // get appointment services for the location & sku
+    const serviceItems = await searchCatalogItems(locationId, "APPOINTMENTS_SERVICE", HAIR_SERVICES_SKU);
     // delete the appointment services
     if (serviceItems && serviceItems.length > 0) {
       const { result: { deletedObjectIds } } = await catalogApi.batchDeleteCatalogObjects({
@@ -292,7 +267,7 @@ program
       output: process.stdout,
     });
     const locationId = process.env.SQUARE_LOCATION_ID;
-    rl.question(`Are you sure you want to clear all appointment services for location ${locationId}? (y/n)`, async(ans) => {
+    rl.question(`Are you sure you want to clear all appointment services created for location ${locationId} and deactivate team members? (y/n)`, async(ans) => {
       if (ans.toUpperCase() === "Y") {
         // deactivate team members
         await deactivateTeamMembers(locationId);
