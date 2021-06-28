@@ -39,7 +39,7 @@
           "itemVariationData": {
             "availableForBooking": true,
             "inventoryAlertType": "NONE",
-            "name": "Women's Haircut",
+            "name": "Regular",
             "priceMoney": {
               "amount": 3500,
               "currency": "CURRENCY"
