@@ -13,6 +13,9 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
+const bookingRoute = require("./bookings");
+
+router.use("/bookings", bookingRoute);
 
 router.get("/", async (req, res, next) => {
   res.send("HELLO WORLD");
