@@ -35,7 +35,7 @@ const {
 } = new Client(config);
 
 // assign a SKU to all the hair appointment services so we can search & delete them later on
-const HAIR_SERVICES_SKU = "HAIR-SERVICE";
+const HAIR_SERVICES_SKU = "BOOKINGS-SAMPLE-APP-HAIR-SERVICE";
 
 /**
  * Retrieve the location
@@ -171,22 +171,18 @@ async function deactivateTeamMembers(locationId) {
       console.log(`No team members for location ${locationId} to deactivate.`);
       return;
     }
-    const teamMembersMap = {};
-    for (const teamMember of teamMembers) {
-      teamMembersMap[teamMember.id] = {
+    const teamMembersMap = teamMembers.reduce((map, teamMember) => {
+      map[teamMember.id] = {
         teamMember: {
           status: "INACTIVE",
         },
       };
-    }
+      return map;
+    }, {});
     const { result } = await teamApi.bulkUpdateTeamMembers({
       teamMembers: teamMembersMap
     });
-    const deactivatedTeamMembers = [];
-    for (const teamMemberId in result.teamMembers) {
-      deactivatedTeamMembers.push(teamMemberId);
-    }
-    console.log("Successfully deactivated team members ", deactivatedTeamMembers);
+    console.log("Successfully deactivated team members ", [ ...Object.keys(result.teamMembers) ]);
   } catch (error) {
     console.error(`Deactivating team members for location ${locationId} failed: `, error);
   }
