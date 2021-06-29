@@ -14,7 +14,7 @@
         First available staff member
     <% } %>
     <% staff.forEach(function(employee) { %>
-      <div class="dashboard__cards_card-wrapper">
+      <div>
         <a href="/services/booking?serviceId=<%= serviceVariation.id %>&staffId=<%= employee.teamMemberId %>">
           <%= employee.displayName %>
         </a>

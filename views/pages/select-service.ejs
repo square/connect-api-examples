@@ -8,7 +8,7 @@
   <div class="services">
     <% items.forEach(function(item) { %>
       <% item.itemData.variations.forEach(function(variation) { %>
-      <div class="dashboard__cards_card-wrapper">
+      <div>
         <a href="/services/<%= variation.id %>/staff">
           <%= item.itemData.name %>
           <%= item.itemData.description %>
