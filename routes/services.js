@@ -23,50 +23,87 @@ const {
   teamApi
 } = require("../util/square-client");
 
+/**
+ * GET /services
+ *
+ * This endpoint is in charge of retrieving all of the service items that can be booked for the current location.
+ */
 router.get("/", async (req, res, next) => {
-  const { result: { items } } = await catalogApi.searchCatalogItems({
-    enabledLocationIds: [locationId],
-    productTypes: ["APPOINTMENTS_SERVICE"]
-  });
+  try {
+    let { result: { items } } = await catalogApi.searchCatalogItems({
+      enabledLocationIds: [ locationId ],
+      productTypes: [ "APPOINTMENTS_SERVICE" ]
+    });
 
-  res.render("pages/landing", { items });
+    if (!items) {
+      items = [];
+    }
+
+    res.render("pages/select-service", { items });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 });
 
 
 /**
- * two options to do this:
- * 1. Retrieve the service given by the ID. Grab the team members for this service.
- * List all bookings profiles for the current location that are bookable
- * for each team member of the service, if bookable, add to list to send back.
+ * GET /services/:serviceId/staff
  *
- * 2. Retrieve the service given by the ID. Grab the team members for this service.
- * For each team member, make an API call to retrieve booking profile and check if bookable.
- * if so, add to list. (could be slow if many team members)
- *
- * sending back: list of booking profiles (which will contain name and ID).
- * Limitation: no way to provide description or gender, cant support pictures or background info).
+ * This endpoint is in charge of retrieving all the staff associated with a specific service variation.
+ * It needs to do the following:
+ * 1. Get the service variation from the serviceId provided in the path.
+ * 2. Get the booking profiles for all staff members in the current location (that are bookable).
+ * 3. Get all team members that are active.
+ * 4. By cross referencing 1,2,3, we can find those team members who are associated with the service variation,
+ *    are active, and bookable at the current location. These are the actual available staff members for the booking.
  */
-router.get("/:id/staff", async (req, res, next) => {
-  const serviceId = req.params.id;
+router.get("/:serviceId/staff", async (req, res, next) => {
+  const serviceId = req.params.serviceId;
+  try {
+    // Send request to get the service associated with the given item variation ID, and related objects.
+    const retrieveServicePromise = catalogApi.retrieveCatalogObject(serviceId, true);
 
-  // Send request to get the service associated with the given catalog object ID.
-  const retrieveServicePromise = catalogApi.retrieveCatalogObject(serviceId);
+    // Send request to list staff booking profiles for the current location.
+    const listBookingProfilesPromise = bookingsApi.listTeamMemberBookingProfiles(true, undefined, undefined, locationId);
 
-  // Send request to list staff booking profiles for the current location.
-  const listBookingProfilesPromise = bookingsApi.listTeamMemberBookingProfiles(true, undefined, undefined, locationId);
+    // Send request to list all active team members for this merchant at this location.
+    const listActiveTeamMembersPromise = teamApi.searchTeamMembers({
+      query: {
+        filter: {
+          locationIds: [ locationId ],
+          status: "ACTIVE"
+        }
+      }
+    });
 
-  const responses = await Promise.all([retrieveServicePromise, listBookingProfilesPromise]);
+    // Wait until all API calls have completed.
+    const [ { result }, { result: { teamMemberBookingProfiles } }, { result: { teamMembers } } ] =
+      await Promise.all([ retrieveServicePromise, listBookingProfilesPromise, listActiveTeamMembersPromise ]);
 
-  const serviceTeamMembers = responses[0].result.object.itemData.variations[0].itemVariationData.teamMemberIds;
-  const bookableTeamMemberProfiles = responses[1].result.teamMemberBookingProfiles;
-  console.log(serviceTeamMembers);
-  console.log(bookableTeamMemberProfiles);
+    // We want to filter teamMemberBookingProfiles by checking that the teamMemberId associated with the profile is in our serviceTeamMembers.
+    // We also want to verify that each team member is ACTIVE.
+    const serviceVariation = result.object;
+    const parentItem = result.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
-  // We want to filter bookableTeamMemberProfiles by checking that the teamMemberId associated with the profile is in our serviceTeamMembers.
-  const staff = bookableTeamMemberProfiles.filter(profile => serviceTeamMembers.includes(profile.teamMemberId));
+    const serviceTeamMembers = serviceVariation.itemVariationData.teamMemberIds || [];
+    const activeTeamMembers = teamMembers.map(teamMember => teamMember.id);
 
-  console.log(staff);
-  // res.render("pages/booking", { staff });
+    const staff = teamMemberBookingProfiles
+      .filter(profile => serviceTeamMembers.includes(profile.teamMemberId) && activeTeamMembers.includes(profile.teamMemberId));
+
+    res.render("pages/select-staff", { parentItem, serviceVariation, staff });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+// PLACEHOLDER
+router.get("/booking", async (req, res, next) => {
+  console.log(req.query.serviceId);
+  console.log(req.query.staffId);
+  res.send("placeholder");
 });
 
 module.exports = router;

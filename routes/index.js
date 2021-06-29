@@ -17,6 +17,11 @@ const router = express.Router();
 const servicesRoute = require("./services");
 router.use("/services", servicesRoute);
 
+/**
+ * GET /
+ *
+ * Entry point for the app. Will redirect to the /services endpoint.
+ */
 router.get("/", async (req, res, next) => {
   res.redirect("/services");
 });

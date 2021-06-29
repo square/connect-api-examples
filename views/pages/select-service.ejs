@@ -4,16 +4,19 @@
 </head>
 
 <body>
-  <p> landing page </p>
+  <p> Select Service </p>
   <div class="services">
     <% items.forEach(function(item) { %>
+      <% item.itemData.variations.forEach(function(variation) { %>
       <div class="dashboard__cards_card-wrapper">
-        <a href="/services/<%= item.id %>/staff">
+        <a href="/services/<%= variation.id %>/staff">
           <%= item.itemData.name %>
           <%= item.itemData.description %>
-          $<%= item.itemData.variations[0].itemVariationData.priceMoney.amount %>
+          <%= variation.itemVariationData.name %>
+          $<%= variation.itemVariationData.priceMoney.amount %>
         </a>
       </div>
+      <%}); %>
     <%}); %>
 </body>
 
