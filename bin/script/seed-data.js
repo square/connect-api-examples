@@ -154,7 +154,7 @@ async function searchActiveTeamMembers(locationId) {
         },
       },
     });
-    return teamMembers.slice(25);
+    return teamMembers;
   } catch (error) {
     console.error(`Searching for team members for location ${locationId} failed: `, error);
   }
