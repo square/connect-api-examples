@@ -1,0 +1,26 @@
+<html>
+
+<head>
+</head>
+
+<body>
+  <h5> Select Staff member </h5>
+  <h6> <%= parentItem.itemData.name %></h6>
+  <h6> <%= parentItem.itemData.description %></h6>
+  <h6> <%= serviceVariation.itemVariationData.serviceDuration %></h6>
+  <div class="services">
+    <%if (bookableStaff.length > 0) { %>
+      <a href="/availability/<%= bookableStaff[0].teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>" >
+        First available staff member
+    <% } %>
+    <% bookableStaff.forEach(function(employee) { %>
+      <div>
+        <a href="/availability/<%= employee.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>" >
+          <%= employee.displayName %>
+        </a>
+        <%= employee.description %>
+      </div>
+    <%}); %>
+</body>
+
+</html>

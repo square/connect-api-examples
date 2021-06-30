@@ -33,8 +33,8 @@ const {
 } = new Client(config);
 
 module.exports = {
-  customersApi,
   bookingsApi,
   catalogApi,
+  customersApi,
   teamApi
 };
