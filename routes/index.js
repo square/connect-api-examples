@@ -15,7 +15,9 @@ const express = require("express");
 const router = express.Router();
 
 const servicesRoute = require("./services");
+const staffRoute = require("./staff");
 router.use("/services", servicesRoute);
+router.use("/staff", staffRoute);
 
 /**
  * GET /

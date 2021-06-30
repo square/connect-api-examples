@@ -9,7 +9,7 @@
     <% items.forEach(function(item) { %>
       <% item.itemData.variations.forEach(function(variation) { %>
       <div>
-        <a href="/services/<%= variation.id %>/staff">
+        <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
           <%= item.itemData.name %>
           <%= item.itemData.description %>
           <%= variation.itemVariationData.name %>

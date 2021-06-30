@@ -9,13 +9,13 @@
   <h6> <%= parentItem.itemData.description %></h6>
   <h6> <%= serviceVariation.itemVariationData.serviceDuration %></h6>
   <div class="services">
-    <%if (staff.length > 0) { %>
-      <a href="/services/booking?serviceId=<%= serviceVariation.id %>&staffId=<%= staff[0].teamMemberId %>" >
+    <%if (bookableStaff.length > 0) { %>
+      <a href="/services/<%= bookableStaff[0].teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>" >
         First available staff member
     <% } %>
-    <% staff.forEach(function(employee) { %>
+    <% bookableStaff.forEach(function(employee) { %>
       <div>
-        <a href="/services/booking?serviceId=<%= serviceVariation.id %>&staffId=<%= employee.teamMemberId %>">
+        <a href="/services/<%= employee.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>" >
           <%= employee.displayName %>
         </a>
         <%= employee.description %>
