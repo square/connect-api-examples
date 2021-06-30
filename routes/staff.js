@@ -65,8 +65,6 @@ router.get("/:serviceId", async (req, res, next) => {
 
     const serviceTeamMembers = serviceVariation.itemVariationData.teamMemberIds || [];
     const activeTeamMembers = teamMembers.map(teamMember => teamMember.id);
-    console.log(serviceTeamMembers);
-    console.log(activeTeamMembers);
 
     const bookableStaff = teamMemberBookingProfiles
       .filter(profile => serviceTeamMembers.includes(profile.teamMemberId) && activeTeamMembers.includes(profile.teamMemberId));

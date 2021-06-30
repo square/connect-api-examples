@@ -10,12 +10,12 @@
   <h6> <%= serviceVariation.itemVariationData.serviceDuration %></h6>
   <div class="services">
     <%if (bookableStaff.length > 0) { %>
-      <a href="/services/<%= bookableStaff[0].teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>" >
+      <a href="/availability/<%= bookableStaff[0].teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>" >
         First available staff member
     <% } %>
     <% bookableStaff.forEach(function(employee) { %>
       <div>
-        <a href="/services/<%= employee.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>" >
+        <a href="/availability/<%= employee.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>" >
           <%= employee.displayName %>
         </a>
         <%= employee.description %>
