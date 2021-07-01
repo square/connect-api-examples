@@ -56,10 +56,14 @@
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default,
 .ui-button,
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight
 html .ui-button.ui-state-disabled:hover {
   border: 1px solid #EBEBEB;
   background: white;
   font-weight: 500;
+  color: black;
   border-radius: 56px;
 }
 
@@ -74,15 +78,6 @@ html .ui-button.ui-state-disabled:hover {
   background: #007fff;
   font-weight: normal;
   color: #ffffff;
-}
-
-.ui-state-highlight,
-.ui-widget-content .ui-state-highlight,
-.ui-widget-header .ui-state-highlight {
-  border: 1px solid #fffa90;
-  background: #fffa90;
-  color: #777620;
-  font-weight: 500;
 }
 
 .ui-datepicker .ui-datepicker-title {
