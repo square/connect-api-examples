@@ -50,6 +50,10 @@ html {
   font-family: SQ Market;
 }
 
+.availability {
+  margin: 25px;
+}
+
 .availability h4 {
   color: #1A1A1A;
   font-size: 18px;
@@ -70,8 +74,7 @@ html {
   margin: 7px;
   text-align: center;
   text-decoration: none;
-  line-height: 40px;
-  height: 40px;
+  padding: 15px 10px;
   width: 104px;
 }
 
