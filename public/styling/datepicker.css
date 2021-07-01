@@ -1,0 +1,95 @@
+/* Overrides some of the styling for JQuery datepicker */
+.ui-datepicker {
+	width: 672px;
+	padding: .2em .2em 0;
+	display: none;
+  font-family: SQ Market;
+}
+.ui-widget-header {
+  background: white;
+  border: none;
+  border-bottom: 1px solid #EBEBEB;
+}
+.ui-datepicker .ui-datepicker-header {
+	position: relative;
+	padding: .2em 0;
+  width: 672px;
+}
+.ui-datepicker th {
+  padding: 25px 20px;
+}
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+	position: absolute;
+	top: 10px;
+	width: 40px;
+	height: 40px;
+}
+.ui-datepicker .ui-datepicker-prev-hover,
+.ui-datepicker .ui-datepicker-next-hover {
+	top: 10px;
+}
+.ui-datepicker .ui-datepicker-prev {
+	left: 3px;
+}
+.ui-datepicker .ui-datepicker-next {
+	right: 3px;
+}
+.ui-datepicker .ui-datepicker-prev-hover {
+	left: 3px;
+  border: none;
+}
+.ui-datepicker .ui-datepicker-next-hover {
+	right: 3px;
+  border: none;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .ui-button, html .ui-button.ui-state-disabled:hover {
+  border: 1px solid #EBEBEB;
+  background: white;
+  font-weight: 500;
+  border-radius: 56px;
+}
+.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled {
+  border: none;
+}
+.ui-state-default.ui-state-active, .ui-state-active {
+  border: 1px solid #007fff;
+  background: #007fff;
+  font-weight: normal;
+  color: #ffffff;
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+  border: 1px solid #fffa90;
+  background: #fffa90;
+  color: #777620;
+  font-weight: 500;
+}
+.ui-datepicker .ui-datepicker-title {
+  font-size: 20px;
+	margin: 0.5em 2.3em;
+  letter-spacing: 0.06em;
+	line-height: 1.8em;
+	text-align: center;
+}
+.ui-datepicker .ui-datepicker-title select {
+	font-size: 1em;
+	margin: 1px 0;
+}
+.ui-datepicker table {
+	width: 100%;
+	font-size: 16px;
+	border-collapse: collapse;
+	margin: 0 0 .4em;
+}
+.ui-datepicker td {
+	border: 0;
+	padding: 1px;
+}
+.ui-datepicker td span,
+.ui-datepicker td a {
+	display: block;
+	padding: 20px;
+  margin: 15px;
+	text-align: center;
+	text-decoration: none;
+}
