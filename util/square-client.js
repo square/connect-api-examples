@@ -12,10 +12,10 @@ limitations under the License.
 */
 
 const { Client } = require("square");
-require('dotenv').config();
+require("dotenv").config();
 
-const env = process.env[`ENVIRONMENT`].toLowerCase();
-const accessToken = process.env[`SQUARE_ACCESS_TOKEN`];
+const env = process.env["ENVIRONMENT"].toLowerCase();
+const accessToken = process.env["SQUARE_ACCESS_TOKEN"];
 
 // Set Square credentials
 const config = {
@@ -29,6 +29,7 @@ const {
   customersApi,
   bookingsApi,
   catalogApi,
+  locationsApi,
   teamApi
 } = new Client(config);
 
@@ -36,5 +37,6 @@ module.exports = {
   bookingsApi,
   catalogApi,
   customersApi,
+  locationsApi,
   teamApi
 };
