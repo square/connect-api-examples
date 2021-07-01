@@ -46,7 +46,7 @@
   font-display: fallback;
 }
 
-html {
+* {
   font-family: SQ Market;
 }
 
@@ -59,6 +59,7 @@ html {
   font-size: 18px;
   letter-spacing: 0.006em;
   line-height: 26px;
+  margin-top: 40px;
 }
 
 .availability a.availableTime {
