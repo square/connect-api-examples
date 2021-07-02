@@ -1,0 +1,27 @@
+<html>
+
+<head>
+</head>
+
+<body>
+  <h4> Thank you for booking with us </h4>
+  <h4> We will contact you after your appointment has been accepted.</h4>
+  <h6> Scheduled with <%= teamMember.givenName %> <%= teamMember.familyName %>  </h6>
+  <h6> Start time <%= booking.startAt %> </h6>
+  <h6> Duration <%= booking.appointmentSegments[0].durationMinutes %> </h6>
+  <h6> item name <%= parentItem.itemData.name %> </h6>
+  <h6> item description <%= parentItem.itemData.description %> </h6>
+  <h6> variation name <%= serviceVariation.itemVariationData.name %> </h6>
+  <h6> location name <%= location.name %> </h6>
+  <h6> location address <%= location.address.addressLine1 %> <%= location.address.locality %> <%= location.address.administrativeDistrictLevel1 %> <%= location.address.country %> <%= location.address.postalCode %> </h6>
+  <h6> phone number <%= location.phoneNumber %> </h6>
+
+  <form action="/booking/<%= booking.id %>/reschedule" method="get">
+    <button> Modify Booking </button>
+  </form>
+  <form class="form-control" action="/booking/<%= booking.id %>/cancel" method="POST">
+    <button type="submit">Cancel booking</button>
+  </form>
+</body>
+
+</html>

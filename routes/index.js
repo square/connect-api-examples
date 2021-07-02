@@ -16,8 +16,10 @@ const router = express.Router();
 
 const servicesRoute = require("./services");
 const staffRoute = require("./staff");
+const bookingRoute = require("./booking");
 router.use("/services", servicesRoute);
 router.use("/staff", staffRoute);
+router.use("/booking", bookingRoute);
 
 /**
  * GET /
