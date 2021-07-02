@@ -17,7 +17,7 @@ class DatePickerHandler {
     this.staffId = staffId;
 
     // show the available times for today's date
-    this.selectNewDate(new Date().toISOString().split("T")[0]);
+    this.selectNewDate(new Date().toLocaleDateString().split("T")[0]);
   }
 
   /**
