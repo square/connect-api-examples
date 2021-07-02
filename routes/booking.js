@@ -49,12 +49,6 @@ router.post("/create", async (req, res, next) => {
     const { result: { object: catalogItemVariation } } = await catalogApi.retrieveCatalogObject(serviceId);
     const durationMinutes = convertMsToMins(catalogItemVariation.itemVariationData.serviceDuration);
 
-    // If version mismatches, 
-    if (serviceVariationVersion !== catalogItemVariation.version) {
-      //TODO: redirect to front page with an error message
-      res.sendStatus(400);
-    }
-
     // Create booking
     const { result: { booking } } = await bookingsApi.createBooking({  
       booking: {
@@ -78,6 +72,12 @@ router.post("/create", async (req, res, next) => {
     res.json({ booking: booking.id });
 
   } catch (error) {
+    const timeNotAvailable = error.errors.find(e => e.detail.match(/That time slot is no longer available/));
+    if (timeNotAvailable) {
+      //TODO: redirect with some error message
+      return res.redirect("/");
+    }
+
     console.error(error);
     next(error);
   }
