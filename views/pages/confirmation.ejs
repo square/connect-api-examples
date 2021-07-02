@@ -16,12 +16,12 @@
   <h6> location address <%= location.address.addressLine1 %> <%= location.address.locality %> <%= location.address.administrativeDistrictLevel1 %> <%= location.address.country %> <%= location.address.postalCode %> </h6>
   <h6> phone number <%= location.phoneNumber %> </h6>
 
-  <a href="/booking/<%= booking.id %>/reschedule">
-    <button type="submit">Modify booking</button>
- </a>
- <form class="form-control" action="/booking/<%= booking.id %>/cancel" method="POST">
-  <button type="submit">Cancel booking</button>
- </form>
+  <form action="/booking/<%= booking.id %>/reschedule" method="get">
+    <button> Modify Booking </button>
+  </form>
+  <form class="form-control" action="/booking/<%= booking.id %>/cancel" method="POST">
+    <button type="submit">Cancel booking</button>
+  </form>
 </body>
 
 </html>
