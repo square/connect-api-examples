@@ -1,0 +1,85 @@
+body {
+  font-size: 14px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.9);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  font-size: 14px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.9);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+  font-size: 52px;
+  line-height: 60px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+}
+
+h3 {
+  font-size: 32px;
+  line-height: 40px;
+  margin: 0;
+}
+
+h4 {
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 0.006em;
+  margin: 0;
+}
+
+h5 {
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.006em;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+a:visited {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.service {
+  flex-direction: row;
+  align-items: center;
+  padding: 32px;
+
+  position: relative;
+  width: 673px;
+  height: 168px;
+  left: 592px;
+  top: 254px;
+
+  /* Fill/White */
+
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  border-radius: 12px;
+  margin: 24px;
+}
+
+.description {
+  color: rgba(0, 0, 0, 0.55);
+  margin-top: 4px;
+}
+
+.pretty-dropdown__icon {
+  position: absolute;
+  right: 15px;
+  top: 50%
+}
+
+.details {
+  margin-top: 4px;
+}

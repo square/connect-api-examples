@@ -1,0 +1,27 @@
+<%
+
+msToMinutes = function(durationInMs) {
+  return Number(durationInMs) / 60000;
+}
+
+formatMoney = function(value, currency) {
+  let valueAsNumber = Number(value);
+  // Create number formatter.
+  const props = {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 2
+  };
+  // If the value is an integer, show no decimal digits.
+  if (valueAsNumber % 1 == 0) {
+    props.minimumFractionDigits = 0;
+  }
+  
+  // Some currencies don't need to use higher denominations to represent values.
+  if (currency !== "JPY") {
+    valueAsNumber /= 100.0;
+  }
+  var formatter = new Intl.NumberFormat('en-US', props);
+  return formatter.format(valueAsNumber);
+}
+%>

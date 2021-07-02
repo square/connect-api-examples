@@ -1,6 +1,8 @@
+<% include("../functions") %>
 <html>
 
 <head>
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -8,14 +10,17 @@
   <div class="services">
     <% items.forEach(function(item) { %>
       <% item.itemData.variations.forEach(function(variation) { %>
-      <div>
-        <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
-          <%= item.itemData.name %>
-          <%= item.itemData.description %>
-          <%= variation.itemVariationData.name %>
-          $<%= variation.itemVariationData.priceMoney.amount %>
-        </a>
-      </div>
+      <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
+        <div class="service">
+          <h4><%= item.itemData.name %> - <%= variation.itemVariationData.name %></h4>
+          <h5 class="description"><%= item.itemData.description %></h5>
+          <img class="pretty-dropdown__icon" src="images/side-caret.svg">
+          <h5 class="details"> 
+            <%= formatMoney(variation.itemVariationData.priceMoney.amount, variation.itemVariationData.priceMoney.currency) %> 
+            • <%= msToMinutes(variation.itemVariationData.serviceDuration) %> minutes
+          </h5>
+        </div>
+      </a>
       <%}); %>
     <%}); %>
 </body>
