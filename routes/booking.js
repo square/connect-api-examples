@@ -16,7 +16,6 @@ const router = express.Router();
 const { bookingsApi, customersApi, catalogApi } = require("../util/square-client");
 const { v4: uuidv4 } = require("uuid");
 
-
 /**
  * POST /booking/create
  * 
@@ -24,22 +23,37 @@ const { v4: uuidv4 } = require("uuid");
  * by form data. Create a new customer if necessary, otherwise use an existing
  * customer that matches the `firstName`, `lastName`, `emailAddress`, and `phoneNumber`
  * to create the booking.
+ * 
+ * accepted query params are:
+ * `serviceId` - the ID of the service
+ * `staffId` - the ID of the staff
+ * `startAt` - starting time of the booking
+ * `serviceVariationVersion` - the version of the service initially selected. If the version mistaches the
+ * current version of the service, fail with an error message.
  */
 router.post("/create", async (req, res, next) => {
   const serviceId = req.query.serviceId;
+  const serviceVariationVersion = req.query.version;
   const staffId = req.query.staffId;
   const startAt = req.query.startAt;
 
-  const givenName = req.body.givenName;
-  const familyName = req.body.familyName;
+  const customerNote = req.body.customerNote;
   const emailAddress = req.body.emailAddress;
+  const familyName = req.body.familyName;
+  const givenName = req.body.givenName;
   const phoneNumber = req.body.phoneNumber;
+
 
   try {
     // Retrieve catalog object by the variation ID
-    const { result: { object:catalogItemVariation } } = await catalogApi.retrieveCatalogObject(serviceId);
+    const { result: { object: catalogItemVariation } } = await catalogApi.retrieveCatalogObject(serviceId);
     const durationMinutes = convertMsToMins(catalogItemVariation.itemVariationData.serviceDuration);
-    const serviceVariationVersion = catalogItemVariation.version;
+
+    // If version mismatches, 
+    if (serviceVariationVersion !== catalogItemVariation.version) {
+      //TODO: redirect to front page with an error message
+      res.sendStatus(400);
+    }
 
     // Create booking
     const { result: { booking } } = await bookingsApi.createBooking({  
@@ -47,12 +61,13 @@ router.post("/create", async (req, res, next) => {
         appointmentSegments: [
           {
             durationMinutes,
-            serviceVariationId:serviceId,
+            serviceVariationId: serviceId,
             serviceVariationVersion,
-            teamMemberId:staffId,
+            teamMemberId: staffId,
           }
         ],
         customerId: await getCustomerID(givenName, familyName, emailAddress, phoneNumber),
+        customerNote,
         locationId: process.env["SQUARE_LOCATION_ID"].toLowerCase(),
         startAt,
       },
@@ -63,18 +78,17 @@ router.post("/create", async (req, res, next) => {
     res.json({ booking: booking.id });
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     next(error);
   }
 });
 
-
 /**
- * PUT /booking/:bookingId
+ * POST /booking/:bookingId/reschedule
  * 
  * Update an existing booking, you may update the starting date
  */
-router.put("/:bookingId", async (req, res, next) => {
+router.post("/:bookingId/reschedule", async (req, res, next) => {
   const bookingId = req.params.bookingId;
   const startAt = req.query.startAt;
 
@@ -83,26 +97,25 @@ router.put("/:bookingId", async (req, res, next) => {
     const updateBooking = {
       startAt,
       version: booking.version,
-    }
+    };
 
-    const { result: { booking:newBooking } } = await bookingsApi.updateBooking(bookingId, { booking: updateBooking });
+    const { result: { booking: newBooking } } = await bookingsApi.updateBooking(bookingId, { booking: updateBooking });
 
     //TODO: redirect to confirmation page
     res.json({ booking: newBooking.id });
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     next(error);
   }
 });
 
-
 /**
- * DELETE /booking/:bookingId
+ * POST /booking/:bookingId/delete
  * 
  * delete a booking by booking ID
  */
-router.delete("/:bookingId", async (req, res, next) => {
+router.post("/:bookingId/delete", async (req, res, next) => {
   const bookingId = req.params.bookingId;
 
   try {
@@ -112,13 +125,12 @@ router.delete("/:bookingId", async (req, res, next) => {
     
     //TODO: redirect to confirmation page or home page
     res.sendStatus(200);
-    
+
   } catch (error) {
-    console.log(error);
+    console.error(error);
     next(error);
   }
 });
-
 
 /**
  * Convert a duration in milliseconds to minutes
@@ -130,15 +142,14 @@ function convertMsToMins(duration) {
   return Math.round(Number(duration) / 1000 / 60);
 }  
 
-
 /**
  * Return the id of a customer that matches the firstName, lastName, email, 
  * and phoneNumber. If such customer doesn't exist, create a new customer.
  * 
- * @param {*} givenName
- * @param {*} familyName 
- * @param {*} emailAddress 
- * @param {*} phoneNumber 
+ * @param {string} givenName
+ * @param {string} familyName 
+ * @param {string} emailAddress 
+ * @param {string} phoneNumber 
  */
 async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
 
@@ -158,9 +169,7 @@ async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
   if (customers && customers.length > 0) {
     const matchingCustomers = customers.filter(customer =>
       customer.givenName === givenName &&
-      customer.familyName === familyName &&
-      customer.phoneNumber === phoneNumber &&
-      customer.emailAddress === emailAddress
+      customer.familyName === familyName
     );
 
     // If a matching customer is found, return the first matching customer
