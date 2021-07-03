@@ -13,24 +13,47 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/* eslint no-console: 0 */
 
+const sampleData = require("./service-items.json");
 const { Client, Environment } = require("square");
+const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
 const { program } = require("commander");
-require("dotenv").config()
+require("dotenv").config();
 
 // We don't recommend to run this script in the production environment
 const config = {
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Sandbox,
-}
+};
 
 // Configure catalog & team API instance
 const {
   catalogApi,
+  locationsApi,
   teamApi,
 } = new Client(config);
+
+// assign a SKU to all the hair appointment services so we can search & delete them later on
+const HAIR_SERVICES_SKU = "BOOKINGS-SAMPLE-APP-HAIR-SERVICE";
+
+/**
+ * Retrieve the location
+ * @param {String} locationId
+ * @returns {Location}
+ */
+async function retrieveLocation(locationId) {
+  try {
+    const { result: { location } } = await locationsApi.retrieveLocation(locationId);
+    console.log(`Retriving location ${locationId} succeeded`);
+    return location;
+  } catch (error) {
+    if (error.statusCode === 401) {
+      console.error("Unauthorized error - verify that your access token is for the sandbox environment");
+    }
+    console.error(`Retriving the location ${locationId} failed: `, error);
+  }
+}
 
 /**
  * Creates the appointment services using Catalog API
@@ -38,39 +61,33 @@ const {
  * https://squareupsandbox.com/dashboard/items/services
  * https://squareup.com/dashboard/items/services
  * @param {String[]} teamMemberIds - team member ids to assign to services
+ * @param {Location} location - location to assign services to
  */
-async function createAppointmentServices(teamMemberIds) {
-  const serviceNames = ["Hair Color Treatment", "Women's Haircut", "Men's Haircut", "Shampoo & Blow Dry"];
+async function createAppointmentServices(teamMemberIds, location) {
+  const items = [];
+  for (const itemId in sampleData) {
+    // set the currency and team members and location for the item
+    const item = sampleData[itemId];
+    item.presentAtLocationIds = [ location.id ];
+    const { itemData: { variations } } = item;
+    for (const variation of variations) {
+      variation.presentAtLocationIds = [ location.id ];
+      variation.itemVariationData.sku = HAIR_SERVICES_SKU;
+      variation.itemVariationData.priceMoney.currency = location.currency;
+      variation.itemVariationData.teamMemberIds = teamMemberIds;
+    }
+    items.push(item);
+  }
   try {
-    await Promise.all(serviceNames.map(serviceName => {
-      catalogApi.upsertCatalogObject({
-        idempotencyKey: uuidv4(),
-        object: {
-          id: `#${uuidv4()}`,
-          itemData: {
-            name: serviceName,
-            productType: "APPOINTMENTS_SERVICE",
-            variations: [
-              {
-                id: `#${uuidv4()}`,
-                itemVariationData: {
-                  availableForBooking: true,
-                  inventoryAlertType: "NONE",
-                  name: "Regular",
-                  pricingType: "VARIABLE_PRICING",
-                  serviceDuration: 1800000, // 30 minutes
-                  teamMemberIds,
-                },
-                presentAtAllLocations: true,
-                type: "ITEM_VARIATION",
-              }
-            ]
-          },
-          type: "ITEM",
+    // create appointment services
+    await catalogApi.batchUpsertCatalogObjects({
+      batches: [
+        {
+          objects: items,
         }
-      }
-      );
-    }));
+      ],
+      idempotencyKey: uuidv4(),
+    });
     console.log("Creation of appointment services succeeded");
   } catch (error) {
     console.error("Creating appointment services failed: ", error);
@@ -81,9 +98,10 @@ async function createAppointmentServices(teamMemberIds) {
  * Creates two team members and returns the ids of the new team members.
  * Visit for more information:
  * https://developer.squareup.com/reference/square/team-api/create-team-member
+ * @param {String} locationId
  * @returns {String[]} array of the new team members' ids
  */
-async function createTeamMembers() {
+async function createTeamMembers(locationId) {
   const teamMembers = [
     {
       emailAddress: "johnsmith1234@square-example.com",
@@ -101,7 +119,13 @@ async function createTeamMembers() {
     const responses = await Promise.all(teamMembers.map(newTeamMember =>
       teamApi.createTeamMember({
         idempotencyKey: uuidv4(),
-        teamMember: newTeamMember
+        teamMember: {
+          assignedLocations: {
+            assignmentType: "EXPLICIT_LOCATIONS",
+            locationIds: [ locationId ],
+          },
+          ...newTeamMember,
+        },
       })
     ));
     responses.map(response => {
@@ -115,6 +139,99 @@ async function createTeamMembers() {
   return teamMemberIds;
 }
 
+/**
+ * Search active team members assigned to the location
+ * @param {String} locationId
+ * @return {TeamMember[]}
+ */
+async function searchActiveTeamMembers(locationId) {
+  try {
+    const { result: { teamMembers } } = await teamApi.searchTeamMembers({
+      query: {
+        filter: {
+          locationIds: [ locationId ],
+          status: "ACTIVE",
+        },
+      },
+    });
+    return teamMembers;
+  } catch (error) {
+    console.error(`Searching for team members for location ${locationId} failed: `, error);
+  }
+}
+
+/**
+ * Deactivates the team members for the location
+ * @param {String} locationId
+ */
+async function deactivateTeamMembers(locationId) {
+  try {
+    const teamMembers = await searchActiveTeamMembers(locationId);
+    if (!teamMembers || !teamMembers.length) {
+      console.log(`No team members for location ${locationId} to deactivate.`);
+      return;
+    }
+    const teamMembersMap = teamMembers.reduce((map, teamMember) => {
+      map[teamMember.id] = {
+        teamMember: {
+          status: "INACTIVE",
+        },
+      };
+      return map;
+    }, {});
+    const { result } = await teamApi.bulkUpdateTeamMembers({
+      teamMembers: teamMembersMap
+    });
+    console.log("Successfully deactivated team members ", [ ...Object.keys(result.teamMembers) ]);
+  } catch (error) {
+    console.error(`Deactivating team members for location ${locationId} failed: `, error);
+  }
+}
+
+/**
+ * Search for catalog items with the specified product type and location id and sku
+ * @param {String} locationId
+ * @param {String} productType
+ * @param {String} sku
+ * @returns {CatalogObject[]}
+ */
+async function searchCatalogItems(locationId, productType, sku) {
+  try {
+    const { result: { items } } = await catalogApi.searchCatalogItems({
+      enabledLocationIds: [ locationId ],
+      productTypes: [ productType ],
+      textFilter: sku,
+    });
+    console.info(`Successfully retrieved catalog items with product type ${productType} and locationId ${locationId}`);
+    return items;
+  } catch (error) {
+    console.error(`Searching for catalog items with product type ${productType} and locationId ${locationId} failed: `, error);
+  }
+}
+
+/**
+ * Delete all appointment service items for the location
+ * WARNING: This is permanent and irreversable
+ * @param {*} locationId
+ */
+async function clearAppointmentServices(locationId) {
+  try {
+    // get appointment services for the location & sku
+    const serviceItems = await searchCatalogItems(locationId, "APPOINTMENTS_SERVICE", HAIR_SERVICES_SKU);
+    // delete the appointment services
+    if (serviceItems && serviceItems.length > 0) {
+      const { result: { deletedObjectIds } } = await catalogApi.batchDeleteCatalogObjects({
+        objectIds: serviceItems.map((item) => item.id)
+      });
+      console.log("Successfully deleted catalog items ", deletedObjectIds);
+    } else {
+      console.log(`No appointment services to delete for location ${locationId}`);
+    }
+  } catch (error) {
+    console.error(`Failed to clear appointment services for location ${locationId}`, error);
+  }
+}
+
 /*
  * Main driver for the script.
  */
@@ -122,10 +239,41 @@ program
   .command("generate")
   .description("creates two team members using team API and hair services using catalog API")
   .action(async() => {
-    const teamMembers = await createTeamMembers();
-    if (teamMembers) {
-      createAppointmentServices(teamMembers)
+    // retrieve the location
+    const locationId = process.env.SQUARE_LOCATION_ID;
+    const location = await retrieveLocation(locationId);
+    if (!location) {
+      console.error("Fetching location failed. Exiting script");
+      return;
     }
+    // create team members
+    const teamMembers = await createTeamMembers(location.id);
+    if (teamMembers.length > 0) {
+      // create appointment services
+      createAppointmentServices(teamMembers, location);
+    }
+  });
+
+program
+  .command("clear")
+  .description("clears the team members and appointment services assigned to the location")
+  .action(async() => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    const locationId = process.env.SQUARE_LOCATION_ID;
+    rl.question(`Are you sure you want to clear all appointment services created for location ${locationId} and deactivate team members? (y/n)`, async(ans) => {
+      if (ans.toUpperCase() === "Y") {
+        // deactivate team members
+        await deactivateTeamMembers(locationId);
+        // clear appointment services
+        await clearAppointmentServices(locationId);
+      } else if (ans.toUpperCase() === "N") {
+        console.log("Aborting clear.");
+      }
+      rl.close();
+    });
   });
 
 program.parse(process.argv);

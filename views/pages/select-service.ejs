@@ -1,0 +1,23 @@
+<html>
+
+<head>
+</head>
+
+<body>
+  <p> Select Service </p>
+  <div class="services">
+    <% items.forEach(function(item) { %>
+      <% item.itemData.variations.forEach(function(variation) { %>
+      <div>
+        <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
+          <%= item.itemData.name %>
+          <%= item.itemData.description %>
+          <%= variation.itemVariationData.name %>
+          $<%= variation.itemVariationData.priceMoney.amount %>
+        </a>
+      </div>
+      <%}); %>
+    <%}); %>
+</body>
+
+</html>

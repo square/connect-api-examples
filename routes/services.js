@@ -13,24 +13,35 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
-const bookingRoute = require("./booking");
+require("dotenv").config();
 
-router.use("/booking", bookingRoute);
+const locationId = process.env["SQUARE_LOCATION_ID"];
 
-const servicesRoute = require("./services");
-const staffRoute = require("./staff");
-const bookingRoute = require("./booking");
-router.use("/services", servicesRoute);
-router.use("/staff", staffRoute);
-router.use("/booking", bookingRoute);
+const {
+  catalogApi,
+} = require("../util/square-client");
 
 /**
- * GET /
+ * GET /services
  *
- * Entry point for the app. Will redirect to the /services endpoint.
+ * This endpoint is in charge of retrieving all of the service items that can be booked for the current location.
  */
 router.get("/", async (req, res, next) => {
-  res.redirect("/services");
+  try {
+    let { result: { items } } = await catalogApi.searchCatalogItems({
+      enabledLocationIds: [ locationId ],
+      productTypes: [ "APPOINTMENTS_SERVICE" ]
+    });
+
+    if (!items) {
+      items = [];
+    }
+
+    res.render("pages/select-service", { items });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 });
 
 module.exports = router;
