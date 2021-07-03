@@ -1,7 +1,31 @@
 <%
 
-msToMinutes = function(durationInMs) {
-  return Number(durationInMs) / 60000;
+formatTime = function(durationInMs) {
+  const duration = Number(durationInMs);
+
+  // We want to convert milliseconds into human readable text (e.g. 2 hours 3 mins)
+
+  const seconds = Math.floor((duration / 1000) % 60);
+  // TODO: what happens if granularity level is of a second? might need carried rounding.
+  const minutes = Math.floor(duration / (1000 * 60) % 60);
+  const hours = Math.floor(duration / (1000 * 60 * 60) % 24);
+
+  console.log(seconds);
+  console.log(minutes);
+  console.log(hours);
+
+  let msg = [];
+  if (hours > 0) {
+    msg.push(hours);
+    msg.push((hours > 1) ? "hours" : "hour");
+  }
+
+  if (minutes > 0) {
+    msg.push(minutes);
+    msg.push((minutes > 1) ? "mins" : "min");
+  }
+
+  return msg.join(" ");
 }
 
 formatMoney = function(value, currency) {

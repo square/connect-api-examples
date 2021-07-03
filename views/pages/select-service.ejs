@@ -6,23 +6,37 @@
 </head>
 
 <body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+  
   <p> Select Service </p>
-  <div class="services">
-    <% items.forEach(function(item) { %>
-      <% item.itemData.variations.forEach(function(variation) { %>
-      <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
-        <div class="service">
-          <h4><%= item.itemData.name %> - <%= variation.itemVariationData.name %></h4>
-          <h5 class="description"><%= item.itemData.description %></h5>
-          <img class="pretty-dropdown__icon" src="images/side-caret.svg">
-          <h5 class="details"> 
-            <%= formatMoney(variation.itemVariationData.priceMoney.amount, variation.itemVariationData.priceMoney.currency) %> 
-            • <%= msToMinutes(variation.itemVariationData.serviceDuration) %> minutes
-          </h5>
-        </div>
-      </a>
+  <div class="window-container" id="login-container">
+    <div class="content__wrapper">
+    <h4> Book an appointment </h4>
+    <h4 class="title">Services</h4>
+    <h4 class="underline"></h4>
+    <div class="services">
+      <% items.forEach(function(item) { %>
+        <% item.itemData.variations.forEach(function(variation) { %>
+        <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
+          <div class="service">
+            <div class="test">
+              <h4><%= item.itemData.name %> - <%= variation.itemVariationData.name %></h4>
+              <h5 class="description"><%= item.itemData.description %></h5>
+              <h5 class="details"> 
+                <%= formatMoney(variation.itemVariationData.priceMoney.amount, variation.itemVariationData.priceMoney.currency) %> 
+                • <%= formatTime(variation.itemVariationData.serviceDuration) %>
+              </h5>
+          </div>
+          <span class="pretty-dropdown__icon"></span>
+          <img src="images/side-caret.svg">
+          </div>
+        </a>
+        <%}); %>
       <%}); %>
-    <%}); %>
+    </div>
+  </div>
 </body>
 
 </html>

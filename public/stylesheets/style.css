@@ -53,20 +53,16 @@ a:visited {
   flex-direction: row;
   align-items: center;
   padding: 32px;
-
-  position: relative;
   width: 673px;
   height: 168px;
   left: 592px;
   top: 254px;
-
-  /* Fill/White */
-
   background: #FFFFFF;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
   border-radius: 12px;
-  margin: 24px;
+  margin: 24px 0px 24px 0px;
+  display: flex;
 }
 
 .description {
@@ -75,11 +71,68 @@ a:visited {
 }
 
 .pretty-dropdown__icon {
-  position: absolute;
-  right: 15px;
-  top: 50%
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
 }
 
 .details {
   margin-top: 4px;
+}
+
+.window-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#login-container .content__wrapper {
+  width: 700px;
+  margin: auto;
+}
+
+.title {
+  color: #006AFF;
+  margin: 38px 0px 0px 0px;
+}
+
+.underline {
+  position: static;
+  width: 76px;
+  height: 2px;
+  left: 0px;
+  top: 38px;
+
+  background: #006AFF;
+  border-radius: 6px 6px 0px 0px;
+
+  /* Inside Auto Layout */
+
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 5px 0px 24px 0px;
+}
+
+.test {
+  margin-right: 20px;
+  position: static;
+  width: 583px;
+  height: 110px;
+  margin: 4px 20px 4px 0px;
+}
+
+.top-nav {
+  font-size: 14px;
+  line-height: 24px;
+  position: relative;
+  font-weight: bold;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }

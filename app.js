@@ -20,7 +20,7 @@ const cookieParser = require("cookie-parser");
 const routes = require("./routes/index");
 const app = express();
 
-require("./util/square-client");
+const { locationsApi } = require("./util/square-client");
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
@@ -33,6 +33,8 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
+
+app.locals.location = "CANADA";
 
 app.use(cookieParser());
 app.use("/", routes);

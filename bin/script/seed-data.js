@@ -105,8 +105,8 @@ async function createTeamMembers(locationId) {
   const teamMembers = [
     {
       emailAddress: "johnsmith1234@square-example.com",
-      familyName: "Smith",
-      givenName: "John",
+      familyName: "text",
+      givenName: "text",
     },
     {
       emailAddress: "amyjohnson1234@square-example.com",

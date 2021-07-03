@@ -17,7 +17,7 @@
               "currency": "CURRENCY"
             },
             "pricingType": "FIXED_PRICING",
-            "serviceDuration": 1800000
+            "serviceDuration": 100001
           },
           "presentAtAllLocations": false,
           "type": "ITEM_VARIATION"
@@ -45,7 +45,7 @@
               "currency": "CURRENCY"
             },
             "pricingType": "FIXED_PRICING",
-            "serviceDuration": 1800000
+            "serviceDuration": 5400000
           },
           "presentAtAllLocations": false,
           "type": "ITEM_VARIATION"
@@ -73,7 +73,7 @@
               "currency": "CURRENCY"
             },
             "pricingType": "FIXED_PRICING",
-            "serviceDuration": 1800000
+            "serviceDuration": 9000000
           },
           "presentAtAllLocations": false,
           "type": "ITEM_VARIATION"
