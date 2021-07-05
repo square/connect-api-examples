@@ -20,7 +20,18 @@ const cookieParser = require("cookie-parser");
 const routes = require("./routes/index");
 const app = express();
 
-require("./util/square-client");
+const { locationsApi } = require("./util/square-client");
+
+// Get location information and store it in app.locals so it is accessible in all pages.
+locationsApi.retrieveLocation(process.env[`SQUARE_LOCATION_ID`]).then(function(response) {
+  app.locals.location = response.result.location;
+}).catch(function(error) {
+  if (error.statusCode === "401") {
+    console.error("Configuration has failed. Please verify `.env` file is correct.");
+  }
+  process.exit(1);
+});
+
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
