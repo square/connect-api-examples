@@ -22,14 +22,13 @@
         <h4>Location</h4>
         <div>
           <span><%= location.address.addressLine1 %>, </span> <br>
-            <%if (location.address.addressLine2) { %>
-              <span><%= location.address.addressLine2 %>, </span>
-            <% } %>
-            <span>
-              <%= location.address.locality %>, 
-              <%= location.address.administrativeDistrictLevel1 %>,
-              <%= location.address.postalCode %>
-            </span>
+          <%if (location.address.addressLine2) { %>
+            <span><%= location.address.addressLine2 %>, </span>
+          <% } %>
+          <span>
+            <%= location.address.locality %>, 
+            <%= location.address.administrativeDistrictLevel1 %>,
+            <%= location.address.postalCode %>
           </span>
         </div>
       </div>
