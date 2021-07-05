@@ -43,19 +43,19 @@ a:visited {
 }
 
 /* Select services page */
-.window-container {
-  height: 100vh;
-  width: 100vw;
+.container {
+  width: 1000px;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .content__business {
-  width: 333px;
-  margin-right: 0px;
-  margin-left: auto;
-  height: inherit;
+  width: 30%;
+  margin: auto;
+  margin-top: 0px;
 }
 
 .card__wrapper {
