@@ -13,13 +13,10 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
-const bookingRoute = require("./booking");
-
-router.use("/booking", bookingRoute);
-
 const servicesRoute = require("./services");
 const staffRoute = require("./staff");
 const bookingRoute = require("./booking");
+
 router.use("/services", servicesRoute);
 router.use("/staff", staffRoute);
 router.use("/booking", bookingRoute);
