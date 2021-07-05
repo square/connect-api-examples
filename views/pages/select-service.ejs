@@ -9,27 +9,59 @@
   <header>
     <%- include("../partials/header") %>
   </header>
-  
-  <p> Select Service </p>
-  <div class="window-container" id="login-container">
-    <div class="content__wrapper">
+  <div class="window-container">
+    <div class="content__business">
+      <div class="content__business-logo">
+        <img src="/images/blank-logo.svg">
+      </div>
+      <h3><%= location.businessName %></h3>
+      <%if (location.description) { %>
+        <h5> <%= location.description %> </h5>
+      <% } %>
+      <div class="content__business-location">
+        <h4>Location</h4>
+        <span>
+          <%= location.address.addressLine1 %>, 
+          <%if (location.address.addressLine2) { %>
+            <br> <%= location.address.addressLine2 %>,
+          <% } %>
+          <br> 
+          <%= location.address.locality %>, 
+          <%= location.address.administrativeDistrictLevel1 %>,
+          <%= location.address.postalCode %></span>
+      </div>
+      <%if (location.phoneNumber || location.businessEmail) { %>
+        <div class="content__business-contact">
+          <h4>Contact</h4>
+          <%if (location.businessEmail) { %>
+            Email: <span> <%= location.businessEmail %> </span> 
+            <br> 
+          <% } %>
+          <%if (location.phoneNumber) { %>
+            Phone:
+            <span> <%= location.phoneNumber %> </span>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+    <div class="content__service">
     <h4> Book an appointment </h4>
     <h4 class="title">Services</h4>
     <h4 class="underline"></h4>
-    <div class="services">
+    <div class="content__service-cards">
       <% items.forEach(function(item) { %>
         <% item.itemData.variations.forEach(function(variation) { %>
         <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
-          <div class="service">
-            <div class="test">
+          <div class="card__wrapper">
+            <div class="card__info">
               <h4><%= item.itemData.name %> - <%= variation.itemVariationData.name %></h4>
-              <h5 class="description"><%= item.itemData.description %></h5>
-              <h5 class="details"> 
+              <h5 class="card__description"><%= item.itemData.description %></h5>
+              <h5 class="card__details"> 
                 <%= formatMoney(variation.itemVariationData.priceMoney.amount, variation.itemVariationData.priceMoney.currency) %> 
                 • <%= formatTime(variation.itemVariationData.serviceDuration) %>
               </h5>
           </div>
-          <span class="pretty-dropdown__icon"></span>
+          <span class="card__icon"></span>
           <img src="images/side-caret.svg">
           </div>
         </a>

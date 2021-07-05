@@ -5,13 +5,6 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-body {
-  font-size: 14px;
-  line-height: 22px;
-  color: rgba(0, 0, 0, 0.9);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
 h1 {
   font-size: 52px;
   line-height: 60px;
@@ -49,7 +42,23 @@ a:visited {
   color: rgba(0, 0, 0, 0.9);
 }
 
-.service {
+/* Select services page */
+.window-container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.content__business {
+  width: 333px;
+  margin-right: 0px;
+  margin-left: auto;
+  height: inherit;
+}
+
+.card__wrapper {
   flex-direction: row;
   align-items: center;
   padding: 32px;
@@ -65,32 +74,27 @@ a:visited {
   display: flex;
 }
 
-.description {
+
+.card__description {
   color: rgba(0, 0, 0, 0.55);
   margin-top: 4px;
 }
 
-.pretty-dropdown__icon {
+.card__icon {
   display: inline-block;
   height: 100%;
   vertical-align: middle;
 }
 
-.details {
+.card__details {
   margin-top: 4px;
 }
 
-.window-container {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#login-container .content__wrapper {
+.content__service {
   width: 700px;
   margin: auto;
+  margin-left: 163px;
+  margin-top: 0px;
 }
 
 .title {
@@ -104,12 +108,8 @@ a:visited {
   height: 2px;
   left: 0px;
   top: 38px;
-
   background: #006AFF;
   border-radius: 6px 6px 0px 0px;
-
-  /* Inside Auto Layout */
-
   flex: none;
   order: 1;
   align-self: stretch;
@@ -117,7 +117,7 @@ a:visited {
   margin: 5px 0px 24px 0px;
 }
 
-.test {
+.card__info {
   margin-right: 20px;
   position: static;
   width: 583px;
@@ -130,9 +130,42 @@ a:visited {
   line-height: 24px;
   position: relative;
   font-weight: bold;
-  padding: 24px;
-  display: flex;
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 68px;
+}
+
+.content__business-location {
+  margin-top: 32px;
+}
+
+.content__business-location span {
+  color: #71767B;
+}
+
+.content__business-contact {
+  margin-top: 24px;
+}
+
+.content__business-contact span {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.content__business-logo {
+  margin-bottom: 24px;
+}
+
+/* Header */
+.top-nav__logo {
+  float: left;
+  margin-left: 25px;
+  margin-right: 15px;
+}
+
+.top-nav__name {
+  margin-top: 10px;
 }

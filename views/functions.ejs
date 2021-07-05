@@ -1,18 +1,15 @@
 <%
-
+/**
+ * Helper function to format time from milliseconds to human readable text
+ * E.g. 5400000 milliseconds to "1 hour 30 mins".
+ * @param {Number} durationInMs
+ */
 formatTime = function(durationInMs) {
   const duration = Number(durationInMs);
-
-  // We want to convert milliseconds into human readable text (e.g. 2 hours 3 mins)
-
   const seconds = Math.floor((duration / 1000) % 60);
-  // TODO: what happens if granularity level is of a second? might need carried rounding.
+  // TODO: what happens if granularity level is of a second? might need more logic here.  
   const minutes = Math.floor(duration / (1000 * 60) % 60);
   const hours = Math.floor(duration / (1000 * 60 * 60) % 24);
-
-  console.log(seconds);
-  console.log(minutes);
-  console.log(hours);
 
   let msg = [];
   if (hours > 0) {
@@ -28,6 +25,12 @@ formatTime = function(durationInMs) {
   return msg.join(" ");
 }
 
+/**
+ * Helper function to format money into appropriate currency and rounding.
+ * If the value is an integer (i.e. no decimal places), do not show `.00`.
+ * @param {Number} value the amount
+ * @param {String} currency the currency code
+ */
 formatMoney = function(value, currency) {
   let valueAsNumber = Number(value);
   // Create number formatter.
