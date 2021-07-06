@@ -61,7 +61,7 @@ router.get("/:serviceId", async (req, res, next) => {
     // We want to filter teamMemberBookingProfiles by checking that the teamMemberId associated with the profile is in our serviceTeamMembers.
     // We also want to verify that each team member is ACTIVE.
     const serviceVariation = services.object;
-    const parentItem = services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
+    const serviceItem = services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
     const serviceTeamMembers = serviceVariation.itemVariationData.teamMemberIds || [];
     const activeTeamMembers = teamMembers.map(teamMember => teamMember.id);
@@ -69,7 +69,7 @@ router.get("/:serviceId", async (req, res, next) => {
     const bookableStaff = teamMemberBookingProfiles
       .filter(profile => serviceTeamMembers.includes(profile.teamMemberId) && activeTeamMembers.includes(profile.teamMemberId));
 
-    res.render("pages/select-staff", { bookableStaff, parentItem, serviceVariation, serviceVersion });
+    res.render("pages/select-staff", { bookableStaff, serviceItem, serviceVariation, serviceVersion });
   } catch (error) {
     console.error(error);
     next(error);

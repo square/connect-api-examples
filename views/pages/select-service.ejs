@@ -9,16 +9,16 @@
   <header>
     <%- include("../partials/header") %>
   </header>
-  <div class="container">
-    <div class="content__business">
-      <div class="content__business-logo">
+  <div class="content">
+    <div class="content-left business">
+      <div class="business__logo">
         <img src="/images/blank-logo.svg">
       </div>
       <h3><%= location.businessName %></h3>
       <%if (location.description) { %>
         <h5> <%= location.description %> </h5>
       <% } %>
-      <div class="content__business-location">
+      <div class="business__location">
         <h4>Location</h4>
         <div>
           <span><%= location.address.addressLine1 %>, </span> <br>
@@ -33,7 +33,7 @@
         </div>
       </div>
       <%if (location.phoneNumber || location.businessEmail) { %>
-        <div class="content__business-contact">
+        <div class="business__contact">
           <h4>Contact</h4>
           <%if (location.businessEmail) { %>
             Email: <span> <%= location.businessEmail %> </span> 
@@ -46,11 +46,11 @@
         </div>
       <% } %>
     </div>
-    <div class="content__service">
+    <div class="content-main services">
       <h4> Book an appointment </h4>
       <h4 class="title">Services</h4>
       <h4 class="underline"></h4>
-      <div class="content__service-cards">
+      <div class="cards">
         <% items.forEach(function(item) { %>
           <% item.itemData.variations.forEach(function(variation) { %>
           <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">

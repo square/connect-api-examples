@@ -46,137 +46,6 @@ a:visited {
   color: rgba(0, 0, 0, 0.9);
 }
 
-/* Select services page */
-.container {
-  width: 1000px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: auto;
-  margin-right: auto;
-
-}
-
-.content__business {
-  width: 30%;
-  margin: auto;
-  margin-top: 0px;
-}
-
-.card__wrapper {
-  flex-direction: row;
-  align-items: center;
-  padding: 32px;
-  width: 673px;
-  height: 168px;
-  left: 592px;
-  top: 254px;
-  background: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-sizing: border-box;
-  border-radius: 12px;
-  margin: 24px 0px 24px 0px;
-  display: flex;
-}
-
-
-.card__description {
-  color: rgba(0, 0, 0, 0.55);
-  margin-top: 4px;
-}
-
-.card__icon {
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-}
-
-.card__details {
-  margin-top: 4px;
-}
-
-.content__service {
-  width: 700px;
-  margin: auto;
-  margin-left: 163px;
-  margin-top: 0px;
-}
-
-.title {
-  color: #006AFF;
-  margin: 38px 0px 0px 0px;
-}
-
-.underline {
-  position: static;
-  width: 76px;
-  height: 2px;
-  left: 0px;
-  top: 38px;
-  background: #006AFF;
-  border-radius: 6px 6px 0px 0px;
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 0;
-  margin: 5px 0px 24px 0px;
-}
-
-.card__info {
-  margin-right: 20px;
-  position: static;
-  width: 583px;
-  height: 110px;
-  margin: 4px 20px 4px 0px;
-}
-
-.top-nav {
-  font-size: 14px;
-  line-height: 24px;
-  position: relative;
-  font-weight: bold;
-  padding: 15px;
-  display: inline-block;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  margin-bottom: 68px;
-}
-
-.content__business-location {
-  margin-top: 32px;
-}
-
-.content__business-location span {
-  color: #71767B;
-}
-
-.content__business-contact {
-  margin-top: 24px;
-}
-
-.content__business-contact span {
-  color: rgba(0, 0, 0, 0.55);
-}
-
-.content__business-logo {
-  margin-bottom: 24px;
-}
-
-/* Header */
-.top-nav__logo {
-  float: left;
-  margin-left: 25px;
-  margin-right: 15px;
-}
-
-.top-nav__name {
-  margin-top: 10px;
-}
-
-
-/* Staff */
 .icon {
   width: 10px;
   height: 10px;
@@ -213,7 +82,120 @@ a:visited {
   background-color: rgba(0, 0, 0, 0.05);
   padding: 8px 16px;
   border-radius: 6px;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 24px;
+  display: block;
+  width: fit-content;
 }
+
+.title {
+  color: #006AFF;
+  margin: 38px 0px 0px 0px;
+}
+
+.underline {
+  position: static;
+  width: 76px;
+  height: 2px;
+  left: 0px;
+  top: 38px;
+  background: #006AFF;
+  border-radius: 6px 6px 0px 0px;
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 5px 0px 24px 0px;
+}
+
+/* Select services page */
+.card__wrapper {
+  flex-direction: row;
+  align-items: center;
+  padding: 32px;
+  width: 673px;
+  height: 168px;
+  left: 592px;
+  top: 254px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  border-radius: 12px;
+  margin: 24px 0px 24px 0px;
+  display: flex;
+}
+
+.card__description {
+  color: rgba(0, 0, 0, 0.55);
+  margin-top: 4px;
+}
+
+.card__icon {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.card__details {
+  margin-top: 4px;
+}
+
+.card__info {
+  margin-right: 20px;
+  position: static;
+  width: 583px;
+  height: 110px;
+  margin: 4px 20px 4px 0px;
+}
+
+.business__location {
+  margin-top: 32px;
+}
+
+.business__location span {
+  color: #71767B;
+}
+
+.business__contact {
+  margin-top: 24px;
+}
+
+.business__contact span {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.business__logo {
+  margin-bottom: 24px;
+}
+
+/* Header */
+
+.top-nav {
+  font-size: 14px;
+  line-height: 24px;
+  position: relative;
+  font-weight: bold;
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 68px;
+}
+
+.top-nav__logo {
+  float: left;
+  margin-left: 25px;
+  margin-right: 15px;
+}
+
+.top-nav__name {
+  margin-top: 10px;
+}
+
+/* Staff */
 
 .steps, .staff {
   margin-top: 24px;
