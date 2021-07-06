@@ -58,14 +58,14 @@
               <div class="card__info">
                 <h4><%= item.itemData.name %> - <%= variation.itemVariationData.name %></h4>
                 <h5 class="card__description"><%= item.itemData.description %></h5>
-                <h5 class="card__details">
+                <span class="card__details">
                   <%if (variation.itemVariationData.pricingType === "FIXED_PRICING") { %>
                     <%= formatMoney(variation.itemVariationData.priceMoney.amount, variation.itemVariationData.priceMoney.currency) %>
                   <% } else { %>
                     Price Varies
                   <% } %>
                   • <%= formatTime(variation.itemVariationData.serviceDuration) %>
-                </h5>
+                  </span>
             </div>
             <span class="card__icon"></span>
             <img src="images/side-caret.svg">
