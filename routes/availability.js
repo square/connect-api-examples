@@ -18,7 +18,9 @@ require("dotenv").config();
 const locationId = process.env["SQUARE_LOCATION_ID"];
 
 const {
-  bookingsApi
+  bookingsApi,
+  catalogApi,
+  teamApi
 } = require("../util/square-client");
 
 // we will only search availability for the next 30 days
@@ -141,7 +143,7 @@ function formatToAmPm(date) {
  */
 function createDateAvailableTimesMap(availabilities) {
   const dateAvailableTimesMap = {};
-  availabilities.map((availability) => {
+  availabilities.forEach((availability) => {
     // get date
     const startAtDate = new Date(availability.startAt);
     const localStartDate = new Date(startAtDate.getTime() - startAtDate.getTimezoneOffset()*60*1000);
@@ -159,7 +161,48 @@ function createDateAvailableTimesMap(availabilities) {
 }
 
 /**
- * GET /availability
+ * Retrieve all the staff that can perform a specific service variation.
+ * 1. Get the service using catalog API.
+ * 2. Get the booking profiles for all staff members in the current location (that are bookable).
+ * 3. Get all active team members for the location.
+ * 4. Cross reference 1, 2, and 3 so we can find all available staff members for the service.
+ * @param {String} serviceId
+ * @return {String[]} array of all the team member ids that can be booked for the service
+ */
+async function searchActiveTeamMembers(serviceId) {
+  // Send request to get the service associated with the given item variation ID.
+  const retrieveServicePromise = catalogApi.retrieveCatalogObject(serviceId);
+
+  // Send request to list staff booking profiles for the current location.
+  const listBookingProfilesPromise = bookingsApi.listTeamMemberBookingProfiles(true, undefined, undefined, locationId);
+
+  // Send request to list all active team members for this merchant at this location.
+  const listActiveTeamMembersPromise = teamApi.searchTeamMembers({
+    query: {
+      filter: {
+        locationIds: [ locationId ],
+        status: "ACTIVE"
+      }
+    }
+  });
+
+  const [ { result: services }, { result: { teamMemberBookingProfiles } }, { result: { teamMembers } } ] =
+  await Promise.all([ retrieveServicePromise, listBookingProfilesPromise, listActiveTeamMembersPromise ]);
+
+  // We want to filter teamMemberBookingProfiles by checking that the teamMemberId associated with the profile is in our serviceTeamMembers.
+  // We also want to verify that each team member is ACTIVE.
+  const serviceVariation = services.object;
+
+  const serviceTeamMembers = serviceVariation.itemVariationData.teamMemberIds || [];
+  const activeTeamMembers = teamMembers.map(teamMember => teamMember.id);
+
+  const bookableStaff = teamMemberBookingProfiles
+    .filter(profile => serviceTeamMembers.includes(profile.teamMemberId) && activeTeamMembers.includes(profile.teamMemberId));
+  return bookableStaff.map(staff => staff.teamMemberId);
+}
+
+/**
+ * GET /availability/:staffId/:serviceId?version
  *
  * This endpoint is in charge of retrieving the availability for the service + team member
  * If the team member is set as anyStaffMember then we retrieve the availability for all team members
@@ -185,15 +228,19 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
       }
     }
   };
-  // search availability for the specific staff member if staff id is passed as a param
-  if (staffId !== ANY_STAFF_PARAMS) {
-    searchRequest.query.filter.segmentFilters[0].teamMemberIdFilter = {
-      any: [
-        staffId
-      ],
-    };
-  }
   try {
+    // search availability for the specific staff member if staff id is passed as a param
+    if (staffId === ANY_STAFF_PARAMS) {
+      searchRequest.query.filter.segmentFilters[0].teamMemberIdFilter = {
+        any: (await searchActiveTeamMembers(serviceId)),
+      };
+    } else {
+      searchRequest.query.filter.segmentFilters[0].teamMemberIdFilter = {
+        any: [
+          staffId
+        ],
+      };
+    }
     const { result: { availabilities } } = await bookingsApi.searchAvailability(searchRequest);
     // create object where keys are the date in yyyy-mm-dd format and values contain the available times & team member for that date
     const availabilityMap = createDateAvailableTimesMap(availabilities);

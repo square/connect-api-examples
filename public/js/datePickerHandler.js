@@ -17,7 +17,8 @@ class DatePickerHandler {
     this.staffId = staffId;
 
     // show the available times for today's date
-    this.selectNewDate(new Date().toLocaleDateString().split("T")[0]);
+    const now = new Date();
+    this.selectNewDate(new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split("T")[0]);
   }
 
   /**
@@ -38,7 +39,7 @@ class DatePickerHandler {
       return;
     }
     // for each available time create a new element that directs user to the next page
-    availabities.map((availability) => {
+    availabities.forEach((availability) => {
       const timeItem = document.createElement("a");
       timeItem.innerHTML = availability.time;
       timeItem.href = `/booking?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${this.staffId}&startAt=${availability.date}`;
