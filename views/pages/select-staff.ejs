@@ -12,7 +12,7 @@
 
     <div class="content">
       <div class="content-left">
-        <a class="button" href="/services">← Back</a>
+        <a class="button" href="/services"><span class="icon back-arrow"></span> Back</a>
         <div class="steps">
           <div class="steps__step">
             <div class="steps__step-wrapper">
@@ -59,18 +59,34 @@
       <div class="content-main">
         <h4>Select a staff member</h4>
         <div class="staff">
-          <%if (bookableStaff.length> 0) { %>
-          <a href="/availability/<%= bookableStaff[0].teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
+          <%if (bookableStaff.length > 0) { %>
+          <a href="/availability/anyStaffMember/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
           <div class="staff__card">
             <div class="staff__card-wrapper">
               <div class="staff__card-picture" id="any-staff">
-                <img id="image-1" src="/images/staff-1.jpeg" />
-                <img id="image-2" src="/images/staff-2.jpeg" />
+                <div class="staff__card-picture-wrapper" id="image-1">
+                  <% if (bookableStaff[0].profileImageUrl) { %>
+                    <img src="<%= bookableStaff[0].profileImageUrl %>" />
+                  <% } else { %>
+                    <%= getStaffInitials(bookableStaff[0].displayName) %>
+                  <% }; %>
+                </div>
+                <div class="staff__card-picture-wrapper" id="image-2">
+                  <% if (bookableStaff.length >= 2) { %>
+                    <% if (bookableStaff[1].profileImageUrl) { %>
+                      <img src="<%= bookableStaff[1].profileImageUrl %>" />
+                    <% } else { %>
+                      <%= getStaffInitials(bookableStaff[1].displayName) %>
+                    <% }; %>
+                  <% } else { %>
+                    <%= getStaffInitials("any") %>
+                  <% }; %>
+                </div>
               </div>
               <div class="staff__card-details">
-                <div class="staff__card-name">First available staff member</div>
+                <div class="staff__card-name">Any available staff member</div>
                 <div class="staff__card-description">
-                  Looking for the first available appointment? Choose this option to find the first avalible
+                  Looking for the first available appointment? Choose this option to find the first available
                   appointment.
                 </div>
               </div>
@@ -80,24 +96,31 @@
           </a>
           <% } %>
 
-          <% for(var i=0; i < bookableStaff.length; i++) { %>
-          <a href="/availability/<%= bookableStaff[i].teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
-          <div class="staff__card">
-            <div class="staff__card-wrapper">
-              <div class="staff__card-picture">
-                <img src="/images/staff-<%= i%2+1 %>.jpeg" />
-              </div>
-              <div class="staff__card-details">
-                <div class="staff__card-name"><%= bookableStaff[i].displayName %></div>
-                <div class="staff__card-description">
-                  <%= bookableStaff[i].description || "No description." %>
+          <% bookableStaff.forEach(function(staff) { %>
+          <a href="/availability/<%= staff.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
+            <div class="staff__card">
+              <div class="staff__card-wrapper">
+                <div class="staff__card-picture">
+                  <div class="staff__card-picture-wrapper">
+                  <% if (staff.profileImageUrl) { %>
+                    <img src="<%= staff.profileImageUrl %>" />
+                  <% } else { %>
+                    <%= getStaffInitials(staff.displayName) %>
+                  <% }; %>
+                  </div>
+                
+                </div>
+                <div class="staff__card-details">
+                  <div class="staff__card-name"><%= staff.displayName %></div>
+                  <div class="staff__card-description">
+                    <%= staff.description || "No description." %>
+                  </div>
                 </div>
               </div>
-            </div>
-          <span class="icon plus"></span>  
-          </div>     
+              <span class="icon plus"></span>  
+            </div>     
           </a>
-          <%}; %>
+          <% }); %>
         </div>
       </div>
     </div>

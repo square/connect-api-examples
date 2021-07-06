@@ -49,6 +49,7 @@ a:visited {
 .icon {
   width: 10px;
   height: 10px;
+  display: inline-block;
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -59,6 +60,11 @@ a:visited {
 
 .icon.plus {
   background-image: url("/images/plus.svg");
+}
+
+.icon.back-arrow {  
+  width: 20px;
+  background-image: url("/images/back-arrow.svg");
 }
 
 .content {
@@ -227,6 +233,10 @@ a:visited {
   align-items: center;
 }
 
+.steps__step-title a {
+  color: rgba(0, 0, 0, 0.55);
+}
+
 .steps__step-name, .staff__card-name {
   font-size: 18px;
   color: black;
@@ -264,6 +274,18 @@ a:visited {
   border: 1px solid white;
   border-radius: 50%;
 }
+.staff__card-picture-wrapper {
+  width: 64px;
+  height: 64px;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 50%;
+  display: flex;
+  font-size: 48px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.55);
+  align-items: center;
+  justify-content: center;
+}
 
 .staff__card-details {
   padding-right: 150px;
@@ -272,6 +294,12 @@ a:visited {
 
 .staff__card .icon {
   flex: 0 0 10px;
+}
+
+#any-staff .staff__card-picture-wrapper {
+  width: 46px;
+  height: 46px;
+  font-size: 24px;
 }
 
 #any-staff img {
