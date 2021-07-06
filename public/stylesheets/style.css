@@ -1,0 +1,312 @@
+body {
+  font-size: 14px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.9);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+  font-size: 52px;
+  line-height: 60px;
+  margin-top: 0px;
+  margin-bottom: 16px;
+}
+
+h3 {
+  font-size: 32px;
+  line-height: 40px;
+  margin: 0;
+}
+
+h4 {
+  font-size: 18px;
+  line-height: 26px;
+  letter-spacing: 0.006em;
+  margin: 0;
+}
+
+h5 {
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.006em;
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+a:visited {
+  color: rgba(0, 0, 0, 0.9);
+}
+
+/* Select services page */
+.container {
+  width: 1000px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.content__business {
+  width: 30%;
+  margin: auto;
+  margin-top: 0px;
+}
+
+.card__wrapper {
+  flex-direction: row;
+  align-items: center;
+  padding: 32px;
+  width: 673px;
+  height: 168px;
+  left: 592px;
+  top: 254px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  border-radius: 12px;
+  margin: 24px 0px 24px 0px;
+  display: flex;
+}
+
+
+.card__description {
+  color: rgba(0, 0, 0, 0.55);
+  margin-top: 4px;
+}
+
+.card__icon {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.card__details {
+  margin-top: 4px;
+}
+
+.content__service {
+  width: 700px;
+  margin: auto;
+  margin-left: 163px;
+  margin-top: 0px;
+}
+
+.title {
+  color: #006AFF;
+  margin: 38px 0px 0px 0px;
+}
+
+.underline {
+  position: static;
+  width: 76px;
+  height: 2px;
+  left: 0px;
+  top: 38px;
+  background: #006AFF;
+  border-radius: 6px 6px 0px 0px;
+  flex: none;
+  order: 1;
+  align-self: stretch;
+  flex-grow: 0;
+  margin: 5px 0px 24px 0px;
+}
+
+.card__info {
+  margin-right: 20px;
+  position: static;
+  width: 583px;
+  height: 110px;
+  margin: 4px 20px 4px 0px;
+}
+
+.top-nav {
+  font-size: 14px;
+  line-height: 24px;
+  position: relative;
+  font-weight: bold;
+  padding: 15px;
+  display: inline-block;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 68px;
+}
+
+.content__business-location {
+  margin-top: 32px;
+}
+
+.content__business-location span {
+  color: #71767B;
+}
+
+.content__business-contact {
+  margin-top: 24px;
+}
+
+.content__business-contact span {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.content__business-logo {
+  margin-bottom: 24px;
+}
+
+/* Header */
+.top-nav__logo {
+  float: left;
+  margin-left: 25px;
+  margin-right: 15px;
+}
+
+.top-nav__name {
+  margin-top: 10px;
+}
+
+
+/* Staff */
+.icon {
+  width: 10px;
+  height: 10px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.icon.side-caret-selected {
+  background-image: url("/images/side-caret-selected.svg");
+}
+
+.icon.plus {
+  background-image: url("/images/plus.svg");
+}
+
+.content {
+  width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+}
+
+.content-left {
+  width: 35%;
+  margin: 70px 30px;
+}
+
+.content-main {
+  width: 65%;
+  margin: 70px 50px;
+}
+
+.button {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.steps, .staff {
+  margin-top: 24px;
+}
+
+.steps__step, .staff__card {
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+
+.steps__step.selected {
+  border: 2px solid rgba(0, 107, 230, 1);
+  color: rgba(0, 107, 230, 1);
+}
+
+.steps__step.selected .steps__step-title {
+  color: rgba(0, 107, 230, 1);
+}
+
+.steps__step-title {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: 0.009em;
+  color: rgba(0, 0, 0, 0.55);
+  font-weight: bold;
+  align-items: center;
+}
+
+.steps__step-name, .staff__card-name {
+  font-size: 18px;
+  color: black;
+  line-height: 26px;
+  letter-spacing: 0.006em;
+  font-weight: bold;
+}
+
+.steps__step-description, .staff__card-description {
+  color: rgba(113, 118, 123, 1);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.staff__card {
+  display: flex;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.staff__card-wrapper {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+}
+
+.staff__card-picture {
+  flex: 0 0 70px;
+  margin-right: 16px;
+  position: relative;
+}
+
+.staff__card-picture img {
+  width: 64px;
+  border: 1px solid white;
+  border-radius: 50%;
+}
+
+.staff__card-details {
+  padding-right: 150px;
+  flex: 1;
+}
+
+.staff__card .icon {
+  flex: 0 0 10px;
+}
+
+#any-staff img {
+  width: 46px;
+  border: 1px solid white;
+  border-radius: 24px;
+}
+
+#any-staff #image-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#any-staff #image-2 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
