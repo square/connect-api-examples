@@ -1,0 +1,52 @@
+<%
+/**
+ * Helper function to format time from milliseconds to human readable text
+ * E.g. 5400000 milliseconds to "1 hour 30 mins".
+ * @param {Number} durationInMs
+ */
+formatTime = function(durationInMs) {
+  const duration = Number(durationInMs);
+  const minutes = Math.floor(duration / (1000 * 60) % 60);
+  const hours = Math.floor(duration / (1000 * 60 * 60) % 24);
+
+  let msg = [];
+  if (hours > 0) {
+    msg.push(hours);
+    msg.push((hours > 1) ? "hours" : "hour");
+  }
+
+  if (minutes > 0) {
+    msg.push(minutes);
+    msg.push((minutes > 1) ? "mins" : "min");
+  }
+
+  return msg.join(" ");
+}
+
+/**
+ * Helper function to format money into appropriate currency and rounding.
+ * If the value is an integer (i.e. no decimal places), do not show `.00`.
+ * @param {Number} value the amount
+ * @param {String} currency the currency code
+ */
+formatMoney = function(value, currency) {
+  let valueAsNumber = Number(value);
+  // Create number formatter.
+  const props = {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 2
+  };
+  // If the value is an integer, show no decimal digits.
+  if (valueAsNumber % 1 == 0) {
+    props.minimumFractionDigits = 0;
+  }
+  
+  // Some currencies don't need to use higher denominations to represent values.
+  if (currency !== "JPY") {
+    valueAsNumber /= 100.0;
+  }
+  var formatter = new Intl.NumberFormat('en-US', props);
+  return formatter.format(valueAsNumber);
+}
+%>
