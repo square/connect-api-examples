@@ -27,13 +27,13 @@ class DatePickerHandler {
    * @param {String} date ie. 2021-10-30
    */
   selectNewDate(date) {
-    const availableTimesDiv = document.getElementById("availableTimes");
+    const availableTimesDiv = document.getElementById("available-times");
     // clear available times and reset it to the new available times for the date
     availableTimesDiv.innerHTML = "";
     const availabities = this.availabilityMap[date];
     if (!availabities) { // no available times for the date
       const noTimesAvailable = document.createElement("p");
-      noTimesAvailable.className = "noTimesAvailableMessage";
+      noTimesAvailable.className = "no-times-available-msg";
       noTimesAvailable.innerHTML = "There are no times available for this date - please select a new date.";
       availableTimesDiv.appendChild(noTimesAvailable);
       return;
@@ -43,7 +43,7 @@ class DatePickerHandler {
       const timeItem = document.createElement("a");
       timeItem.innerHTML = availability.time;
       timeItem.href = `/booking?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${this.staffId}&startAt=${availability.date}`;
-      timeItem.className = "availableTime";
+      timeItem.className = "available-time";
       timeItem.type = "submit";
       availableTimesDiv.appendChild(timeItem);
     });
