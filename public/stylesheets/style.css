@@ -431,6 +431,7 @@ a:visited {
 .steps__staff-step-body {
   padding-left: 10px;
 }
+<<<<<<< HEAD
 
 .developer-note {
   justify-content: center;
@@ -459,3 +460,88 @@ a:visited {
   cursor: pointer;
 }
 
+.content__card {
+  /* Bg */
+
+
+width: 500px;
+height: 542px;
+margin-top: 40px;
+/* Fill/White */
+
+background: #FFFFFF;
+border: 1px solid rgba(0, 0, 0, 0.08);
+box-sizing: border-box;
+border-radius: 12px;
+display: inline-block;
+}
+
+.subtitle {
+  color: #71767B;
+  margin-top: 8px;
+}
+
+.content__service.message {
+  text-align: center;
+}
+
+.content__card .subtitle {
+  margin-top: 45px;
+  margin-bottom: 0px;
+}
+
+.test {
+  width: 328px;
+  display: inline-block;
+}
+
+.btn-primary {
+  background-color: rgba(0, 106, 255, 1);
+  color: white;
+  border-width: 0;
+  width: 100%;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  border-radius: 6px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-secondary {
+  background-color: #F5F6F7;
+  color: #151C1F;
+  border-width: 0;
+  width: 100%;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  border-radius: 6px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 22px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date {
+  margin-top: 37px;
+  margin-bottom: 16px;
+}
+
+.location-info {
+  margin-top: 16px;
+  margin-bottom: 52px;
+}
+
+.button__group button {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}

@@ -62,6 +62,7 @@ formatMoney = function(value, currency) {
 getStaffInitials = function(displayName) {
   return displayName.toUpperCase()[0];
 }
+<<<<<<< HEAD
 
 /**
  * Helper function to convert date into a human readable date 
@@ -104,5 +105,30 @@ convertTimeToText = function(date) {
   minutes = minutes < 10 ? "0" + minutes : minutes;
 
   return `${hours}:${minutes} ${d.getHours() >= 12 ? "pm" : "am"}`;
+}
+
+formatDate = function(current, minutes) {
+  const currentDate = new Date(current);
+  const minutesAsNumber = Number(minutes);
+  const newDate = new Date(currentDate.getTime() + minutesAsNumber * 60000);
+  // TODO: what happens if we span over multiple days? Need to check current.getDay() vs new.getDay()
+
+  const msg = [];
+  msg.push(currentDate.toDateString());
+  msg.push(currentDate.toLocaleTimeString("en-US"));
+  msg.push("-");
+  if (isSameDay(currentDate, newDate)) {
+    msg.push(newDate.toLocaleTimeString("en-US"));
+  } else {
+    msg.push(newDate.toDateString());
+    msg.push(newDate.toLocaleTimeString("en-US"));
+  }
+  return msg.join(" ");
+}
+
+isSameDay = function(date1, date2) {
+  return (date1.getDate() === date2.getDate() 
+     && date1.getMonth() === date2.getMonth()
+     && date1.getFullYear() === date2.getFullYear());
 }
 %>
