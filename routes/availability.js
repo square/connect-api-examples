@@ -167,11 +167,12 @@ function createDateAvailableTimesMap(availabilities) {
  * 3. Get all active team members for the location.
  * 4. Cross reference 1, 2, and 3 so we can find all available staff members for the service.
  * @param {String} serviceId
- * @return {String[]} array of all the team member ids that can be booked for the service
+ * @return {[CatalogItem, String[]]} array where first item is the service item and
+ * second item is the array of all the team member ids that can be booked for the service
  */
 async function searchActiveTeamMembers(serviceId) {
   // Send request to get the service associated with the given item variation ID.
-  const retrieveServicePromise = catalogApi.retrieveCatalogObject(serviceId);
+  const retrieveServicePromise = catalogApi.retrieveCatalogObject(serviceId, true);
 
   // Send request to list staff booking profiles for the current location.
   const listBookingProfilesPromise = bookingsApi.listTeamMemberBookingProfiles(true, undefined, undefined, locationId);
@@ -188,7 +189,6 @@ async function searchActiveTeamMembers(serviceId) {
 
   const [ { result: services }, { result: { teamMemberBookingProfiles } }, { result: { teamMembers } } ] =
   await Promise.all([ retrieveServicePromise, listBookingProfilesPromise, listActiveTeamMembersPromise ]);
-
   // We want to filter teamMemberBookingProfiles by checking that the teamMemberId associated with the profile is in our serviceTeamMembers.
   // We also want to verify that each team member is ACTIVE.
   const serviceVariation = services.object;
@@ -198,7 +198,7 @@ async function searchActiveTeamMembers(serviceId) {
 
   const bookableStaff = teamMemberBookingProfiles
     .filter(profile => serviceTeamMembers.includes(profile.teamMemberId) && activeTeamMembers.includes(profile.teamMemberId));
-  return bookableStaff.map(staff => staff.teamMemberId);
+  return [ services, bookableStaff.map(staff => staff.teamMemberId) ];
 }
 
 /**
@@ -229,10 +229,23 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
     }
   };
   try {
+    // get service item - needed to display service details in left pane
+    const retrieveServicePromise = catalogApi.retrieveCatalogObject(serviceId, true);
+    let availabilities;
+    // additional data to send to template
+    let additionalInfo;
     // search availability for the specific staff member if staff id is passed as a param
     if (staffId === ANY_STAFF_PARAMS) {
+      const [ services, teamMembers ] = await searchActiveTeamMembers(serviceId);
       searchRequest.query.filter.segmentFilters[0].teamMemberIdFilter = {
-        any: (await searchActiveTeamMembers(serviceId)),
+        any: teamMembers,
+      };
+      // get availability
+      const availabilitiesResult = await bookingsApi.searchAvailability(searchRequest);
+      availabilities = availabilitiesResult.result.availabilities;
+      additionalInfo = {
+        serviceItem: services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0],
+        serviceVariation: services.object
       };
     } else {
       searchRequest.query.filter.segmentFilters[0].teamMemberIdFilter = {
@@ -240,12 +253,22 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
           staffId
         ],
       };
+      // get availability
+      const availabilityPromise = bookingsApi.searchAvailability(searchRequest);
+      // get team member booking profile - needed to display team member details in left pane
+      const bookingProfilePromise = bookingsApi.retrieveTeamMemberBookingProfile(staffId);
+      const [ { result }, { result: services }, { result: { teamMemberBookingProfile } } ] = await Promise.all([ availabilityPromise, retrieveServicePromise, bookingProfilePromise ]);
+      availabilities = result.availabilities;
+      additionalInfo = {
+        bookingProfile: teamMemberBookingProfile,
+        serviceItem: services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0],
+        serviceVariation: services.object
+      };
     }
-    const { result: { availabilities } } = await bookingsApi.searchAvailability(searchRequest);
     // create object where keys are the date in yyyy-mm-dd format and values contain the available times & team member for that date
     const availabilityMap = createDateAvailableTimesMap(availabilities);
-    // send the serviceId, serviceVersion & staffId since it's needed to book an appointment in the next step
-    res.render("pages/availability", { availabilityMap, serviceId, serviceVersion, staffId });
+    // send the serviceId & serviceVersion since it's needed to book an appointment in the next step
+    res.render("pages/availability", { availabilityMap, serviceId, serviceVersion, ...additionalInfo });
   } catch (error) {
     console.error(error);
     next(error);
