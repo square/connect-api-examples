@@ -20,7 +20,11 @@ formatTime = function(durationInMs) {
     msg.push((minutes > 1) ? "mins" : "min");
   }
 
-  return msg.join(" ");
+  if (msg.length > 0) {
+    return msg.join(" ");
+  } else {
+    return "Unknown duration"
+  }
 }
 
 /**
@@ -48,5 +52,14 @@ formatMoney = function(value, currency) {
   }
   var formatter = new Intl.NumberFormat('en-US', props);
   return formatter.format(valueAsNumber);
+}
+
+/**
+ * Helper function to get the initials of a staff member based on their display name
+ *
+ * @param {String} displayName the display name of the staff
+ */
+getStaffInitials = function(displayName) {
+  return displayName.toUpperCase()[0];
 }
 %>
