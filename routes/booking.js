@@ -16,8 +16,9 @@ const router = express.Router();
 const {
   bookingsApi,
   catalogApi,
+  customersApi,
   locationsApi,
-  teamApi
+  teamApi,
 } = require("../util/square-client");
 const { v4: uuidv4 } = require("uuid");
 

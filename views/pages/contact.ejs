@@ -1,0 +1,80 @@
+<% include("../functions") %>
+<html>
+
+<head>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+
+  <div class="content">
+    <div class="content-left">
+      <a class="button" href="/availability/<%= teamMemberBookingProfile.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>"><span class="icon back-arrow"></span> Back</a>
+      <div class="steps">
+        <div class="steps__step">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Services</span>
+              <a href="/services">Edit</a>
+            </div>
+            <div class="steps__step-body">
+              <div class="steps__step-name">
+                <%= serviceItem.itemData.name %>
+              </div>
+              <div class="steps__step-description">
+                <%= formatTime(serviceVariation.itemVariationData.serviceDuration) %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="steps__step">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Select staff</span>
+            </div>
+          </div>
+        </div>
+        <div class="steps__step">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Appointment time</span>
+              <a href="/availability/<%= teamMemberBookingProfile.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>">Edit</a>
+            </div>
+            <div class="steps__step-body">
+              <div class="steps__step-name">
+                <%= startAt %>
+              </div>
+              <div class="steps__step-description">
+                <%= startAt %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="steps__step selected">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Enter your details</span>
+              <span class="icon side-caret-selected"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-main">
+      <h4>Enter your details</h4>
+      <form class="sq-form-control contact-form" method="POST" action="/booking/create?serviceId=<%= serviceVariation.id %>&staffId=<%= teamMemberBookingProfile.teamMemberId %>&version=<%= serviceVersion %>&startAt=<%= startAt %>">
+        <input class="half-width" type="text" name="phoneNumber" required placeholder="Mobile phone" />
+        <input class="half-width" type="text" name="emailAddress" required placeholder="Email" />
+        <input class="half-width" type="text" name="firstName" required placeholder="First name" />
+        <input class="half-width" type="text" name="lastName" required placeholder="Last name" />
+        <textarea name="notes" placeholder="Appointment notes" rows="5"></textarea>
+
+        <button type="submit" class="button">Book appointment</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
