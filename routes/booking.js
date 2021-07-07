@@ -48,9 +48,9 @@ router.post("/create", async (req, res, next) => {
   const startAt = req.query.startAt;
 
   const customerNote = req.body.customerNote;
-  const emailAddress = "me@amberzlee.com";//req.body.emailAddress;
-  const familyName = "Lee";//req.body.familyName;
-  const givenName = "Amber";//req.body.givenName;
+  const emailAddress = req.body.emailAddress;
+  const familyName = req.body.familyName;
+  const givenName = req.body.givenName;
   const phoneNumber = req.body.phoneNumber;
 
 
@@ -230,7 +230,7 @@ router.get("/:bookingId/reschedule", async (req, res, next) => {
  * Convert a duration in milliseconds to minutes
  *
  * @param {*} duration - duration in milliseconds
- * @returns
+ * @returns Number
  */
 function convertMsToMins(duration) {
   return Math.round(Number(duration) / 1000 / 60);
