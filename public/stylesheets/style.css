@@ -319,3 +319,41 @@ a:visited {
   bottom: 0;
   right: 0;
 }
+
+/* Availability page */
+
+.availability {
+  margin: 25px;
+}
+
+.availability h4 {
+  color: #1A1A1A;
+  font-size: 18px;
+  letter-spacing: 0.006em;
+  line-height: 26px;
+  margin-top: 40px;
+}
+
+.availability a.available-time {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  box-sizing: border-box;
+  color: #1A1A1A;
+  float: left;
+  font-weight: 500;
+  letter-spacing: .01em;
+  list-style-type: none;
+  margin: 7px;
+  text-align: center;
+  text-decoration: none;
+  padding: 15px 10px;
+  width: 104px;
+}
+
+.availability p {
+  color: #71767B;
+  font-size: 16px;
+  line-height: 22px;
+  margin-bottom: 25px;
+}
