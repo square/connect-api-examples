@@ -57,67 +57,68 @@
       <div class="content-main">
         <h4>Select a staff member</h4>
         <div class="staff">
-          <%if (bookableStaff.length > 0) { %>
-          <a href="/availability/anyStaffMember/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
-          <div class="staff__card">
-            <div class="staff__card-wrapper">
-              <div class="staff__card-picture" id="any-staff">
-                <div class="staff__card-picture-wrapper" id="image-1">
-                  <% if (bookableStaff[0].profileImageUrl) { %>
-                    <img src="<%= bookableStaff[0].profileImageUrl %>" />
-                  <% } else { %>
-                    <%= getStaffInitials(bookableStaff[0].displayName) %>
-                  <% }; %>
+          <% if (bookableStaff.length> 0) { %>
+            <a href="/availability/anyStaffMember/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
+              <div class="staff__card">
+                <div class="staff__card-wrapper">
+                  <div class="staff__card-picture" id="any-staff">
+                    <div class="staff__card-picture-wrapper" id="image-1">
+                      <% if (bookableStaff[0].profileImageUrl) { %>
+                        <img src="<%= bookableStaff[0].profileImageUrl %>" />
+                        <% } else { %>
+                          <%= getStaffInitials(bookableStaff[0].displayName) %>
+                            <% }; %>
+                    </div>
+                    <div class="staff__card-picture-wrapper" id="image-2">
+                      <% if (bookableStaff.length>= 2) { %>
+                        <% if (bookableStaff[1].profileImageUrl) { %>
+                          <img src="<%= bookableStaff[1].profileImageUrl %>" />
+                        <% } else { %>
+                          <%= getStaffInitials(bookableStaff[1].displayName) %>
+                        <% }; %>
+                          <% } else { %>
+                        <%= getStaffInitials("any") %>
+                      <% }; %>
+                    </div>
+                  </div>
+                  <div class="staff__card-details">
+                    <div class="staff__card-name">Any available staff member</div>
+                    <div class="staff__card-description">
+                      Looking for the first available appointment? Choose this option to find the first available
+                      appointment.
+                    </div>
+                  </div>
                 </div>
-                <div class="staff__card-picture-wrapper" id="image-2">
-                  <% if (bookableStaff.length >= 2) { %>
-                    <% if (bookableStaff[1].profileImageUrl) { %>
-                      <img src="<%= bookableStaff[1].profileImageUrl %>" />
-                    <% } else { %>
-                      <%= getStaffInitials(bookableStaff[1].displayName) %>
-                    <% }; %>
-                  <% } else { %>
-                    <%= getStaffInitials("any") %>
-                  <% }; %>
-                </div>
+                <span class="icon plus"></span>
               </div>
-              <div class="staff__card-details">
-                <div class="staff__card-name">Any available staff member</div>
-                <div class="staff__card-description">
-                  Looking for the first available appointment? Choose this option to find the first available
-                  appointment.
-                </div>
-              </div>
-            </div>
-            <span class="icon plus"></span>
-          </div>
-          </a>
+            </a>
           <% } %>
 
           <% bookableStaff.forEach(function(staff) { %>
-          <a href="/availability/<%= staff.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
-            <div class="staff__card">
-              <div class="staff__card-wrapper">
-                <div class="staff__card-picture">
-                  <div class="staff__card-picture-wrapper">
-                  <% if (staff.profileImageUrl) { %>
-                    <img src="<%= staff.profileImageUrl %>" />
-                  <% } else { %>
-                    <%= getStaffInitials(staff.displayName) %>
-                  <% }; %>
+            <a href="/availability/<%= staff.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
+              <div class="staff__card">
+                <div class="staff__card-wrapper">
+                  <div class="staff__card-picture">
+                    <div class="staff__card-picture-wrapper">
+                      <% if (staff.profileImageUrl) { %>
+                        <img src="<%= staff.profileImageUrl %>" />
+                      <% } else { %>
+                        <%= getStaffInitials(staff.displayName) %>
+                      <% }; %>
+                    </div>
                   </div>
-                
-                </div>
-                <div class="staff__card-details">
-                  <div class="staff__card-name"><%= staff.displayName %></div>
-                  <div class="staff__card-description">
-                    <%= staff.description || "No description." %>
+                  <div class="staff__card-details">
+                    <div class="staff__card-name">
+                      <%= staff.displayName %>
+                    </div>
+                    <div class="staff__card-description">
+                      <%= staff.description || "No description." %>
+                    </div>
                   </div>
                 </div>
+                <span class="icon plus"></span>
               </div>
-              <span class="icon plus"></span>  
-            </div>     
-          </a>
+            </a>
           <% }); %>
         </div>
       </div>
