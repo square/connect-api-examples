@@ -409,11 +409,25 @@ a:visited {
   font-family: inherit;
 }
 
-.sq-form-control button {
+.sq-form-control .button.btn-primary  {
   width: 100%;
   margin-right: 20px;
   color: white;
   background-color: rgba(0, 106, 255, 1);
+  font-weight: bold;
+  border: none;
+  font-size: 16px;
+  padding: 17px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.sq-form-control .button.btn-secondary {
+  width: 100%;
+  margin-right: 20px;
+  color: white;
+  background-color: #F5F6F7;
+  color: #151C1F;
   font-weight: bold;
   border: none;
   font-size: 16px;
@@ -431,7 +445,6 @@ a:visited {
 .steps__staff-step-body {
   padding-left: 10px;
 }
-<<<<<<< HEAD
 
 .developer-note {
   justify-content: center;
@@ -477,16 +490,18 @@ display: inline-block;
 }
 
 .subtitle {
+  font-size: 16px;
+  line-height: 26px;
   color: #71767B;
   margin-top: 8px;
 }
 
 .content__service.message {
   text-align: center;
+  margin-top: 68px;
 }
 
 .content__card .subtitle {
-  margin-top: 45px;
   margin-bottom: 0px;
 }
 
@@ -495,22 +510,18 @@ display: inline-block;
   display: inline-block;
 }
 
-.btn-primary {
-  background-color: rgba(0, 106, 255, 1);
-  color: white;
-  border-width: 0;
+/* .btn-primary {
   width: 100%;
-  padding-top: 13px;
-  padding-bottom: 13px;
-  border-radius: 6px;
-  margin-top: 24px;
-  margin-bottom: 24px;
-  font-size: 14px;
-  line-height: 22px;
+  margin-right: 20px;
+  color: white;
+  background-color: rgba(0, 106, 255, 1);
+  font-weight: bold;
+  border: none;
+  font-size: 16px;
+  padding: 17px;
+  text-align: center;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border-radius: 6px;
 }
 
 .btn-secondary {
@@ -529,19 +540,30 @@ display: inline-block;
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .date {
   margin-top: 37px;
   margin-bottom: 16px;
 }
 
-.location-info {
-  margin-top: 16px;
-  margin-bottom: 52px;
+.button__group .sq-form-control .button {
+  margin-right: 0px;
 }
 
-.button__group button {
-  margin-bottom: 0px;
-  margin-top: 0px;
+.staff__card-wrapper.confirm {
+  margin-top: 50px;
+}
+
+.staff__card-details--confirm {
+  margin-left: 10px;
+}
+
+.button__group {
+  margin-top: 52px;
+}
+
+.item-description {
+  font-size: 16px;
+  line-height: 26px;
 }

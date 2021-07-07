@@ -71,14 +71,14 @@ router.post("/create", async (req, res, next) => {
         ],
         customerId: await getCustomerID(givenName, familyName, emailAddress, phoneNumber),
         customerNote,
-        locationId: process.env["SQUARE_LOCATION_ID"].toLowerCase(),
+        locationId: locationId,
         startAt,
       },
       idempotencyKey: uuidv4(),
     });
 
     //TODO: redirect to confirmation page
-    res.json({ booking: booking.id });
+    res.redirect("/booking/" + booking.id);
 
   } catch (error) {
     const timeNotAvailable = error.errors.find(e => e.detail.match(/That time slot is no longer available/));
@@ -165,16 +165,17 @@ router.get("/:bookingId", async (req, res, next) => {
     const retrieveServiceVariationPromise = catalogApi.retrieveCatalogObject(serviceVariationId, true);
 
     // Make API call to get team member details
-    const retrieveTeamMemberPromise = teamApi.retrieveTeamMember(teamMemberId);
+    const retrieveTeamMemberPromise = bookingsApi.retrieveTeamMemberBookingProfile(teamMemberId);
 
     // Wait until all API calls have completed
-    const [ { result: { location } }, { result: service }, { result: { teamMember } } ] =
+    const [ { result: { location } }, { result: service }, { result: { teamMemberBookingProfile } } ] =
       await Promise.all([ retrieveLocationPromise, retrieveServiceVariationPromise, retrieveTeamMemberPromise ]);
 
     const serviceVariation = service.object;
     const parentItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
-    res.render("pages/confirmation", { booking, location, parentItem, serviceVariation, teamMember });
+    res.render("pages/confirmation", { booking, location, parentItem, serviceVariation, teamMemberBookingProfile });
+    
   } catch (error) {
     console.error(error);
     next(error);
@@ -218,6 +219,7 @@ router.get("/:bookingId/reschedule", async (req, res, next) => {
     // create object where keys are the date in yyyy-mm-dd format and values contain the available times & team member for that date
     const availabilityMap = dateHelpers.createDateAvailableTimesMap(availabilities);
     res.render("pages/reschedule", { availabilityMap, bookingId, serviceId: serviceVariationId, serviceVersion: serviceVariationVersion });
+
   } catch (error) {
     console.error(error);
     next(error);

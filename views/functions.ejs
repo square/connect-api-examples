@@ -62,7 +62,6 @@ formatMoney = function(value, currency) {
 getStaffInitials = function(displayName) {
   return displayName.toUpperCase()[0];
 }
-<<<<<<< HEAD
 
 /**
  * Helper function to convert date into a human readable date 
@@ -109,21 +108,22 @@ convertTimeToText = function(date) {
 
 formatDate = function(current, minutes) {
   const currentDate = new Date(current);
-  const minutesAsNumber = Number(minutes);
-  const newDate = new Date(currentDate.getTime() + minutesAsNumber * 60000);
-  // TODO: what happens if we span over multiple days? Need to check current.getDay() vs new.getDay()
+  const futureDate = new Date(currentDate.getTime() + minutes * 60000);
 
-  const msg = [];
-  msg.push(currentDate.toDateString());
-  msg.push(currentDate.toLocaleTimeString("en-US"));
-  msg.push("-");
-  if (isSameDay(currentDate, newDate)) {
-    msg.push(newDate.toLocaleTimeString("en-US"));
-  } else {
-    msg.push(newDate.toDateString());
-    msg.push(newDate.toLocaleTimeString("en-US"));
+  const currentOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+  const currentFormatter = new Intl.DateTimeFormat('en-US', currentOptions);
+
+  const futureOptions = { hour: 'numeric', minute: 'numeric' };
+  // if is not the same day, show full date.
+  if (!isSameDay(currentDate, futureDate)) {
+    futureOptions.weekday = 'long';
+    futureOptions.year = 'numeric';
+    futureOptions.month = 'long';
+    futureOptions.day = 'numeric';
   }
-  return msg.join(" ");
+  const futureFormatter = new Intl.DateTimeFormat('en-US', futureOptions);
+
+  return currentFormatter.format(currentDate) + " - " + futureFormatter.format(futureDate);
 }
 
 isSameDay = function(date1, date2) {
