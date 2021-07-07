@@ -20,7 +20,11 @@ formatTime = function(durationInMs) {
     msg.push((minutes > 1) ? "mins" : "min");
   }
 
-  return msg.join(" ");
+  if (msg.length > 0) {
+    return msg.join(" ");
+  } else {
+    return "Unknown duration"
+  }
 }
 
 /**
