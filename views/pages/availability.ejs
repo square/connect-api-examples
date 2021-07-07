@@ -34,7 +34,7 @@
                 <a href="/staff/<%= serviceId %>?version=<%= serviceVersion %>">Edit</a>
               </div>
               <div class="availability-staff__card-wrapper">
-                <div class="staff__card-picture-wrapper" id="image-1">
+                <div class="staff__card-picture-wrapper">
                   <% if (locals.bookingProfile && bookingProfile.profileImageUrl) { %>
                     <img src="<%= bookableStaff[1].profileImageUrl %>" />
                   <% } else if (locals.bookingProfile) { %>
@@ -64,6 +64,7 @@
             <div class="steps__step-wrapper">
               <div class="steps__step-title">
                 <span>Appointment time</span>
+                <span class="icon side-caret-selected"></span>
               </div>
             </div>
           </div>
