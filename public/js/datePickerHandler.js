@@ -8,14 +8,11 @@ class DatePickerHandler {
    * @param {Object} availabilityMap
    * @param {String} serviceId
    * @param {String} serviceVersion
-   * @param {String} staffId
    */
-  constructor(availabilityMap, serviceId, serviceVersion, staffId) {
+  constructor(availabilityMap, serviceId, serviceVersion) {
     this.availabilityMap = availabilityMap;
     this.serviceId = serviceId;
     this.serviceVersion = serviceVersion;
-    this.staffId = staffId;
-
     // show the available times for today's date
     const now = new Date();
     this.selectNewDate(new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split("T")[0]);

@@ -267,8 +267,8 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
     }
     // create object where keys are the date in yyyy-mm-dd format and values contain the available times & team member for that date
     const availabilityMap = createDateAvailableTimesMap(availabilities);
-    // send the serviceId, serviceVersion & staffId since it's needed to book an appointment in the next step
-    res.render("pages/availability", { availabilityMap, serviceId, serviceVersion, staffId, ...additionalInfo });
+    // send the serviceId & serviceVersion since it's needed to book an appointment in the next step
+    res.render("pages/availability", { availabilityMap, serviceId, serviceVersion, ...additionalInfo });
   } catch (error) {
     console.error(error);
     next(error);
