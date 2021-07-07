@@ -132,6 +132,10 @@ a:visited {
   display: flex;
 }
 
+.card__wrapper.disabled {
+  background: #F5F6F7;
+}
+
 .card__description {
   color: rgba(0, 0, 0, 0.55);
   margin-top: 4px;
@@ -175,6 +179,19 @@ a:visited {
   margin-bottom: 24px;
 }
 
+.business__logo img {
+  width: 104px;
+  height: 104px;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 50%;
+  display: flex;
+  font-size: 48px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.55);
+  align-items: center;
+  justify-content: center;
+}
+
 /* Header */
 
 .top-nav {
@@ -194,6 +211,19 @@ a:visited {
   float: left;
   margin-left: 25px;
   margin-right: 15px;
+}
+
+.top-nav__logo img {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 50%;
+  display: flex;
+  font-size: 48px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.55);
+  align-items: center;
+  justify-content: center;
 }
 
 .top-nav__name {
@@ -361,4 +391,31 @@ a:visited {
 
 .steps__staff-step-body {
   padding-left: 10px;
+}
+
+.developer-note {
+  justify-content: center;
+  display: flex;
+  background-color: white;
+  margin-top: 80px;
+  position: relative;
+}
+
+.developer-note div {
+  width: 350px;
+  padding: 24px;
+  background-color: rgba(245, 246, 247, 1);
+  border-radius: 12px;
+}
+
+.developer-note div h5 {
+  margin-top: 0px;
+}
+
+.developer-note span {
+  color: #5F666C;
+}
+
+.developer-note a {
+  cursor: pointer;
 }
