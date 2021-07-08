@@ -8,14 +8,11 @@ class DatePickerHandler {
    * @param {Object} availabilityMap
    * @param {String} serviceId
    * @param {String} serviceVersion
-   * @param {String} staffId
    */
-  constructor(availabilityMap, serviceId, serviceVersion, staffId) {
+  constructor(availabilityMap, serviceId, serviceVersion) {
     this.availabilityMap = availabilityMap;
     this.serviceId = serviceId;
     this.serviceVersion = serviceVersion;
-    this.staffId = staffId;
-
     // show the available times for today's date
     const now = new Date();
     this.selectNewDate(new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split("T")[0]);
@@ -42,10 +39,45 @@ class DatePickerHandler {
     availabities.forEach((availability) => {
       const timeItem = document.createElement("a");
       timeItem.innerHTML = availability.time;
-      timeItem.href = `/contact?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${this.staffId}&startAt=${availability.date}`;
+      timeItem.href = `/contact?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${availability.teamMemberId}&startAt=${availability.date}`;
       timeItem.className = "available-time";
       timeItem.type = "submit";
       availableTimesDiv.appendChild(timeItem);
     });
+  }
+
+  /**
+   * Format date to yyyy-mm-dd format
+   * @param {String} date
+   * @returns {String}
+   */
+  formatDate(date) {
+    const d = new Date(date);
+    let month = "" + (d.getMonth() + 1);
+    let day = "" + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) {
+      month = "0" + month;
+    }
+    if (day.length < 2) {
+      day = "0" + day;
+    }
+
+    return [ year, month, day ].join("-");
+  }
+
+  /**
+   * Determines whether a date is selectable or not
+   * @param {String} date
+   * @returns {Boolean[]} where first item indicates whether the date is selectable
+   */
+  isSelectable(date) {
+    const now = new Date();
+    const today = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
+    const formattedDate = this.formatDate(date);
+    // let date be selectable if there's availabilities for the date or
+    // if the date is today
+    return [ this.availabilityMap[formattedDate] || formattedDate === today ];
   }
 }

@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-
 const sampleData = require("./service-items.json");
 const { Client, Environment } = require("square");
 const readline = require("readline");

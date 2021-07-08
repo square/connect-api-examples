@@ -62,7 +62,7 @@ a:visited {
   background-image: url("/images/plus.svg");
 }
 
-.icon.back-arrow {  
+.icon.back-arrow {
   width: 20px;
   background-image: url("/images/back-arrow.svg");
 }
@@ -321,17 +321,12 @@ a:visited {
 }
 
 /* Availability page */
-
-.availability {
-  margin: 25px;
-}
-
 .availability h4 {
   color: #1A1A1A;
   font-size: 18px;
   letter-spacing: 0.006em;
   line-height: 26px;
-  margin-top: 40px;
+  margin-bottom: 30px;
 }
 
 .availability a.available-time {
@@ -348,7 +343,7 @@ a:visited {
   text-align: center;
   text-decoration: none;
   padding: 15px 10px;
-  width: 104px;
+  width: 120px;
 }
 
 .availability p {
@@ -406,3 +401,14 @@ a:visited {
   text-align: center;
   cursor: pointer;
 }
+
+.availability-staff__card-wrapper {
+  display: flex;
+  justify-content: left;
+  padding-top: 10px;
+}
+
+.steps__staff-step-body {
+  padding-left: 10px;
+}
+
