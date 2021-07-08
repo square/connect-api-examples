@@ -11,6 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+const dateHelpers = require("../util/dateHelpers");
 const express = require("express");
 const router = express.Router();
 const {
@@ -174,7 +175,49 @@ router.get("/:bookingId", async (req, res, next) => {
     const parentItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
     res.render("pages/confirmation", { booking, location, parentItem, serviceVariation, teamMember });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
+/**
+ * GET /booking/:bookingId/reschedule
+ *
+ * Get availability for the service variation & team member of the
+ * existing booking so the user can reschedule the booking
+ */
+router.get("/:bookingId/reschedule", async (req, res, next) => {
+  const bookingId = req.params.bookingId;
+  try {
+    // Retrieve the booking provided by the bookingId.
+    const { result: { booking } } = await bookingsApi.retrieveBooking(bookingId);
+    const { serviceVariationId, teamMemberId, serviceVariationVersion } = booking.appointmentSegments[0];
+    const startAt = dateHelpers.getStartAtDate();
+    const searchRequest = {
+      query: {
+        filter: {
+          locationId,
+          segmentFilters: [
+            {
+              serviceVariationId,
+              teamMemberIdFilter: {
+                any: [ teamMemberId ],
+              }
+            },
+          ],
+          startAtRange: {
+            endAt: dateHelpers.getEndAtDate(startAt).toISOString(),
+            startAt: startAt.toISOString(),
+          },
+        }
+      }
+    };
+    // get availability
+    const { result: { availabilities } } = await bookingsApi.searchAvailability(searchRequest);
+    // create object where keys are the date in yyyy-mm-dd format and values contain the available times & team member for that date
+    const availabilityMap = dateHelpers.createDateAvailableTimesMap(availabilities);
+    res.render("pages/reschedule", { availabilityMap, bookingId, serviceId: serviceVariationId, serviceVersion: serviceVariationVersion });
   } catch (error) {
     console.error(error);
     next(error);
@@ -185,7 +228,7 @@ router.get("/:bookingId", async (req, res, next) => {
  * Convert a duration in milliseconds to minutes
  *
  * @param {*} duration - duration in milliseconds
- * @returns
+ * @returns Number
  */
 function convertMsToMins(duration) {
   return Math.round(Number(duration) / 1000 / 60);
@@ -201,7 +244,6 @@ function convertMsToMins(duration) {
  * @param {string} phoneNumber
  */
 async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
-
   const { result: { customers } } = await customersApi.searchCustomers({
     query: {
       filter: {
