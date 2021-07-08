@@ -142,5 +142,4 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
   }
 });
 
-
 module.exports = router;

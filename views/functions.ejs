@@ -62,4 +62,45 @@ formatMoney = function(value, currency) {
 getStaffInitials = function(displayName) {
   return displayName.toUpperCase()[0];
 }
+
+/**
+ * Helper function to convert date into a human readable date 
+ * 
+ * e.g. 2021-07-09T16:00:00Z -> Friday, July 09, 2021
+ * 
+ * @param {String} date the date to parse
+ */
+convertDateToText = function(date) {
+  const d = new Date(date);
+  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const weekday = weekdays[d.getDay()];
+  const month = months[d.getMonth()];
+  const day = d.getDate();
+  const year = d.getFullYear();
+
+  var ordinalIndicator = "th";
+  if (day === "1") {
+    ordinalIndicator = "st";
+  } else if (day === "2") {
+    ordinalIndicator = "nd";
+  } else if (day === "3") {
+    ordinalIndicator = "rd";
+  }
+
+  return `${weekday}, ${month} ${day}${ordinalIndicator}, ${year}`;
+}
+
+convertTimeToText = function(date) {
+  const d = new Date(date);
+
+  let hours = d.getHours();
+  let minutes = d.getMinutes();
+
+  hours = hours % 12 ? hours % 12 : 12;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+
+  return `${hours}:${minutes} ${d.getHours() >= 12 ? "pm" : "am"}`;
+}
 %>

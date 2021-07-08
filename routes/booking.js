@@ -38,8 +38,7 @@ const locationId = process.env["SQUARE_LOCATION_ID"];
  * `serviceId` - the ID of the service
  * `staffId` - the ID of the staff
  * `startAt` - starting time of the booking
- * `serviceVariationVersion` - the version of the service initially selected. If the version mistaches the
- * current version of the service, fail with an error message.
+ * `serviceVariationVersion` - the version of the service initially selected
  */
 router.post("/create", async (req, res, next) => {
   const serviceId = req.query.serviceId;
@@ -282,6 +281,5 @@ async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
 
   return customer.id;
 }
-
 
 module.exports = router;

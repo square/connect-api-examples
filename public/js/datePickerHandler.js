@@ -45,6 +45,7 @@ class DatePickerHandler {
       form.method = this.bookingId ? "post" : "get";
       const timeItem = document.createElement("button");
       timeItem.innerHTML = availability.time;
+      timeItem.href = `/contact?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${availability.teamMemberId}&startAt=${availability.date}`;
       timeItem.className = "available-time";
       timeItem.type = "submit";
       form.appendChild(timeItem);
