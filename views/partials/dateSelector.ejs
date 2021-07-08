@@ -30,9 +30,5 @@
   </div>
 </div>
 <script>
-  <% if (locals.bookingId) { %>
-    const datePickerHandler = new DatePickerHandler(<%- JSON.stringify(availabilityMap) %>, "<%- serviceId %>", "<%- serviceVersion %>", "<%- bookingId %>");
-  <% } else { %>
-    const datePickerHandler = new DatePickerHandler(<%- JSON.stringify(availabilityMap) %>, "<%- serviceId %>", "<%- serviceVersion %>");
-  <% } %>
+  const datePickerHandler = new DatePickerHandler(<%- JSON.stringify(availabilityMap) %>, "<%- serviceId %>", "<%- serviceVersion %>", "<%- locals.bookingId %>");
 </script>
