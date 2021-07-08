@@ -13,8 +13,6 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
-
-
 const availabilityRoute = require("./availability");
 const bookingRoute = require("./booking");
 const contactRoute = require("./contact");
@@ -26,7 +24,6 @@ router.use("/contact", contactRoute);
 router.use("/services", servicesRoute);
 router.use("/staff", staffRoute);
 router.use("/booking", bookingRoute);
-
 
 /**
  * GET /

@@ -101,6 +101,6 @@ convertTimeToText = function(date) {
   hours = hours % 12 ? hours % 12 : 12;
   minutes = minutes < 10 ? "0" + minutes : minutes;
 
-  return `${hours}:${minutes} ${hours >= 12 ? "pm" : "am"}`;
+  return `${hours}:${minutes} ${d.getHours() >= 12 ? "pm" : "am"}`;
 }
 %>
