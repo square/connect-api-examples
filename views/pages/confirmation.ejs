@@ -12,11 +12,11 @@
   <div class="container">
     <div class="content__service message">
       <h3> Thank you for booking with us </h3>
-      <div class="subtitle">
+      <div class="content__service message-sm">
         <span> We will contact you after your appointment has been accepted.</span>
       </div>
       <div class="content__card">
-        <div class="test">
+        <div class="content__card-wrapper">
           <div>
             <div class="staff__card-wrapper confirm">
               <div class="staff__card-picture-wrapper">
@@ -27,15 +27,20 @@
                 <% } %>
               </div>
               <div class="staff__card-details--confirm">
-                <span class="subtitle">Scheduled with</span>
+                <span class="message-sm">Scheduled with</span>
                 <h4><%= teamMemberBookingProfile.displayName %></h4>
               </div>
             </div>
           </div>
-          <div class="date">
-            <h5><%= formatDate(booking.startAt, booking.appointmentSegments[0].durationMinutes) %></h5>
+          <div class="content__card-date">
+            <h5>
+              <% formatDateToParts(booking.startAt, booking.appointmentSegments[0].durationMinutes).forEach(function(part) { %>
+                <%= part %>
+                <br>
+              <%}); %>
+            </h5>
           </div>
-          <div class="item-description">
+          <div class="content__card-description">
             <span><%= parentItem.itemData.name %> - <%= serviceVariation.itemVariationData.name %></span>
           </div>
           <div class="business__location">
@@ -58,10 +63,10 @@
             </div>
           </div>
           <div class="button__group">
-            <form class="sq-form-control" action="/booking/<%= booking.id %>/reschedule?startAt=<%= booking.startAt %>" method="POST">
+            <form class="sq-form-control" action="/booking/<%= booking.id %>/reschedule" method="GET">
               <button class="button btn-primary" type="submit"> Modify Booking </button>
             </form>
-            <form class="sq-form-control" action="/booking/<%= booking.id %>/cancel" method="POST">
+            <form class="sq-form-control" action="/booking/<%= booking.id %>/delete" method="POST">
               <button class="button btn-secondary" type="submit">Cancel booking</button>
             </form>
           </div>

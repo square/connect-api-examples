@@ -86,8 +86,8 @@
       <form class="sq-form-control contact-form" method="POST" action="/booking/create?serviceId=<%= serviceVariation.id %>&staffId=<%= teamMemberBookingProfile.teamMemberId %>&version=<%= serviceVersion %>&startAt=<%= startAt %>">
         <input class="half-width" type="text" name="phoneNumber" required placeholder="Mobile phone" />
         <input class="half-width" type="text" name="emailAddress" required placeholder="Email" />
-        <input class="half-width" type="text" name="firstName" required placeholder="First name" />
-        <input class="half-width" type="text" name="lastName" required placeholder="Last name" />
+        <input class="half-width" type="text" name="givenName" required placeholder="First name" />
+        <input class="half-width" type="text" name="familyName" required placeholder="Last name" />
         <textarea name="notes" placeholder="Appointment notes" rows="5"></textarea>
 
         <button class="button btn-primary" type="submit">Book appointment</button>
