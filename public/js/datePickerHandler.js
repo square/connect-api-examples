@@ -41,11 +41,26 @@ class DatePickerHandler {
     // or reschedules the booking if it's an existing booking
     availabities.forEach((availability) => {
       const form = document.createElement("form");
-      form.action = this.bookingId ? `/booking/${this.bookingId}/reschedule?startAt=${availability.date}` : `/contact?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${availability.teamMemberId}&startAt=${availability.date}`;
+      form.action = this.bookingId ? `/booking/${this.bookingId}/reschedule?startAt=${availability.date}` : "/contact";
       form.method = this.bookingId ? "post" : "get";
+      // create hidden parameters for GET contact action
+      if (form.actmethodion === "/get") {
+        const queryParams = {
+          serviceId: this.serviceId,
+          staff: availability.teamMemberId,
+          startAt: availability.date,
+          version: this.serviceVersion,
+        };
+        Object.keys(queryParams).forEach(queryParam => {
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = queryParam;
+          input.value = queryParams[queryParam];
+          form.appendChild(input);
+        });
+      }
       const timeItem = document.createElement("button");
       timeItem.innerHTML = availability.time;
-      timeItem.href = `/contact?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${availability.teamMemberId}&startAt=${availability.date}`;
       timeItem.className = "available-time";
       timeItem.type = "submit";
       form.appendChild(timeItem);

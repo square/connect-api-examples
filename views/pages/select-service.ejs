@@ -19,11 +19,7 @@
         <% } %>
       </div>
       <h3>
-        <%if (location.businessName) { %>
-          <%= location.businessName %>
-        <% } else { %>
-          <%= location.name %>
-        <% } %>
+        <%= location.businessName || location.name %>
       </h3>
       <%if (location.description) { %>
         <h5> <%= location.description %> </h5>

@@ -8,11 +8,7 @@
   </div>
   <div class="top-nav__name">
     <span>
-      <%if (location.businessName) { %>
-        <%= location.businessName %>
-      <% } else { %>
-        <%= location.name %>
-      <% } %>
+      <%= location.businessName || location.name %>
     </span>
   </div>
 </div>

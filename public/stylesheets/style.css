@@ -184,12 +184,6 @@ a:visited {
   height: 104px;
   background-color: rgba(0, 0, 0, 0.03);
   border-radius: 50%;
-  display: flex;
-  font-size: 48px;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.55);
-  align-items: center;
-  justify-content: center;
 }
 
 /* Header */
@@ -218,12 +212,6 @@ a:visited {
   height: 40px;
   background-color: rgba(0, 0, 0, 0.03);
   border-radius: 50%;
-  display: flex;
-  font-size: 48px;
-  font-weight: bold;
-  color: rgba(0, 0, 0, 0.55);
-  align-items: center;
-  justify-content: center;
 }
 
 .top-nav__name {
@@ -299,7 +287,7 @@ a:visited {
   position: relative;
 }
 
-.staff__card-picture img {
+.staff__card-picture img, .staff__card-picture-wrapper img {
   width: 64px;
   border: 1px solid white;
   border-radius: 50%;

@@ -34,6 +34,24 @@
           <div class="steps__step-wrapper">
             <div class="steps__step-title">
               <span>Select staff</span>
+              <a href="/staff/<%= serviceVariation.id %>?version=<%= serviceVersion %>">Edit</a>
+            </div>
+            <div class="availability-staff__card-wrapper">
+              <div class="staff__card-picture-wrapper">
+                <% if (teamMemberBookingProfile.profileImageUrl) { %>
+                  <img src="<%= teamMemberBookingProfile.profileImageUrl %>" />
+                <% } else { %>
+                  <%= getStaffInitials(teamMemberBookingProfile.displayName) %>
+                <% } %>
+              </div>
+              <div class="steps__staff-step-body">
+                <div class="steps__step-name">
+                  <%= teamMemberBookingProfile.displayName %>
+                </div>
+                <div class="steps__step-description">
+                  Available
+                </div>
+              </div>
             </div>
           </div>
         </div>
