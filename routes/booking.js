@@ -175,7 +175,6 @@ router.get("/:bookingId", async (req, res, next) => {
     const parentItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
     res.render("pages/confirmation", { booking, location, parentItem, serviceVariation, teamMember });
-
   } catch (error) {
     console.error(error);
     next(error);

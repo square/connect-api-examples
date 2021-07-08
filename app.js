@@ -23,7 +23,7 @@ const app = express();
 const { locationsApi } = require("./util/square-client");
 
 // Get location information and store it in app.locals so it is accessible in all pages.
-locationsApi.retrieveLocation(process.env[`SQUARE_LOCATION_ID`]).then(function(response) {
+locationsApi.retrieveLocation(process.env["SQUARE_LOCATION_ID"]).then(function(response) {
   app.locals.location = response.result.location;
 }).catch(function(error) {
   if (error.statusCode === "401") {
