@@ -36,7 +36,7 @@
               <div class="availability-staff__card-wrapper">
                 <div class="staff__card-picture-wrapper">
                   <% if (locals.bookingProfile && bookingProfile.profileImageUrl) { %>
-                    <img src="<%= bookableStaff[1].profileImageUrl %>" />
+                    <img src="<%= bookingProfile.profileImageUrl %>" />
                   <% } else if (locals.bookingProfile) { %>
                     <%= getStaffInitials(bookingProfile.displayName) %>
                   <% } else { %>

@@ -299,7 +299,7 @@ a:visited {
   position: relative;
 }
 
-.staff__card-picture img {
+.staff__card-picture img, .staff__card-picture-wrapper img {
   width: 64px;
   border: 1px solid white;
   border-radius: 50%;
