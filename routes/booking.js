@@ -239,5 +239,4 @@ async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
   return customer.id;
 }
 
-
 module.exports = router;
