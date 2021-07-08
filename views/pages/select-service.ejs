@@ -69,47 +69,45 @@
       <h4 class="title">Services</h4>
       <h4 class="underline"></h4>
       <div class="cards">
-        <% if (items.length > 0) {%>
-          <% items.forEach(function(item) { %>
-            <% item.itemData.variations.forEach(function(variation) { %>
-              <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
-                <div class="card__wrapper">
-                  <div class="card__info">
-                    <h4><%= item.itemData.name %> - <%= variation.itemVariationData.name %></h4>
-                    <h5 class="card__description"><%= item.itemData.description %></h5>
-                    <span class="card__details">
-                      <%if (variation.itemVariationData.pricingType === "FIXED_PRICING") { %>
-                        <%= formatMoney(variation.itemVariationData.priceMoney.amount, variation.itemVariationData.priceMoney.currency) %>
-                      <% } else { %>
-                        Price Varies
-                      <% } %>
-                      • <%= formatTime(variation.itemVariationData.serviceDuration) %>
-                      </span>
-                  </div>
-                  <span class="card__icon"></span>
-                  <img src="images/side-caret.svg">
+        <% items.forEach(function(item) { %>
+          <% item.itemData.variations.forEach(function(variation) { %>
+            <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
+              <div class="card__wrapper">
+                <div class="card__info">
+                  <h4><%= item.itemData.name %> - <%= variation.itemVariationData.name %></h4>
+                  <h5 class="card__description"><%= item.itemData.description %></h5>
+                  <span class="card__details">
+                    <%if (variation.itemVariationData.pricingType === "FIXED_PRICING") { %>
+                      <%= formatMoney(variation.itemVariationData.priceMoney.amount, variation.itemVariationData.priceMoney.currency) %>
+                    <% } else { %>
+                      Price Varies
+                    <% } %>
+                    • <%= formatTime(variation.itemVariationData.serviceDuration) %>
+                    </span>
                 </div>
-              </a>
-            <%}); %>
+                <span class="card__icon"></span>
+                <img src="images/side-caret.svg">
+              </div>
+            </a>
           <%}); %>
-      </div>
-    </div>
-  </div>
-        <%} else {%>
+        <%}); %>
+        <% if (!items.length) {%>
           <div class="card__wrapper disabled"></div>
+        <% } %>
       </div>
     </div>
   </div>
+  <% if (!items.length) {%>
     <div class="developer-note">
       <div>
         <h5>Developer note</h5>
         <span>Looks like you don’t have any services setup yet. Run the seeding script or use the 
-          <a href="https://developer.squareup.com/explorer/square/catalog-api/upsert-catalog-object" target="_blank">API Explorer</a>
-          to create your first service using the Catalog API.
+          <a href="https://developer.squareup.com/explorer/square/catalog-api/upsert-catalog-object" target="_blank">API Explorer</a> or the <a href="https://squareupsandbox.com/dashboard/" target="_blank">Seller Dashboard</a>
+          to create your first service.
         </span>
       </div>
     </div>
-        <% } %>
+  <% } %>
 </body>
 
 </html>
