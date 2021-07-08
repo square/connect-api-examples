@@ -21,9 +21,9 @@ const {
 
 /**
  * GET /contact
- * 
+ *
  * Render the contact information form prior to creating a booking
- * 
+ *
  *  accepted query params are:
  * `serviceId` - the ID of the service
  * `staffId` - the ID of the staff

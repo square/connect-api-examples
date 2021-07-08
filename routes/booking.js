@@ -27,12 +27,12 @@ const locationId = process.env["SQUARE_LOCATION_ID"];
 
 /**
  * POST /booking/create
- * 
+ *
  * Create a new booking, booking details and customer information is submitted
  * by form data. Create a new customer if necessary, otherwise use an existing
  * customer that matches the `firstName`, `lastName`, `emailAddress`, and `phoneNumber`
  * to create the booking.
- * 
+ *
  * accepted query params are:
  * `serviceId` - the ID of the service
  * `staffId` - the ID of the staff
@@ -58,7 +58,7 @@ router.post("/create", async (req, res, next) => {
     const durationMinutes = convertMsToMins(catalogItemVariation.itemVariationData.serviceDuration);
 
     // Create booking
-    const { result: { booking } } = await bookingsApi.createBooking({  
+    const { result: { booking } } = await bookingsApi.createBooking({
       booking: {
         appointmentSegments: [
           {
@@ -93,7 +93,7 @@ router.post("/create", async (req, res, next) => {
 
 /**
  * POST /booking/:bookingId/reschedule
- * 
+ *
  * Update an existing booking, you may update the starting date
  */
 router.post("/:bookingId/reschedule", async (req, res, next) => {
@@ -120,7 +120,7 @@ router.post("/:bookingId/reschedule", async (req, res, next) => {
 
 /**
  * POST /booking/:bookingId/delete
- * 
+ *
  * delete a booking by booking ID
  */
 router.post("/:bookingId/delete", async (req, res, next) => {
@@ -128,12 +128,12 @@ router.post("/:bookingId/delete", async (req, res, next) => {
 
   try {
     const { result: { booking } } = await bookingsApi.retrieveBooking(bookingId);
-    
+
     await bookingsApi.cancelBooking(bookingId, { bookingVersion: booking.version });
-    
+
     //TODO: redirect to confirmation page or home page
     res.sendStatus(200);
-    
+
   } catch (error) {
     console.error(error);
     next(error);
@@ -174,7 +174,7 @@ router.get("/:bookingId", async (req, res, next) => {
     const parentItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
     res.render("pages/confirmation", { booking, location, parentItem, serviceVariation, teamMember });
-    
+
   } catch (error) {
     console.error(error);
     next(error);
@@ -183,22 +183,22 @@ router.get("/:bookingId", async (req, res, next) => {
 
 /**
  * Convert a duration in milliseconds to minutes
- * 
+ *
  * @param {*} duration - duration in milliseconds
- * @returns 
+ * @returns
  */
 function convertMsToMins(duration) {
   return Math.round(Number(duration) / 1000 / 60);
-}  
+}
 
 /**
- * Return the id of a customer that matches the firstName, lastName, email, 
+ * Return the id of a customer that matches the firstName, lastName, email,
  * and phoneNumber. If such customer doesn't exist, create a new customer.
- * 
+ *
  * @param {string} givenName
- * @param {string} familyName 
- * @param {string} emailAddress 
- * @param {string} phoneNumber 
+ * @param {string} familyName
+ * @param {string} emailAddress
+ * @param {string} phoneNumber
  */
 async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
 
