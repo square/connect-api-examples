@@ -80,7 +80,7 @@ convertDateToText = function(date) {
   const day = d.getDate();
   const year = d.getFullYear();
 
-  var ordinalIndicator = "th";
+  let ordinalIndicator = "th";
   const lastChar = day.toString().charAt(day.toString().length-1);
 
   if (lastChar === "1") {
