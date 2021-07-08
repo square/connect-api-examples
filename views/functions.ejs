@@ -81,11 +81,13 @@ convertDateToText = function(date) {
   const year = d.getFullYear();
 
   var ordinalIndicator = "th";
-  if (day === "1") {
+  const lastChar = day.toString().charAt(day.toString().length-1);
+
+  if (lastChar === "1") {
     ordinalIndicator = "st";
-  } else if (day === "2") {
+  } else if (lastChar === "2") {
     ordinalIndicator = "nd";
-  } else if (day === "3") {
+  } else if (lastChar === "3") {
     ordinalIndicator = "rd";
   }
 
