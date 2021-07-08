@@ -44,7 +44,7 @@ class DatePickerHandler {
       form.action = this.bookingId ? `/booking/${this.bookingId}/reschedule?startAt=${availability.date}` : "/contact";
       form.method = this.bookingId ? "post" : "get";
       // create hidden parameters for GET contact action
-      if (form.actmethodion === "/get") {
+      if (form.method === "get") {
         const queryParams = {
           serviceId: this.serviceId,
           staff: availability.teamMemberId,
