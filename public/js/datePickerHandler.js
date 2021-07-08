@@ -39,7 +39,7 @@ class DatePickerHandler {
     availabities.forEach((availability) => {
       const timeItem = document.createElement("a");
       timeItem.innerHTML = availability.time;
-      timeItem.href = `/booking?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${availability.teamMemberId}&startAt=${availability.date}`;
+      timeItem.href = `/contact?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${availability.teamMemberId}&startAt=${availability.date}`;
       timeItem.className = "available-time";
       timeItem.type = "submit";
       availableTimesDiv.appendChild(timeItem);

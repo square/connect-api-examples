@@ -353,6 +353,55 @@ a:visited {
   margin-bottom: 25px;
 }
 
+/* Contacts page */
+
+.contact-form {
+  margin-top: 24px;
+}
+
+.sq-form-control {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.sq-form-control input, .sq-form-control textarea {
+  font-size: 16px;
+  line-height: 24px;
+  padding: 11px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  margin-bottom: 24px;
+}
+
+.sq-form-control input::placeholder, .sq-form-control textarea::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.sq-form-control .half-width {
+  flex: 1 0 300px;
+  margin-right: 20px;
+}
+
+.sq-form-control textarea {
+  width: 100%;
+  margin-right: 20px;
+  resize: none;
+  font-family: inherit;
+}
+
+.sq-form-control button {
+  width: 100%;
+  margin-right: 20px;
+  color: white;
+  background-color: rgba(0, 106, 255, 1);
+  font-weight: bold;
+  border: none;
+  font-size: 16px;
+  padding: 17px;
+  text-align: center;
+  cursor: pointer;
+}
+
 .availability-staff__card-wrapper {
   display: flex;
   justify-content: left;
@@ -362,3 +411,4 @@ a:visited {
 .steps__staff-step-body {
   padding-left: 10px;
 }
+
