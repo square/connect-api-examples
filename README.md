@@ -101,5 +101,6 @@ This Express.js project is organized as follows:
     *   **booking.js** Provides routes to get, create, reschedule, and cancel bookings 
 *   **util/** Includes the following:
     *   **square_client.js** The utility code initializes the Square SDK client
+    *   **dateHelpers.js** The utility code to create a mapping of the availabilities array and other date-related helper functions
 *   **views/** Provides the view (.ejs) files
 
