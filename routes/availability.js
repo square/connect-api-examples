@@ -140,7 +140,7 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
       timezone = location.timezone;
     }
     // send the serviceId & serviceVersion since it's needed to book an appointment in the next step
-    res.render("pages/availability", { availabilities, serviceId, serviceVersion, timezone:"America/New_York", ...additionalInfo });
+    res.render("pages/availability", { availabilities, serviceId, serviceVersion, timezone, ...additionalInfo });
   } catch (error) {
     console.error(error);
     next(error);
