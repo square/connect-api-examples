@@ -1,21 +1,19 @@
 # Overview
 
 
-This sample web application integrates the Square [Bookings API](https://developer.squareup.com/reference/square/bookings-api) and showcases some of 
-its functionality, including:
+This sample web application integrates the Square [Bookings API](https://developer.squareup.com/reference/square/bookings-api) and showcases some of its functionality, including:
 * Create booking
 * Update booking
 * Cancel booking
 * Search availabilities
-* List bookable staff members
-* List appointment services
+* List staff booking profiles
 
 In addition to the Bookings API, the application uses the following Square APIs for an integrated experience:
 
-* The [Catalog API](https://developer.squareup.com/reference/square/catalog-api) to create and retrieve appointment service type catalog objects.
-* The [Customers API](https://developer.squareup.com/reference/square/customers-api) to create and retrieve customer profiles in the seller's Customer Directory. 
-* The [Locations API](https://developer.squareup.com/reference/square/locations-api) to get the location id to be used by other APIs in the application.
-* The [Teams API](https://developer.squareup.com/reference/square/team-api) to retrieve team member details.
+* The [Catalog API](https://developer.squareup.com/reference/square/catalog-api) to create and retrieve appointment service type catalog objects
+* The [Customers API](https://developer.squareup.com/reference/square/customers-api) to create and retrieve customer profiles in the seller's Customer Directory
+* The [Locations API](https://developer.squareup.com/reference/square/locations-api) to find the seller’s currency to be used throughout the application.
+* The [Teams API](https://developer.squareup.com/reference/square/team-api) to retrieve team member details
 
 # Setup
 
@@ -36,7 +34,9 @@ In addition to the Bookings API, the application uses the following Square APIs 
    `npm install`
 
 ## Set up your seller account
-In order to run this app, you need to first ensure your seller account has appointments enabled. The appointments service is **free** in the `sandbox` environment and is a paid service in the `production` environment. We recommend using the `sandbox` environment for development and testing purposes. To set up the apointments service in `sandbox`, follow these steps:
+In order to run this app, you need to first ensure your seller account has appointments enabled. The appointments service is **free** in the `sandbox` environment and is a paid service in the `production` environment. We recommend using the `sandbox` environment for development and testing purposes.
+
+To set up the apointments service in `sandbox`, follow these steps:
 
 1. Ensure your `.env` file has `ENVIRONMENT` set to `sandbox` and other credentials correctly provided 
 
@@ -44,7 +44,7 @@ In order to run this app, you need to first ensure your seller account has appoi
   
    `npm run seed`
 
-   This script will create the following appointment services in your account:
+   This command will create the following appointment services in your account:
    * Hair Color Treatment
    * Women's Haircut
    * Men's Haircut
@@ -56,7 +56,7 @@ In order to run this app, you need to first ensure your seller account has appoi
 
 1. Log into your [sandbox seller dashboard](https://squareupsandbox.com/dashboard/) in the browser
 
-1. Click on [Appointments](https://squareupsandbox.com/appointments/) on the left-hand side panel
+1. Click on the [Appointments](https://squareupsandbox.com/appointments/) tab on the left-hand side panel
 
 1. Click on the *Get Started* button on the center of the page
 
@@ -66,7 +66,7 @@ In order to run this app, you need to first ensure your seller account has appoi
 
 1. You now have appointments enabled
 
-1. Click on [Staff](https://squareupsandbox.com/appointments/staff) on the left-hand side panel
+1. Click on the [Staff](https://squareupsandbox.com/appointments/staff) tab on the left-hand side panel
 
 1. Click on the *Add Employee* button on the right side of the page
 
