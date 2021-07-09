@@ -65,6 +65,8 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 1. Log into your [Sandbox Seller Dashboard](https://squareupsandbox.com/dashboard/) in the browser
 
+1. If your business has more than 1 location, make sure your select the location provided in the `.env` file from the dropdown on the Dashboard's *Home page*
+
 1. Click on the [Appointments](https://squareupsandbox.com/appointments/) tab on the left-hand side panel
 
 1. Click on the *Get Started* button on the center of the page
@@ -81,7 +83,7 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 1. Click on the *Add Employee* button on the right side of the page
 
-1. You should see 2 available employees if you successfully ran the seeding command: *Amy Johnson* and *John Smith*. Choose either one of the them and click the *Save* button on the right bottom corner of the page
+1. You should see 2 available employees if you successfully ran the seeding command: *Amy Johnson* and *John Smith*. Choose either one of the them and set optional configurations for the employee on the right-side panel, then click the *Save* button on the right bottom corner of the page
 
 1. You will get a pop up to *Start Your Free Trial of Appointments for Teams*. Click on the *Start Trial* button. Note that if you are in the `sandbox` environment you will not be charged
 
