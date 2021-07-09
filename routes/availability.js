@@ -21,6 +21,7 @@ const locationId = process.env["SQUARE_LOCATION_ID"];
 const {
   bookingsApi,
   catalogApi,
+  locationsApi,
   teamApi,
 } = require("../util/square-client");
 
@@ -101,6 +102,9 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
     let availabilities;
     // additional data to send to template
     let additionalInfo;
+    // get the business location so we can retrieve the timezone
+    const retrieveLocationPromise = locationsApi.retrieveLocation(locationId);
+    let timezone;
     // search availability for the specific staff member if staff id is passed as a param
     if (staffId === ANY_STAFF_PARAMS) {
       const [ services, teamMembers ] = await searchActiveTeamMembers(serviceId);
@@ -108,12 +112,14 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
         any: teamMembers,
       };
       // get availability
-      const availabilitiesResult = await bookingsApi.searchAvailability(searchRequest);
-      availabilities = availabilitiesResult.result.availabilities;
+      const availabilityPromise = bookingsApi.searchAvailability(searchRequest);
+      const [ { result }, { result: { location } } ] = await Promise.all([ availabilityPromise, retrieveLocationPromise ]);
+      availabilities = result.availabilities;
       additionalInfo = {
         serviceItem: services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0],
         serviceVariation: services.object
       };
+      timezone = location.timezone;
     } else {
       searchRequest.query.filter.segmentFilters[0].teamMemberIdFilter = {
         any: [
@@ -124,18 +130,17 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
       const availabilityPromise = bookingsApi.searchAvailability(searchRequest);
       // get team member booking profile - needed to display team member details in left pane
       const bookingProfilePromise = bookingsApi.retrieveTeamMemberBookingProfile(staffId);
-      const [ { result }, { result: services }, { result: { teamMemberBookingProfile } } ] = await Promise.all([ availabilityPromise, retrieveServicePromise, bookingProfilePromise ]);
+      const [ { result }, { result: services }, { result: { teamMemberBookingProfile } }, { result: { location } } ] = await Promise.all([ availabilityPromise, retrieveServicePromise, bookingProfilePromise, retrieveLocationPromise ]);
       availabilities = result.availabilities;
       additionalInfo = {
         bookingProfile: teamMemberBookingProfile,
         serviceItem: services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0],
         serviceVariation: services.object
       };
+      timezone = location.timezone;
     }
-    // create object where keys are the date in yyyy-mm-dd format and values contain the available times & team member for that date
-    const availabilityMap = dateHelpers.createDateAvailableTimesMap(availabilities);
     // send the serviceId & serviceVersion since it's needed to book an appointment in the next step
-    res.render("pages/availability", { availabilityMap, serviceId, serviceVersion, ...additionalInfo });
+    res.render("pages/availability", { availabilities, serviceId, serviceVersion, timezone, ...additionalInfo });
   } catch (error) {
     console.error(error);
     next(error);

@@ -112,6 +112,22 @@ convertTimeToText = function(date) {
 }
 
 /**
+* Retrieve the local time zone in IANA format
+*/
+getLocalTimezone = function() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+/**
+ * A helper function to stringify JSON objects that contains bigint.
+ */
+stringifyJSON = function(data) {
+  return JSON.stringify(data, (key, value) =>
+    typeof value === "bigint" ? value.toString() : value
+  );
+}
+
+/**
  * Helper function to convert a date and a duration into a readable time range.
  * If the two dates are on the same day, show only one date.
  * e.g. 2021-07-09T16:00:00Z, 30 min -> Friday, July 09, 2021 9:00 AM - 9:30 AM

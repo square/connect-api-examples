@@ -18,6 +18,7 @@ const {
   bookingsApi,
   catalogApi,
   customersApi,
+  locationsApi,
 } = require("../util/square-client");
 const { v4: uuidv4 } = require("uuid");
 
@@ -207,11 +208,11 @@ router.get("/:bookingId/reschedule", async (req, res, next) => {
       }
     };
     // get availability
-    const { result: { availabilities } } = await bookingsApi.searchAvailability(searchRequest);
-    // create object where keys are the date in yyyy-mm-dd format and values contain the available times & team member for that date
-    const availabilityMap = dateHelpers.createDateAvailableTimesMap(availabilities);
-    res.render("pages/reschedule", { availabilityMap, bookingId, serviceId: serviceVariationId, serviceVersion: serviceVariationVersion });
-
+    const searchAvailabilityPromise = bookingsApi.searchAvailability(searchRequest);
+    // get location details so we can get the timezone
+    const retrieveLocationPromise = locationsApi.retrieveLocation(locationId);
+    const [ { result: { availabilities } }, { result: { location: { timezone } } } ] = await Promise.all([ searchAvailabilityPromise, retrieveLocationPromise ]);
+    res.render("pages/reschedule", { availabilities, bookingId, serviceId: serviceVariationId, serviceVersion: serviceVariationVersion, timezone });
   } catch (error) {
     console.error(error);
     next(error);

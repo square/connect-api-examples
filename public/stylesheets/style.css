@@ -344,6 +344,7 @@ a:visited {
 }
 
 /* Availability page */
+
 .availability h4 {
   color: #1A1A1A;
   font-size: 18px;
@@ -450,6 +451,18 @@ a:visited {
   padding-left: 10px;
   margin-top: 15px;
 }
+
+/* Different timezones warning */
+.timezone-warning {
+  border: 1px solid #FF901A;
+  background-color: #FFF3E6;
+  color: #5F666C;
+  padding: 25px;
+  position: relative;
+  text-align: center;
+}
+
+/* Developer note */
 
 .developer-note {
   justify-content: center;
