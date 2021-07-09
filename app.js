@@ -26,7 +26,7 @@ const { locationsApi } = require("./util/square-client");
 locationsApi.retrieveLocation(process.env["SQUARE_LOCATION_ID"]).then(function(response) {
   app.locals.location = response.result.location;
 }).catch(function(error) {
-  if (error.statusCode === "401") {
+  if (error.statusCode === 401) {
     console.error("Configuration has failed. Please verify `.env` file is correct.");
   }
   process.exit(1);
