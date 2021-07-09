@@ -34,9 +34,12 @@ In addition to the Bookings API, the application uses the following Square APIs 
    `npm install`
 
 ## Set up your seller account
+
 In order to run this app, you need to first ensure your seller account has appointments enabled. The appointments service is **free** in the `sandbox` environment and is a paid service in the `production` environment. We recommend using the `sandbox` environment for development and testing purposes.
 
 To set up the apointments service in `sandbox`, follow these steps:
+
+### 1. Initialize test data
 
 1. Ensure your `.env` file has `ENVIRONMENT` set to `sandbox` and other credentials correctly provided 
 
@@ -54,6 +57,8 @@ To set up the apointments service in `sandbox`, follow these steps:
    * John Smith
    * Amy Johnson
 
+### 2. Enable Appointments for your business
+
 1. Log into your [sandbox seller dashboard](https://squareupsandbox.com/dashboard/) in the browser
 
 1. Click on the [Appointments](https://squareupsandbox.com/appointments/) tab on the left-hand side panel
@@ -65,6 +70,8 @@ To set up the apointments service in `sandbox`, follow these steps:
 1. On the next page, skip the link to download the Square app for now
 
 1. You now have appointments enabled
+
+### 3. Make your staff bookable
 
 1. Click on the [Staff](https://squareupsandbox.com/appointments/staff) tab on the left-hand side panel
 
