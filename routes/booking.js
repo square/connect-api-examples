@@ -69,7 +69,7 @@ router.post("/create", async (req, res, next) => {
         ],
         customerId: await getCustomerID(givenName, familyName, emailAddress, phoneNumber),
         customerNote,
-        locationId: locationId,
+        locationId,
         startAt,
       },
       idempotencyKey: uuidv4(),
