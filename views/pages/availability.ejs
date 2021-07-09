@@ -45,7 +45,7 @@
                 </div>
                 <div class="steps__staff-step-body">
                   <div class="steps__step-name">
-                    <%if (locals.bookingProfile) { %>
+                    <% if (locals.bookingProfile) { %>
                       <%= bookingProfile.displayName %>
                     <% } else { %>
                       Any staff member
@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="content-main">
-        <%- include('../partials/dateSelector', { availabilityMap }); %>
+        <%- include('../partials/dateSelector', { availabilities }); %>
       </div>
   </body>
 </html>

@@ -105,4 +105,20 @@ convertTimeToText = function(date) {
 
   return `${hours}:${minutes} ${d.getHours() >= 12 ? "pm" : "am"}`;
 }
+
+/**
+* Retrieve the local time zone in IANA format
+*/
+getLocalTimezone = function() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+/**
+ * A helper function to stringify JSON objects that contains bigint.
+ */
+stringifyJSON = function(data) {
+  return JSON.stringify(data, (key, value) =>
+    typeof value === "bigint" ? value.toString() : value
+  );
+}
 %>
