@@ -59,6 +59,8 @@ To set up the apointments service in `sandbox`, follow these steps:
    * John Smith
    * Amy Johnson
 
+**Note:** You may delete these objects from the sandbox environment when you wish by running `npm run clear` 
+
 ### 2. Enable Appointments for your business
 
 1. Log into your [Sandbox Seller Dashboard](https://squareupsandbox.com/dashboard/) in the browser
