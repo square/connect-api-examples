@@ -264,7 +264,7 @@ a:visited {
   font-weight: bold;
 }
 
-.steps__step-description, .staff__card-description {
+.staff__card-description {
   color: rgba(113, 118, 123, 1);
   font-size: 14px;
   line-height: 22px;
@@ -448,6 +448,7 @@ a:visited {
 
 .steps__staff-step-body {
   padding-left: 10px;
+  margin-top: 15px;
 }
 
 .developer-note {
