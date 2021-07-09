@@ -93,6 +93,7 @@ a:visited {
   line-height: 24px;
   display: block;
   width: fit-content;
+  width: -moz-fit-content;
 }
 
 .title {
@@ -289,8 +290,10 @@ a:visited {
 
 .staff__card-picture img, .staff__card-picture-wrapper img {
   width: 64px;
+  height: 64px;
   border: 1px solid white;
   border-radius: 50%;
+  object-fit: cover;
 }
 .staff__card-picture-wrapper {
   width: 64px;
@@ -324,6 +327,8 @@ a:visited {
   width: 46px;
   border: 1px solid white;
   border-radius: 24px;
+  height: 46px;
+  object-fit: cover;
 }
 
 #any-staff #image-1 {
@@ -347,14 +352,15 @@ a:visited {
   margin-bottom: 30px;
 }
 
-.availability a.available-time {
+.availability button.available-time {
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 6px;
   box-sizing: border-box;
   color: #1A1A1A;
+  cursor: pointer;
   float: left;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: .01em;
   list-style-type: none;
   margin: 7px;
@@ -407,11 +413,25 @@ a:visited {
   font-family: inherit;
 }
 
-.sq-form-control button {
+.sq-form-control .button.btn-primary  {
   width: 100%;
   margin-right: 20px;
   color: white;
   background-color: rgba(0, 106, 255, 1);
+  font-weight: bold;
+  border: none;
+  font-size: 16px;
+  padding: 17px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.sq-form-control .button.btn-secondary {
+  width: 100%;
+  margin-right: 20px;
+  color: white;
+  background-color: #F5F6F7;
+  color: #151C1F;
   font-weight: bold;
   border: none;
   font-size: 16px;
@@ -457,3 +477,87 @@ a:visited {
   cursor: pointer;
 }
 
+.content__card {
+  width: 500px;
+  height: 500px;
+  margin-top: 40px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+  border-radius: 12px;
+  display: inline-block;
+}
+
+.message-sm {
+  font-size: 16px;
+  line-height: 26px;
+  color: #71767B;
+  margin-top: 8px;
+}
+
+.content__service.message {
+  text-align: center;
+  margin-top: 68px;
+}
+
+.content__service.message-sm {
+  margin-bottom: 0px;
+}
+
+.content__card-wrapper {
+  width: 328px;
+  display: inline-block;
+}
+
+.content__card-date {
+  margin-top: 37px;
+  margin-bottom: 16px;
+}
+
+.button__group .sq-form-control .button {
+  margin-right: 0px;
+  height: 40px;
+  padding: 9px;
+  font-size: 14px;
+}
+
+.staff__card-wrapper.confirm {
+  margin-top: 50px;
+}
+
+.staff__card-details--confirm {
+  margin-left: 10px;
+}
+
+.button__group {
+  margin-top: 46px;
+}
+
+.content__card-description {
+  font-size: 16px;
+  line-height: 26px;
+}
+
+.success-toast {
+  justify-content: center;
+  display: flex;
+  margin-top: 60px;
+  min-width: 350px;
+}
+
+.success-toast div {
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  border-radius: 50px;
+  background-color: white;
+  padding: 0 24px;
+}
+
+.success-toast img {
+  margin-right: 12px;
+  vertical-align: middle;
+}

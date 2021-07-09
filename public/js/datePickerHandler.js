@@ -8,11 +8,13 @@ class DatePickerHandler {
    * @param {Object} availabilityMap
    * @param {String} serviceId
    * @param {String} serviceVersion
+   * @param {String} bookingId - booking id if rescheduling an existing booking. Else undefined
    */
-  constructor(availabilityMap, serviceId, serviceVersion) {
+  constructor(availabilityMap, serviceId, serviceVersion, bookingId) {
     this.availabilityMap = availabilityMap;
     this.serviceId = serviceId;
     this.serviceVersion = serviceVersion;
+    this.bookingId = bookingId;
     // show the available times for today's date
     const now = new Date();
     this.selectNewDate(new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split("T")[0]);
@@ -35,14 +37,34 @@ class DatePickerHandler {
       availableTimesDiv.appendChild(noTimesAvailable);
       return;
     }
-    // for each available time create a new element that directs user to the next page
+    // for each available time create a new element that directs user to the next step in booking
+    // or reschedules the booking if it's an existing booking
     availabities.forEach((availability) => {
-      const timeItem = document.createElement("a");
+      const form = document.createElement("form");
+      form.action = this.bookingId ? `/booking/${this.bookingId}/reschedule?startAt=${availability.date}` : "/contact";
+      form.method = this.bookingId ? "post" : "get";
+      // create hidden parameters for GET contact action
+      if (form.method === "get") {
+        const queryParams = {
+          serviceId: this.serviceId,
+          staff: availability.teamMemberId,
+          startAt: availability.date,
+          version: this.serviceVersion,
+        };
+        Object.keys(queryParams).forEach(queryParam => {
+          const input = document.createElement("input");
+          input.type = "hidden";
+          input.name = queryParam;
+          input.value = queryParams[queryParam];
+          form.appendChild(input);
+        });
+      }
+      const timeItem = document.createElement("button");
       timeItem.innerHTML = availability.time;
-      timeItem.href = `/contact?serviceId=${this.serviceId}&version=${this.serviceVersion}&staff=${availability.teamMemberId}&startAt=${availability.date}`;
       timeItem.className = "available-time";
       timeItem.type = "submit";
-      availableTimesDiv.appendChild(timeItem);
+      form.appendChild(timeItem);
+      availableTimesDiv.appendChild(form);
     });
   }
 
