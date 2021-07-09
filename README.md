@@ -17,14 +17,14 @@ In addition to the Bookings API, the application uses the following Square APIs 
 
 # Setup
 
-## Set up the project
+## Set up the application
 1. Ensure that you have npm installed with Node.js version v10 or later (run `npm -v` in your terminal). If not, follow the instructions for your OS: [https://www.npmjs.com/get-npm](https://www.npmjs.com/get-npm) 
 
 2. Set your credentials: 
     1. You need a `.env` file at the top directory to provide credentials. You can copy the content in the `.env.example` file provided in the project and use it as a template
     2. In the file:
         1. Set `ENVRIONMENT` to `sandbox` (for testing) or `production`
-        2. Provide other credentials for the corresponding environment
+        2. Provide values for `SQUARE_APPLICATION_ID`, `SQUARE_ACCESS_TOKEN`, and `SQUARE_LOCATION_ID` for the corresponding environment
  
     For more information, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application). The Create an Application section explains where you can find your credentials information. 
 
@@ -42,7 +42,7 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 ### 1. Initialize test data
 
-1. Ensure your `.env` file has `ENVIRONMENT` set to `sandbox` and other credentials correctly provided 
+1. Ensure your `.env` file has `ENVIRONMENT` set to `sandbox` and provide sandbox environment values for `SQUARE_APPLICATION_ID`, `SQUARE_ACCESS_TOKEN`, and `SQUARE_LOCATION_ID`
 
 1. Run the seeding script provided in this sample app to create some services and staff members:
   
