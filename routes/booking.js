@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const dateHelpers = require("../util/dateHelpers");
+const dateHelpers = require("../util/date-helpers");
 const express = require("express");
 const router = express.Router();
 const {
