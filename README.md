@@ -90,16 +90,16 @@ In order to run this app, you need to first ensure your seller account has appoi
 
 This Express.js project is organized as follows:
 
-*   **.env** Square provides a `.env.example` file. You should make a copy of this file and save it as `.env`. You should provide your credentials in the `.env` file.
-*   **public/** Provides images, JavaScript, and CSS files used to render the pages.
+*   **.env** Square provides a `.env.example` file. You should make a copy of this file and save it as `.env`. You should provide your credentials in the `.env` file
+*   **public/** Provides images, JavaScript, and CSS files used to render the pages
 *   **routes/** The following JavaScript files define the routes to handle requests:
-    *   **index.js** Provides routes to handle all the login or logout requests for the initial page. 
-    *   **services.js** Provides a route to list appointmnet services. 
+    *   **index.js** Provides routes to handle all the login or logout requests for the initial page
+    *   **services.js** Provides a route to list appointmnet services
     *   **staff.js** Provides a route to list and bookable staff members for a service
     *   **availability.js** Provides routes to search availability based on service and staff member selected
     *   **contact.js** Provides a route to display a customer contact information form prior to complete booking
     *   **booking.js** Provides routes to get, create, reschedule, and cancel bookings 
 *   **util/** Includes the following:
-    *   **square_client.js** The utility code initializes the Square SDK client. 
-*   **views/** Provides the view (.ejs) files.
+    *   **square_client.js** The utility code initializes the Square SDK client
+*   **views/** Provides the view (.ejs) files
 
