@@ -72,7 +72,7 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 1. You should see 2 available employees if you successfully ran the seeding command: *Amy Johnson* and *John Smith*. Choose either one of the them and click the *Save* button on the right bottom corner of the page
 
-1. You will get a pop up to *Start Your Free Trial of Appointments for Teams*. Click on the *Start Trial* button. Note that if you are in the `sandbox` envionment you will not be charged
+1. You will get a pop up to *Start Your Free Trial of Appointments for Teams*. Click on the *Start Trial* button. Note that if you are in the `sandbox` environment you will not be charged
 
 1. Repeat the *Add Employee* step to add the other staff
 
