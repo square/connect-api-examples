@@ -76,7 +76,7 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 1. Repeat the *Add Employee* step to add the other staff
 
-1. Both Amy Johnson and John Smith should now set up as service providers for the services that were created by the seeding command
+1. Both Amy Johnson and John Smith should now be set up as service providers for the services that were created by the seeding command
 
 ## Run the application
 
