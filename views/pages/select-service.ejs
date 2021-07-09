@@ -59,6 +59,13 @@
           <span>No contact information</span>
       <% } %>
       </div>
+      <%if (cancel === "success") { %>
+        <div class="success-toast">
+          <div>
+            <img src="/images/success.svg">Your booking was cancelled successfully!
+          </div>
+        </div>
+      <% } %>
     </div>
     <div class="content-main services">
       <h4> Book an appointment </h4>

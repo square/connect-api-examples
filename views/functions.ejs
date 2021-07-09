@@ -94,6 +94,11 @@ convertDateToText = function(date) {
   return `${weekday}, ${month} ${day}${ordinalIndicator}, ${year}`;
 }
 
+/**
+ * Helper function to convert a date into hour:min (AM/PM) format.
+ *
+ * @param {String} date the date to convert
+ */
 convertTimeToText = function(date) {
   const d = new Date(date);
 
@@ -104,5 +109,53 @@ convertTimeToText = function(date) {
   minutes = minutes < 10 ? "0" + minutes : minutes;
 
   return `${hours}:${minutes} ${d.getHours() >= 12 ? "pm" : "am"}`;
+}
+
+/**
+ * Helper function to convert a date and a duration into a readable time range.
+ * If the two dates are on the same day, show only one date.
+ * e.g. 2021-07-09T16:00:00Z, 30 min -> Friday, July 09, 2021 9:00 AM - 9:30 AM
+ * e.g. 2021-08-09T04:30:00Z, 30 min -> Friday, July 09, 2021 11:30 PM - Saturday, July 10, 2021 12:00 AM
+ *
+ * The result is an array of the parts, so that the callee can format the different parts into different lines.
+ * @param {String} current the current date to use
+ * @param {Number} minutes the duration of the booking
+ */
+formatDateToParts = function(current, minutes) {
+  const currentDate = new Date(current);
+  const futureDate = new Date(currentDate.getTime() + minutes * 60000);
+
+  const currentDateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const currentHourOptions = { hour: 'numeric', minute: 'numeric'};
+  const currentDateFormatter = new Intl.DateTimeFormat('en-US', currentDateOptions);
+  const currentHourFormatter = new Intl.DateTimeFormat('en-US', currentHourOptions);
+
+  const futureOptions = { hour: 'numeric', minute: 'numeric' };
+  // if is not the same day, show full date for the future date. Otherwise just show time.
+  const sameDay = isSameDay(currentDate, futureDate);
+  if (!sameDay) {
+    futureOptions.weekday = 'long';
+    futureOptions.year = 'numeric';
+    futureOptions.month = 'long';
+    futureOptions.day = 'numeric';
+  }
+
+  const futureFormatter = new Intl.DateTimeFormat('en-US', futureOptions);
+  return sameDay ?
+    [ currentDateFormatter.format(currentDate), currentHourFormatter.format(currentDate) + " - " + futureFormatter.format(futureDate) ] :
+    [ currentDateFormatter.format(currentDate) + ", " + currentHourFormatter.format(currentDate), " - ", futureFormatter.format(futureDate) ];
+
+}
+
+/**
+ * Helper function to check whether two dates are on the same day.
+ *
+ * @param {Date} date1 the first date to use for the comparison
+ * @param {Date} date2 the second date to use for the comparison
+ */
+isSameDay = function(date1, date2) {
+  return (date1.getDate() === date2.getDate() 
+     && date1.getMonth() === date2.getMonth()
+     && date1.getFullYear() === date2.getFullYear());
 }
 %>
