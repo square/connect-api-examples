@@ -27,6 +27,7 @@ const {
  * This endpoint is in charge of retrieving all of the service items that can be booked for the current location.
  */
 router.get("/", async (req, res, next) => {
+  const cancel = req.query.cancel;
   try {
     let { result: { items } } = await catalogApi.searchCatalogItems({
       enabledLocationIds: [ locationId ],
@@ -37,7 +38,7 @@ router.get("/", async (req, res, next) => {
       items = [];
     }
 
-    res.render("pages/select-service", { items });
+    res.render("pages/select-service", { cancel, items });
   } catch (error) {
     console.error(error);
     next(error);

@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const dateHelpers = require("../util/dateHelpers");
+const dateHelpers = require("../util/date-helpers");
 const express = require("express");
 const router = express.Router();
 require("dotenv").config();
@@ -140,7 +140,7 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
       timezone = location.timezone;
     }
     // send the serviceId & serviceVersion since it's needed to book an appointment in the next step
-    res.render("pages/availability", { availabilities, serviceId, serviceVersion, timezone, ...additionalInfo });
+    res.render("pages/availability", { availabilities, serviceId, serviceVersion, timezone:"America/New_York", ...additionalInfo });
   } catch (error) {
     console.error(error);
     next(error);

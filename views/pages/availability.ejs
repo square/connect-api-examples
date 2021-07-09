@@ -51,11 +51,6 @@
                       Any staff member
                     <% } %>
                   </div>
-                  <%if (locals.bookingProfile) { %>
-                    <div class="steps__step-description">
-                      Available
-                    </div>
-                  <% } %>
                 </div>
               </div>
             </div>
@@ -74,11 +69,11 @@
                 <span>Enter your details</span>
               </div>
             </div>
-          </div>
+          </div>s
         </div>
       </div>
       <div class="content-main">
-        <%- include('../partials/dateSelector', { availabilities }); %>
+        <%- include('../partials/date-selector', { availabilities }); %>
       </div>
   </body>
 </html>

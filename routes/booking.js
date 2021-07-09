@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const dateHelpers = require("../util/dateHelpers");
+const dateHelpers = require("../util/date-helpers");
 const express = require("express");
 const router = express.Router();
 const {
@@ -19,7 +19,6 @@ const {
   catalogApi,
   customersApi,
   locationsApi,
-  teamApi,
 } = require("../util/square-client");
 const { v4: uuidv4 } = require("uuid");
 
@@ -71,14 +70,13 @@ router.post("/create", async (req, res, next) => {
         ],
         customerId: await getCustomerID(givenName, familyName, emailAddress, phoneNumber),
         customerNote,
-        locationId: process.env["SQUARE_LOCATION_ID"].toLowerCase(),
+        locationId,
         startAt,
       },
       idempotencyKey: uuidv4(),
     });
 
-    //TODO: redirect to confirmation page
-    res.json({ booking: booking.id });
+    res.redirect("/booking/" + booking.id);
 
   } catch (error) {
     const timeNotAvailable = error.errors.find(e => e.detail.match(/That time slot is no longer available/));
@@ -110,8 +108,7 @@ router.post("/:bookingId/reschedule", async (req, res, next) => {
 
     const { result: { booking: newBooking } } = await bookingsApi.updateBooking(bookingId, { booking: updateBooking });
 
-    //TODO: redirect to confirmation page
-    res.json({ booking: newBooking.id });
+    res.redirect("/booking/" + newBooking.id);
 
   } catch (error) {
     console.error(error);
@@ -132,8 +129,7 @@ router.post("/:bookingId/delete", async (req, res, next) => {
 
     await bookingsApi.cancelBooking(bookingId, { bookingVersion: booking.version });
 
-    //TODO: redirect to confirmation page or home page
-    res.sendStatus(200);
+    res.redirect("/services?cancel=success");
 
   } catch (error) {
     console.error(error);
@@ -158,23 +154,21 @@ router.get("/:bookingId", async (req, res, next) => {
     const serviceVariationId = booking.appointmentSegments[0].serviceVariationId;
     const teamMemberId = booking.appointmentSegments[0].teamMemberId;
 
-    // Make API call to get location details
-    const retrieveLocationPromise = locationsApi.retrieveLocation(locationId);
-
     // Make API call to get service variation details
     const retrieveServiceVariationPromise = catalogApi.retrieveCatalogObject(serviceVariationId, true);
 
     // Make API call to get team member details
-    const retrieveTeamMemberPromise = teamApi.retrieveTeamMember(teamMemberId);
+    const retrieveTeamMemberPromise = bookingsApi.retrieveTeamMemberBookingProfile(teamMemberId);
 
     // Wait until all API calls have completed
-    const [ { result: { location } }, { result: service }, { result: { teamMember } } ] =
-      await Promise.all([ retrieveLocationPromise, retrieveServiceVariationPromise, retrieveTeamMemberPromise ]);
+    const [ { result: service }, { result: { teamMemberBookingProfile } } ] =
+      await Promise.all([ retrieveServiceVariationPromise, retrieveTeamMemberPromise ]);
 
     const serviceVariation = service.object;
-    const parentItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
+    const serviceItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
-    res.render("pages/confirmation", { booking, location, parentItem, serviceVariation, teamMember });
+    res.render("pages/confirmation", { booking, serviceItem, serviceVariation, teamMemberBookingProfile });
+
   } catch (error) {
     console.error(error);
     next(error);
