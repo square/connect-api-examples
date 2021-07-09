@@ -164,9 +164,9 @@ router.get("/:bookingId", async (req, res, next) => {
       await Promise.all([ retrieveServiceVariationPromise, retrieveTeamMemberPromise ]);
 
     const serviceVariation = service.object;
-    const parentItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
+    const serviceItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
-    res.render("pages/confirmation", { booking, parentItem, serviceVariation, teamMemberBookingProfile });
+    res.render("pages/confirmation", { booking, serviceItem, serviceVariation, teamMemberBookingProfile });
 
   } catch (error) {
     console.error(error);
