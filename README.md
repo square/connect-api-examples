@@ -6,13 +6,14 @@ This sample web application integrates the Square [Bookings API](https://develop
 * Update booking
 * Cancel booking
 * Search availabilities
-* List staff booking profiles
+* List team member booking profiles
+* Retrieve team member booking profile
 
 In addition to the Bookings API, the application uses the following Square APIs for an integrated experience:
 
 * The [Catalog API](https://developer.squareup.com/reference/square/catalog-api) to create and retrieve appointment service type catalog objects
 * The [Customers API](https://developer.squareup.com/reference/square/customers-api) to create and retrieve customer profiles in the seller's Customer Directory
-* The [Locations API](https://developer.squareup.com/reference/square/locations-api) to find the seller’s currency to be used throughout the application.
+* The [Locations API](https://developer.squareup.com/reference/square/locations-api) to get information about the seller's business location to be used throughout the application
 * The [Teams API](https://developer.squareup.com/reference/square/team-api) to retrieve team member details
 
 # Setup
@@ -23,10 +24,10 @@ In addition to the Bookings API, the application uses the following Square APIs 
 2. Set your credentials: 
     1. You need a `.env` file at the top directory to provide credentials. You can copy the content in the `.env.example` file provided in the project and use it as a template
     2. In the file:
-        1. Set `ENVRIONMENT` to `sandbox` (for testing) or `production`
+        1. Set `ENVIRONMENT` to `sandbox` (for testing) or `production`
         2. Provide values for `SQUARE_APPLICATION_ID`, `SQUARE_ACCESS_TOKEN`, and `SQUARE_LOCATION_ID` for the corresponding environment
  
-    For more information, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application). The Create an Application section explains where you can find your credentials information. 
+    For more information, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application). The **Create an application** section explains where you can find your credentials information. 
 
     **WARNING:** Remember to use your own credentials only for testing the sample application. If you plan to make a version of this sample application available for your own purposes, use the Square [OAuth API](https://developer.squareup.com/docs/oauth-api/overview) to safely manage access to Square accounts. 
 
@@ -88,7 +89,7 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 ## Run the application
 
-1. Test the application and run the server. Depending on the content of the `.env` file, the application runs in the Square Sandbox or production environment.
+1. Test the application and run the server. Depending on the content of the `.env` file, the application runs in the Square sandbox or production environment.
 
    `npm start` 
 
@@ -101,14 +102,14 @@ This Express.js project is organized as follows:
 *   **.env** Square provides a `.env.example` file. You should make a copy of this file and save it as `.env`. You should provide your credentials in the `.env` file
 *   **public/** Provides images, JavaScript, and CSS files used to render the pages
 *   **routes/** The following JavaScript files define the routes to handle requests:
-    *   **index.js** Provides routes to handle all the login or logout requests for the initial page
+    *   **index.js** Provides routes to redirect the index page to `/services`
     *   **services.js** Provides a route to list appointmnet services
-    *   **staff.js** Provides a route to list and bookable staff members for a service
+    *   **staff.js** Provides a route to list bookable staff members for a service
     *   **availability.js** Provides routes to search availability based on service and staff member selected
     *   **contact.js** Provides a route to display a customer contact information form prior to complete booking
     *   **booking.js** Provides routes to get, create, reschedule, and cancel bookings 
 *   **util/** Includes the following:
-    *   **square_client.js** The utility code initializes the Square SDK client
-    *   **dateHelpers.js** The utility code to create a mapping of the availabilities array and other date-related helper functions
+    *   **square-client.js** The utility code initializes the Square SDK client
+    *   **date-helpers.js** The utility code to create a mapping of the availabilities array and other date-related helper functions
 *   **views/** Provides the view (.ejs) files
 
