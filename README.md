@@ -106,7 +106,7 @@ This Express.js project is organized as follows:
 *   **.env** Square provides a `.env.example` file. You should make a copy of this file and save it as `.env`. You should provide your credentials in the `.env` file
 *   **public/** Provides images, JavaScript, and CSS files used to render the pages
 *   **routes/** The following JavaScript files define the routes to handle requests:
-    *   **index.js** Provides routes to redirect the index page to `/services`
+    *   **index.js** Redirect the index page to `/services`
     *   **services.js** Provides a route to list appointmnet services
     *   **staff.js** Provides a route to list bookable staff members for a service
     *   **availability.js** Provides routes to search availability based on service and staff member selected
