@@ -455,6 +455,7 @@ a:visited {
   display: flex;
   background-color: white;
   margin-top: 80px;
+  margin-bottom: 20px;
   position: relative;
 }
 

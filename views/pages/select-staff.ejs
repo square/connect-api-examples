@@ -57,7 +57,7 @@
     <div class="content-main">
       <h4>Select a staff member</h4>
       <div class="staff">
-        <% if (bookableStaff.length> 0) { %>
+        <% if (bookableStaff.length > 0) { %>
           <a href="/availability/anyStaffMember/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
             <div class="staff__card">
               <div class="staff__card-wrapper">
@@ -120,9 +120,22 @@
             </div>
           </a>
         <% }); %>
+        <% if (!bookableStaff.length) {%>
+          <div class="card__wrapper disabled"></div>
+        <% } %>
       </div>
     </div>
   </div>
+  <% if (!bookableStaff.length) {%>
+    <div class="developer-note">
+      <div>
+        <h5>Developer note</h5>
+        <span>Looks like you don’t have any bookable staff members setup yet. Run the seeding script or use the <a href="https://developer.squareup.com/explorer/square/team-api/create-team-member" target="_blank">API Explorer</a>
+           to create team members, then visit the <a href="https://squareupsandbox.com/appointments/staff" target="_blank">Seller Dashboard</a> to mark those team members as bookable for your business location.
+        </span>
+      </div>
+    </div>
+  <% } %>
 
 </body>
 
