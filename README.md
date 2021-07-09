@@ -17,6 +17,7 @@ In addition to the Bookings API, the application uses the following Square APIs 
 
 # Setup
 
+## Set up the project
 1. Ensure that you have npm installed with Node.js version v10 or later (run `npm -v` in your terminal). If not, follow the instructions for your OS: [https://www.npmjs.com/get-npm](https://www.npmjs.com/get-npm) 
 
 2. Set your credentials: 
