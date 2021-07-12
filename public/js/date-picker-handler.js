@@ -101,7 +101,7 @@ class DatePickerHandler {
       const startAtDate = new Date(availability.startAt);
       // convert dates to the business time zone
       const businessTime = new Date(startAtDate.toLocaleString(undefined, { timeZone: businessTimeZone }));
-      const month = businessTime.getMonth() < 9 ? `0${businessTime.getMonth() + 1}` : businessTime.getMonth();
+      const month = businessTime.getMonth() < 9 ? `0${businessTime.getMonth() + 1}` : businessTime.getMonth() + 1;
       const date = businessTime.getDate() < 10 ? `0${businessTime.getDate()}` : businessTime.getDate();
       const startDate = `${businessTime.getFullYear()}-${month}-${date}`;
       const availableTimes = dateAvailableTimesMap[startDate] || [];
