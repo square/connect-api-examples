@@ -100,7 +100,7 @@ class DatePickerHandler {
       // get start date
       const startAtDate = new Date(availability.startAt);
       // convert dates to the business time zone
-      const businessTime = new Date(startAtDate.toLocaleString(undefined, { timeZone: businessTimeZone }));
+      const businessTime = new Date(startAtDate.toLocaleString("en-US", { timeZone: businessTimeZone }));
       const month = ("0" + (businessTime.getMonth() + 1)).slice(-2);
       const date = ("0" + businessTime.getDate()).slice(-2);
       const startDate = `${businessTime.getFullYear()}-${month}-${date}`;

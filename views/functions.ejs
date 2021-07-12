@@ -73,7 +73,7 @@ getStaffInitials = function(displayName) {
  */
 convertDateToText = function(dateStr, businessTimeZone) {
   const date = new Date(dateStr);
-  const d = new Date(date.toLocaleString(undefined, { timeZone: businessTimeZone }));
+  const d = new Date(date.toLocaleString("en-US", { timeZone: businessTimeZone }));
   const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -104,7 +104,7 @@ convertDateToText = function(dateStr, businessTimeZone) {
  */
 convertTimeToText = function(dateStr, businessTimeZone) {
   const date = new Date(dateStr);
-  const d = new Date(date.toLocaleString(undefined, { timeZone: businessTimeZone }));
+  const d = new Date(date.toLocaleString("en-US", { timeZone: businessTimeZone }));
 
   let hours = d.getHours();
   let minutes = d.getMinutes();
@@ -143,7 +143,7 @@ stringifyJSON = function(data) {
  * @param {Number} minutes the duration of the booking
  */
 formatDateToParts = function(current, businessTimeZone, minutes) {
-  const currentDate = new Date(new Date(current).toLocaleString(undefined, { timeZone: businessTimeZone }));
+  const currentDate = new Date(new Date(current).toLocaleString("en-US", { timeZone: businessTimeZone }));
   const futureDate = new Date(currentDate.getTime() + minutes * 60000);
 
   const currentDateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
