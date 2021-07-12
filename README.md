@@ -65,7 +65,7 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 1. Log into your [Sandbox Seller Dashboard](https://squareupsandbox.com/dashboard/) in the browser
 
-1. If your business has more than 1 location, make sure your select the location provided in the `.env` file from the dropdown on the Dashboard's *Home page*
+1. If your business has more than 1 location, make sure you select the location provided in the `.env` file from the dropdown on the Dashboard's *Home page*
 
 1. Click on the [Appointments](https://squareupsandbox.com/appointments/) tab on the left-hand side panel
 
