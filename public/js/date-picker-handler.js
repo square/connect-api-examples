@@ -9,9 +9,10 @@ class DatePickerHandler {
    * @param {String} serviceId
    * @param {String} serviceVersion
    * @param {String} bookingId - booking id if rescheduling an existing booking. Else undefined
+   * @param {String} businessTimeZone - the business IANA time zone
    */
-  constructor(availabilities, serviceId, serviceVersion, bookingId) {
-    this.availabilityMap = this.createDateAvailableTimesMap(availabilities);
+  constructor(availabilities, serviceId, serviceVersion, bookingId, businessTimeZone) {
+    this.availabilityMap = this.createDateAvailableTimesMap(availabilities, businessTimeZone);
     this.serviceId = serviceId;
     this.serviceVersion = serviceVersion;
     this.bookingId = bookingId;
@@ -24,10 +25,12 @@ class DatePickerHandler {
    * Return a mapping of the availabilities array
    * to enable easy lookup of available times for a date on the client side
    * @param {Availability[]} availabilities
+   * @param {String} businessTimeZone IANA timezone of the business
    * @return {Object<String, Object[]>} map where keys are the dates and values are
    * objects that contain the time, the team member id available and
    * the date in RFC 3339 format
-   * All dates & times returned are converted to local time zone
+   * All dates & times returned are converted to the time zone passed in
+   * (business time zone)
    *
    * Ex. If availabilities is:
    * [
@@ -91,19 +94,22 @@ class DatePickerHandler {
       ]
     }
   */
-  createDateAvailableTimesMap(availabilities) {
+  createDateAvailableTimesMap(availabilities, businessTimeZone) {
     const dateAvailableTimesMap = {};
     availabilities.forEach((availability) => {
-      // get date
+      // get start date
       const startAtDate = new Date(availability.startAt);
-      const localStartDate = new Date(startAtDate.getTime() - startAtDate.getTimezoneOffset()*60*1000);
-      const startDate = localStartDate.toISOString().split("T")[0];
+      // convert dates to the business time zone
+      const businessTime = new Date(startAtDate.toLocaleString(undefined, { timeZone: businessTimeZone }));
+      const month = businessTime.getMonth() < 9 ? `0${businessTime.getMonth() + 1}` : businessTime.getMonth();
+      const date = businessTime.getDate() < 10 ? `0${businessTime.getDate()}` : businessTime.getDate();
+      const startDate = `${businessTime.getFullYear()}-${month}-${date}`;
       const availableTimes = dateAvailableTimesMap[startDate] || [];
       // add the available times as a value to the date
       availableTimes.push({
         date: availability.startAt, // keep date in same RFC 3339 format so it can be used in createBooking
         teamMemberId: availability.appointmentSegments[0].teamMemberId,
-        time: this.formatToAmPm(startAtDate)
+        time: this.formatToAmPm(businessTime)
       });
       dateAvailableTimesMap[startDate] = availableTimes;
     });
@@ -112,7 +118,7 @@ class DatePickerHandler {
 
   /**
    * Reformat time to 12 hour am/pm format
-   * @param {Date} date
+   * @param {Date} date in business's time zone
    * @return {String} time in 12 hour format with am/pm
    */
   formatToAmPm(date) {

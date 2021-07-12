@@ -67,11 +67,13 @@ getStaffInitials = function(displayName) {
  * Helper function to convert date into a human readable date 
  * 
  * e.g. 2021-07-09T16:00:00Z -> Friday, July 09, 2021
- * 
- * @param {String} date the date to parse
+ *
+ * @param {String} dateStr the ISO string date
+ * @param {String} businessTimeZone the IANA timezone of the business
  */
-convertDateToText = function(date) {
-  const d = new Date(date);
+convertDateToText = function(dateStr, businessTimeZone) {
+  const date = new Date(dateStr);
+  const d = new Date(date.toLocaleString(undefined, { timeZone: businessTimeZone }));
   const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -97,10 +99,12 @@ convertDateToText = function(date) {
 /**
  * Helper function to convert a date into hour:min (AM/PM) format.
  *
- * @param {String} date the date to convert
+ * @param {String} dateStr the ISO string date
+ * @param {String} businessTimeZone the IANA timezone of the business
  */
-convertTimeToText = function(date) {
-  const d = new Date(date);
+convertTimeToText = function(dateStr, businessTimeZone) {
+  const date = new Date(dateStr);
+  const d = new Date(date.toLocaleString(undefined, { timeZone: businessTimeZone }));
 
   let hours = d.getHours();
   let minutes = d.getMinutes();
@@ -135,10 +139,11 @@ stringifyJSON = function(data) {
  *
  * The result is an array of the parts, so that the callee can format the different parts into different lines.
  * @param {String} current the current date to use
+ * @param {String} businessTimeZone IANA timezone of the business
  * @param {Number} minutes the duration of the booking
  */
-formatDateToParts = function(current, minutes) {
-  const currentDate = new Date(current);
+formatDateToParts = function(current, businessTimeZone, minutes) {
+  const currentDate = new Date(new Date(current).toLocaleString(undefined, { timeZone: businessTimeZone }));
   const futureDate = new Date(currentDate.getTime() + minutes * 60000);
 
   const currentDateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };

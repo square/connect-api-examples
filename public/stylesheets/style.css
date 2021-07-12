@@ -457,9 +457,14 @@ a:visited {
   border: 1px solid #FF901A;
   background-color: #FFF3E6;
   color: #5F666C;
-  padding: 25px;
+  padding: 15px;
   position: relative;
-  text-align: center;
+  display: flex;
+  justify-content: left;
+}
+
+.timezone-warning span {
+  margin: 5px;
 }
 
 /* Developer note */

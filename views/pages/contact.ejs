@@ -60,10 +60,10 @@
             </div>
             <div class="steps__step-body">
               <div class="steps__step-name">
-                <%= convertDateToText(startAt) %>
+                <%= convertDateToText(startAt, location.timezone) %>
               </div>
               <div class="steps__step-description">
-                <%= convertTimeToText(startAt) %>
+                <%= convertTimeToText(startAt, location.timezone) %>
               </div>
             </div>
           </div>
