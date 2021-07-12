@@ -34,7 +34,7 @@
           </div>
           <div class="content__card-date">
             <h5>
-              <% formatDateToParts(booking.startAt, booking.appointmentSegments[0].durationMinutes).forEach(function(part) { %>
+              <% formatDateToParts(booking.startAt, location.timezone, booking.appointmentSegments[0].durationMinutes).forEach(function(part) { %>
                 <%= part %>
                 <br>
               <%}); %>

@@ -18,7 +18,6 @@ const {
   bookingsApi,
   catalogApi,
   customersApi,
-  locationsApi,
 } = require("../util/square-client");
 const { v4: uuidv4 } = require("uuid");
 
@@ -208,11 +207,8 @@ router.get("/:bookingId/reschedule", async (req, res, next) => {
       }
     };
     // get availability
-    const searchAvailabilityPromise = bookingsApi.searchAvailability(searchRequest);
-    // get location details so we can get the timezone
-    const retrieveLocationPromise = locationsApi.retrieveLocation(locationId);
-    const [ { result: { availabilities } }, { result: { location: { timezone } } } ] = await Promise.all([ searchAvailabilityPromise, retrieveLocationPromise ]);
-    res.render("pages/reschedule", { availabilities, bookingId, serviceId: serviceVariationId, serviceVersion: serviceVariationVersion, timezone });
+    const { result: { availabilities } } = await bookingsApi.searchAvailability(searchRequest);
+    res.render("pages/reschedule", { availabilities, bookingId, serviceId: serviceVariationId, serviceVersion: serviceVariationVersion });
   } catch (error) {
     console.error(error);
     next(error);

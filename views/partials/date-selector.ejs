@@ -26,16 +26,18 @@
   <div id="datepicker"></div>
   <h4> Available Times </h4>
 
-  <% if (getLocalTimezone() !== timezone) { %>
+  <p> You can schedule an appointment between 4 hours and 30 days ahead of time. </p>
+
+  <% if (getLocalTimezone() !== location.timezone) { %>
     <div class="timezone-warning">
-      &#9888; You are currently in a different timezone from the business. The times displayed are in your current location's timezone.
+      <span class="notify-icon"> &#9888; </span>
+      <span> <b>HEADS UP!</b> It looks like you're in a different timezone. Times below are shown in <%= location.timezone %> time.</span>
     </div>
   <% } %>
-
-  <p> You can schedule an appointment between 4 hours and 30 days ahead of time. </p>
+  
   <div id="available-times">
   </div>
 </div>
 <script>
-  const datePickerHandler = new DatePickerHandler(<%- stringifyJSON(availabilities) %>, "<%- serviceId %>", "<%- serviceVersion %>", "<%- locals.bookingId %>");
+  const datePickerHandler = new DatePickerHandler(<%- stringifyJSON(availabilities) %>, "<%- serviceId %>", "<%- serviceVersion %>", "<%- locals.bookingId %>", "<%- location.timezone %>");
 </script>
