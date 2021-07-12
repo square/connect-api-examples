@@ -28,7 +28,7 @@
 
   <% if (getLocalTimezone() !== location.timezone) { %>
     <div class="timezone-warning">
-      <span> &#9888; </span>
+      <span class="notify-icon"> &#9888; </span>
       <span> <b>HEADS UP!</b> It looks like you're in a different timezone. Times below are shown in <%= location.timezone %> time.</span>
     </div>
   <% } %>

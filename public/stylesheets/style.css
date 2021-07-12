@@ -467,6 +467,12 @@ a:visited {
   margin: 5px;
 }
 
+.timezone-warning .notify-icon {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+
 /* Developer note */
 
 .developer-note {
