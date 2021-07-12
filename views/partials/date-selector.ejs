@@ -28,7 +28,7 @@
 
   <% if (getLocalTimezone() !== location.timezone) { %>
     <div class="timezone-warning">
-      &#9888; You are currently in a different timezone than the business is (<%= location.timezone %>). The times displayed are in your current location's timezone.
+      &#9888; You are currently in a different timezone (<%= getLocalTimezone() %>) than the business (<%= location.timezone %>). The times displayed are in your current location's timezone.
     </div>
   <% } %>
 
