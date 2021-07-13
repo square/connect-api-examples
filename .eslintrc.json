@@ -5,6 +5,7 @@
         "es2021": true
     },
     "extends": "eslint:recommended",
+    "node": true,
     "parserOptions": {
         "ecmaVersion": 12
     },
