@@ -18,7 +18,6 @@ const { Client, Environment } = require("square");
 const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
 const { program } = require("commander");
-const { customersApi } = require("../../util/square-client");
 require("dotenv").config();
 
 // We don't recommend to run this script in the production environment
@@ -30,6 +29,7 @@ const config = {
 // Configure catalog & team API instance
 const {
   catalogApi,
+  customersApi,
   locationsApi,
   teamApi,
 } = new Client(config);
