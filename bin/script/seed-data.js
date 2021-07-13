@@ -262,7 +262,7 @@ async function clearCustomers() {
 
     await Promise.all(deleteCustomerPromises);
     console.log("Successfully deleted customers", customerIds);
-    
+
   } catch (error) {
     console.error("Failed to clear customers", error);
   }
@@ -299,7 +299,7 @@ program
       output: process.stdout,
     });
     const locationId = process.env.SQUARE_LOCATION_ID;
-    rl.question(`Are you sure you want to clear all appointment services created for location ${locationId}, deactivate team members and remove all customers created by the app? (y/n)`, async(ans) => {
+    rl.question(`Are you sure you want to clear all appointment services created for location ${locationId}, deactivate team members and remove all customers created by the app? (y/n) `, async(ans) => {
       if (ans.toUpperCase() === "Y") {
         // deactivate team members
         await deactivateTeamMembers(locationId);
