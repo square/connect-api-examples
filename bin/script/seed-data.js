@@ -248,6 +248,7 @@ async function clearCustomers() {
         }
       }
     });
+
     if (!customers) {
       console.log("No customers were created by the app");
       return;
@@ -261,6 +262,7 @@ async function clearCustomers() {
 
     await Promise.all(deleteCustomerPromises);
     console.log("Successfully deleted customers", customerIds);
+    
   } catch (error) {
     console.error("Failed to clear customers", error);
   }
