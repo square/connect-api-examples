@@ -267,6 +267,7 @@ async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
     givenName,
     idempotencyKey: uuidv4(),
     phoneNumber,
+    referenceId: "BOOKINGS-SAMPLE-APP",
   });
 
   return customer.id;
