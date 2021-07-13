@@ -18,6 +18,7 @@ const { Client, Environment } = require("square");
 const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
 const { program } = require("commander");
+const { customersApi } = require("../../util/square-client");
 require("dotenv").config();
 
 // We don't recommend to run this script in the production environment
@@ -35,6 +36,7 @@ const {
 
 // assign a SKU to all the hair appointment services so we can search & delete them later on
 const HAIR_SERVICES_SKU = "BOOKINGS-SAMPLE-APP-HAIR-SERVICE";
+const BOOKINGS_SAMPLE_APP_REFERENCE_ID = "BOOKINGS-SAMPLE-APP";
 
 /**
  * Retrieve the location
@@ -231,6 +233,39 @@ async function clearAppointmentServices(locationId) {
   }
 }
 
+/**
+ * Delete all customers created by the sample app
+ * WARNING: This is permanent and irreversable
+ */
+async function clearCustomers() {
+  try {
+    const { result: { customers } }  = await customersApi.searchCustomers({
+      query: {
+        filter: {
+          referenceId: {
+            exact: BOOKINGS_SAMPLE_APP_REFERENCE_ID,
+          }
+        }
+      }
+    });
+    if (!customers) {
+      console.log("No customers were created by the app");
+      return;
+    }
+
+    const customerIds = customers.map((customer) => customer.id);
+
+    const deleteCustomerPromises = customerIds.map((customerId) => {
+      return customersApi.deleteCustomer(customerId);
+    });
+
+    await Promise.all(deleteCustomerPromises);
+    console.log("Successfully deleted customers", customerIds);
+  } catch (error) {
+    console.error("Failed to clear customers", error);
+  }
+}
+
 /*
  * Main driver for the script.
  */
@@ -262,12 +297,14 @@ program
       output: process.stdout,
     });
     const locationId = process.env.SQUARE_LOCATION_ID;
-    rl.question(`Are you sure you want to clear all appointment services created for location ${locationId} and deactivate team members? (y/n)`, async(ans) => {
+    rl.question(`Are you sure you want to clear all appointment services created for location ${locationId}, deactivate team members and remove all customers created by the app? (y/n)`, async(ans) => {
       if (ans.toUpperCase() === "Y") {
         // deactivate team members
         await deactivateTeamMembers(locationId);
         // clear appointment services
         await clearAppointmentServices(locationId);
+        // clear customers created by app
+        await clearCustomers();
       } else if (ans.toUpperCase() === "N") {
         console.log("Aborting clear.");
       }
