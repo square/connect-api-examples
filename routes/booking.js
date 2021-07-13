@@ -29,7 +29,7 @@ const locationId = process.env["SQUARE_LOCATION_ID"];
  *
  * Create a new booking, booking details and customer information is submitted
  * by form data. Create a new customer if necessary, otherwise use an existing
- * customer that matches the `firstName`, `lastName`, `emailAddress`, and `phoneNumber`
+ * customer that matches the `firstName`, `lastName` and `emailAddress`
  * to create the booking.
  *
  * accepted query params are:
@@ -48,7 +48,6 @@ router.post("/create", async (req, res, next) => {
   const emailAddress = req.body.emailAddress;
   const familyName = req.body.familyName;
   const givenName = req.body.givenName;
-  const phoneNumber = req.body.phoneNumber;
 
 
   try {
@@ -67,7 +66,7 @@ router.post("/create", async (req, res, next) => {
             teamMemberId: staffId,
           }
         ],
-        customerId: await getCustomerID(givenName, familyName, emailAddress, phoneNumber),
+        customerId: await getCustomerID(givenName, familyName, emailAddress),
         customerNote,
         locationId,
         startAt,
@@ -226,23 +225,19 @@ function convertMsToMins(duration) {
 }
 
 /**
- * Return the id of a customer that matches the firstName, lastName, email,
- * and phoneNumber. If such customer doesn't exist, create a new customer.
+ * Return the id of a customer that matches the firstName, lastName and email
+ * If such customer doesn't exist, create a new customer.
  *
  * @param {string} givenName
  * @param {string} familyName
  * @param {string} emailAddress
- * @param {string} phoneNumber
  */
-async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
+async function getCustomerID(givenName, familyName, emailAddress) {
   const { result: { customers } } = await customersApi.searchCustomers({
     query: {
       filter: {
         emailAddress: {
           exact: emailAddress,
-        },
-        phoneNumber: {
-          exact: "+" + phoneNumber,
         }
       }
     }
@@ -266,7 +261,6 @@ async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
     familyName,
     givenName,
     idempotencyKey: uuidv4(),
-    phoneNumber,
     referenceId: "BOOKINGS-SAMPLE-APP",
   });
 
