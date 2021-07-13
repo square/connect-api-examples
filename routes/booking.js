@@ -266,7 +266,7 @@ async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
     familyName,
     givenName,
     idempotencyKey: uuidv4(),
-    phoneNumber: "+" + phoneNumber,
+    phoneNumber,
   });
 
   return customer.id;
