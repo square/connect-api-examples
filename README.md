@@ -63,11 +63,13 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 ### 2. Enable Appointments for your business
 
-1. Log into your [Sandbox Seller Dashboard](https://squareupsandbox.com/dashboard/) in the browser
+1. Log into [Developer Dashboard](https://developer.squareup.com/apps) in the browser
 
-1. If your business has more than 1 location, make sure you select the location provided in the `.env` file from the dropdown on the Dashboard's *Home page*
+1. Click the *Open* button beside your sandbox test account to open the sandbox seller dashboard. Follow the instructions in this and the next section within the sandbox seller dashboard
 
-1. Click on the [Appointments](https://squareupsandbox.com/appointments/) tab on the left-hand side panel
+1. Click on the *Appointments* tab on the left-hand side panel
+
+1. If your business has more than 1 location, make sure you select the location provided in the `.env` file on the *Appointments* page
 
 1. Click on the *Get Started* button on the center of the page
 
@@ -79,7 +81,7 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 ### 3. Make your staff bookable
 
-1. Click on the [Staff](https://squareupsandbox.com/appointments/staff) tab on the left-hand side panel
+1. Click on the *Staff* tab on the left-hand side panel
 
 1. Click on the *Add Employee* button on the right side of the page
 
@@ -91,7 +93,7 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 1. Both Amy Johnson and John Smith should now be set up as service providers for the services that were created by the seeding command
 
-## Run the application
+## 4. Run the application
 
 1. Test the application and run the server. Depending on the content of the `.env` file, the application runs in the Square sandbox or production environment.
 
