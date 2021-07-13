@@ -36,6 +36,7 @@ const {
 
 // assign a SKU to all the hair appointment services so we can search & delete them later on
 const HAIR_SERVICES_SKU = "BOOKINGS-SAMPLE-APP-HAIR-SERVICE";
+// assign a reference id to customers so we can search & delete them later on
 const BOOKINGS_SAMPLE_APP_REFERENCE_ID = "BOOKINGS-SAMPLE-APP";
 
 /**
