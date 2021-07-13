@@ -1,14 +1,16 @@
 <div class="top-nav">
     <div class="top-nav__logo">
-      <%if (location.logoUrl) { %>
-        <img src="<%= location.logoUrl %>">
-      <% } else { %>
-        <img src="/images/blank-logo-sm.svg">
-      <% } %>
+      <a href="/services">
+        <%if (location.logoUrl) { %>
+          <img src="<%= location.logoUrl %>">
+        <% } else { %>
+          <img src="/images/blank-logo-sm.svg">
+        <% } %>
+      </a>
   </div>
   <div class="top-nav__name">
-    <span>
+    <a href="/services">
       <%= location.businessName || location.name %>
-    </span>
+    </a>
   </div>
 </div>
