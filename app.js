@@ -16,10 +16,23 @@ limitations under the License.
 const express = require("express");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
+require("dotenv").config();
 
-const routes = require("./routes/index");
 const app = express();
 
+// Check that all required .env variables exist
+if (!process.env["ENVIRONMENT"] || process.env["ENVIRONMENT"] === "") {
+  console.error(".env file missing required field \"ENVIRONMENT\".");
+  process.exit(1);
+} else if (!process.env["SQUARE_ACCESS_TOKEN"] || process.env["SQUARE_ACCESS_TOKEN"] === "") {
+  console.error(".env file missing required field \"SQUARE_ACCESS_TOKEN\".");
+  process.exit(1);
+} else if (!process.env["SQUARE_LOCATION_ID"] || process.env["SQUARE_LOCATION_ID"] === "") {
+  console.error(".env file missing required field \"SQUARE_LOCATION_ID\".");
+  process.exit(1);
+}
+
+const routes = require("./routes/index");
 const { locationsApi } = require("./util/square-client");
 
 // Get location information and store it in app.locals so it is accessible in all pages.
@@ -31,7 +44,6 @@ locationsApi.retrieveLocation(process.env["SQUARE_LOCATION_ID"]).then(function(r
   }
   process.exit(1);
 });
-
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
