@@ -67,9 +67,9 @@ To set up the apointments service in `sandbox`, follow these steps:
 
 1. Click the *Open* button beside your sandbox test account to open the sandbox seller dashboard. Follow the instructions in this and the next section within the sandbox seller dashboard
 
-1. If your business has more than 1 location, make sure you select the location provided in the `.env` file from the dropdown on the Dashboard's *Home page*
-
 1. Click on the *Appointments* tab on the left-hand side panel
+
+1. If your business has more than 1 location, make sure you select the location provided in the `.env` file on the *Appointments* page
 
 1. Click on the *Get Started* button on the center of the page
 
