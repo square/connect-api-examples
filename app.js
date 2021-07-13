@@ -21,13 +21,13 @@ require("dotenv").config();
 const app = express();
 
 // Check that all required .env variables exist
-if (!process.env["ENVIRONMENT"] || process.env["ENVIRONMENT"] === "") {
+if (!process.env["ENVIRONMENT"]) {
   console.error(".env file missing required field \"ENVIRONMENT\".");
   process.exit(1);
-} else if (!process.env["SQUARE_ACCESS_TOKEN"] || process.env["SQUARE_ACCESS_TOKEN"] === "") {
+} else if (!process.env["SQUARE_ACCESS_TOKEN"]) {
   console.error(".env file missing required field \"SQUARE_ACCESS_TOKEN\".");
   process.exit(1);
-} else if (!process.env["SQUARE_LOCATION_ID"] || process.env["SQUARE_LOCATION_ID"] === "") {
+} else if (!process.env["SQUARE_LOCATION_ID"]) {
   console.error(".env file missing required field \"SQUARE_LOCATION_ID\".");
   process.exit(1);
 }
