@@ -242,7 +242,7 @@ async function getCustomerID(givenName, familyName, emailAddress, phoneNumber) {
           exact: emailAddress,
         },
         phoneNumber: {
-          exact: "+" + phoneNumber,
+          exact: phoneNumber,
         }
       }
     }

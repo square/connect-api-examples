@@ -81,7 +81,7 @@
     <div class="content-main">
       <h4>Enter your details</h4>
       <form class="sq-form-control contact-form" method="POST" action="/booking/create?serviceId=<%= serviceVariation.id %>&staffId=<%= teamMemberBookingProfile.teamMemberId %>&version=<%= serviceVersion %>&startAt=<%= startAt %>">
-        <input class="half-width" name="phoneNumber" required maxlength="15" placeholder="Mobile phone" type="tel" pattern="[0-9]{9,}" title="Phone number should be at least 9 digits with no spaces or hyphens" />
+        <input class="half-width" name="phoneNumber" required maxlength="15" placeholder="Mobile phone" type="tel" pattern="^\+[1-9]\d{1,14}$" title="Phone number should be in E.164 format (including the leading +)" />
         <input class="half-width" name="emailAddress" required maxlength="320" placeholder="Email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Invalid email address" />
         <input class="half-width" type="text" name="givenName" required maxlength="50" placeholder="First name" />
         <input class="half-width" type="text" name="familyName" required maxlength="50" placeholder="Last name" />
