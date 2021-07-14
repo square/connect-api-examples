@@ -71,6 +71,14 @@ app.use(function (req, res, next) {
 // For simplicity, we print all error information
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
+  // when errors is not iterable - return a generic 500 page
+  if (!err.errors.length) {
+    return res.render("pages/formatted-error", {
+      code: 500,
+      description: "Something went wrong",
+      shortDescription: "Internal Server Error",
+    });
+  }
   // error when time slot is not available when creating a booking
   const timeNotAvailable = err.errors.find(e => e.detail.match(/That time slot is no longer available/));
   if (timeNotAvailable) {
