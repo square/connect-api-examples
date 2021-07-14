@@ -72,7 +72,7 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   // when errors is not iterable - return a generic 500 page
-  if (!err.errors.length) {
+  if (!err.errors || !err.errors.length) {
     return res.render("pages/formatted-error", {
       code: 500,
       description: "Something went wrong",
