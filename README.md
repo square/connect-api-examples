@@ -25,7 +25,7 @@ In addition to using the Bookings API, the application demonstrates how to integ
     1. You need a *.env* file at the top directory to provide credentials. You can copy the content in the *.env.example* file provided in the project and use it as a template
     2. In the file:
         1. Set `ENVIRONMENT` to `sandbox` (for testing) or `production`
-        2. Replace `SQUARE_APPLICATION_ID`, `SQUARE_ACCESS_TOKEN`, and `SQUARE_LOCATION_ID` by your Square application ID, access token, and your seller location ID, respectively, for the chosen environment.
+        2. Replace the placeholder texts of `SQUARE_APPLICATION_ID`, `SQUARE_ACCESS_TOKEN`, and `SQUARE_LOCATION_ID` with your Square application ID, access token, and your seller location ID, respectively, for the chosen environment.
  
     You can find your Square credentials in the Square Developer Dashboard. For more information, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application). 
 
@@ -87,7 +87,7 @@ You now have appointments enabled!
 
 1. Choose one of the two employees, `Amy Johnson` and `John Smith`, created by the seeding command, set optional configurations for the selected employee on the right-side panel, then click or tap the **Save** button on the right bottom corner of the page.
 
-1. On the **Start Your Free Trial of Appointments for Teams** pop-up window, click or tap the **Start Trial** button. Note that you must use the `sandbox` environment to use the free trial.
+1. On the **Start Your Free Trial of Appointments for Teams** pop-up window, click or tap the **Start Trial** button. Note that use of the `sandbox` environment is always free of charge.
 
 1. Repeat the **Add Employee** step to add the other staff.
 
