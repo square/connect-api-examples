@@ -50,7 +50,7 @@ formatMoney = function(value, currency) {
   if (currency !== "JPY") {
     valueAsNumber /= 100.0;
   }
-  var formatter = new Intl.NumberFormat('en-US', props);
+  const formatter = new Intl.NumberFormat('en-US', props);
   return formatter.format(valueAsNumber);
 }
 
