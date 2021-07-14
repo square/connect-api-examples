@@ -378,11 +378,6 @@ a:visited {
   margin-bottom: 25px;
 }
 
-#available-times {
-  display: flex;
-  flex-wrap: wrap;
-}
-
 @media only screen
 and (max-width: 1150px) {
   .availability {
@@ -390,9 +385,8 @@ and (max-width: 1150px) {
   }
 
   .availability button.available-time {
-    padding: 10px 7px;
-    margin: 7px;
-    width: 80px;
+    padding: 9px 6px;
+    margin: 9px;
   }
 }
 
