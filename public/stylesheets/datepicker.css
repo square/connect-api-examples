@@ -146,7 +146,7 @@ html .ui-button.ui-state-disabled:hover {
 @media only screen
 and (max-width: 1150px) {
   .ui-datepicker {
-    width: 300px;
+    width: 380px;
   }
 
   .ui-datepicker .ui-datepicker-title {
@@ -154,7 +154,7 @@ and (max-width: 1150px) {
   }
 
   .ui-datepicker .ui-datepicker-header {
-    width: 300px;
+    width: 380px;
   }
 
   .ui-datepicker table {
@@ -168,12 +168,21 @@ and (max-width: 1150px) {
   .ui-datepicker td span,
   .ui-datepicker td a {
     padding: 5px;
-    margin: 2.5px 7.5px;
+    margin: 2.5px 5.5px;
   }
 
   .ui-datepicker .ui-datepicker-prev,
   .ui-datepicker .ui-datepicker-next {
     width: 20px;
     height: 20px;
+  }
+
+  .ui-state-default,
+  .ui-widget-content .ui-state-default,
+  .ui-widget-header .ui-state-default,
+  .ui-button, .ui-state-highlight,
+  .ui-widget-content .ui-state-highlight,
+  .ui-widget-header .ui-state-highlight html .ui-button.ui-state-disabled:hover {
+    padding: 12px 0;
   }
 }
