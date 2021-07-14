@@ -34,7 +34,7 @@ In addition to using the Bookings API, the application demonstrates how to integ
     1. You need a *.env* file at the top directory to provide credentials. You can copy the content in the *.env.example* file provided in the project and use it as a template
     2. In the file:
         1. Set `ENVIRONMENT` to `sandbox` (for testing) or `production`
-        2. Replace the placeholder texts of `SQUARE_ACCESS_TOKEN`, and `SQUARE_LOCATION_ID` with your access token and your seller location ID, respectively, for the chosen environment.
+        2. Replace the placeholder texts of `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` with your access token and your seller location ID, respectively, for the chosen environment.
 
     You can find your Square credentials in the Square Developer Dashboard. For more information, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application).
 
