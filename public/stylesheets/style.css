@@ -564,7 +564,7 @@ a:visited {
 
 .content__card-wrapper {
   display: inline-block;
-  padding: 0 95px;
+  padding: 50px 95px;
   max-width: 328px;
 }
 
@@ -578,10 +578,6 @@ a:visited {
   height: 40px;
   padding: 9px;
   font-size: 14px;
-}
-
-.staff__card-wrapper.confirm {
-  margin-top: 50px;
 }
 
 .staff__card-details--confirm {
