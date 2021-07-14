@@ -76,7 +76,7 @@ app.use(function (err, req, res, next) {
   if (timeNotAvailable) {
     return res.render("pages/formatted-error", {
       code: err.statusCode,
-      description: "Opps! This appointment time has been taken. Please try booking again.",
+      description: "Opps! This appointment time is no longer available. Please try booking again.",
       shortDescription: "Bad Request",
     });
   }
