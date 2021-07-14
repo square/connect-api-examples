@@ -73,7 +73,7 @@ app.use(function (err, req, res, next) {
   const pastCancellationPeriod = err.errors.find(e => e.detail.match(/cannot cancel past cancellation period end/));
   const endedCancellationPeriod = err.errors.find(e => e.detail.match(/The cancellation period for this booking has ended/));
   if (pastCancellationPeriod || endedCancellationPeriod) {
-    return res.render("pages/formatted-error", { code: err.statusCode, description: "Sorry! The booking is past the cancellation period so cannot be cancelled.", shortDescription: "Bad Request" })
+    return res.render("pages/formatted-error", { code: err.statusCode, description: "Sorry! The booking is past the cancellation period so cannot be cancelled or rescheduled.", shortDescription: "Bad Request" })
   }
   res.render("pages/error", {
     // If it is a response error then format the JSON string, if not output the error
