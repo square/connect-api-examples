@@ -146,7 +146,7 @@ html .ui-button.ui-state-disabled:hover {
 @media only screen
 and (max-width: 1150px) {
   .ui-datepicker {
-    width: 380px;
+    width: 400px;
   }
 
   .ui-datepicker .ui-datepicker-title {
@@ -154,7 +154,7 @@ and (max-width: 1150px) {
   }
 
   .ui-datepicker .ui-datepicker-header {
-    width: 380px;
+    width: 400px;
   }
 
   .ui-datepicker table {
