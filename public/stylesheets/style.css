@@ -473,6 +473,43 @@ a:visited {
   font-size: 20px;
 }
 
+/* Formatted error page */
+.formatted-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+}
+
+.formatted-error h1 {
+  color: #151C1F;
+  font-size: 50px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.formatted-error h2 {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.formatted-error p {
+  color: #5F666C;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.formatted-error .button  {
+  color: white;
+  background-color: rgba(0, 106, 255, 1);
+  border: none;
+  font-size: 14px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
 /* Developer note */
 
 .developer-note {

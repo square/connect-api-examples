@@ -77,11 +77,6 @@ router.post("/create", async (req, res, next) => {
     res.redirect("/booking/" + booking.id);
 
   } catch (error) {
-    const timeNotAvailable = error.errors.find(e => e.detail.match(/That time slot is no longer available/));
-    if (timeNotAvailable) {
-      //TODO: redirect with some error message
-      return res.redirect("/");
-    }
 
     console.error(error);
     next(error);
