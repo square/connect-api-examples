@@ -207,8 +207,7 @@ class DatePickerHandler {
     const now = new Date();
     const today = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().split("T")[0];
     const formattedDate = this.formatDate(date);
-    // let date be selectable if there's availabilities for the date or
-    // if the date is today
+    // let date be selectable if there's availabilities for the date or if the date is today
     return [ this.availabilityMap[formattedDate] || formattedDate === today ];
   }
 }

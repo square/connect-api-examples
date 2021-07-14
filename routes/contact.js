@@ -48,7 +48,6 @@ router.get("/", async (req, res, next) => {
     const serviceItem = relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
     res.render("pages/contact", { serviceItem, serviceVariation, serviceVersion, startAt, teamMemberBookingProfile });
-
   } catch (error) {
     console.error(error);
     next(error);

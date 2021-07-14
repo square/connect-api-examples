@@ -124,6 +124,6 @@ This application, as an Express.js project, is organized as follows:
   * The *contact.js* file. Defines a route to display a customer contact information form before complete booking.
   * The *booking.js* file. Defines routes to get, create, reschedule, and cancel bookings.
 * The *util/* folder. Includes the following:
-  * The *square-client.js*`* file. Contains the utility code to initialize the Square SDK client.
+  * The *square-client.js* file. Contains the utility code to initialize the Square SDK client.
   * The *date-helpers.js* file. Contains the utility code to create start dates and end dates for search of booking availability
 * The *views/* folder. Provides the view (*.ejs*) files to render HTML displays.

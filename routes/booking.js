@@ -49,7 +49,6 @@ router.post("/create", async (req, res, next) => {
   const familyName = req.body.familyName;
   const givenName = req.body.givenName;
 
-
   try {
     // Retrieve catalog object by the variation ID
     const { result: { object: catalogItemVariation } } = await catalogApi.retrieveCatalogObject(serviceId);
@@ -75,9 +74,7 @@ router.post("/create", async (req, res, next) => {
     });
 
     res.redirect("/booking/" + booking.id);
-
   } catch (error) {
-
     console.error(error);
     next(error);
   }
@@ -102,7 +99,6 @@ router.post("/:bookingId/reschedule", async (req, res, next) => {
     const { result: { booking: newBooking } } = await bookingsApi.updateBooking(bookingId, { booking: updateBooking });
 
     res.redirect("/booking/" + newBooking.id);
-
   } catch (error) {
     console.error(error);
     next(error);
@@ -119,11 +115,9 @@ router.post("/:bookingId/delete", async (req, res, next) => {
 
   try {
     const { result: { booking } } = await bookingsApi.retrieveBooking(bookingId);
-
     await bookingsApi.cancelBooking(bookingId, { bookingVersion: booking.version });
 
     res.redirect("/services?cancel=success");
-
   } catch (error) {
     console.error(error);
     next(error);
@@ -161,7 +155,6 @@ router.get("/:bookingId", async (req, res, next) => {
     const serviceItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
 
     res.render("pages/confirmation", { booking, serviceItem, serviceVariation, teamMemberBookingProfile });
-
   } catch (error) {
     console.error(error);
     next(error);
@@ -213,7 +206,7 @@ router.get("/:bookingId/reschedule", async (req, res, next) => {
  * Convert a duration in milliseconds to minutes
  *
  * @param {*} duration - duration in milliseconds
- * @returns Number
+ * @returns {Number} - duration in minutes
  */
 function convertMsToMins(duration) {
   return Math.round(Number(duration) / 1000 / 60);
