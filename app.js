@@ -59,6 +59,22 @@ app.use(function (req, res, next) {
 // For simplicity, we print all error information
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
+  // error when time slot is not available when creating a booking
+  const timeNotAvailable = err.errors.find(e => e.detail.match(/That time slot is no longer available/));
+  if (timeNotAvailable) {
+    return res.render("pages/formatted-error", { code: err.statusCode, description: "Opps! This appointment time has been taken. Please try booking again.", shortDescription: "Bad Request" })
+  }
+  // error when the service version is stale when creating a booking
+  const staleVersion = err.errors.find(e => e.detail.match(/Stale version/));
+  if (staleVersion) {
+    return res.render("pages/formatted-error", { code: err.statusCode, description: "The service has been updated since selecting it. Please try booking it again.", shortDescription: "Bad Request" })
+  }
+  // error when the booking is past the cancellation period when cancelling a booking
+  const pastCancellationPeriod = err.errors.find(e => e.detail.match(/cannot cancel past cancellation period end/));
+  const endedCancellationPeriod = err.errors.find(e => e.detail.match(/The cancellation period for this booking has ended/));
+  if (pastCancellationPeriod || endedCancellationPeriod) {
+    return res.render("pages/formatted-error", { code: err.statusCode, description: "Sorry! The booking is past the cancellation period so cannot be cancelled.", shortDescription: "Bad Request" })
+  }
   res.render("pages/error", {
     // If it is a response error then format the JSON string, if not output the error
     error: err.errors ? JSON.stringify(err.errors, null, 4) : err.stack,

@@ -77,14 +77,6 @@ router.post("/create", async (req, res, next) => {
     res.redirect("/booking/" + booking.id);
 
   } catch (error) {
-    const timeNotAvailable = error.errors.find(e => e.detail.match(/That time slot is no longer available/));
-    const staleVersion = error.errors.find(e => e.detail.match(/Stale version/));
-    if (staleVersion) {
-      res.render("pages/formatted-error", { code: error.statusCode, description: "The service has been updated since selecting it. Please try booking it again.", shortDescription: "Bad Request" })
-    }
-    if (timeNotAvailable) {
-      res.render("pages/formatted-error", { code: error.statusCode, description: "Opps! This appointment time has been taken. Please try booking again.", shortDescription: "Bad Request" })
-    }
 
     console.error(error);
     next(error);
