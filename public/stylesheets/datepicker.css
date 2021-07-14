@@ -142,3 +142,38 @@ html .ui-button.ui-state-disabled:hover {
   text-align: center;
   text-decoration: none;
 }
+
+@media only screen
+and (max-width: 1150px) {
+  .ui-datepicker {
+    width: 300px;
+  }
+
+  .ui-datepicker .ui-datepicker-title {
+    font-size: 14px;
+  }
+
+  .ui-datepicker .ui-datepicker-header {
+    width: 300px;
+  }
+
+  .ui-datepicker table {
+    font-size: 12px;
+  }
+
+  .ui-datepicker th {
+    padding: 10px 0px;
+  }
+
+  .ui-datepicker td span,
+  .ui-datepicker td a {
+    padding: 5px;
+    margin: 2.5px 7.5px;
+  }
+
+  .ui-datepicker .ui-datepicker-prev,
+  .ui-datepicker .ui-datepicker-next {
+    width: 20px;
+    height: 20px;
+  }
+}

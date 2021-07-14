@@ -378,6 +378,24 @@ a:visited {
   margin-bottom: 25px;
 }
 
+#available-times {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media only screen
+and (max-width: 1150px) {
+  .availability {
+    width: 450px;
+  }
+
+  .availability button.available-time {
+    padding: 10px 7px;
+    margin: 7px;
+    width: 80px;
+  }
+}
+
 /* Contacts page */
 
 .contact-form {
