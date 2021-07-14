@@ -503,7 +503,6 @@ a:visited {
 .formatted-error .button  {
   color: white;
   background-color: rgba(0, 106, 255, 1);
-  font-weight: 500;
   border: none;
   font-size: 14px;
   padding: 12px;
