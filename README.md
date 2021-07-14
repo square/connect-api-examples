@@ -90,7 +90,7 @@ You now have appointments enabled!
 
 #### 3. Make your staff bookable
 
-1. Click on the [Staff](https://squareupsandbox.com/appointments/staff) tab on the left-hand side panel.
+1. Click on the *Staff* tab on the left-hand side panel.
 
 1. Click on the **Add Employee** button on the right side of the page.
 
@@ -102,7 +102,7 @@ You now have appointments enabled!
 
 1. Both `Amy Johnson` and `John Smith` should now be set up as service providers for the services created by the seeding command.
 
-#### 4. Run the application
+### Run the application
 
 1. Run the following command in a terminal to start the server and test the application, in the environment specified in  the *.env* file.
 
