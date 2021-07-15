@@ -27,10 +27,8 @@ $json = file_get_contents('php://input');
 $data = json_decode($json);
 $token = $data->token;
 
-$access_token = getenv('SQUARE_ACCESS_TOKEN');
-
 $square_client = new SquareClient([
-  'accessToken' => $access_token,  
+  'accessToken' => getenv('SQUARE_ACCESS_TOKEN'),
   'environment' => getenv('ENVIRONMENT')
 ]);
 
@@ -59,7 +57,7 @@ try {
   if ($response->isSuccess()) {
     echo json_encode($response->getResult());
   } else {
-    echo json_encode($response->getErrors());
+    echo json_encode(array('errors' => $response->getErrors()));
   }
 } catch (ApiException $e) {
   echo json_encode(array('errors' => $e));
