@@ -141,7 +141,7 @@ The application flow is explained with the assumption that you are familiar with
 
 ### Select services page
 
-<img src="./bin/images/select-services-screenshot.png" width="700" height="400">
+<img src="./bin/images/select-services-screenshot.png" width="700">
 
 The application's landing page is the Select Services page, where you can select one of the business services to book. The left-hand pane provides information about your business and contact information.
 
