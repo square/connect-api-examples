@@ -145,7 +145,7 @@ The application flow is explained with the assumption that you are familiar with
 
 The application's landing page is the Select Services page, where you can select one of the business services to book. The left-hand pane provides information about your business and contact information.
 
-When you open the application in the browser at <http://localhost:3000>, you are redirected to the /services route. The handler for this route retrieves all [**APPOINTMENTS_SERVICE**](https://developer.squareup.com/reference/square/enums/CatalogItemProductType#value-APPOINTMENTS_SERVICE) type services for the business location using the [Search Catalog Items](https://developer.squareup.com/reference/square/catalog/search-catalog-items) endpoint in the Catalog API.
+When you open the application in the browser at <http://localhost:3000>, you are redirected to the /services route. The handler for this route retrieves all [**APPOINTMENTS_SERVICE**](https://developer.squareup.com/reference/square/enums/CatalogItemProductType#value-APPOINTMENTS_SERVICE) type services for the business location using the [Search Catalog Items endpoint](https://developer.squareup.com/reference/square/catalog/search-catalog-items) in the Catalog API.
 
 See code in services.js:
 
