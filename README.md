@@ -141,7 +141,7 @@ The application flow is explained with the assumption that you are familiar with
 
 ### Select services page
 
-<img src="./bin/images/select-services-screenshot.png" width="300" height="500">
+<img src="./bin/images/select-services-screenshot.png" width="400" height="400">
 
 The landing page of the application is the *Select Services* page (i.e. _/services_), in which you can select one of the business services to book. Additionally, the left-hand pane will provide information about your business and location, based on your *.env* file configuration.
 
@@ -170,7 +170,7 @@ router.get("/", async (req, res, next) => {
 
 ### Select staff page
 
-<img src="./bin/images/select-staff-screenshot.png" width="300" height="500">
+<img src="./bin/images/select-staff-screenshot.png" width="400" height="400">
 
 After selecting a service in the previous page, the application will redirect you to the *Select Staff* page (i.e. _/staff/:serviceId?version_). On this page, you can select a team member that provides the service you have selected in the previous step. Additionally, you can click on the **Any team member** button if you don't want to select a specific team member. That can be useful in cases where you want to schedule an appointment during the first available time slot across all team members. The controller for this route will retrieve all bookable team members that can preform the service you have perviously selected. Those are determined by cross referencing the following API calls:
 
@@ -226,7 +226,7 @@ router.get("/:serviceId", async (req, res, next) => {
 
 ### Select availability page
 
-<img src="./bin/images/select-availability-screenshot.png" width="300" height="500">
+<img src="./bin/images/select-availability-screenshot.png" width="400" height="400">
 
 After selecting a service and a staff member to provide that service, you need to select a time for your booking/appointment. The application will redirect you to the *Select Availability* page in which you can select a time for your booking based on the available time slots for the service and the staff member combination you have selected. In this app, for simplicity, we allow booking an appointment 30 days to 4 hours in advance. By interacting with our calendar, you will be able to view the different available time slots for each day. The controller for this route (_/availability/:staffId/:serviceId?version_) will use the *dateHelper* utility (i.e. date-helper.js), as well as several API calls (mentioned in previous sections) to render the available times. Most importantly, it uses the [Search Availability API](https://developer.squareup.com/reference/square/bookings/search-availability) call to get available times for a specific service and team member combination.
 
@@ -302,7 +302,7 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
 
 ### Contact details page
 
-<img src="./bin/images/contact-details-screenshot.png" width="300" height="500">
+<img src="./bin/images/contact-details-screenshot.png" width="400" height="400">
 
 After selecting service, staff member, and an available time slot for your appointment, the application will redirect you to the *Contact Details* page, in which you will provide your contact information. The information that you provide as part of this form will only be used to create a customer for you using the [Create Customer API](https://developer.squareup.com/reference/square/customers/create-customer), which is necessary in order to book an appointment. When testing, feel free to provide fake information. The controller for this route (i.e. _/booking/create_) will receive this POST request with the user information, and eventually call the [Create Booking API](https://developer.squareup.com/reference/square/bookings-api/create-booking) in order to create and schedule the appointment based on the service, team member, and availability provided in previous steps.
 
@@ -354,7 +354,7 @@ router.post("/create", async (req, res, next) => {
 
 ### Confirmation page
 
-<img src="./bin/images/confirmation-page-screenshot.png" width="300" height="500">
+<img src="./bin/images/confirmation-page-screenshot.png" width="400" height="400">
 
 If the booking was created successfully, you will be redirected to the *Confirmation* page. This page contains information about your scheduled appointment, such as the service name and description, the staff member, location information, date and time, etc. You will also see two different buttons to either *modify* or *cancel* your appointment. The controller for this route (i.e. _/booking/:bookingId_) will get the data to be rendered on this page by using several APIs mentioned in previous steps, but most importantly, the [Retrieve Booking API](https://developer.squareup.com/reference/square/bookings-api/retrieve-booking) which returns information about a specific booking, based on the booking ID.
 
@@ -393,7 +393,7 @@ router.get("/:bookingId", async (req, res, next) => {
 
 ### Modify/reschedule booking page
 
-<img src="./bin/images/modify-booking-screenshot.png" width="300" height="500">
+<img src="./bin/images/modify-booking-screenshot.png" width="400" height="400">
 
 By pressing on the **Modify booking** button in the confirmation page, you can modify the date/time of the appointment you have just created. You will be redirected to a screen similar to the *Select Availability* page, where you can re-select you desired time slot. This time however, clicking on a time slot will modify your previous booking right away, and there is no need to provide your contact information once again. The controller for this route (i.e. _/:bookingId/reschedule_) will use the [Search Availability API](https://developer.squareup.com/reference/square/bookings/search-availability) to find the available time slots for the booking. Once you pick a time slot, the controller for that route (i.e. POST _/booking/:bookingId/reschedule_) will run and use the [Update Booking API](https://developer.squareup.com/reference/square/bookings-api/update-booking) in order to modify your existing booking.
 
@@ -467,7 +467,7 @@ router.post("/:bookingId/reschedule", async (req, res, next) => {
 
 ### Cancel booking action
 
-<img src="./bin/images/cancel-booking-screenshot.png" width="300" height="500">
+<img src="./bin/images/cancel-booking-screenshot.png" width="400" height="400">
 
 By pressing on the **Cancel booking** button in the confirmation page, the controller for this route (i.e. _POST /booking/:bookingId/delete_) will run and cancel your booking. It will use the [Cancel Booking API](https://developer.squareup.com/reference/square/bookings-api/cancel-booking) to do so. You will then be redirected to the initial landing page (i.e. _/services_), with an appropriate toast. This can be seen in the screenshot above.
 
