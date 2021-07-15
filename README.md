@@ -4,7 +4,7 @@
 * [Bookings API Overview](https://developer.squareup.com/docs/bookings-api/what-it-is)
 * [Bookings API Reference](https://developer.squareup.com/reference/square/bookings-api)
 
-# Booking API Sample App
+# Bookings API Sample App
 
 * [Overview](#overview)
 * [Setup](#setup)
@@ -143,9 +143,11 @@ The application flow is explained with the assumption that you are familiar with
 
 <img src="./bin/images/select-services-screenshot.png" width="700" height="400">
 
-The landing page of the application is the *Select Services* page (i.e. _/services_), in which you can select one of the business services to book. Additionally, the left-hand pane will provide information about your business and location, based on your *.env* file configuration.
+The application's landing page is the Select Services page, where you can select one of the business services to book. The left-hand pane provides information about your business and contact information.
 
-When you first open the browser to the app (i.e. <http://localhost:3000>), you will be redirected to the _/services_ route. The controller for this route will retrieve all services for the business location (based on your *.env* configuration), by calling the Search Catalog Items API with the **APPOINTMENTS_SERVICE** product type. See code in services.js:
+When you open the application in the browser at <http://localhost:3000>, you are redirected to the /services route. The handler for this route retrieves all [**APPOINTMENTS_SERVICE**](https://developer.squareup.com/reference/square/enums/CatalogItemProductType#value-APPOINTMENTS_SERVICE) type services for the business location using the [Search Catalog Items](https://developer.squareup.com/reference/square/catalog/search-catalog-items) endpoint in the Catalog API.
+
+See code in services.js:
 
 ```javascript
 router.get("/", async (req, res, next) => {
@@ -170,13 +172,12 @@ router.get("/", async (req, res, next) => {
 
 ### Select staff page
 
-<img src="./bin/images/select-staff-screenshot.png" width="700" height="400">
+<img src="./bin/images/select-staff-screenshot.png" width="700">
 
-After selecting a service in the previous page, the application will redirect you to the *Select Staff* page (i.e. _/staff/:serviceId?version_). On this page, you can select a team member that provides the service you have selected in the previous step. Additionally, you can click on the **Any team member** button if you don't want to select a specific team member. That can be useful in cases where you want to schedule an appointment during the first available time slot across all team members. The controller for this route will retrieve all bookable team members that can preform the service you have perviously selected. Those are determined by cross referencing the following API calls:
+After selecting service on the previous page, the application redirects you to the *Select Staff* page (i.e. _/staff/:serviceId?version_), where you can select one or any active team member. When choosing the *Any team member* option, the handler retrieves all bookable active team members that can perform the service by cross-referencing multiple APIs. This is necessary due to the fact team members are managed by both the Team API and the Bookings API. The handler first needs to find all active team members that are capable of providing the chosen service using the Team API. Then, it needs to verify that those team members are bookable, using the Bookings API. The major endpoints used in the handler are:
 
-*[Retrieve Catalog Object](https://developer.squareup.com/reference/square/catalog/retrieve-catalog-object)
-*[List Team Member Booking Profiles](https://developer.squareup.com/reference/square/bookings/list-team-member-booking-profiles)
-*[Search Team Members](https://developer.squareup.com/reference/square/team/search-team-members)
+* [List Team Member Booking Profiles](https://developer.squareup.com/reference/square/bookings/list-team-member-booking-profiles)
+* [Search Team Members](https://developer.squareup.com/reference/square/team/search-team-members)
 
 For more information, see code in staff.js:
 
@@ -226,9 +227,9 @@ router.get("/:serviceId", async (req, res, next) => {
 
 ### Select availability page
 
-<img src="./bin/images/select-availability-screenshot.png" width="700" height="400">
+<img src="./bin/images/select-availability-screenshot.png" width="700">
 
-After selecting a service and a staff member to provide that service, you need to select a time for your booking/appointment. The application will redirect you to the *Select Availability* page in which you can select a time for your booking based on the available time slots for the service and the staff member combination you have selected. In this app, for simplicity, we allow booking an appointment 30 days to 4 hours in advance. By interacting with our calendar, you will be able to view the different available time slots for each day. The controller for this route (_/availability/:staffId/:serviceId?version_) will use the *dateHelper* utility (i.e. date-helper.js), as well as several API calls (mentioned in previous sections) to render the available times. Most importantly, it uses the [Search Availability API](https://developer.squareup.com/reference/square/bookings/search-availability) call to get available times for a specific service and team member combination.
+Next you need to select a start time for your booking. In the *Select Availability* page we allow booking an appointment 4 hours to 30 days in advance. The handler for this route (_/availability/:staffId/:serviceId?version_) uses the [Search Availability endpoint](https://developer.squareup.com/reference/square/bookings/search-availability) in the Bookings API to retrieve the available times for a specific service and team member(s).
 
 For more information, see code in availability.js:
 
@@ -302,9 +303,9 @@ router.get("/:staffId/:serviceId", async (req, res, next) => {
 
 ### Contact details page
 
-<img src="./bin/images/contact-details-screenshot.png" width="700" height="400">
+<img src="./bin/images/contact-details-screenshot.png" width="700">
 
-After selecting service, staff member, and an available time slot for your appointment, the application will redirect you to the *Contact Details* page, in which you will provide your contact information. The information that you provide as part of this form will only be used to create a customer for you using the [Create Customer API](https://developer.squareup.com/reference/square/customers/create-customer), which is necessary in order to book an appointment. When testing, feel free to provide fake information. The controller for this route (i.e. _/booking/create_) will receive this POST request with the user information, and eventually call the [Create Booking API](https://developer.squareup.com/reference/square/bookings-api/create-booking) in order to create and schedule the appointment based on the service, team member, and availability provided in previous steps.
+The next page is the *Contact Details* page - in order to create a booking we need to create a [Customer](https://developer.squareup.com/reference/square/objects/Customer) using [Create Customer endpoint](https://developer.squareup.com/reference/square/customers/create-customer) in the Customers API. The handler for this route (_/booking/create_) creates the customer or retrieves the existing customer for the given customer details and then calls [Create Booking endpoint](https://developer.squareup.com/reference/square/bookings-api/create-booking) in the Bookings API to create the booking.
 
 For more information, see code in booking.js:
 
@@ -354,9 +355,9 @@ router.post("/create", async (req, res, next) => {
 
 ### Confirmation page
 
-<img src="./bin/images/confirmation-page-screenshot.png" width="700" height="400">
+<img src="./bin/images/confirmation-page-screenshot.png" width="700">
 
-If the booking was created successfully, you will be redirected to the *Confirmation* page. This page contains information about your scheduled appointment, such as the service name and description, the staff member, location information, date and time, etc. You will also see two different buttons to either *modify* or *cancel* your appointment. The controller for this route (i.e. _/booking/:bookingId_) will get the data to be rendered on this page by using several APIs mentioned in previous steps, but most importantly, the [Retrieve Booking API](https://developer.squareup.com/reference/square/bookings-api/retrieve-booking) which returns information about a specific booking, based on the booking ID.
+If the booking was created successfully, you will be redirected to the *Confirmation* page. This page contains information about your scheduled appointment, such as the service name and description, the staff member, location information, date and time, etc. You will also see two different buttons to either *reschedule* or *cancel* your appointment. The handler for this route (_/booking/:bookingId_) aggregates the data to be rendered on this page by using several APIs mentioned in previous steps, but most importantly, the [Retrieve Booking endpoint](https://developer.squareup.com/reference/square/bookings-api/retrieve-booking) in the Bookings API, which returns information about a specific booking, based on the booking ID.
 
 For more information, see code in booking.js:
 
@@ -391,11 +392,11 @@ router.get("/:bookingId", async (req, res, next) => {
 });
 ```
 
-### Modify/reschedule booking page
+### Reschedule booking page
 
-<img src="./bin/images/modify-booking-screenshot.png" width="700" height="400">
+<img src="./bin/images/modify-booking-screenshot.png" width="700">
 
-By pressing on the **Modify booking** button in the confirmation page, you can modify the date/time of the appointment you have just created. You will be redirected to a screen similar to the *Select Availability* page, where you can re-select you desired time slot. This time however, clicking on a time slot will modify your previous booking right away, and there is no need to provide your contact information once again. The controller for this route (i.e. _/:bookingId/reschedule_) will use the [Search Availability API](https://developer.squareup.com/reference/square/bookings/search-availability) to find the available time slots for the booking. Once you pick a time slot, the controller for that route (i.e. POST _/booking/:bookingId/reschedule_) will run and use the [Update Booking API](https://developer.squareup.com/reference/square/bookings-api/update-booking) in order to modify your existing booking.
+You can reschedule bookings by clicking on the *Reschedule booking* button on the confirmation page. Once a new time slot is selected the controller for the route (POST _/booking/:bookingId/reschedule_) uses the [Update Booking endpoint](https://developer.squareup.com/reference/square/bookings-api/update-booking) in the Bookings API to modify the existing booking.
 
 For more information, see code in booking.js:
 
@@ -467,9 +468,9 @@ router.post("/:bookingId/reschedule", async (req, res, next) => {
 
 ### Cancel booking action
 
-<img src="./bin/images/cancel-booking-screenshot.png" width="700" height="400">
+<img src="./bin/images/cancel-booking-screenshot.png" width="700">
 
-By pressing on the **Cancel booking** button in the confirmation page, the controller for this route (i.e. _POST /booking/:bookingId/delete_) will run and cancel your booking. It will use the [Cancel Booking API](https://developer.squareup.com/reference/square/bookings-api/cancel-booking) to do so. You will then be redirected to the initial landing page (i.e. _/services_), with an appropriate toast. This can be seen in the screenshot above.
+You can cancel an appointment by clicking on the **Cancel booking** button in the confirmation page. The handler for this route (POST _/booking/:bookingId/delete_) uses the [Cancel Booking endpoint](https://developer.squareup.com/reference/square/bookings-api/cancel-booking) in the Bookings API to cancel your appointment. The handler then redirects to the initial landing page (_/services_), with an appropriate toast. This can be seen in the screenshot above.
 
 For more information, see code in booking.js:
 
