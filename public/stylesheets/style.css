@@ -154,6 +154,7 @@ a:visited {
   margin-right: 20px;
   position: static;
   margin: 4px 20px 4px 0px;
+  width: 95%;
 }
 
 .business__location {
