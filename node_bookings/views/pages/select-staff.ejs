@@ -1,0 +1,143 @@
+<% include("../functions") %>
+<html>
+
+<head>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+
+  <div class="content">
+    <div class="content-left">
+      <a class="button" href="/services"><span class="icon back-arrow"></span> Back</a>
+      <div class="steps">
+        <div class="steps__step">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Services</span>
+              <a href="/services">Edit</a>
+            </div>
+            <div class="steps__step-body">
+              <div class="steps__step-name">
+                <%= serviceItem.itemData.name %>
+              </div>
+              <div class="steps__step-description">
+                <%= formatTime(serviceVariation.itemVariationData.serviceDuration) %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="steps__step selected">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Select staff</span>
+              <span class="icon side-caret-selected"></span>
+            </div>
+          </div>
+        </div>
+        <div class="steps__step">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Appointment time</span>
+            </div>
+          </div>
+        </div>
+        <div class="steps__step">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Enter your details</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-main">
+      <h4>Select a staff member</h4>
+      <div class="staff">
+        <% if (bookableStaff.length > 0) { %>
+          <a href="/availability/anyStaffMember/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
+            <div class="staff__card">
+              <div class="staff__card-wrapper">
+                <div class="staff__card-picture" id="any-staff">
+                  <div class="staff__card-picture-wrapper" id="image-1">
+                    <% if (bookableStaff[0].profileImageUrl) { %>
+                      <img src="<%= bookableStaff[0].profileImageUrl %>" />
+                      <% } else { %>
+                        <%= getStaffInitials(bookableStaff[0].displayName) %>
+                          <% }; %>
+                  </div>
+                  <div class="staff__card-picture-wrapper" id="image-2">
+                    <% if (bookableStaff.length>= 2) { %>
+                      <% if (bookableStaff[1].profileImageUrl) { %>
+                        <img src="<%= bookableStaff[1].profileImageUrl %>" />
+                      <% } else { %>
+                        <%= getStaffInitials(bookableStaff[1].displayName) %>
+                      <% }; %>
+                        <% } else { %>
+                      <%= getStaffInitials("any") %>
+                    <% }; %>
+                  </div>
+                </div>
+                <div class="staff__card-details">
+                  <div class="staff__card-name">Any available staff member</div>
+                  <div class="staff__card-description">
+                    Looking for the first available appointment? Choose this option to find the first available
+                    appointment.
+                  </div>
+                </div>
+              </div>
+              <span class="icon plus"></span>
+            </div>
+          </a>
+        <% } %>
+
+        <% bookableStaff.forEach(function(staff) { %>
+          <a href="/availability/<%= staff.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>">
+            <div class="staff__card">
+              <div class="staff__card-wrapper">
+                <div class="staff__card-picture">
+                  <div class="staff__card-picture-wrapper">
+                    <% if (staff.profileImageUrl) { %>
+                      <img src="<%= staff.profileImageUrl %>" />
+                    <% } else { %>
+                      <%= getStaffInitials(staff.displayName) %>
+                    <% }; %>
+                  </div>
+                </div>
+                <div class="staff__card-details">
+                  <div class="staff__card-name">
+                    <%= staff.displayName %>
+                  </div>
+                  <div class="staff__card-description">
+                    <%= staff.description || "No description." %>
+                  </div>
+                </div>
+              </div>
+              <span class="icon plus"></span>
+            </div>
+          </a>
+        <% }); %>
+        <% if (!bookableStaff.length) {%>
+          <div class="card__wrapper disabled"></div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <% if (!bookableStaff.length) {%>
+    <div class="developer-note">
+      <div>
+        <h5>Developer note</h5>
+        <span>Looks like you don’t have any bookable staff members setup yet. Run the seeding script or use the <a href="https://developer.squareup.com/explorer/square/team-api/create-team-member" target="_blank">API Explorer</a>
+           to create team members, then visit the Seller Dashboard for your environment to mark those team members as bookable for your business location.
+           For more information, check our README file.
+        </span>
+      </div>
+    </div>
+  <% } %>
+
+</body>
+
+</html>

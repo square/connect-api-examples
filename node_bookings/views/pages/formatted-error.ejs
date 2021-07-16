@@ -1,0 +1,20 @@
+<html>
+
+  <head>
+    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+  </head>
+
+  <body>
+    <header>
+      <%- include("../partials/header") %>
+    </header>
+  
+    <div class="formatted-error">
+      <p>HTTP <%= code %></p>
+      <h1><%= shortDescription %></h1>
+      <h2><%= description %></h2>
+      <a class="button" href="/services">Back to Home</a>
+    </div>
+  </body>
+
+</html>
