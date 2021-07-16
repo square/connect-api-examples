@@ -35,8 +35,8 @@
   background-image: none !important;
 }
 
-.ui-datepicker-prev:before,
-.ui-datepicker-next:before {
+.ui-datepicker-prev::before,
+.ui-datepicker-next::before {
   position: absolute;
   top: 0;
   right: 0;
@@ -48,12 +48,12 @@
   justify-content: center;
 }
 
-.ui-datepicker-prev:before {
+.ui-datepicker-prev::before {
   content: "\276E";
   font-size: 17px;
 }
 
-.ui-datepicker-next:before {
+.ui-datepicker-next::before {
   content: "\276F";
   font-size: 17px;
 }
