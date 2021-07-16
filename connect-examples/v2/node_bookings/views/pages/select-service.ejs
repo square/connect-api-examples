@@ -1,0 +1,116 @@
+<% include("../functions") %>
+<html>
+
+<head>
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+  <div class="content">
+    <div class="content-left business">
+      <div class="business__logo">
+        <%if (location.logoUrl) { %>
+          <img src="<%= location.logoUrl %>">
+        <% } else { %>
+          <img src="/images/blank-logo.svg">
+        <% } %>
+      </div>
+      <h3>
+        <%= location.businessName || location.name %>
+      </h3>
+      <%if (location.description) { %>
+        <h5> <%= location.description %> </h5>
+      <% } %>
+      <div class="business__location">
+        <h4>Location</h4>
+        <div>
+          <%if (location.address) { %>
+            <%if (location.address.addressLine1) { %>
+              <span><%= location.address.addressLine1 %>, </span> <br>
+            <% } %>
+            <%if (location.address.addressLine2) { %>
+              <span><%= location.address.addressLine2 %>, </span>
+            <% } %>
+            <span>
+              <%= location.address.locality %>,
+              <%= location.address.administrativeDistrictLevel1 %>,
+              <%= location.address.postalCode %>
+            </span>
+          <% } else { %>
+            <span>No location information</span>
+          <% } %>
+        </div>
+      </div>
+      <div class="business__contact">
+      <h4>Contact</h4>
+      <%if (location.phoneNumber || location.businessEmail) { %>
+        <%if (location.businessEmail) { %>
+          Email: <span> <%= location.businessEmail %> </span>
+          <br>
+        <% } %>
+        <%if (location.phoneNumber) { %>
+          Phone:
+          <span> <%= location.phoneNumber %> </span>
+        <% } %>
+      <% } else { %>
+          <span>No contact information</span>
+      <% } %>
+      </div>
+      <%if (cancel === "success") { %>
+        <div class="success-toast">
+          <div>
+            <img src="/images/success.svg">Your booking was cancelled successfully!
+          </div>
+        </div>
+      <% } %>
+    </div>
+    <div class="content-main services">
+      <h4> Book an appointment </h4>
+      <h4 class="title">Services</h4>
+      <h4 class="underline"></h4>
+      <div class="cards">
+        <% items.forEach(function(item) { %>
+          <% item.itemData.variations.forEach(function(variation) { %>
+            <a href="/staff/<%= variation.id %>?version=<%= variation.version %>">
+              <div class="card__wrapper">
+                <div class="card__info">
+                  <h4><%= item.itemData.name %> - <%= variation.itemVariationData.name %></h4>
+                  <h5 class="card__description"><%= item.itemData.description %></h5>
+                  <span class="card__details">
+                    <%if (variation.itemVariationData.pricingType === "FIXED_PRICING") { %>
+                      <%= formatMoney(variation.itemVariationData.priceMoney.amount, variation.itemVariationData.priceMoney.currency) %>
+                    <% } else { %>
+                      Price Varies
+                    <% } %>
+                    • <%= formatTime(variation.itemVariationData.serviceDuration) %>
+                    </span>
+                </div>
+                <span class="card__icon"></span>
+                <img src="images/side-caret.svg">
+              </div>
+            </a>
+          <%}); %>
+        <%}); %>
+        <% if (!items.length) {%>
+          <div class="card__wrapper disabled"></div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <% if (!items.length) {%>
+    <div class="developer-note">
+      <div>
+        <h5>Developer note</h5>
+        <span>Looks like you don’t have any services setup yet. Run the seeding script or use the 
+          <a href="https://developer.squareup.com/explorer/square/catalog-api/upsert-catalog-object" target="_blank">API Explorer</a> or the Seller Dashboard for your environment
+          to create your first service. For more information, check our README file.
+        </span>
+      </div>
+    </div>
+  <% } %>
+</body>
+
+</html>

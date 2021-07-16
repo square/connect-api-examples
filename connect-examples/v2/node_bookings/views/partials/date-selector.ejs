@@ -1,0 +1,43 @@
+<head>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link href="/stylesheets/datepicker.css" rel="stylesheet" type="text/css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $("#datepicker").datepicker({
+      beforeShowDay: function(date) {
+        return datePickerHandler.isSelectable(date);
+      },
+      dateFormat: 'yy-mm-dd',
+      minDate: 0,
+      maxDate: "30d"
+    });
+    $("#datepicker").on("change", function() {
+      datePickerHandler.selectNewDate($(this).val());
+    })
+  } );
+  </script>
+  <script src="/js/date-picker-handler.js"></script>
+</head>
+    
+<div class="availability">
+  <h4> Select appointment date </h4>
+  <div id="datepicker"></div>
+  <h4> Available Times </h4>
+
+  <p> You can schedule an appointment between 4 hours and 30 days ahead of time. </p>
+
+  <% if (getLocalTimezone() !== location.timezone) { %>
+    <div class="timezone-warning">
+      <span class="notify-icon"> &#9888; </span>
+      <span> <b>HEADS UP!</b> It looks like you're in a different timezone. Times below are shown in <%= location.timezone %> time.</span>
+    </div>
+  <% } %>
+  
+  <div id="available-times">
+  </div>
+</div>
+<script>
+  const datePickerHandler = new DatePickerHandler(<%- stringifyJSON(availabilities) %>, "<%- serviceId %>", "<%- serviceVersion %>", "<%- locals.bookingId %>", "<%- location.timezone %>");
+</script>

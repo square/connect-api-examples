@@ -1,0 +1,29 @@
+<% include("../functions") %>
+<html>
+  <head>
+    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <header>
+      <%- include("../partials/header") %>
+    </header>
+    <div class="content">
+      <div class="content-left">
+        <a class="button" href="/booking/<%= bookingId %>"><span class="icon back-arrow"></span> Back to booking </a>
+        <div class="steps">
+          <div class="steps__step selected">
+            <div class="steps__step-wrapper">
+              <div class="steps__step-title">
+                <span>Reschedule Appointment</span>
+                <span class="icon side-caret-selected"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-main">
+        <%- include('../partials/date-selector', { availabilities }); %>
+      </div>
+    </div>
+  </body>
+</html>

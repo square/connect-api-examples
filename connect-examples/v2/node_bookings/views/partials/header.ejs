@@ -1,0 +1,16 @@
+<div class="top-nav">
+    <div class="top-nav__logo">
+      <a href="/services">
+        <%if (location.logoUrl) { %>
+          <img src="<%= location.logoUrl %>">
+        <% } else { %>
+          <img src="/images/blank-logo-sm.svg">
+        <% } %>
+      </a>
+  </div>
+  <div class="top-nav__name">
+    <a href="/services">
+      <%= location.businessName || location.name %>
+    </a>
+  </div>
+</div>

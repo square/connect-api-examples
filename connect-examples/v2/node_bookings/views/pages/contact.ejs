@@ -1,0 +1,94 @@
+<% include("../functions") %>
+<html>
+
+<head>
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+
+  <div class="content">
+    <div class="content-left">
+      <a class="button" href="/availability/<%= teamMemberBookingProfile.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>"><span class="icon back-arrow"></span> Back</a>
+      <div class="steps">
+        <div class="steps__step">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Services</span>
+              <a href="/services">Edit</a>
+            </div>
+            <div class="steps__step-body">
+              <div class="steps__step-name">
+                <%= serviceItem.itemData.name %>
+              </div>
+              <div class="steps__step-description">
+                <%= formatTime(serviceVariation.itemVariationData.serviceDuration) %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="steps__step">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Select staff</span>
+              <a href="/staff/<%= serviceVariation.id %>?version=<%= serviceVersion %>">Edit</a>
+            </div>
+            <div class="availability-staff__card-wrapper">
+              <div class="staff__card-picture-wrapper">
+                <% if (teamMemberBookingProfile.profileImageUrl) { %>
+                  <img src="<%= teamMemberBookingProfile.profileImageUrl %>" />
+                <% } else { %>
+                  <%= getStaffInitials(teamMemberBookingProfile.displayName) %>
+                <% } %>
+              </div>
+              <div class="steps__staff-step-body">
+                <div class="steps__step-name">
+                  <%= teamMemberBookingProfile.displayName %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="steps__step">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Appointment time</span>
+              <a href="/availability/<%= teamMemberBookingProfile.teamMemberId %>/<%= serviceVariation.id %>?version=<%= serviceVersion %>">Edit</a>
+            </div>
+            <div class="steps__step-body">
+              <div class="steps__step-name">
+                <%= convertDateToText(startAt, location.timezone) %>
+              </div>
+              <div class="steps__step-description">
+                <%= convertTimeToText(startAt, location.timezone) %>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="steps__step selected">
+          <div class="steps__step-wrapper">
+            <div class="steps__step-title">
+              <span>Enter your details</span>
+              <span class="icon side-caret-selected"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content-main">
+      <h4>Enter your details</h4>
+      <form class="sq-form-control contact-form" method="POST" action="/booking/create?serviceId=<%= serviceVariation.id %>&staffId=<%= teamMemberBookingProfile.teamMemberId %>&version=<%= serviceVersion %>&startAt=<%= startAt %>">
+        <input class="half-width" type="text" name="givenName" required maxlength="50" placeholder="First name" />
+        <input class="half-width" type="text" name="familyName" required maxlength="50" placeholder="Last name" />
+        <input class="half-width" name="emailAddress" required maxlength="320" placeholder="Email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" title="Invalid email address" />
+        <textarea name="customerNote" placeholder="Appointment notes (optional)" maxlength="1500" rows="5"></textarea>
+
+        <button class="button btn-primary" type="submit">Book appointment</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

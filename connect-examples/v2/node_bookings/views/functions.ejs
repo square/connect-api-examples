@@ -1,0 +1,182 @@
+<%
+/**
+ * Helper function to format time from milliseconds to human readable text
+ * E.g. 5400000 milliseconds to "1 hour 30 mins".
+ * @param {Number} durationInMs
+ */
+formatTime = function(durationInMs) {
+  const duration = Number(durationInMs);
+  const minutes = Math.floor(duration / (1000 * 60) % 60);
+  const hours = Math.floor(duration / (1000 * 60 * 60) % 24);
+
+  let msg = [];
+  if (hours > 0) {
+    msg.push(hours);
+    msg.push((hours > 1) ? "hours" : "hour");
+  }
+
+  if (minutes > 0) {
+    msg.push(minutes);
+    msg.push((minutes > 1) ? "mins" : "min");
+  }
+
+  if (msg.length > 0) {
+    return msg.join(" ");
+  } else {
+    return "Unknown duration"
+  }
+}
+
+/**
+ * Helper function to format money into appropriate currency and rounding.
+ * If the value is an integer (i.e. no decimal places), do not show `.00`.
+ * @param {Number} value the amount
+ * @param {String} currency the currency code
+ */
+formatMoney = function(value, currency) {
+  let valueAsNumber = Number(value);
+  // Create number formatter.
+  const props = {
+    style: 'currency',
+    currency: currency,
+    minimumFractionDigits: 2
+  };
+  // If the value is an integer, show no decimal digits.
+  if (valueAsNumber % 1 == 0) {
+    props.minimumFractionDigits = 0;
+  }
+  
+  // Some currencies don't need to use higher denominations to represent values.
+  if (currency !== "JPY") {
+    valueAsNumber /= 100.0;
+  }
+  const formatter = new Intl.NumberFormat('en-US', props);
+  return formatter.format(valueAsNumber);
+}
+
+/**
+ * Helper function to get the initials of a staff member based on their display name
+ *
+ * @param {String} displayName the display name of the staff
+ */
+getStaffInitials = function(displayName) {
+  return displayName.toUpperCase()[0];
+}
+
+/**
+ * Helper function to convert date into a human readable date 
+ * 
+ * e.g. 2021-07-09T16:00:00Z -> Friday, July 09, 2021
+ *
+ * @param {String} dateStr the ISO string date
+ * @param {String} businessTimeZone the IANA timezone of the business
+ */
+convertDateToText = function(dateStr, businessTimeZone) {
+  const date = new Date(dateStr);
+  const d = new Date(date.toLocaleString("en-US", { timeZone: businessTimeZone }));
+  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const weekday = weekdays[d.getDay()];
+  const month = months[d.getMonth()];
+  const day = d.getDate();
+  const year = d.getFullYear();
+
+  let ordinalIndicator = "th";
+  const lastChar = day.toString().charAt(day.toString().length-1);
+
+  if (lastChar === "1" && day.toString() !== "11") {
+    ordinalIndicator = "st";
+  } else if (lastChar === "2" && day.toString() !== "12") {
+    ordinalIndicator = "nd";
+  } else if (lastChar === "3" && day.toString() !== "13") {
+    ordinalIndicator = "rd";
+  }
+
+  return `${weekday}, ${month} ${day}${ordinalIndicator}, ${year}`;
+}
+
+/**
+ * Helper function to convert a date into hour:min (AM/PM) format.
+ *
+ * @param {String} dateStr the ISO string date
+ * @param {String} businessTimeZone the IANA timezone of the business
+ */
+convertTimeToText = function(dateStr, businessTimeZone) {
+  const date = new Date(dateStr);
+  const d = new Date(date.toLocaleString("en-US", { timeZone: businessTimeZone }));
+
+  let hours = d.getHours();
+  let minutes = d.getMinutes();
+
+  hours = hours % 12 ? hours % 12 : 12;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+
+  return `${hours}:${minutes} ${d.getHours() >= 12 ? "pm" : "am"}`;
+}
+
+/**
+* Retrieve the local time zone in IANA format
+*/
+getLocalTimezone = function() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
+/**
+ * A helper function to stringify JSON objects that contains bigint.
+ */
+stringifyJSON = function(data) {
+  return JSON.stringify(data, (key, value) =>
+    typeof value === "bigint" ? value.toString() : value
+  );
+}
+
+/**
+ * Helper function to convert a date and a duration into a readable time range.
+ * If the two dates are on the same day, show only one date.
+ * e.g. 2021-07-09T16:00:00Z, 30 min -> Friday, July 09, 2021 9:00 AM - 9:30 AM
+ * e.g. 2021-08-09T04:30:00Z, 30 min -> Friday, July 09, 2021 11:30 PM - Saturday, July 10, 2021 12:00 AM
+ *
+ * The result is an array of the parts, so that the callee can format the different parts into different lines.
+ * @param {String} current the current date to use
+ * @param {String} businessTimeZone IANA timezone of the business
+ * @param {Number} minutes the duration of the booking
+ */
+formatDateToParts = function(current, businessTimeZone, minutes) {
+  const currentDate = new Date(new Date(current).toLocaleString("en-US", { timeZone: businessTimeZone }));
+  const futureDate = new Date(currentDate.getTime() + minutes * 60000);
+
+  const currentDateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const currentHourOptions = { hour: 'numeric', minute: 'numeric'};
+  const currentDateFormatter = new Intl.DateTimeFormat('en-US', currentDateOptions);
+  const currentHourFormatter = new Intl.DateTimeFormat('en-US', currentHourOptions);
+
+  const futureOptions = { hour: 'numeric', minute: 'numeric' };
+  // if is not the same day, show full date for the future date. Otherwise just show time.
+  const sameDay = isSameDay(currentDate, futureDate);
+  if (!sameDay) {
+    futureOptions.weekday = 'long';
+    futureOptions.year = 'numeric';
+    futureOptions.month = 'long';
+    futureOptions.day = 'numeric';
+  }
+
+  const futureFormatter = new Intl.DateTimeFormat('en-US', futureOptions);
+  return sameDay ?
+    [ currentDateFormatter.format(currentDate), currentHourFormatter.format(currentDate) + " - " + futureFormatter.format(futureDate) ] :
+    [ currentDateFormatter.format(currentDate) + ", " + currentHourFormatter.format(currentDate), " - ", futureFormatter.format(futureDate) ];
+
+}
+
+/**
+ * Helper function to check whether two dates are on the same day.
+ *
+ * @param {Date} date1 the first date to use for the comparison
+ * @param {Date} date2 the second date to use for the comparison
+ */
+isSameDay = function(date1, date2) {
+  return (date1.getDate() === date2.getDate() 
+     && date1.getMonth() === date2.getMonth()
+     && date1.getFullYear() === date2.getFullYear());
+}
+%>

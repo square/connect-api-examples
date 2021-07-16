@@ -1,0 +1,79 @@
+<% include("../functions") %>
+<html>
+
+<head>
+  <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header>
+    <%- include("../partials/header") %>
+  </header>
+  <div class="container">
+    <div class="content__service message">
+      <h3> Thank you for booking with us </h3>
+      <div class="content__service message-sm">
+        <span> Your appointment has been approved.</span>
+      </div>
+      <div class="content__card">
+        <div class="content__card-wrapper">
+          <div>
+            <div class="staff__card-wrapper confirm">
+              <div class="staff__card-picture-wrapper">
+                <% if (teamMemberBookingProfile && teamMemberBookingProfile.profileImageUrl) { %>
+                  <img src="<%= teamMemberBookingProfile.profileImageUrl %>" />
+                <% } else if (teamMemberBookingProfile) { %>
+                  <%= getStaffInitials(teamMemberBookingProfile.displayName) %>
+                <% } %>
+              </div>
+              <div class="staff__card-details--confirm">
+                <span class="message-sm">Scheduled with</span>
+                <h4><%= teamMemberBookingProfile.displayName %></h4>
+              </div>
+            </div>
+          </div>
+          <div class="content__card-date">
+            <h5>
+              <% formatDateToParts(booking.startAt, location.timezone, booking.appointmentSegments[0].durationMinutes).forEach(function(part) { %>
+                <%= part %>
+                <br>
+              <%}); %>
+            </h5>
+          </div>
+          <div class="content__card-description">
+            <span><%= serviceItem.itemData.name %> - <%= serviceVariation.itemVariationData.name %></span>
+          </div>
+          <div class="business__location">
+            <div>
+              <%if (location.address) { %>
+                <%if (location.address.addressLine1) { %>
+                  <span><%= location.address.addressLine1 %>, </span> <br>
+                <% } %>
+                <%if (location.address.addressLine2) { %>
+                  <span><%= location.address.addressLine2 %>, </span>
+                <% } %>
+                <span>
+                  <%= location.address.locality %>,
+                  <%= location.address.administrativeDistrictLevel1 %>,
+                  <%= location.address.postalCode %>
+                </span>
+              <% } else { %>
+                <span>No location information</span>
+              <% } %>
+            </div>
+          </div>
+          <div class="button__group">
+            <form class="sq-form-control" action="/booking/<%= booking.id %>/reschedule" method="GET">
+              <button class="button btn-primary" type="submit"> Reschedule booking </button>
+            </form>
+            <form class="sq-form-control" action="/booking/<%= booking.id %>/delete" method="POST">
+              <button class="button btn-secondary" type="submit">Cancel booking</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

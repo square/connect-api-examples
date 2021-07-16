@@ -1,0 +1,80 @@
+<% include("../functions") %>
+<html>
+  <head>
+    <link href="/stylesheets/style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <header>
+      <%- include("../partials/header") %>
+    </header>
+    <div class="content">
+      <div class="content-left">
+        <a class="button" href="/staff/<%= serviceId %>?version=<%= serviceVersion %>"><span class="icon back-arrow"></span> Back</a>
+        <div class="steps">
+          <div class="steps__step">
+            <div class="steps__step-wrapper">
+              <div class="steps__step-title">
+                <span>Services</span>
+                <a href="/services">Edit</a>
+              </div>
+              <div class="steps__step-body">
+                <div class="steps__step-name">
+                  <%= serviceItem.itemData.name %>
+                </div>
+                <div class="steps__step-description">
+                  <%= formatTime(serviceVariation.itemVariationData.serviceDuration) %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="steps__step">
+            <div class="steps__step-wrapper">
+              <div class="steps__step-title">
+                <span>Select staff</span>
+                <a href="/staff/<%= serviceId %>?version=<%= serviceVersion %>">Edit</a>
+              </div>
+              <div class="availability-staff__card-wrapper">
+                <div class="staff__card-picture-wrapper">
+                  <% if (locals.bookingProfile && bookingProfile.profileImageUrl) { %>
+                    <img src="<%= bookingProfile.profileImageUrl %>" />
+                  <% } else if (locals.bookingProfile) { %>
+                    <%= getStaffInitials(bookingProfile.displayName) %>
+                  <% } else { %>
+                    <%= getStaffInitials("any") %>
+                  <% } %>
+                </div>
+                <div class="steps__staff-step-body">
+                  <div class="steps__step-name">
+                    <% if (locals.bookingProfile) { %>
+                      <%= bookingProfile.displayName %>
+                    <% } else { %>
+                      Any staff member
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="steps__step selected">
+            <div class="steps__step-wrapper">
+              <div class="steps__step-title">
+                <span>Appointment time</span>
+                <span class="icon side-caret-selected"></span>
+              </div>
+            </div>
+          </div>
+          <div class="steps__step">
+            <div class="steps__step-wrapper">
+              <div class="steps__step-title">
+                <span>Enter your details</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-main">
+        <%- include('../partials/date-selector', { availabilities }); %>
+      </div>
+    </div>
+  </body>
+</html>

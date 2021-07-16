@@ -1,0 +1,114 @@
+{
+  "#HairColorTreatment": {
+    "id": "#HairColorTreatment",
+    "itemData": {
+      "description": "Leave-in treatment that will instantly intensify your hair color radiance. Will result in increased shine.",
+      "name": "Hair Color Treatment",
+      "productType": "APPOINTMENTS_SERVICE",
+      "variations": [
+        {
+          "id": "#RegularHairColorTreatment",
+          "itemVariationData": {
+            "availableForBooking": true,
+            "inventoryAlertType": "NONE",
+            "name": "Regular",
+            "priceMoney": {
+              "amount": 6400,
+              "currency": "CURRENCY"
+            },
+            "pricingType": "FIXED_PRICING",
+            "serviceDuration": 1800000
+          },
+          "presentAtAllLocations": false,
+          "type": "ITEM_VARIATION"
+        }
+      ]
+    },
+    "presentAtAllLocations": false,
+    "type": "ITEM"
+  },
+  "#WomensHaircut": {
+    "id": "#WomensHaircut",
+    "itemData": {
+      "description": "Any women's haircut - examples include bobs, pixie, shag, bangs, layers, etc.",
+      "name": "Women's Haircut",
+      "productType": "APPOINTMENTS_SERVICE",
+      "variations": [
+        {
+          "id": "#RegularWomensHaircut",
+          "itemVariationData": {
+            "availableForBooking": true,
+            "inventoryAlertType": "NONE",
+            "name": "Regular",
+            "priceMoney": {
+              "amount": 3500,
+              "currency": "CURRENCY"
+            },
+            "pricingType": "FIXED_PRICING",
+            "serviceDuration": 1800000
+          },
+          "presentAtAllLocations": false,
+          "type": "ITEM_VARIATION"
+        }
+      ]
+    },
+    "presentAtAllLocations": false,
+    "type": "ITEM"
+  },
+  "#MensHaircut": {
+    "id": "#MensHaircut",
+    "itemData": {
+      "description": "Any men's haircut - examples include blunt cut fringe, buzzcut, undercut, etc.",
+      "name": "Men's Haircut",
+      "productType": "APPOINTMENTS_SERVICE",
+      "variations": [
+        {
+          "id": "#RegularMensHaircut",
+          "itemVariationData": {
+            "availableForBooking": true,
+            "inventoryAlertType": "NONE",
+            "name": "Regular",
+            "priceMoney": {
+              "amount": 3000,
+              "currency": "CURRENCY"
+            },
+            "pricingType": "FIXED_PRICING",
+            "serviceDuration": 1800000
+          },
+          "presentAtAllLocations": false,
+          "type": "ITEM_VARIATION"
+        }
+      ]
+    },
+    "presentAtAllLocations": false,
+    "type": "ITEM"
+  },
+  "#ShampooAndBlowDry": {
+    "id": "#ShampooAndBlowDry",
+    "itemData": {
+      "description": "We will shampoo and blow dry your hair in a style that suits your hair and personality.",
+      "name": "Shampoo & Blow Dry",
+      "productType": "APPOINTMENTS_SERVICE",
+      "variations": [
+        {
+          "id": "#RegularShampooAndBlowDry",
+          "itemVariationData": {
+            "availableForBooking": true,
+            "inventoryAlertType": "NONE",
+            "name": "Regular",
+            "priceMoney": {
+              "amount": 4900,
+              "currency": "CURRENCY"
+            },
+            "pricingType": "FIXED_PRICING",
+            "serviceDuration": 1800000
+          },
+          "presentAtAllLocations": false,
+          "type": "ITEM_VARIATION"
+        }
+      ]
+    },
+    "presentAtAllLocations": false,
+    "type": "ITEM"
+  }
+}
