@@ -139,6 +139,10 @@ a:visited {
   border-color: #007fff;
 }
 
+.card__wrapper.disabled:hover {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
 .card__wrapper.disabled {
   background: #F5F6F7;
 }
@@ -456,6 +460,10 @@ a:visited {
   padding: 17px;
   text-align: center;
   cursor: pointer;
+}
+
+.sq-form-control .button.btn-secondary:hover {
+  background-color: rgba(0, 0, 0, 0.07);
 }
 
 .availability-staff__card-wrapper {
