@@ -75,7 +75,6 @@ if ($response->isError()) {
   </header>
 
   <div class="container" id="confirmation">
-
     <div>
       <div>
         <?php
@@ -88,7 +87,6 @@ if ($response->isError()) {
         ?>
       </div>
     </div>
-
     <div>
       <?php
       foreach ($order->getLineItems() as $line_item) {
@@ -111,7 +109,6 @@ if ($response->isError()) {
         ");
       ?>
     </div>
-
     <div>
       <span>Payment Successful!</span>
       <a href="http://localhost:8888">Back to home page</a>
