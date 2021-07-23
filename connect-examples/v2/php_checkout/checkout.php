@@ -63,6 +63,8 @@ try {
 
   // Similar to payments you must have a unique idempotency key.
   $checkout_request = new CreateCheckoutRequest(uniqid(), $create_order_request);
+  // Set a custom redirect URL, otherwise a default Square confirmation page will be used
+  $checkout_request->setRedirectUrl('http://localhost:8888/confirmation.php');
 
   $response = $checkout_api->createCheckout($location_id, $checkout_request);
 } catch (ApiException $e) {

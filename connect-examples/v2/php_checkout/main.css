@@ -3,6 +3,14 @@
     margin: 0 auto;
 }
 
+#confirmation {
+  width: 500px;
+}
+
+#confirmation > div {
+  margin-top: 20px;
+}
+
 #square-logo {
     height: 32px;
     width: 32px;
@@ -85,3 +93,5 @@ button {
   outline: none;
   font-family: "HelveticaNeue-Bold", Helvetica, Arial, sans-serif;
 }
+
+
