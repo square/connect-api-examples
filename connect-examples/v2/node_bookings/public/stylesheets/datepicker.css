@@ -109,6 +109,10 @@ html .ui-button.ui-state-disabled:hover {
   color: #ffffff;
 }
 
+.ui-state-default:hover {
+  border-color: #007fff;
+}
+
 .ui-datepicker .ui-datepicker-title {
   font-size: 20px;
   margin: 0.5em 2.3em;
