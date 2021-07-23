@@ -96,6 +96,10 @@ a:visited {
   width: -moz-fit-content;
 }
 
+.button:hover {
+  background-color: rgba(0, 0, 0, 0.07);
+}
+
 .title {
   color: #006AFF;
   margin: 38px 0px 0px 0px;
@@ -129,6 +133,10 @@ a:visited {
   border-radius: 12px;
   margin: 24px 0px 24px 0px;
   display: flex;
+}
+
+.card__wrapper:hover {
+  border-color: #007fff;
 }
 
 .card__wrapper.disabled {
@@ -273,6 +281,10 @@ a:visited {
   align-items: center;
 }
 
+.staff__card:hover {
+  border-color: #007fff;
+}
+
 .staff__card-wrapper {
   display: flex;
   justify-content: center;
@@ -368,6 +380,10 @@ a:visited {
   width: 120px;
 }
 
+.availability button.available-time:hover {
+  border-color: #007fff;
+}
+
 .availability p {
   color: #71767B;
   font-size: 16px;
@@ -422,6 +438,10 @@ a:visited {
   padding: 17px;
   text-align: center;
   cursor: pointer;
+}
+
+.sq-form-control .button.btn-primary:hover {
+  background-color: #005FE6;
 }
 
 .sq-form-control .button.btn-secondary {
