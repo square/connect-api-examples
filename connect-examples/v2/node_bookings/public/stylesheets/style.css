@@ -101,7 +101,7 @@ a:visited {
 }
 
 .title {
-  color: #006AFF;
+  color: #006aff;
   margin: 38px 0px 0px 0px;
 }
 
@@ -111,7 +111,7 @@ a:visited {
   height: 2px;
   left: 0px;
   top: 38px;
-  background: #006AFF;
+  background: #006aff;
   border-radius: 6px 6px 0px 0px;
   flex: none;
   order: 1;
@@ -127,7 +127,7 @@ a:visited {
   padding: 32px;
   left: 592px;
   top: 254px;
-  background: #FFFFFF;
+  background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
   border-radius: 12px;
@@ -144,7 +144,7 @@ a:visited {
 }
 
 .card__wrapper.disabled {
-  background: #F5F6F7;
+  background: #f5f6f7;
 }
 
 .card__description {
@@ -174,7 +174,7 @@ a:visited {
 }
 
 .business__location span {
-  color: #71767B;
+  color: #71767b;
 }
 
 .business__contact {
@@ -230,11 +230,13 @@ a:visited {
 
 /* Staff */
 
-.steps, .staff {
+.steps,
+.staff {
   margin-top: 24px;
 }
 
-.steps__step, .staff__card {
+.steps__step,
+.staff__card {
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   padding: 24px;
@@ -265,7 +267,8 @@ a:visited {
   color: rgba(0, 0, 0, 0.55);
 }
 
-.steps__step-name, .staff__card-name {
+.steps__step-name,
+.staff__card-name {
   font-size: 18px;
   color: black;
   line-height: 26px;
@@ -301,7 +304,8 @@ a:visited {
   position: relative;
 }
 
-.staff__card-picture img, .staff__card-picture-wrapper img {
+.staff__card-picture img,
+.staff__card-picture-wrapper img {
   width: 64px;
   height: 64px;
   border: 1px solid white;
@@ -359,7 +363,7 @@ a:visited {
 /* Availability page */
 
 .availability h4 {
-  color: #1A1A1A;
+  color: #1a1a1a;
   font-size: 18px;
   letter-spacing: 0.006em;
   line-height: 26px;
@@ -371,11 +375,11 @@ a:visited {
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 6px;
   box-sizing: border-box;
-  color: #1A1A1A;
+  color: #1a1a1a;
   cursor: pointer;
   float: left;
   font-weight: 700;
-  letter-spacing: .01em;
+  letter-spacing: 0.01em;
   list-style-type: none;
   margin: 7px;
   text-align: center;
@@ -389,7 +393,7 @@ a:visited {
 }
 
 .availability p {
-  color: #71767B;
+  color: #71767b;
   font-size: 16px;
   line-height: 22px;
   margin-bottom: 25px;
@@ -406,7 +410,8 @@ a:visited {
   flex-flow: row wrap;
 }
 
-.sq-form-control input, .sq-form-control textarea {
+.sq-form-control input,
+.sq-form-control textarea {
   font-size: 16px;
   line-height: 24px;
   padding: 11px 16px;
@@ -415,7 +420,8 @@ a:visited {
   margin-bottom: 24px;
 }
 
-.sq-form-control input::placeholder, .sq-form-control textarea::placeholder {
+.sq-form-control input::placeholder,
+.sq-form-control textarea::placeholder {
   color: rgba(0, 0, 0, 0.3);
 }
 
@@ -431,7 +437,7 @@ a:visited {
   font-family: inherit;
 }
 
-.sq-form-control .button.btn-primary  {
+.sq-form-control .button.btn-primary {
   width: 100%;
   margin-right: 20px;
   color: white;
@@ -445,15 +451,15 @@ a:visited {
 }
 
 .sq-form-control .button.btn-primary:hover {
-  background-color: #005FE6;
+  background-color: #005fe6;
 }
 
 .sq-form-control .button.btn-secondary {
   width: 100%;
   margin-right: 20px;
   color: white;
-  background-color: #F5F6F7;
-  color: #151C1F;
+  background-color: #f5f6f7;
+  color: #151c1f;
   font-weight: bold;
   border: none;
   font-size: 16px;
@@ -479,9 +485,9 @@ a:visited {
 
 /* Different timezones warning */
 .timezone-warning {
-  border: 1px solid #FF901A;
-  background-color: #FFF3E6;
-  color: #5F666C;
+  border: 1px solid #ff901a;
+  background-color: #fff3e6;
+  color: #5f666c;
   padding: 15px;
   position: relative;
   display: flex;
@@ -507,7 +513,7 @@ a:visited {
 }
 
 .formatted-error h1 {
-  color: #151C1F;
+  color: #151c1f;
   font-size: 50px;
   font-weight: 500;
   margin-bottom: 24px;
@@ -519,13 +525,13 @@ a:visited {
 }
 
 .formatted-error p {
-  color: #5F666C;
+  color: #5f666c;
   font-size: 16px;
   font-weight: 400;
   text-transform: uppercase;
 }
 
-.formatted-error .button  {
+.formatted-error .button {
   color: white;
   background-color: rgba(0, 106, 255, 1);
   border: none;
@@ -558,7 +564,7 @@ a:visited {
 }
 
 .developer-note span {
-  color: #5F666C;
+  color: #5f666c;
 }
 
 .developer-note a {
@@ -568,7 +574,7 @@ a:visited {
 .content__card {
   max-width: 500px;
   margin-top: 40px;
-  background: #FFFFFF;
+  background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
   border-radius: 12px;
@@ -578,7 +584,7 @@ a:visited {
 .message-sm {
   font-size: 16px;
   line-height: 26px;
-  color: #71767B;
+  color: #71767b;
   margin-top: 8px;
 }
 
@@ -648,8 +654,7 @@ a:visited {
 
 /* Support smaller screens up to 700px */
 
-@media only screen
-and (max-width: 1150px) {
+@media only screen and (max-width: 1150px) {
   .staff__card-details {
     padding-right: 50px;
   }
