@@ -40,7 +40,7 @@ In addition to using the Bookings API, the application demonstrates how to integ
 3. Set your credentials:
     a. You need an *.env* file at the top directory to provide credentials. You can copy the content in the *.env.example* file provided in the project and use it as a template.
     b. In the file:
-        * Set `ENVIRONMENT` to `Sandbox` (for testing) or `Production`.
+        * Set `ENVIRONMENT` to `sandbox` (for testing) or `production`.
         * Replace the placeholder texts of `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` with your access token and your seller location ID, respectively, for the chosen environment.
 
     You can find your Square credentials in the Square Developer Dashboard. For more information, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application).
@@ -59,7 +59,7 @@ To set up the appointments service in the Sandbox, follow these steps:
 
 #### 1. Initialize test data
 
-a. Ensure that your *.env* file has `ENVIRONMENT` set to `Sandbox` and provides the Sandbox environment values for `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID`.
+a. Ensure that your *.env* file has `ENVIRONMENT` set to `sandbox` and provides the Sandbox environment values for `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID`.
 
 b. Run the seeding script provided in this sample application to create some services and staff members:
   
