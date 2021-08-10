@@ -15,19 +15,19 @@
 
 This sample web application integrates the Square [Bookings API](https://developer.squareup.com/reference/square/bookings-api) and showcases some of its functionality, including:
 
-* Create booking
-* Update booking
-* Cancel booking
-* Search availabilities
-* List team member booking profiles
-* Retrieve team member booking profile
+* Creating bookings.
+* Updating bookings.
+* Canceling bookings.
+* Searching availabilities.
+* Listing team member booking profiles.
+* Retrieving a team member booking profile.
 
-In addition to using the Bookings API, the application demonstrates how to integrate the Boookings API with the following Square APIs:
+In addition to using the Bookings API, the application demonstrates how to integrate the Bookings API with the following Square APIs:
 
-* Calling the [Catalog API](https://developer.squareup.com/reference/square/catalog-api) to create and retrieve catalog objects of the appointment service type.
-* Calling the [Customers API](https://developer.squareup.com/reference/square/customers-api) to create and retrieve customer profiles in the seller's customer directory.
+* Calling the [Catalog API](https://developer.squareup.com/reference/square/catalog-api) to create and retrieve catalog objects of the appointments service type.
+* Calling the [Customers API](https://developer.squareup.com/reference/square/customers-api) to create and retrieve customer profiles in the seller's Customer Directory.
 * Calling the [Locations API](https://developer.squareup.com/reference/square/locations-api) to get information about the seller's business location used throughout the application.
-* Calling the [Teams API](https://developer.squareup.com/reference/square/team-api) to retrieve the profile of a team member providing booked services in an appointment.
+* Calling the [Team API](https://developer.squareup.com/reference/square/team-api) to retrieve the profile of a team member providing booked services in an appointment.
 
 ## Setup
 
@@ -38,14 +38,14 @@ In addition to using the Bookings API, the application demonstrates how to integ
 2. Ensure that you have Node.js version v10 or later (run `node -v` in your terminal). If not, follow the instructions for your OS at [https://nodejs.org/en/download/](https://nodejs.org/en/download/).
 
 3. Set your credentials:
-    1. You need a *.env* file at the top directory to provide credentials. You can copy the content in the *.env.example* file provided in the project and use it as a template
-    2. In the file:
-        1. Set `ENVIRONMENT` to `sandbox` (for testing) or `production`
-        2. Replace the placeholder texts of `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` with your access token and your seller location ID, respectively, for the chosen environment.
+    a. You need an *.env* file at the top directory to provide credentials. You can copy the content in the *.env.example* file provided in the project and use it as a template.
+    b. In the file:
+        * Set `ENVIRONMENT` to `Sandbox` (for testing) or `Production`.
+        * Replace the placeholder texts of `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` with your access token and your seller location ID, respectively, for the chosen environment.
 
     You can find your Square credentials in the Square Developer Dashboard. For more information, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application).
 
-    **IMPORTANT:** You can use your own credentials to test the sample application. If you plan to make a version of this sample application available for other users, you must use the Square [OAuth API](https://developer.squareup.com/docs/oauth-api/overview) to safely manage access to Square accounts.
+    **IMPORTANT:** You can use your own credentials to test the sample application. If you plan to make a version of this sample application available to other users, you must use the Square [OAuth API](https://developer.squareup.com/docs/oauth-api/overview) to safely manage access to Square accounts.
 
 4. Open a terminal and run the following command to install the sample application's dependencies:
 
@@ -53,19 +53,20 @@ In addition to using the Bookings API, the application demonstrates how to integ
 
 ### Set up your seller account
 
-To run this app, your seller account must have appointments enabled. The appointments service is free in the `sandbox` environment and incurs service charges in the `production` environment. We recommend using the `sandbox` environment for development and testing purposes.
+To run this application, your seller account must have appointments enabled. The appointments service is free in the Sandbox environment and may incur service charges in the Production environment. You should use the Sandbox environment for development and testing purposes.
 
-To set up the apointments service in `sandbox`, follow these steps:
+To set up the appointments service in the Sandbox, follow these steps:
 
 #### 1. Initialize test data
 
-1. Ensure your `.env` file has `ENVIRONMENT` set to `sandbox` and provide sandbox environment values for `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID`
+a. Ensure that your *.env* file has `ENVIRONMENT` set to `Sandbox` and provides the Sandbox environment values for `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID`.
 
-1. Run the seeding script provided in this sample app to create some services and staff members:
+b. Run the seeding script provided in this sample application to create some services and staff members:
   
    `npm run seed`
 
-   This command will create the following appointment services in your account:
+   This command creates the following appointments services in your account:
+
    * Hair Color Treatment
    * Women's Haircut
    * Men's Haircut
@@ -75,422 +76,169 @@ To set up the apointments service in `sandbox`, follow these steps:
    * John Smith
    * Amy Johnson
 
-**Note:** You can run `npm run clear` to delete these objects from the sandbox environment when they are no longer needed.  
+**Note:** You can run `npm run clear` to delete these objects from the Sandbox environment when they are no longer needed.  
 
 #### 2. Enable Appointments for your business
 
-1. Log into your [Developer Dashboard](https://developer.squareup.com/apps) in the browser.
+a. Sign in to the [Developer Dashboard](https://developer.squareup.com/apps) in the browser.
 
-1. Click the *Open* button beside your sandbox test account to open the Sandbox Seller Dashboard.
+b. Choose the **Open** button beside your Sandbox test account to open the Sandbox Seller Dashboard.
 
-1. In the new tab, click on the *Appointments* tab on the left-hand side panel.
+c. Choose the **Appointments** tab on the left pane.
 
-1. Click on the **Get Started** button on the center of the page.
+d. Choose **Get Started**.
 
-1. Fill in your business information as prompted.
+e. Enter your business information as prompted.
 
-1. On the next page, skip the link to download the Square app for now.
+f. On the next page, skip the link to download the Square application for now.
 
-1. If your business has more than one location, make sure to select the location provided in the *.env* file from the dropdown on the Dashboard's *Appointments* page.
+g. If your business has more than one location, make sure to select the location provided in the .env file from the drop-down menu on the **Appointments** page.
 
-You now have appointments enabled!
+You now have Appointments enabled.
 
 #### 3. Make your staff bookable
 
-1. Click on the *Staff* tab on the left-hand side panel.
+a. Choose the **Staff** tab on the left pane.
 
-1. Click on the **Add Employee** button on the right side of the page.
+b. Choose the **Add Employee** button on the right side of the page.
 
-1. Choose one of the two employees, `Amy Johnson` and `John Smith`, created by the seeding command, set optional configurations for the selected employee on the right-side panel, then click or tap the **Save** button on the right bottom corner of the page.
+c. Choose one of the two employees (Amy Johnson or John Smith) created by the seeding command, set optional configurations for the selected employee on the right-side pane, and then choose the **Save** button on the right bottom corner of the page.
 
-1. On the **Start Your Free Trial of Appointments for Teams** pop-up window, click or tap the **Start Trial** button. Note that use of the `sandbox` environment is always free of charge.
+d. On the **Start Your Free Trial of Appointments for Teams** window, choose the **Start Trial** button. Note that use of the Sandbox environment is always free of charge.
 
-1. Repeat the **Add Employee** step to add the other staff.
+e. Repeat the **Add Employee** step to add the other staff member.
 
-1. Both `Amy Johnson` and `John Smith` should now be set up as service providers for the services created by the seeding command.
+f. Both Amy Johnson and John Smith should now be set up as service providers for the services created by the seeding command.
 
 ### Run the application
 
-1. Run the following command in a terminal to start the server and test the application, in the environment specified in  the *.env* file.
+1. Run the following command in a terminal to start the server and test the application, in the environment specified in the .env file.
 
    `npm start`
 
-1. Type `localhost:3000` in your browser's address bar to start the application. Then select one from the list of services on the first page.
+2. Type `localhost:3000` in your browser to start the application. Then select a service on the first page.
 
 ## Project organization
 
 This application, as an Express.js project, is organized as follows:
 
-* The *.env* file. The application provides the *.env.example* file in the project's main folder for you to copy as a template, to save it as *.env* in the same directory, and to provide your credentials in the saved *.env* file.
+* The *.env* file. The application provides the *.env.example* file in the project's main folder for you to copy as a template, save it as *.env* in the same directory, and provide your credentials in the saved *.env* file.
 * The *public/* folder. Provides images, JavaScript, and CSS files used to render the pages.
 * The *routes/* folder. Creates the following JavaScript files to define the routes to handle requests:
-  * The *index.js* file. Redirects the index page via the `/services` route.
-  * The *services.js* file. Defines a route to list appointmnet services.
+  * The *index.js* file. Redirects the index page using the `/services` route.
+  * The *services.js* file. Defines a route to list appointment services.
   * The *staff.js* file. Defines a route to list bookable staff members for a booking.
   * The *availability.js* file. Defines routes to search availability based on selected services and staff members.
-  * The *contact.js* file. Defines a route to display a customer contact information form before complete booking.
+  * The *contact.js* file. Defines a route to display a customer contact information form before completing a booking.
   * The *booking.js* file. Defines routes to get, create, reschedule, and cancel bookings.
 * The *util/* folder. Includes the following:
   * The *square-client.js* file. Contains the utility code to initialize the Square SDK client.
-  * The *date-helpers.js* file. Contains the utility code to create start dates and end dates for search of booking availability
+  * The *date-helpers.js* file. Contains the utility code to create start dates and end dates for the search of booking availability.
 * The *views/* folder. Provides the view (*.ejs*) files to render HTML displays.
 
 ## Application flow
 
-The application flow is explained with the assumption that you are familiar with [Express](https://expressjs.com/) (the web framework for Node.js).
+This sample application is a Node.js-[Express](https://expressjs.com/) project.
 
-### Select services page
+In general, Express is a web application framework for Node.js. It supports provisioning a user interface for the application to interact with the user by  rendering HTML pages. A user action corresponds to an HTTP or HTTPS request passed to the backend through a specific route and is handled by the corresponding route handler in Node.js.  
+
+Specifically, when the sample application is running, it can perform the following interactive tasks:  
+
+* [**Select bookable services**](#select-bookable-services)
+* [**Select a bookable staff**](#select-a-bookable-staff)
+* [**Select booking availability**](#select-booking-availability)
+* [**Provide customer contact information**](#provide-customer-contact-information)
+* [**Create a booking**](#create-a-booking)
+* [**Get the booking confirmation**](#get-the-booking-confirmation)
+* [**Reschedule a booked appointment**](#reschedule-a-booked-appointment)
+* [**Cancel a booked appointment**](#cancel-a-booked-appointment)
+
+Each user interaction is implemented in a pair of Express view page (_/views/pages/<*>.ejs_) and route handler file (_/routes/<*>.js_). The view presents the frontend to accept a user input and the route handler serves in the backend to process the user input and, depending on the result, to direct the application to another view page to gather more information from the user or to another route for further processing. A view can branch into multiple routes and, similarly, a route can circle back into multiple views.
+
+With the application's backend running, the user opens the application's home page (such as `http://localhost:3000` for the locally hosted application) to start the application flow. This starting request is handled by the [/ route handler](routes/index.js#L33) defined in the _/routes/index.js_ file. It simply redirects the request to the `/services` route handler that lets the user select a bookable service.
+
+### Select bookable services
+
+The [_/services_ route handler](routes/services.js#L29) calls the [`SearchCatalogItems`](https://developer.squareup.com/reference/square/catalog/search-catalog-items) endpoint of the Catalog API to retrieve all of the appointments services, as represented by [`CatalogItem`](https://developer.squareup.com/reference/square/objects/CatalogItem) objects with the [`product_type`](https://developer.squareup.com/reference/square/objects/CatalogItem#definition__property-product_type) attribute value set to [`APPOINTMENTS_SERVICE`](https://developer.squareup.com/reference/square/enums/CatalogItemProductType#value-APPOINTMENTS_SERVICE). Notice that the route path of `/` in the route handler code is relative to the `/services` route.
+
+It then opens the [_/views/pages/select-service.ejs_](views/pages/select-service.ejs) page that presents a list of bookable services for the user to select one.
 
 <img src="./bin/images/select-services-screenshot.png" width="700">
 
-The application's landing page is the Select Services page, where you can select one of the business services to book. The left-hand pane provides information about your business and contact information.
+The left-hand pane provides information about the business providing the service, including the location and contact information.
 
-When you open the application in the browser at <http://localhost:3000>, you are redirected to the /services route. The handler for this route retrieves all [**APPOINTMENTS_SERVICE**](https://developer.squareup.com/reference/square/enums/CatalogItemProductType#value-APPOINTMENTS_SERVICE) type services for the business location using the [Search Catalog Items endpoint](https://developer.squareup.com/reference/square/catalog/search-catalog-items) in the Catalog API.
+The selection of a particular service is then followed by a request to select a servicing staff for the selected service by way of the `/staff/:serviceId` route.
 
-See code in services.js:
+### Select a bookable staff
 
-```javascript
-router.get("/", async (req, res, next) => {
-  const cancel = req.query.cancel;
-  try {
-    let { result: { items } } = await catalogApi.searchCatalogItems({
-      enabledLocationIds: [ locationId ],
-      productTypes: [ "APPOINTMENTS_SERVICE" ]
-    });
+The `/staff/:serviceId` route is handled by the route handler defined in [_/routes/staff.js_](routes/staff.js). This route handler retrieves all active and bookable team members that can perform the service and presents the staff members for the user to choose. To do so, the route handler carries out the following tasks:
 
-    if (!items) {
-      items = [];
-    }
-
-    res.render("pages/select-service", { cancel, items });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-```
-
-### Select staff page
+* Calls the [RetrieveCatalogObject](https://developer.squareup.com/reference/square/catalog/retrieve-catalog-object) endpoint of the Catalog API to retrieve the `CatalogObject` of the specified service ID.
+* Calls the [SearchTeamMembers](https://developer.squareup.com/reference/square/team/search-team-members) endpoint of the Team API to find all active team members capable of providing the chosen service.
+* Calls the [ListTeamMemberBookingProfiles](https://developer.squareup.com/reference/square/bookings/list-team-member-booking-profiles) endpoint of the Bookings API to verify that the team members are bookable.
+* Renders the [select-stff.ejs](views/pages/select-staff.ejs) page for the user to select a servicing staff member.
 
 <img src="./bin/images/select-staff-screenshot.png" width="700">
 
-After selecting service on the previous page, the application redirects you to the *Select Staff* page (i.e. _/staff/:serviceId?version_), where you can select one or any active team member. When choosing the *Any team member* option, the handler retrieves all bookable active team members that can perform the service by cross-referencing multiple APIs. This is necessary due to the fact team members are managed by both the Team API and the Bookings API. The handler first needs to find all active team members that are capable of providing the chosen service using the Team API. Then, it needs to verify that those team members are bookable, using the Bookings API. The major endpoints used in the handler are:
+In addition to specific staff members, there is the **Any available staff member** option for the user to accept any staff member for the booking.
 
-* [List Team Member Booking Profiles](https://developer.squareup.com/reference/square/bookings/list-team-member-booking-profiles)
-* [Search Team Members](https://developer.squareup.com/reference/square/team/search-team-members)
+The selection of a staff member is then followed by a request to select booking availability from a list of available time periods for the service and team member requested. This request proceeds by way of the [_availability/:staffId/:serviceId?version_](routes/availability.js) route.
 
-For more information, see code in staff.js:
+### Select booking availability
 
-```javascript
-router.get("/:serviceId", async (req, res, next) => {
-  const serviceId = req.params.serviceId;
-  const serviceVersion = req.query.version;
-  try {
-    // Send request to get the service associated with the given item variation ID, and related objects.
-    const retrieveServicePromise = catalogApi.retrieveCatalogObject(serviceId, true);
-
-    // Send request to list staff booking profiles for the current location.
-    const listBookingProfilesPromise = bookingsApi.listTeamMemberBookingProfiles(true, undefined, undefined, locationId);
-
-    // Send request to list all active team members for this merchant at this location.
-    const listActiveTeamMembersPromise = teamApi.searchTeamMembers({
-      query: {
-        filter: {
-          locationIds: [ locationId ],
-          status: "ACTIVE"
-        }
-      }
-    });
-
-    // Wait until all API calls have completed.
-    const [ { result: services }, { result: { teamMemberBookingProfiles } }, { result: { teamMembers } } ] =
-      await Promise.all([ retrieveServicePromise, listBookingProfilesPromise, listActiveTeamMembersPromise ]);
-
-    // We want to filter teamMemberBookingProfiles by checking that the teamMemberId associated with the profile is in our serviceTeamMembers.
-    // We also want to verify that each team member is ACTIVE.
-    const serviceVariation = services.object;
-    const serviceItem = services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
-
-    const serviceTeamMembers = serviceVariation.itemVariationData.teamMemberIds || [];
-    const activeTeamMembers = teamMembers.map(teamMember => teamMember.id);
-
-    const bookableStaff = teamMemberBookingProfiles
-      .filter(profile => serviceTeamMembers.includes(profile.teamMemberId) && activeTeamMembers.includes(profile.teamMemberId));
-
-    res.render("pages/select-staff", { bookableStaff, serviceItem, serviceVariation, serviceVersion });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-```
-
-### Select availability page
+The `availability/:staffId/:serviceId` route is handled by the route handler defined in [_routes/availability.js_](routes/availability.js). This route handler calls the [searchAvailability](https://developer.squareup.com/reference/square/bookings/search-availability) of the Bookings API to get the available appointment segments for the specified service and staff. It then renders the [_availability.ejs_](views/pages/availability.ejs) page for the user to pick an available date and time for the appointment.
 
 <img src="./bin/images/select-availability-screenshot.png" width="700">
 
-Next you need to select a start time for your booking. In the *Select Availability* page we allow booking an appointment 4 hours to 30 days in advance. The handler for this route (_/availability/:staffId/:serviceId?version_) uses the [Search Availability endpoint](https://developer.squareup.com/reference/square/bookings/search-availability) in the Bookings API to retrieve the available times for a specific service and team member(s).
+On this page, the user interfaces of **Select appointment date** and **Available times** are rendered according to [date-selector.ejs](views/partials/date-selector.ejs). The related user-event handler is defined in [_date-picker-handler.js_](public/js/date-picker-handler.js)
 
-For more information, see code in availability.js:
+After the user chooses an appointment date and available time periods, the application submits a request to collect customer contact information from the user to complete the booking. The request proceeds by way of the [_/contact_](public/js/date-picker-handler.js#L153) route.
 
-```javascript
-router.get("/:staffId/:serviceId", async (req, res, next) => {
-  const serviceId = req.params.serviceId;
-  const serviceVersion = req.query.version;
-  const staffId = req.params.staffId;
-  const startAt = dateHelpers.getStartAtDate();
-  const searchRequest = {
-    query: {
-      filter: {
-        locationId,
-        segmentFilters: [
-          {
-            serviceVariationId: serviceId,
-          },
-        ],
-        startAtRange: {
-          endAt: dateHelpers.getEndAtDate(startAt).toISOString(),
-          startAt: startAt.toISOString(),
-        },
-      }
-    }
-  };
-  try {
-    // get service item - needed to display service details in left pane
-    const retrieveServicePromise = catalogApi.retrieveCatalogObject(serviceId, true);
-    let availabilities;
-    // additional data to send to template
-    let additionalInfo;
-    // search availability for the specific staff member if staff id is passed as a param
-    if (staffId === ANY_STAFF_PARAMS) {
-      const [ services, teamMembers ] = await searchActiveTeamMembers(serviceId);
-      searchRequest.query.filter.segmentFilters[0].teamMemberIdFilter = {
-        any: teamMembers,
-      };
-      // get availability
-      const { result } = await bookingsApi.searchAvailability(searchRequest);
-      availabilities = result.availabilities;
-      additionalInfo = {
-        serviceItem: services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0],
-        serviceVariation: services.object
-      };
-    } else {
-      searchRequest.query.filter.segmentFilters[0].teamMemberIdFilter = {
-        any: [
-          staffId
-        ],
-      };
-      // get availability
-      const availabilityPromise = bookingsApi.searchAvailability(searchRequest);
-      // get team member booking profile - needed to display team member details in left pane
-      const bookingProfilePromise = bookingsApi.retrieveTeamMemberBookingProfile(staffId);
-      const [ { result }, { result: services }, { result: { teamMemberBookingProfile } } ] = await Promise.all([ availabilityPromise, retrieveServicePromise, bookingProfilePromise ]);
-      availabilities = result.availabilities;
-      additionalInfo = {
-        bookingProfile: teamMemberBookingProfile,
-        serviceItem: services.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0],
-        serviceVariation: services.object
-      };
-    }
-    // send the serviceId & serviceVersion since it's needed to book an appointment in the next step
-    res.render("pages/availability", { availabilities, serviceId, serviceVersion, ...additionalInfo });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-```
+### Provide customer contact information
 
-### Contact details page
+The `/contact` route is handled by the route handler defined in [contact.js](routes/contact.js#L33). This route handler renders the [_contact.ejs](views/pages/contact.ejs) page for the user to provide customer information for the requested appointment, as the last step to complete a booking.
 
 <img src="./bin/images/contact-details-screenshot.png" width="700">
 
-The next page is the *Contact Details* page - in order to create a booking we need to create a [Customer](https://developer.squareup.com/reference/square/objects/Customer) using [Create Customer endpoint](https://developer.squareup.com/reference/square/customers/create-customer) in the Customers API. The handler for this route (_/booking/create_) creates the customer or retrieves the existing customer for the given customer details and then calls [Create Booking endpoint](https://developer.squareup.com/reference/square/bookings-api/create-booking) in the Bookings API to create the booking.
+After entering the contact details, the user chooses the **Book appointment** button to submit a request to create the booking.  The application's backend receives this request by way of the `/booking/create` route.
 
-For more information, see code in booking.js:
+### Create a booking
 
-```javascript
-router.post("/create", async (req, res, next) => {
-  const serviceId = req.query.serviceId;
-  const serviceVariationVersion = req.query.version;
-  const staffId = req.query.staffId;
-  const startAt = req.query.startAt;
+The `/booking/create` route is handled by a route handler defined in the [_bookings.js_](routes/bookings.js#L41). This route handler calls the [CreateBooking](https://developer.squareup.com/reference/square/bookings-api/create-booking) endpoint of the Bookings API to create the booking, specifying in the request's input the user input and other required information including the service ID, team member ID, availability slot, and customer contact information. Notice that the customer contact information is used to obtain the required ID of a new or existing [Customer](https://developer.squareup.com/reference/square/objects/Customer) object with the specified contact information, with the help of the [getCustomerID](routes/booking.js#L223) helper method making use of the Customers API.
 
-  const customerNote = req.body.customerNote;
-  const emailAddress = req.body.emailAddress;
-  const familyName = req.body.familyName;
-  const givenName = req.body.givenName;
+When the request succeeds, the route handler redirects the application flow to the booking confirmation page through the `/booking/:bookingId` route; otherwise, it responds with an error.
 
-  try {
-    // Retrieve catalog object by the variation ID
-    const { result: { object: catalogItemVariation } } = await catalogApi.retrieveCatalogObject(serviceId);
-    const durationMinutes = convertMsToMins(catalogItemVariation.itemVariationData.serviceDuration);
+### Get the booking confirmation
 
-    // Create booking
-    const { result: { booking } } = await bookingsApi.createBooking({
-      booking: {
-        appointmentSegments: [
-          {
-            durationMinutes,
-            serviceVariationId: serviceId,
-            serviceVariationVersion,
-            teamMemberId: staffId,
-          }
-        ],
-        customerId: await getCustomerID(givenName, familyName, emailAddress),
-        customerNote,
-        locationId,
-        startAt,
-      },
-      idempotencyKey: uuidv4(),
-    });
+The `/booking/:bookingId` route is handled by the [corresponding route handler](routes/booking.js#L135) defined in  [_/routes/booking.js_](routes/booking.js). 
 
-    res.redirect("/booking/" + booking.id);
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-```
-
-### Confirmation page
+This route handler calls the [RetrieveBooking](https://developer.squareup.com/reference/square/bookings-api/retrieve-booking) endpoint of the Bookings API to retrieve the specified booking details and aggregates the data in rendering the [booking confirmation](views/pages/confirmation.ejs) page.
 
 <img src="./bin/images/confirmation-page-screenshot.png" width="700">
 
-If the booking was created successfully, you will be redirected to the *Confirmation* page. This page contains information about your scheduled appointment, such as the service name and description, the staff member, location information, date and time, etc. You will also see two different buttons to either *reschedule* or *cancel* your appointment. The handler for this route (_/booking/:bookingId_) aggregates the data to be rendered on this page by using several APIs mentioned in previous steps, but most importantly, the [Retrieve Booking endpoint](https://developer.squareup.com/reference/square/bookings-api/retrieve-booking) in the Bookings API, which returns information about a specific booking, based on the booking ID.
+This page displays the details of the scheduled appointment, such as the service name and description, the staff member, location information, and the date and time. 
 
-For more information, see code in booking.js:
+It also presents the **Reschedule booking** or **Cancel booking** option for the user to update the appointment. 
 
-```javascript
-router.get("/:bookingId", async (req, res, next) => {
-  const bookingId = req.params.bookingId;
-  try {
-    // Retrieve the booking provided by the bookingId.
-    const { result: { booking } } = await bookingsApi.retrieveBooking(bookingId);
+* The **Reschedule booking** option starts a request to reschedule the booking of the specified ID. The application's backend receives the request through the `/booking/:bookingId/reschedule` route. For more information, see [Reschedule a booked appointment](#reschedule-a-booked-appointment).
+* The **Cancel booking** option starts a request to cancel the booking of the specified ID. The application's backend receives the request through the `/booking/:bookingId/cancel` route. For more information, see [Cancel a booked appointment](#cancel-a-booked-appointment).
 
-    const serviceVariationId = booking.appointmentSegments[0].serviceVariationId;
-    const teamMemberId = booking.appointmentSegments[0].teamMemberId;
+### Reschedule a booked appointment
 
-    // Make API call to get service variation details
-    const retrieveServiceVariationPromise = catalogApi.retrieveCatalogObject(serviceVariationId, true);
-
-    // Make API call to get team member details
-    const retrieveTeamMemberPromise = bookingsApi.retrieveTeamMemberBookingProfile(teamMemberId);
-
-    // Wait until all API calls have completed
-    const [ { result: service }, { result: { teamMemberBookingProfile } } ] =
-      await Promise.all([ retrieveServiceVariationPromise, retrieveTeamMemberPromise ]);
-
-    const serviceVariation = service.object;
-    const serviceItem = service.relatedObjects.filter(relatedObject => relatedObject.type === "ITEM")[0];
-
-    res.render("pages/confirmation", { booking, serviceItem, serviceVariation, teamMemberBookingProfile });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-```
-
-### Reschedule booking page
+The `/booking/:bookingId/reschedule` route is handled by the [GET /booking/:bookingId/reschedule route handler](routes/booking.js#L170) defined in _booking.js_. The route handler renders the [reschedule.ejs](views/pages/reschedule.ejs) page with the booking of the specified ID and the associated available time periods for the user to choose.
 
 <img src="./bin/images/modify-booking-screenshot.png" width="700">
 
-You can reschedule bookings by clicking on the *Reschedule booking* button on the confirmation page. Once a new time slot is selected the controller for the route (POST _/booking/:bookingId/reschedule_) uses the [Update Booking endpoint](https://developer.squareup.com/reference/square/bookings-api/update-booking) in the Bookings API to modify the existing booking.
+On this page, the user interfaces of **Select appointment date** and **Available times** are rendered according to [date-selector.ejs](views/partials/date-selector.ejs). The related user-event handler is defined in [_date-picker-handler.js_](public/js/date-picker-handler.js)
 
-For more information, see code in booking.js:
+After the user chooses an appointment date and available time periods, the application submits a [POST /booking/${this.bookingId}/reschedule?startAt=${availability.date} request](public/js/date-picker-handler.js#L153) to the backend. This request is handled by the [/booking/:bookingId/reschedule route handler](routes/booking.js#L88). This route handler retrieves the existing booking and updates it with the new `startAt` attribute value. The operations involve calling the [RetrieveBooking](https://developer.squareup.com/reference/square/bookings-api/retrieve-booking) and [UpdateBooking](https://developer.squareup.com/reference/square/bookings-api/update-booking) endpoints of the Bookings API.
 
-```javascript
-router.get("/:bookingId/reschedule", async (req, res, next) => {
-  const bookingId = req.params.bookingId;
-  try {
-    // Retrieve the booking provided by the bookingId.
-    const { result: { booking } } = await bookingsApi.retrieveBooking(bookingId);
-    const { serviceVariationId, teamMemberId, serviceVariationVersion } = booking.appointmentSegments[0];
-    const startAt = dateHelpers.getStartAtDate();
-    const searchRequest = {
-      query: {
-        filter: {
-          locationId,
-          segmentFilters: [
-            {
-              serviceVariationId,
-              teamMemberIdFilter: {
-                any: [ teamMemberId ],
-              }
-            },
-          ],
-          startAtRange: {
-            endAt: dateHelpers.getEndAtDate(startAt).toISOString(),
-            startAt: startAt.toISOString(),
-          },
-        }
-      }
-    };
-    // get availability
-    const { result: { availabilities } } = await bookingsApi.searchAvailability(searchRequest);
-    res.render("pages/reschedule", { availabilities, bookingId, serviceId: serviceVariationId, serviceVersion: serviceVariationVersion });
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-```
+After the booking is updated successfully, the handler redirects the application flow through the `/booking/:bookingId` route the [booking confirmation page](views/pages/confirmation.ejs) to present the user with a confirmation of the rescheduled booking. For more information, see the [/booking/:bookingId route handler](routes/booking.js#L135).
 
-and
+### Cancel a booked appointment
 
-```javascript
-/**
- * POST /booking/:bookingId/reschedule
- *
- * Update an existing booking, you may update the starting date
- */
-router.post("/:bookingId/reschedule", async (req, res, next) => {
-  const bookingId = req.params.bookingId;
-  const startAt = req.query.startAt;
-
-  try {
-    const { result: { booking } } = await bookingsApi.retrieveBooking(bookingId);
-    const updateBooking = {
-      startAt,
-      version: booking.version,
-    };
-
-    const { result: { booking: newBooking } } = await bookingsApi.updateBooking(bookingId, { booking: updateBooking });
-
-    res.redirect("/booking/" + newBooking.id);
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-```
-
-### Cancel booking action
+After creating a booking, the application lets the user cancel it by providing the user with the **Cancel booking** option to submit the request through the `/booking/:bookingId/delete` route. The [route handler](routes/booking.js#L113) calls the [CancelBooking](https://developer.squareup.com/reference/square/bookings-api/cancel-booking) endpoint of the Bookings API after retrieving the existing booking.
 
 <img src="./bin/images/cancel-booking-screenshot.png" width="700">
 
-You can cancel an appointment by clicking on the **Cancel booking** button in the confirmation page. The handler for this route (POST _/booking/:bookingId/delete_) uses the [Cancel Booking endpoint](https://developer.squareup.com/reference/square/bookings-api/cancel-booking) in the Bookings API to cancel your appointment. The handler then redirects to the initial landing page (_/services_), with an appropriate toast. This can be seen in the screenshot above.
-
-For more information, see code in booking.js:
-
-```javascript
-/**
- * POST /booking/:bookingId/delete
- *
- * delete a booking by booking ID
- */
-router.post("/:bookingId/delete", async (req, res, next) => {
-  const bookingId = req.params.bookingId;
-
-  try {
-    const { result: { booking } } = await bookingsApi.retrieveBooking(bookingId);
-    await bookingsApi.cancelBooking(bookingId, { bookingVersion: booking.version });
-
-    res.redirect("/services?cancel=success");
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
-```
+When the booking is cancelled successfully, the route handler redirects the application flow to the application's home page through the `/services?cancel=success` route. The `?cancel=success` query expression causes the statement **Your booking was cancelled successfully!** to be added to the original home page.
