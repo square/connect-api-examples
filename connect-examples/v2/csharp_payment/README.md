@@ -21,7 +21,7 @@ There are two sections in this ReadMe.
 1. Open your terminal, and run the following to build the app:
 
     ```
-    dotnet buid
+    dotnet build
     ```
 
 1. Then, to run the server:
