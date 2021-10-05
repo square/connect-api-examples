@@ -1,8 +1,6 @@
 const { Client } = require('square');
 
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-}
+require('dotenv').config()
 
 // Square client config
 const config = {
