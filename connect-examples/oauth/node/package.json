@@ -8,7 +8,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "cookie-parser": "*",
     "dotenv": "^8.2.0",
     "express": "*",
