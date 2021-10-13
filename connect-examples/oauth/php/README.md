@@ -46,11 +46,6 @@ php composer.phar install
 
    **WARNING**: Never check your credentials/access_token into your version control system. We've added `.env` to the `.gitignore` file to help prevent uploading confidential information.
 
-
-    Note that OAuth Sandbox credentials begin with a sandbox prefix and that the base URL for calling Sandbox endpoints is https://connect.squareupsandbox.com. When you implement for production, you need production credentials and use the production environment.
-
-    In addition, you should also avoid putting the application secret directly in your source code, encrypt the secret, and use other methods such as environment variables to reference the secret in your application.
-
 ### Step 3: Running the example
 
 1. Open the [Developer Dashboard](https://developer.squareup.com/apps).
