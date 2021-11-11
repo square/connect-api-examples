@@ -100,6 +100,8 @@ Many API calls used in this sample app require a customer ID. The customer ID is
 
 - Retrieving a list of gift cards for the customer using the [List gift cards API](https://developer.squareup.com/reference/square/gift-cards-api/list-gift-cards)
 - Creating a new gift card and linking it to a customer using the [Link customer to gift card API](https://developer.squareup.com/reference/square/gift-cards-api/link-customer-to-gift-card)
+- Unlinking a gift card from a customer using the [Unlink customer from gift card API](https://developer.squareup.com/reference/square/gift-cards-api/unlink-customer-from-gift-card)
+
 
 If you are not logged in, you will be redirected to the _/login_ page, where the [List customers API](https://developer.squareup.com/reference/square/customers-api/list-customers) is called to retrieve a list of customers under the seller's account.
 
@@ -149,7 +151,7 @@ You can click on _Reset now_ on the login page to delete customer data created b
 
 ### Gift card dashboard
 
-Once you are logged in as a customer, you are then redirected to the _/dashboard_ page. This page displays a list of gift cards that are retrieved using the [List gift cards API](https://developer.squareup.com/reference/square/gift-cards-api/list-gift-cards). See code in [dashboard.js](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/routes/dashboard.js)
+Once you are logged in as a customer, you are then redirected to the _/dashboard_ page. This page displays a list of gift cards that are retrieved using the [List gift cards API](https://developer.squareup.com/reference/square/gift-cards-api/list-gift-cards). See code in [dashboard.js](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/routes/dashboard.js):
 
 ```
 router.get("/", checkLoginStatus, async (req, res, next) => {
@@ -183,7 +185,7 @@ The following screenshot shows a dashboard with no gift cards and a button to cr
 
 ### Add a new gift card
 
-From the _/dashboard_ page, you may add a new gift card. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L38);
+From the _/dashboard_ page, you may add a new gift card. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L38):
 
 ```
 router.post("/create", checkLoginStatus, async (req, res, next) => {
@@ -218,7 +220,7 @@ The above handler makes the following Gift Cards API calls:
 
 <img src="./bin/images/gift-cards-api-app-30.png" width="300"/>
 
-Once a new gift card is created, you are redirected to the card's details page; you may also access this page through the dashboard. At this time, the card is not activated and it has no funds. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L63)
+Once a new gift card is created, you are redirected to the card's details page; you may also access this page through the dashboard. At this time, the card is not activated and it has no funds. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L63):
 
 ```
 router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
@@ -229,9 +231,15 @@ router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => 
 });
 ```
 
-### Delete gift card
+### Unlink ("delete") a gift card
 
-The Square Gift Card API does not support deleting a gift card. However, in this application, this delete operation is done by unlinking the gift card from a customer using the [Unlink gift card from customer API](https://developer.squareup.com/reference/square/gift-cards-api/unlink-customer-from-gift-card). From the gift card's details page described above, you may delete a gift card if it has not been activated yet (no funds were ever added) by clicking on the ellipsis menu and clicking the _Delete card_ button. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L93)
+The Square Gift Card API does *not* support deleting a gift card. However, this application achieves a similar effect by *unlinking* the gift card from a customer, using the [Unlink gift card from customer API](https://developer.squareup.com/reference/square/gift-cards-api/unlink-customer-from-gift-card).
+
+To "delete" a gift card in the application, go to the ellipsis menu and click the _Delete card_ button.  The underlying code unlinks the card from the customer by calling `giftCardsApi.unlinkCustomerFromGiftCard()`.
+
+*Note:*  In the application, you can only "delete" a gift card if the card has never had any funds added to it.  However, this is an application-level constraint, and is not intrinsic to the Gift Card API itself.  The Gift Card API does let you unlink a customer from gift cards that are `ACTIVE` and have a non-zero balance.
+
+See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L93):
 
 ```
 router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkPendingCard, async (req, res, next) => {
@@ -250,7 +258,7 @@ router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkPendingCard, 
 
 ### View transaction history
 
-Once a gift card is activated, you may view the transaction history of a gift card by clicking on the ellipsis menu on a gift card's details page and then clicking the _Transaction history_ button. You are then directed to the _/gift-card/:gan/history_ page where a list of gift card activities is retrieved and displayed using the [List gift card activities API](https://developer.squareup.com/reference/square/gift-card-activities-api/list-gift-card-activities). See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L75)
+Once a gift card is activated, you may view the transaction history of a gift card by clicking on the ellipsis menu on a gift card's details page and then clicking the _Transaction history_ button. You are then directed to the _/gift-card/:gan/history_ page where a list of gift card activities is retrieved and displayed using the [List gift card activities API](https://developer.squareup.com/reference/square/gift-card-activities-api/list-gift-card-activities). See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L75):
 
 ```
 router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, next) => {
@@ -308,7 +316,7 @@ The following APIs are used to add funds to a gift card:
 - `createPayment` takes payment by charging the specified card on file using the [Create payment API](https://developer.squareup.com/reference/square/payments-api/create-payment)
 - `createGiftCardActivity` loads funds on the gift card using the [Create gift card activity API](https://developer.squareup.com/reference/square/gift-card-activities-api/create-gift-card-activity). In the request, the activity type is set appropriately. For example, LOAD to load funds or ACTIVATE to activate the gift card.
 
-See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L140)
+See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L140):
 
 ```
 router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
