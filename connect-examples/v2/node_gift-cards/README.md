@@ -359,4 +359,4 @@ The following [middleware functions](https://github.com/square/connect-api-examp
 **Note:** Gift cards have different maximum amount limits based on the currency of your seller account. You will not able to pay successfully if a card has reached its limit. In this app, we prevent this error from the frontend.
 
 ## Feedback
-Leave a feedback for this sample app [here](https://delighted.com/t/DT6msOcY)!
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

@@ -167,4 +167,4 @@ if ($response->isSuccess()) {
 ```
 
 ## Feedback
-Leave a feedback for this sample app [here](https://delighted.com/t/DT6msOcY)!
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

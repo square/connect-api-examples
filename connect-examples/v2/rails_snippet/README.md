@@ -23,4 +23,4 @@ SQUARE_APPLICATION_SECRET=your-app-secret
 The application will then run and be accessible at http://localhost:3000
 
 ## Feedback
-Leave a feedback for this sample app [here](https://delighted.com/t/DT6msOcY)!
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

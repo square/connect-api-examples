@@ -41,4 +41,4 @@ To run the example, execute the following from the command line:
 You can then proceed through the OAuth flow by going to `http://localhost:4567` in your web browser.
 
 ## Feedback
-Leave a feedback for this sample app [here](https://delighted.com/t/DT6msOcY)!
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!
