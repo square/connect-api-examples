@@ -93,3 +93,6 @@ key muanually as the environment variable.
 
 You can use [AWS Key Management Service (KMS)](https://docs.aws.amazon.com/kms/latest/developerguide/overview.html)
 or other similar services to protect your key.
+
+## Feedback
+Leave a feedback for this sample app [here](https://delighted.com/t/DT6msOcY)!

@@ -242,3 +242,6 @@ After creating a booking, the application lets the user cancel it by providing t
 <img src="./bin/images/cancel-booking-screenshot.png" width="700">
 
 When the booking is cancelled successfully, the route handler redirects the application flow to the application's home page through the `/services?cancel=success` route. The `?cancel=success` query expression causes the statement **Your booking was cancelled successfully!** to be added to the original home page.
+
+## Feedback
+Leave a feedback for this sample app [here](https://delighted.com/t/DT6msOcY)!
