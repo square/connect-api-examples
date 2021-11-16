@@ -58,3 +58,6 @@ For more information about Checkout please visit:
 * https://developer.squareup.com/docs/checkout-api-overview
 * https://developer.squareup.com/reference/square/checkout-api
 * https://github.com/square/square-php-sdk/blob/master/docs/Api/CheckoutApi.md
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

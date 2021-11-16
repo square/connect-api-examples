@@ -39,3 +39,6 @@ To run the example, execute the following from the command line:
     ruby oauth-flow.rb
 
 You can then proceed through the OAuth flow by going to `http://localhost:4567` in your web browser.
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

@@ -357,3 +357,6 @@ The following [middleware functions](https://github.com/square/connect-api-examp
 - `checkCardOwner` verified that the card being accessed belongs to the logged-in customer
 
 **Note:** Gift cards have different maximum amount limits based on the currency of your seller account. You will not able to pay successfully if a card has reached its limit. In this app, we prevent this error from the frontend.
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

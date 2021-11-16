@@ -59,3 +59,6 @@ php composer.phar install
     ```
 
 1. Open http://localhost:8000/request_token.php to start.
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!
