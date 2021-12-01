@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsPayment</title>
+    <%= csrf_meta_tags %>
+    <script type="text/javascript">
+      window.applicationId = '<%=Rails.application.secrets.square_application_id %>';
+      window.locationId = '<%=Rails.application.secrets.square_location_id %>';
+    </script>
+    <%= stylesheet_link_tag 'application', 'data-turbolinks-track' => true %>
+  </head>
+  <body>
+
+    <%= yield %>
+
+
+  </body>
+</html>
