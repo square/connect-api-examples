@@ -5,6 +5,7 @@ This folder includes the following samples:
 * [__csharp_checkout__](https://github.com/square/connect-api-examples/tree/master/connect-examples/v2/csharp_checkout): a simple .NET server implementation that utilizes Square Checkout
 to take a custom payment.
 * [__csharp_payment__](https://github.com/square/connect-api-examples/tree/master/connect-examples/v2/csharp_payment): a simple .NET server implementation for taking payments with an accompanying UI.
+* [__in_app_payment__](https://github.com/square/connect-api-examples/tree/master/connect-examples/v2/in_app_payment): Android and iOS sample apps for taking payments with a Node.js server implementation.
 * [__java_catalog__](https://github.com/square/connect-api-examples/tree/master/connect-examples/v2/java_catalog): a Java command line app that manages catalog items using the Catalog API.
 * [__java_payment__](https://github.com/square/connect-api-examples/tree/master/connect-examples/v2/java_payment): a simple Java server implementation for taking payments with an accompanying UI.
 * [__node_gift-cards__](https://github.com/square/connect-api-examples/tree/master/connect-examples/v2/node_gift-cards): a Node.js webapp for managing gift cards using the Gift Cards and Gift Card Activities API.
