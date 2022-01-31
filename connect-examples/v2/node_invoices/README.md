@@ -25,8 +25,10 @@ Before you begin, note the following:
 
 ## Setup
 
-1. Ensure you have npm installed (`npm -v` in your terminal) with version v10 or greater.
+1. Ensure you have npm installed (`npm -v` in your terminal)
    If not please follow the instructions for your OS: https://www.npmjs.com/get-npm
+
+1. Ensure you have node installed (`node -v`) with version v10 or greater.
 
 1. Set your credentials.
 

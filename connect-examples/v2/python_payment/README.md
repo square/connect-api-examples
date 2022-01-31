@@ -27,8 +27,7 @@ Make sure you have Python >= 3.4
 
 ### Provide required credentials
 
-Replace all your credentials in `config.ini`. Note that there's sandbox and
-production credentials. Use `is_prod` (true/false) to choose between them.
+Create a `config.ini` file at the root directory by copying the contents of the `config.ini.example` file and populate it. Note that there's sandbox and production credentials. Use `is_prod` (true/false) to choose between them.
 Do not use quotes around the strings in the `config.ini` file.
 (**WARNING**: never upload `config.ini` with your credentials/access_token.)
 

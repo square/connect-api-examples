@@ -130,7 +130,7 @@ getImageForBrand = function(brand) {
   const prefix = "/images/"
   const extension = ".svg";
   let name = "";
-  switch(brand) {
+  switch (brand) {
     case "VISA": 
       name = "visa";
       break;
@@ -177,13 +177,16 @@ getCustomerName = function(firstName, lastName, length = 40) {
  * A function to build data from a list of Cards objects for the select dropdown element.
  */
 getCardsData = function(cards) {
-  return cards.map(card => ({
-    img: getImageForBrand(card.cardBrand),
-    value: card.id,
-    displayValue: capitalize(card.cardBrand) + " ●●●● " + card.last4,
-    description: capitalize(card.cardBrand)
-    })
-  );
+  return cards.map(card => {
+    card.cardBrand = getCardBrand(card);
+    return {
+      img: getImageForBrand(card.cardBrand),
+      value: card.id,
+      displayValue: capitalize(card.cardBrand) + " ●●●● " + card.last4,
+      description: capitalize(card.cardBrand)
+    }
+  });
+  return test;
 }
 
 getMinAndStepByCurrency = function(currency) {
@@ -200,5 +203,39 @@ getMaxByCurrency = function(maxAllowedInSmallestDenomination, currency) {
   } 
 
   return Number(maxAllowedInSmallestDenomination) / 100.0;
+}
+
+/**
+ * A function that returns the brand of the card associated with the customer.
+ * If the brand is not set on the object itself, it will use the BIN number to infer.
+ */
+getCardBrand = function(card) {
+  if (card.cardBrand) {
+    return;
+  }
+
+  return getCardBrandFromBin(card.bin);
+}
+
+/**
+ * A function that returns the brand of the card associated with the customer based on the bin.
+ */
+getCardBrandFromBin = function(bin) {
+  let name = "";
+  switch (bin.charAt(0)) {
+    case '4':
+      name = "VISA";
+      break;
+    case '5':
+      name = "MASTERCARD";
+      break;
+    case '3':
+      name = "AMERICAN_EXPRESS";
+      break;
+    default:
+      break;
+  }
+
+  return name;
 }
 %>

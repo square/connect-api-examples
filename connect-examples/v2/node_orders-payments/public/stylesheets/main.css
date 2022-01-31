@@ -18,7 +18,9 @@ limitations under the License.
    Base styles: opinionated defaults
    ========================================================================== */
 
-   * {
+@import url(https://square-fonts-production-f.squarecdn.com/square-sans.min.css);
+
+* {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     outline: none;
@@ -105,7 +107,7 @@ html, body {
     color: var(--dark-gray);
     font-size: 16px;
     line-height: 28px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: var(--square-sans-text);
     font-weight: 500;
     margin: 0;
     padding: 0;
@@ -129,13 +131,14 @@ button {
     font-size: 16px;
     color: #fff;
     text-decoration: none;
+    font-family: var(--square-sans-text);
 }
 
 body.modal-open { overflow: hidden; position: relative; }
 body.modal-open #cocoon { overflow: hidden; position: relative; }
 
 h1, h2, h3, h4, h5 {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: var(--square-sans-text);
     font-weight: 500;
     margin: 1em auto 0 auto;
 }

@@ -2,11 +2,14 @@
   Dropdown selector
 */
 
+@import url(https://square-fonts-production-f.squarecdn.com/square-sans.min.css);
+
 .pretty-dropdown {
   position: relative;
   font-size: 14px;
   line-height: 22px;
   cursor: pointer;
+  font-family: var(--square-sans-text);
 }
 
 .pretty-dropdown__selected {
