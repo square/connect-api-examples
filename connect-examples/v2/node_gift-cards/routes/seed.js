@@ -46,8 +46,8 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
     await cardsApi.createCard(createCardRequest);
 
     // There is a small lag between card creation and when this card is available through listCards.
-    // so, sleep for 4 seconds to be safe.
-    await new Promise(r => setTimeout(r, 4000));
+    // so, sleep for 4.5 seconds to be safe.
+    await new Promise(r => setTimeout(r, 4500));
     // Redirect to the add-funds page, which will now present the newly created card.
     res.redirect("/gift-card/" + gan + "/add-funds/?cardCreated=success");
   } catch (error) {

@@ -2,13 +2,11 @@
   Dropdown menu
 */
 
-@import url(https://square-fonts-production-f.squarecdn.com/square-sans.min.css);
-
 .pretty-dropdown-menu {
   position: relative;
   height: 40px;
   width: 40px;
-  font-family: var(--square-sans-text);
+  font-size: 13px;
 }
 
 .pretty-dropdown-menu button {

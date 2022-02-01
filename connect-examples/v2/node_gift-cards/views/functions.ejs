@@ -178,7 +178,7 @@ getCustomerName = function(firstName, lastName, length = 40) {
  */
 getCardsData = function(cards) {
   return cards.map(card => {
-    card.cardBrand = getCardBrand(card);
+    setCardBrandIfNull(card);
     return {
       img: getImageForBrand(card.cardBrand),
       value: card.id,
@@ -205,15 +205,15 @@ getMaxByCurrency = function(maxAllowedInSmallestDenomination, currency) {
 }
 
 /**
- * A function that returns the brand of the card associated with the customer.
+ * A function that sets the brand of the card associated with the customer.
  * If the brand is not set on the object itself, it will use the BIN number to infer.
  */
-getCardBrand = function(card) {
+setCardBrandIfNull = function(card) {
   if (card.cardBrand) {
     return;
   }
 
-  return getCardBrandFromBin(card.bin);
+  card.cardBrand = getCardBrandFromBin(card.bin);
 }
 
 /**
