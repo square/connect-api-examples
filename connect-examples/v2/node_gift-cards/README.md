@@ -38,9 +38,11 @@ The sample application does not implement a login authentication mechanism that 
 
 ## Setup
 
-1. Ensure that you have Node.js version v10 or later (run `npm -v` in your terminal). If not, follow the instructions for your OS: [https://nodejs.org](https://nodejs.org)
+1. Ensure that you have npm installed (run `npm -v` in your terminal). If not, follow the instructions for your OS: [https://nodejs.org](https://nodejs.org)
 
-2. Set your credentials:
+1. Ensure you have node installed (`node -v`) with version v10 or greater.
+
+1. Set your credentials:
 
    1. Create a `.env` file at the top of this directory by copying the contents of the `.env.example` file
    2. In the file, replace the placeholder texts with actual values for:
@@ -54,15 +56,15 @@ The sample application does not implement a login authentication mechanism that 
 
    **Sandbox testing:** You may configure this application to run using either Square `sandbox` or `production` environments and credentials. For testing, the `sandbox` environment is recommended because you can use fake credit or debit cards to test payments. To learn more about testing in the sandbox environment, refer to [Test in the Sandbox](https://developer.squareup.com/docs/testing/sandbox).
 
-3. From the directory `connect-examples/v2/node_gift-cards`, install the sample application's dependencies with the following command:
+1. From the directory `connect-examples/v2/node_gift-cards`, install the sample application's dependencies with the following command:
 
    `npm install`
 
-4. Run the application:
+1. Run the application:
 
    `npm start`
 
-5. Go to http://localhost:3000 in your browser to explore the application
+1. Go to http://localhost:3000 in your browser to explore the application
 
 ## Test data
 

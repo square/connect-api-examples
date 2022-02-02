@@ -96,8 +96,8 @@
             Click on the button below to add a card on file, this action is only supported in sandbox mode.
           </div>
 
-          <form method="POST" action="/seed/<%= customerId %>/create-card?gan=<%= giftCard.gan %>">
-            <button class="square-button" type="submit">Add card</button>
+          <form id="card-creation-form" method="POST" action="/seed/<%= customerId %>/create-card?gan=<%= giftCard.gan %>">
+            <button onclick="createLoadingScreen('card-creation-form')" class="square-button" type="submit">Add card</button>
           </form>
         <% }; %>
       </div> 
@@ -105,6 +105,7 @@
 
       <script src="/js/pretty-select-dropdown.js"></script>
       <script src="/js/amount-bar.js"></script>
+      <script src="/js/loading.js"></script>
 
       <% var cardsData = getCardsData(cards); %>
 
@@ -125,6 +126,14 @@
       <script>
         const amountBar = new AmountBar("amount-bar", <%- formatMoney %>, "<%= currency %>", <%= maxLimit - Number(giftCard.balanceMoney.amount) %>);
       </script>
+
+      <div class="loading__shadow-overlay">
+        <div class="loading__container">
+          <img class="spinner" src="/images/loading.svg">
+          <h3>Creation in progress. </h3>
+          <p>This might take up to a few seconds.</p>
+        </div>
+      </div>
   </body>
 
   </html>

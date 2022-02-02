@@ -1,6 +1,6 @@
 {
   "require": {
-    "square/square": "10.0.0.20210421",
+    "square/square": "17.1.0.20220120",
     "vlucas/phpdotenv": "^3.3"
   }
 }

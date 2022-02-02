@@ -30,7 +30,7 @@ There are two sections in this ReadMe.
 1. Then to run the server:
 
    ```
-   bin/rails start
+   bin/rails server
    ```
 
 1. Open a browser and navigate to [localhost:3000](http://localhost:3000)

@@ -4,6 +4,7 @@
   padding: .2em .2em 0;
   display: none;
   margin-bottom: 40px;
+  font-family: var(--square-sans-display);
 }
 
 .ui-widget-header {

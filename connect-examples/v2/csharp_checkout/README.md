@@ -20,9 +20,9 @@ Checkout API integrate in the ASP.NET app.
 To get it running:
 
 * Clone/download to your local computer.
-* Place your production credentials in `appsettings.Production.json`
+* Create `appsettings.Production.json` file by copying the contents of `appsettings.Production.json.example` and populate it with your production credentials.
   * <b>WARNING</b>: never upload .env with your credential/access_token
-* Place your sandbox credentials in `appsettings.Sandbox.json`
+* Create `appsettings.Sandbox.json` file by copying the contents of `appsettings.Sandbox.json.example` and populate it with your sandbox credentials.
   * <b>WARNING</b>: never upload .env with your credential/access_token
 * Run the following command in your terminal, while inside the "csharp_checkout" (this) directory to start your server:
 ```
