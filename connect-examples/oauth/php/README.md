@@ -22,7 +22,7 @@ After you've downloaded Composer, install the dependencies with the following
 command from this directory:
 
 ```
-php composer.phar install
+composer install
 ```
 
 ### Step 2: Get your credentials and set the redirect URL:

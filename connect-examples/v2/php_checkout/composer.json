@@ -1,6 +1,7 @@
 {
   "require": {
     "square/square": "*",
-    "vlucas/phpdotenv": "^3.3"
+    "vlucas/phpdotenv": "^3.3",
+    "php": "<8.1"
   }
 }
