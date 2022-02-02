@@ -10,6 +10,10 @@ along with the comments included in `sandbox_callback.php`.
 
 ## Getting started
 
+### Requirements
+
+* 7.1 <= PHP < 8.1
+
 ### Step 1: Download Composer and dependencies
 
 This application requires the PHP Square SDK as well as DotEnv for reading environment variables, which you install via
@@ -22,7 +26,7 @@ After you've downloaded Composer, install the dependencies with the following
 command from this directory:
 
 ```
-php composer.phar install
+composer install
 ```
 
 ### Step 2: Get your credentials and set the redirect URL:

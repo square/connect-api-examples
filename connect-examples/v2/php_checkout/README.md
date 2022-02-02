@@ -15,7 +15,7 @@ It takes a single payment, declared by the user, and creates an order to use in 
 
 ### Requirements
 
-* PHP >= 7.1
+* 7.1 <= PHP < 8.1
 
 ### Install the PHP client library
 
@@ -28,14 +28,14 @@ file. To install the client library:
 2. Run the following command from the directory containing `composer.json`:
 
 ```
-php composer.phar install
+composer install
 ```
 
 ### Specify your application credentials
 
-In order for the example to work, you must edit the file called `.env` with your application credentials and environment configuration.
+In order for the example to work, you must create a new file `.env` by copying the contents of the `.env.example` file. Edit this file with your application credentials and environment configuration.
 
-Open your [application dashboard](https://developer.squareup.com/). Now supply either production, sandbox, or both credentials. Open this file and update the following variables:
+Open your [developer dashboard](https://developer.squareup.com/). Now supply either production, sandbox, or both credentials. Open this file and update the following variables:
 * WARNING: never upload .env with your credential/access_token
 
 | Variable               |  Type    |   Description   |

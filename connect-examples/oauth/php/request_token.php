@@ -15,6 +15,12 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::create(__DIR__);
 $dotenv->load();
 
+// Make sure the sample app only runs with PHP < 8.1 for now.
+if (version_compare(phpversion(), '8.1.0', '>=')) {
+  displayError("Unsupported PHP version",
+    "This sample app is meant to be run with PHP version < 8.1. Change your PHP version and try again.");
+}
+
 // Specify the permissions and url encode the spaced separated list.
 $permissions = urlencode(
                   "ITEMS_READ " . 
