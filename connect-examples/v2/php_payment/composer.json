@@ -1,8 +1,7 @@
 {
   "require": {
-    "square/square": "*",
+    "square/square": "18.0.0.20220420",
     "vlucas/phpdotenv": "^3.3",
-    "ramsey/uuid": "*",
-    "php": "<8.1"
+    "ramsey/uuid": "*"
   }
 }

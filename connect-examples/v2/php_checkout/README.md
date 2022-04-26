@@ -15,7 +15,7 @@ It takes a single payment, declared by the user, and creates an order to use in 
 
 ### Requirements
 
-* 7.1 <= PHP < 8.1
+* 7.1 <= PHP
 
 ### Install the PHP client library
 

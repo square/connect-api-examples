@@ -1,12 +1,5 @@
 <?php
 
-// Make sure the sample app only runs with PHP < 8.1 for now.
-if (version_compare(phpversion(), '8.1.0', '>=')) {
-  echo 'Unsupported PHP version<br/>';
-  echo '<strong>This sample app is meant to be run with PHP version < 8.1. Change your PHP version and try again.</strong><br/>';
-  exit();
-}
-
 // Note this line needs to change if you don't use Composer:
 // require('square-php-sdk/autoload.php');
 require 'vendor/autoload.php';
