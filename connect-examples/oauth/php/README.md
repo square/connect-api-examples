@@ -12,7 +12,7 @@ along with the comments included in `sandbox_callback.php`.
 
 ### Requirements
 
-* 7.1 <= PHP < 8.1
+* 7.1 <= PHP
 
 ### Step 1: Download Composer and dependencies
 
