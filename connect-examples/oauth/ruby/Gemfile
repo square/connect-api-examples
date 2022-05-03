@@ -2,5 +2,5 @@ source "https://rubygems.org"
 
 ruby '2.4.2'
 gem 'square.rb'
-gem 'sinatra', '~> 2.0'
+gem 'sinatra', '~> 2.2'
 gem 'dotenv-rails', groups: [:development, :test]

@@ -53,7 +53,7 @@ GEM
     nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     rack (2.2.3)
-    rack-protection (2.0.8.1)
+    rack-protection (2.2.0)
       rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
@@ -69,11 +69,11 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rake (13.0.3)
-    ruby2_keywords (0.0.2)
-    sinatra (2.0.8.1)
+    ruby2_keywords (0.0.5)
+    sinatra (2.2.0)
       mustermann (~> 1.0)
-      rack (~> 2.0)
-      rack-protection (= 2.0.8.1)
+      rack (~> 2.2)
+      rack-protection (= 2.2.0)
       tilt (~> 2.0)
     square.rb (6.0.0.20200625)
       certifi (~> 2018.1)
@@ -92,7 +92,7 @@ PLATFORMS
 
 DEPENDENCIES
   dotenv-rails
-  sinatra (~> 2.0)
+  sinatra (~> 2.2)
   square.rb
 
 RUBY VERSION
