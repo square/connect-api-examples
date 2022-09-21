@@ -72,18 +72,36 @@ function getQueryVariables(query) {
 async function query(queryName, queryVariables) {
   const sampleQuery = QUERIES[queryName];
   try {
+    let hasNextPage = true;
+    let prevEndCursor = null;
+    let pageNum = 1;
     console.log(`Running the query: ${sampleQuery}`);
     console.log(`Here are the results from the ${queryName} query:`);
-    const data = await getGraphQlClient().request(sampleQuery, queryVariables);
-    const dataObj = queryName === "catalog" ? data[queryName].all : data[queryName];
-    if (!dataObj) {
-      console.log("No objects returned from query");
-      return;
-    }
-    const nodes = dataObj.nodes;
-    for (const obj of nodes) {
-      console.log("===================================================");
-      console.dir(obj, { depth: null });
+    while (hasNextPage) {
+      if (prevEndCursor) {
+        queryVariables.after = prevEndCursor;
+      } else {
+        queryVariables.after = null;
+      }
+      const data = await getGraphQlClient().request(sampleQuery, queryVariables);
+      const dataObj = queryName === "catalog" ? data[queryName].all : data[queryName];
+      if (!dataObj) {
+        console.log("No objects returned from query");
+        return;
+      }
+      const { pageInfo, nodes } = dataObj;
+      for (const obj of nodes) {
+        console.log("===================================================");
+        console.dir(obj, { depth: null });
+      }
+      // We need to fetch more data if hasNextPage is true
+      if (pageInfo) {
+        hasNextPage = pageInfo.hasNextPage;
+        prevEndCursor = pageInfo.endCursor;
+      } else {
+        hasNextPage = false;
+      }
+      pageNum++;
     }
   } catch (err) {
     console.error(`Error when executing ${queryName} query`, err);
@@ -110,6 +128,9 @@ program
     const variables = getQueryVariables(QUERIES[response.query]);
     if (variables) {
       for (const variable of variables) {
+        if (variable === "after") {
+          continue; // skip the $after variable since we populate it from the pageInfo response
+        }
         let variablesResponse;
         // all variables are required so don't allow empty strings
         while (!variablesResponse || !variablesResponse[variable] ||
