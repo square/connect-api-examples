@@ -183,13 +183,20 @@ const ORDERS_QUERY = gql`
   query ORDERS_QUERY_SAMPLE_APP(
     $merchantId: ID!
     $locationId: ID!
+    $after: Cursor
   ) {
     orders(
+      after: $after
       filter: {
         merchants: { equalToAnyOf: [$merchantId] }
         locations: { equalToAnyOf: [$locationId] }
       }
     ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+        startCursor
+      }
       nodes {
         id
         lineItems {
