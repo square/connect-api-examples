@@ -2,12 +2,18 @@ const { gql } = require("graphql-request");
 
 const CATALOG_QUERY = gql`
   query CATALOG_QUERY(
+    $after: Cursor
     $merchantId: ID!
   ) {
     catalog (
       merchants: { equalToAnyOf: [$merchantId] }
     ) {
-      all {
+      all(after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+          startCursor
+        }
         nodes {
           __typename
           id
@@ -101,15 +107,22 @@ const CATALOG_QUERY = gql`
 
 const CUSTOMERS_QUERY = gql`
   query CUSTOMERS_SAMPLE_APP_QUERY(
+    $after: Cursor
     $merchantId: ID!
   ) {
     customers(
+      after: $after
       filter: {
         merchantId: {
           equalToAnyOf: [ $merchantId ]
         }
       }
     ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+        startCursor
+      }
       nodes {
         id
         address {
@@ -170,13 +183,20 @@ const ORDERS_QUERY = gql`
   query ORDERS_QUERY_SAMPLE_APP(
     $merchantId: ID!
     $locationId: ID!
+    $after: Cursor
   ) {
     orders(
+      after: $after
       filter: {
         merchants: { equalToAnyOf: [$merchantId] }
         locations: { equalToAnyOf: [$locationId] }
       }
     ) {
+      pageInfo {
+        hasNextPage
+        endCursor
+        startCursor
+      }
       nodes {
         id
         lineItems {
