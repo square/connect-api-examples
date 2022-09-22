@@ -78,11 +78,7 @@ async function query(queryName, queryVariables) {
     console.log(`Running the query: ${sampleQuery}`);
     console.log(`Here are the results from the ${queryName} query:`);
     while (hasNextPage) {
-      if (prevEndCursor) {
-        queryVariables.after = prevEndCursor;
-      } else {
-        queryVariables.after = null;
-      }
+      queryVariables.after = prevEndCursor ? prevEndCursor : null;
       const data = await getGraphQlClient().request(sampleQuery, queryVariables);
       const dataObj = queryName === "catalog" ? data[queryName].all : data[queryName];
       if (!dataObj) {
