@@ -79,6 +79,7 @@ router.get("/:locationId/:customerId", async (req, res, next) => {
         }
       }
     });
+
     // Render the invoice management page
     res.render("management", {
       locationId,

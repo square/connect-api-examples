@@ -1,0 +1,641 @@
+{
+  "catalog": [
+    {
+      "id": "#bakedGoods",
+      "type": "CATEGORY",
+      "categoryData": {
+        "name": "Baked Goods"
+      }
+    },
+    {
+      "id": "#drinks",
+      "type": "CATEGORY",
+      "categoryData": {
+        "name": "Drinks"
+      }
+    },
+    {
+      "id": "#breakfast",
+      "type": "CATEGORY",
+      "categoryData": {
+        "name": "Breakfast"
+      }
+    },
+    {
+      "id": "#croissant",
+      "type": "ITEM",
+      "itemData": {
+        "abbreviation": "CR",
+        "name": "Croissant",
+        "categoryId": "#bakedGoods",
+        "description": "Light and flaky buttery croissant",
+        "presentAtAllLocations": true,
+        "productType": "REGULAR",
+        "taxIds": [
+          "#tax"
+        ],
+        "variations": [
+          {
+            "id": "#regularCroissant",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Regular",
+              "priceMoney": {
+                "amount": 375,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#croissant"
+            }
+          },
+          {
+            "id": "#chocolate",
+            "type": "ITEM_VARIATION",
+            "description": "Light and flaky buttery croissant with milk chocolate filling",
+            "itemVariationData": {
+              "name": "Chocolate Croissant",
+              "priceMoney": {
+                "amount": 425,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#croissant"
+            }
+          },
+          {
+            "id": "#hamAndSwiss",
+            "type": "ITEM_VARIATION",
+            "description": "Light and flaky buttery croissant filled with Prosciutto Cotto Italian-style ham and melted Swiss cheese",
+            "itemVariationData": {
+              "name": "Ham & Swiss Croissant",
+              "priceMoney": {
+                "amount": 450,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#croissant"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "#coffeeCake",
+      "type": "ITEM",
+      "itemData": {
+        "abbreviation": "CC",
+        "name": "Coffee Cake",
+        "categoryId": "#bakedGoods",
+        "description": "Fluffy & buttery coffee cake with layers of cinnamon sugar filling",
+        "presentAtAllLocations": true,
+        "productType": "REGULAR",
+        "taxIds": [
+          "#tax"
+        ],
+        "variations": [
+          {
+            "id": "#regularCoffeeCake",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Regular",
+              "priceMoney": {
+                "amount": 350,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#coffeeCake"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "#pancakes",
+      "type": "ITEM",
+      "itemData": {
+        "abbreviation": "PA",
+        "name": "Pancakes",
+        "categoryId": "#breakfast",
+        "description": "Three fluffy homemade pancakes topped with powdered sugar and served with maple syrup",
+        "presentAtAllLocations": true,
+        "productType": "REGULAR",
+        "taxIds": [
+          "#tax"
+        ],
+        "variations": [
+          {
+            "id": "#regularPancakes",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Regular",
+              "priceMoney": {
+                "amount": 799,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#pancakes"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "#eggsbenny",
+      "type": "ITEM",
+      "itemData": {
+        "abbreviation": "EB",
+        "name": "Eggs Benny",
+        "categoryId": "#breakfast",
+        "description": "Two poached eggs and ham on an English muffin. Served on a toasted English Muffin and topped with our delicious home-made Hollandaise Sauce, along with grilled Red Potatoes",
+        "presentAtAllLocations": true,
+        "productType": "REGULAR",
+        "taxIds": [
+          "#tax"
+        ],
+        "variations": [
+          {
+            "id": "#wholeWheatEggsBenny",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Whole wheat English muffin",
+              "priceMoney": {
+                "amount": 1350,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#eggsbenny"
+            }
+          },
+          {
+            "id": "#whiteBreadEggsBenny",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "White English muffin",
+              "priceMoney": {
+                "amount": 1350,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#eggsbenny"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "#frenchtoast",
+      "type": "ITEM",
+      "itemData": {
+        "abbreviation": "FT",
+        "name": "French toast",
+        "categoryId": "#breakfast",
+        "description": "Three slices of thick french toast served hot with butter, powdered sugar, maple syrup.",
+        "presentAtAllLocations": true,
+        "productType": "REGULAR",
+        "taxIds": [
+          "#tax"
+        ],
+        "variations": [
+          {
+            "id": "#regular",
+            "description": "Regular Brioche French toast with berries, powdered sugar & maple syrup",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Regular French toast",
+              "priceMoney": {
+                "amount": 999,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#frenchtoast"
+            }
+          },
+          {
+            "id": "#coconut",
+            "description": "Coconut cream stuffed french toast with brûléed pineapple, crushed macadamia nuts and lemon curb",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Coconut Cream French toast",
+              "priceMoney": {
+                "amount": 1300,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#frenchtoast"
+            }
+          },
+
+          {
+            "id": "#nutella",
+            "description": "Thick slices of Sourdough French Toast topped with fresh strawberries and creamy Nutella",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Nutella & Strawberries French toast",
+              "priceMoney": {
+                "amount": 1250,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#frenchtoast"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "#muffin",
+      "type": "ITEM",
+      "itemData": {
+        "abbreviation": "MUFF",
+        "name": "Muffin",
+        "categoryId": "#bakedGoods",
+        "description": "Plump homemade muffins",
+        "presentAtAllLocations": true,
+        "productType": "REGULAR",
+        "taxIds": [
+          "#tax"
+        ],
+        "variations": [
+          {
+            "id": "#regularMuffin",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Plain muffin",
+              "description": "Simple ol'fashioned muffin yet super soft and buttery",
+              "priceMoney": {
+                "amount": 225,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#muffin"
+            }
+          },
+          {
+            "id": "#blueberry",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Blueberry",
+              "description": "Made with fresh blueberries and topped with a sugary-cinnamon crumb topping",
+              "priceMoney": {
+                "amount": 300,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#muffin"
+            }
+          },
+          {
+            "id": "#appleCinnamon",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Apple Cinnamon",
+              "description": "Scrumptious and full of warm cinnamon and crisp apple bits and finished with a cinnamon sugar topping",
+              "priceMoney": {
+                "amount": 325,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#muffin"
+            }
+          },
+          {
+            "id": "#chocolateChip",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Chocolate Chip",
+              "description": "Full of chocolate chips and soft and buttery",
+              "priceMoney": {
+                "amount": 250,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#muffin"
+            }
+          },
+          {
+            "id": "#bananaNut",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Banana Nut",
+              "description": "Light and moist, full of toasted walnuts, and just sweet enough with a touch of cinnamon",
+              "priceMoney": {
+                "amount": 300,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#muffin"
+            }
+          },
+          {
+            "id": "#carrot",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Carrot with Walnuts",
+              "description": "Hearty muffins packed with grated carrots, walnuts and raisins",
+              "priceMoney": {
+                "amount": 300,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#muffin"
+            }
+          },
+          {
+            "id": "#raisin",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Raisin Bran",
+              "description": "Hearty and low fat packed with Raisin bran cereal",
+              "priceMoney": {
+                "amount": 225,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#muffin"
+            }
+          },
+          {
+            "id": "#doubleChocolate",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Double Chocolate Chip",
+              "description": "Very rich and mega chocolate-y loaded with chocolate chips in every bite",
+              "priceMoney": {
+                "amount": 275,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#muffin"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "#coffee",
+      "type": "ITEM",
+      "itemData": {
+        "abbreviation": "Co",
+        "name": "Coffee",
+        "categoryId": "#drinks",
+        "description": "Coffee Drink",
+        "productType": "REGULAR",
+        "taxIds": [
+          "#tax"
+        ],
+        "variations": [
+          {
+            "id": "#smallCoffee",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Small",
+              "description": "10 oz coffee",
+              "priceMoney": {
+                "amount": 159,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#coffee"
+            }
+          },
+          {
+            "id": "#mediumCoffee",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Medium",
+              "description": "14 oz coffee",
+              "priceMoney": {
+                "amount": 179,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#coffee"
+            }
+          },
+          {
+            "id": "#largeCoffee",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Large",
+              "description": "20 oz coffee",
+              "priceMoney": {
+                "amount": 199,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#coffee"
+            }
+          },
+          {
+            "id": "#xLargeCoffee",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Extra Large",
+              "description": "24 oz coffee",
+              "priceMoney": {
+                "amount": 219,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#coffee"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "#tea",
+      "type": "ITEM",
+      "itemData": {
+        "abbreviation": "Tea",
+        "name": "Tea",
+        "categoryId": "#drinks",
+        "description": "Specialty tea Drink - 14 oz",
+        "productType": "REGULAR",
+        "taxIds": [
+          "#tax"
+        ],
+        "variations": [
+          {
+            "id": "#honeyLemon",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Honey Lemon",
+              "description": "Green tea perfectly blended with the tastes of honey and lemon",
+              "priceMoney": {
+                "amount": 200,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#tea"
+            }
+          },
+          {
+            "id": "#peppermint",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Peppermint",
+              "description": "Delight in the pure, refreshing taste of this warm, savory tea with a fresh and minty taste",
+              "priceMoney": {
+                "amount": 200,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#tea"
+            }
+          },
+          {
+            "id": "#chamomile",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Chamomile",
+              "description": "Comforting, soothing taste and delicate aroma - caffiene free",
+              "priceMoney": {
+                "amount": 200,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#tea"
+            }
+          },
+          {
+            "id": "#peach",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Perfect Peach",
+              "description": "Sweetened iced peach tea",
+              "priceMoney": {
+                "amount": 250,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#tea"
+            }
+          },
+          {
+            "id": "#iced",
+            "type": "ITEM_VARIATION",
+            "itemVariationData": {
+              "name": "Iced Tea",
+              "description": "Crisp and refreshing sweetened iced tea",
+              "priceMoney": {
+                "amount": 250,
+                "currency": "USD"
+              },
+              "pricingType": "FIXED_PRICING",
+              "itemId": "#tea"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "#tax",
+      "type": "TAX",
+      "taxData": {
+        "appliesToCustomAmounts": true,
+        "calculationPhase": "TAX_SUBTOTAL_PHASE",
+        "enabled": true,
+        "inclusionType": "ADDITIVE",
+        "name": "Sales tax",
+        "percentage": "10"
+      }
+    }
+  ],
+  "customers" : [
+    {
+      "givenName": "Amelia",
+      "familyName": "Earhart",
+      "emailAddress": "Amelia.Earhart@example.com",
+      "address": {
+        "addressLine1": "500 Electric Ave",
+        "addressLine2": "Suite 600",
+        "locality": "New York",
+        "administrativeDistrictLevel1": "NY",
+        "postalCode": "10003",
+        "country": "US"
+      },
+      "companyName": "Earhart United",
+      "phoneNumber": "1-212-555-4240",
+      "note": "A customer for GraphQL sample app"
+    },
+    {
+      "givenName": "William",
+      "familyName": "Shakespeare",
+      "emailAddress": "William.Shakespeare@example.com",
+      "address": {
+        "addressLine1": "1000 Juliet Lane",
+        "addressLine2": "Unit A",
+        "locality": "Stratford",
+        "administrativeDistrictLevel1": "Avon",
+        "postalCode": "12345",
+        "country": "GB"
+      },
+      "companyName": "King's Men",
+      "phoneNumber": "1-212-444-1234",
+      "note": "A customer for GraphQL sample app"
+    },
+    {
+      "givenName": "Charles",
+      "familyName": "Darwin",
+      "emailAddress": "Charles.Darwin@example.com",
+      "address": {
+        "addressLine1": "915 Origin Street",
+        "locality": "The Mount",
+        "administrativeDistrictLevel1": "Shrewsbury",
+        "postalCode": "10003",
+        "country": "GB"
+      },
+      "companyName": "Darwin Platform",
+      "phoneNumber": "1-806-123-4555",
+      "note": "A customer for GraphQL sample app"
+    },
+    {
+      "givenName": "Abraham",
+      "familyName": "Lincoln",
+      "emailAddress": "Abraham.Lincoln@example.com",
+      "address": {
+        "addressLine1": "500 Electric Ave",
+        "addressLine2": "Suite 600",
+        "locality": "Sinking Spring Farm",
+        "administrativeDistrictLevel1": "KY",
+        "postalCode": "90000",
+        "country": "US"
+      },
+      "companyName": "Lincoln Property",
+      "phoneNumber": "1-111-666-4240",
+      "note": "A customer for GraphQL sample app"
+    },
+    {
+      "givenName": "Maya",
+      "familyName": "Angelou",
+      "emailAddress": "Maya.Angelou@example.com",
+      "address": {
+        "addressLine1": "11 Rose Way",
+        "locality": "St Louis",
+        "administrativeDistrictLevel1": "MO",
+        "postalCode": "12345",
+        "country": "US"
+      },
+      "companyName": "Caged Bird Legacy",
+      "phoneNumber": "1-212-555-8888",
+      "note": "A customer for GraphQL sample app"
+    },
+    {
+      "givenName": "Frida",
+      "familyName": "Kahlo",
+      "emailAddress": "Frida.Kahlo@example.com",
+      "address": {
+        "addressLine1": "7253 Surrealism Ave",
+        "addressLine2": "Suite 5",
+        "locality": "Coyoacá",
+        "administrativeDistrictLevel1": "Mexico City",
+        "postalCode": "10003",
+        "country": "MX"
+      },
+      "companyName": "The Two Fridas",
+      "phoneNumber": "1-212-555-4240",
+      "note": "A customer for GraphQL sample app"
+    }
+  ]
+}

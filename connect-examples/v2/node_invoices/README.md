@@ -25,8 +25,10 @@ Before you begin, note the following:
 
 ## Setup
 
-1. Ensure you have npm installed (`npm -v` in your terminal) with version v10 or greater.
+1. Ensure you have npm installed (`npm -v` in your terminal)
    If not please follow the instructions for your OS: https://www.npmjs.com/get-npm
+
+1. Ensure you have node installed (`node -v`) with version v10 or greater.
 
 1. Set your credentials.
 
@@ -171,3 +173,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

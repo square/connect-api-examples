@@ -1,4 +1,6 @@
-﻿.container {
+﻿@import url(https://square-fonts-production-f.squarecdn.com/square-sans.min.css);
+
+.container {
     width: 920px;
     margin: 0 auto;
 }
@@ -44,6 +46,7 @@
 
 body {
     background-color: #ececec;
+    font-family: var(--square-sans-text);
 }
 
 form {
@@ -57,7 +60,7 @@ input {
     outline-offset: -2px;
     display: inline-block;
     font-size: 18px;
-    font-family: "HelveticaNeue";
+    font-family: var(--square-sans-text);
     padding: 15px;
     color: #373F4A;
 }
@@ -75,6 +78,6 @@ button {
     padding: 15px;
     margin-top: 10px;
     outline: none;
-    font-family: "HelveticaNeue-Bold", Helvetica, Arial, sans-serif;
+    font-family: var(--square-sans-text);
 }
 

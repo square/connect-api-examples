@@ -174,7 +174,7 @@ router.post("/create", async (req, res, next) => {
           paymentRequest
         ],
         acceptedPaymentMethods: {
-          bankAccount: true,
+          bankAccount: false,
           squareGiftCard: true,
           card: false
         }
@@ -182,7 +182,7 @@ router.post("/create", async (req, res, next) => {
     };
 
     console.log(requestBody);
-    const { result : { invoice }} = await invoicesApi.createInvoice(requestBody);
+    const { result : { invoice } } = await invoicesApi.createInvoice(requestBody);
 
     res.redirect(`view/${locationId}/${customerId}/${invoice.id}`);
   } catch (error) {

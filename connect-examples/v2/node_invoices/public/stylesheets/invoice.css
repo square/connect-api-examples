@@ -13,6 +13,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+@import url(https://square-fonts-production-f.squarecdn.com/square-sans.min.css);
+
+html, body {
+    color: var(--dark-gray);
+    font-size: 16px;
+    line-height: 24px;
+    font-family: var(--square-sans-text);
+    font-weight: normal;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+}
 
 .button-container {
   display: flex;

@@ -2,11 +2,13 @@
 * This file contains styling for the core components of the app.
 */
 
+@import url(https://square-fonts-production-f.squarecdn.com/square-sans.min.css);
+
 body {
   font-size: 14px;
   line-height: 22px;
   color: rgba(0, 0, 0, 0.9);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--square-sans-text);
 }
 
 h1 {
@@ -14,6 +16,7 @@ h1 {
   line-height: 60px;
   margin-top: 0px;
   margin-bottom: 16px;
+  font-family: var(--square-sans-display);
 }
 
 h3 {
@@ -35,6 +38,10 @@ h5 {
   letter-spacing: 0.006em;
   margin-top: 28px;
   margin-bottom: 10px;
+}
+
+button {
+  font-family: var(--square-sans-text);
 }
 
 a {

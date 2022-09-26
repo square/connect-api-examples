@@ -6,6 +6,7 @@
   position: relative;
   height: 40px;
   width: 40px;
+  font-size: 13px;
 }
 
 .pretty-dropdown-menu button {

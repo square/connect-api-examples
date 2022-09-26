@@ -29,7 +29,7 @@ which correspond to either your sandbox or production credentials.
 
     NOTE: If the credentials are not set or are invalid, the app will fail during startup.
     
-1. Open a browser and navigate to [localhost:5000](http://localhost:5000). The default port used is `5000`, but this can be configured in the `application.properties` file.
+1. Open a browser and navigate to [localhost:3000](http://localhost:3000). The default port used is `3000`, but this can be configured in the `application.properties` file.
 
 1. Test with different payment options. For more information on testing in sandbox mode, follow the guide: [Testing using the API sandbox](https://developer.squareup.com/docs/testing/sandbox).
 
@@ -157,3 +157,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

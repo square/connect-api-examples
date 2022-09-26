@@ -3,3 +3,5 @@ bin
 obj
 packages
 *.userprefs
+appsettings.json
+appsettings.*.json

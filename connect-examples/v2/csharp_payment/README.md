@@ -13,7 +13,7 @@ There are two sections in this ReadMe.
 
 ## Setup
 
-1. Open `./appsettings.json`. Specify `Environment`, and replace `AccessToken`, `LocationId`, and `ApplicationId` with your sandbox or production credentials. You can get your credentials from your Square application created at [Square Developer Portal](https://developer.squareup.com/apps).
+1. create a file `./appsettings.json` by copying `./appsettings.json.example`. Specify `Environment`, and replace `AccessToken`, `LocationId`, and `ApplicationId` with your sandbox or production credentials. You can get your credentials from your Square application created at [Square Developer Portal](https://developer.squareup.com/apps).
 <b>WARNING</b>: never upload `appsettings.json` with your credentials or access token.
 
 1. Esure you have `dotnet` instealled (`dotnet --version` in your terminal). If not, please download [.net core 2.0+](https://www.microsoft.com/net/download/)
@@ -168,3 +168,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

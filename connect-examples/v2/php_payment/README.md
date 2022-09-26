@@ -16,7 +16,7 @@ There are two sections in this README.
 
 ### Requirements
 
-* PHP >= 7.1
+* 7.1 <= PHP
 
 ### Install the PHP client library
 
@@ -29,16 +29,16 @@ file. To install the client library:
 2. Run the following command from the directory containing `composer.json`:
 
     ```
-    php composer.phar install
+    composer install
     ```
 
 ### Specify your application credentials
 
-Create a file named `.env` in the root directory of this example. `.env.example` is an example of what the `.env` file should look like. Fill in values for `SQUARE_APPLICATION_ID`, `SQUARE_ACCESS_TOKEN`, and `SQUARE_LOCATION_ID` with your sandbox or production credentials.
+In order for the example to work, you must create a new file `.env` by copying the contents of the `.env.example` file. Edit this file with your application credentials and environment configuration.
    <b>WARNING</b>: never save your credentials in your code.
 
 
-Open your [application dashboard](https://developer.squareup.com/apps). Now supply either production, sandbox, or both credentials. Open this file and update the following variables:
+Open your [developer dashboard](https://developer.squareup.com/apps). Now supply either production, sandbox, or both credentials. Open this file and update the following variables:
 * WARNING: never upload .env with your credential/access_token
 
 | Variable               |  Type    |   Description   |
@@ -53,9 +53,9 @@ Open your [application dashboard](https://developer.squareup.com/apps). Now supp
 
 From the sample's root directory, run:
 
-    php -S localhost:8000
+    php -S localhost:8888
 
-You can then visit [`localhost:8000`](http://localhost:8000) in your browser to see the payment form.
+You can then visit [`localhost:8888`](http://localhost:8888) in your browser to see the payment form.
 
 If you're using your sandbox credentials, you can test a valid credit card
 payment by providing the following card information in the form:
@@ -165,3 +165,6 @@ if ($response->isSuccess()) {
 }
 ...
 ```
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

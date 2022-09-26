@@ -21,3 +21,6 @@ SQUARE_APPLICATION_SECRET=your-app-secret
 5. Then run `docker-compose up` to start the rails web server 
 
 The application will then run and be accessible at http://localhost:3000
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

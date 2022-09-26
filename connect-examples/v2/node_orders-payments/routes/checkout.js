@@ -324,7 +324,7 @@ router.post("/add-delivery-details", async (req, res, next) => {
             },
             expectedShippedAt: deliveryTime,
           },
-        },],
+        }, ],
         // Add an arbitratry $2.00 taxable delivery fee to the order
         serviceCharges: [{
           // replace serviceCharges if the order is updated again, otherwise add a new serviceCharge.
@@ -357,9 +357,10 @@ router.post("/add-delivery-details", async (req, res, next) => {
  * Description:
  *  Render the page for customer to submit payment information (a nounce) in order to pay the order
  *
- *  We will render SqPaymentForm in this step, it takes credit card informaiton on the client, convert them into
- *  a nonce through square service securely. You can learn more about the SqPaymentForm here:
- *  https://developer.squareup.com/docs/payment-form/overview
+ *  We will render the payment page using the Web Payment SDK in this step.
+ *  It takes credit card information on the client, and converts them into
+ *  a nonce through square service securely. You can learn more about the Web Payment SDK here:
+ *  https://developer.squareup.com/docs/web-payments/overview
  *
  * Query Parameters:
  *  orderId: Id of the order to be updated
@@ -441,7 +442,7 @@ router.post("/payment", async (req, res, next) => {
           amountMoney: order.totalMoney, // Provides total amount of money and currency to charge for the order.
           orderId: order.id, // Order that is associated with the payment
         });
-    
+
         const result = JSON.stringify(payment, (key, value) => {
           return typeof value === "bigint" ? parseInt(value) : value;
         }, 4);
@@ -451,7 +452,7 @@ router.post("/payment", async (req, res, next) => {
         res.json(error.result);
       }
     } else {
-      try{
+      try {
         // Settle an order with a total of 0.
         const { result: { payment } } = await ordersApi.payOrder(orderId, {
           idempotencyKey

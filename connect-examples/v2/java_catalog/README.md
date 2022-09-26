@@ -104,3 +104,6 @@ For example:
 ```bash
 mvn -q exec:java "-Dexec.args=create_item -token $SQUARE_ACCESS_TOKEN -cleanup"
 ```
+
+## Feedback
+Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

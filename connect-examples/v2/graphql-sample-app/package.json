@@ -1,0 +1,37 @@
+{
+  "name": "graphql-sample-app",
+  "version": "1.0.0",
+  "description": "Sample application for Square's GraphQL endpoint",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js query",
+    "seed": "node ./bin/script/seed-data.js generate",
+    "clear": "node ./bin/script/seed-data.js clear"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/squareup/graphql-sample-app.git"
+  },
+  "author": "azlee, emmac3",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/squareup/graphql-sample-app/issues"
+  },
+  "homepage": "https://github.com/squareup/graphql-sample-app#readme",
+  "devDependencies": {
+    "eslint": "^8.22.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
+  },
+  "dependencies": {
+    "commander": "^8.1.0",
+    "dotenv": "^10.0.0",
+    "graphql": "^15.5.2",
+    "graphql-request": "^4.3.0",
+    "prompts": "^2.4.1",
+    "square": "^21.1.0",
+    "uuid": "^8.3.2"
+  }
+}
