@@ -13,11 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-const { Client } = require('square');
-const colors = require('colors/safe');
+const { Client } = require("square");
+const colors = require("colors/safe");
 
 // Load environment variables from .env file
-const { error } = require('dotenv').config();
+const { error } = require("dotenv").config();
 if (error && process.env.NODE_ENV !== "production") {
   const warningMessage = `Failed to load .env file. Be sure that create a .env file at the root of this examples directory
 or set environment variables.You can find an example in the .env.example file provided.`;
@@ -28,10 +28,11 @@ or set environment variables.You can find an example in the .env.example file pr
 // Create client config from environment variables
 const clientConfig = {
   environment: process.env.NODE_ENV,
-  accessToken: process.env.SQUARE_ACCESS_TOKEN
+  accessToken: process.env.SQUARE_ACCESS_TOKEN,
+  userAgentDetail: "sample_app_node_invoices"
 };
 
-const defaultClient = new Client(clientConfig)
+const defaultClient = new Client(clientConfig);
 
 // Instances of Api that are used
 // You can add additional APIs here if you so choose

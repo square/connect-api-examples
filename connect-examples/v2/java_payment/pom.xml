@@ -26,7 +26,7 @@
     <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>square</artifactId>
-      <version>11.0.0.20210513</version>
+      <version>22.0.0.20220720</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>

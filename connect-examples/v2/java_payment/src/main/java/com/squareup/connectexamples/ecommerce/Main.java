@@ -67,7 +67,9 @@ public class Main {
 
     squareClient = new SquareClient.Builder()
         .environment(Environment.fromString(squareEnvironment))
-        .accessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR)).build();
+        .accessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR))
+        .userAgentDetail("sample_app_java_payment")
+        .build();
   }
 
   public static void main(String[] args) throws Exception {
@@ -101,7 +103,8 @@ public class Main {
   }
 
   @PostMapping("/process-payment")
-  @ResponseBody PaymentResult processPayment(@RequestBody TokenWrapper tokenObject)
+  @ResponseBody
+  PaymentResult processPayment(@RequestBody TokenWrapper tokenObject)
       throws InterruptedException, ExecutionException {
     // To learn more about splitting payments with additional recipients,
     // see the Payments API documentation on our [developer site]
@@ -134,7 +137,8 @@ public class Main {
   }
 
   /**
-   * Helper method that makes a retrieveLocation API call using the configured locationId and
+   * Helper method that makes a retrieveLocation API call using the configured
+   * locationId and
    * returns the future containing the response
    *
    * @param squareClient the API client

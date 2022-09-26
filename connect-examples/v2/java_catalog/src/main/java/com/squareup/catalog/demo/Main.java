@@ -65,7 +65,8 @@ public class Main {
   private static final String ARG_BASE_URL = "-base-url";
 
   /**
-   * Optional argument used to specify that the example should be cleaned up instead of being
+   * Optional argument used to specify that the example should be cleaned up
+   * instead of being
    * executed.
    */
   private static final String ARG_CLEANUP = "-cleanup";
@@ -76,7 +77,8 @@ public class Main {
   private static final String ARG_TOKEN = "-token";
 
   /**
-   * Argument used to set environment. If set to sandbox, the APIs will hit the sandbox environment.
+   * Argument used to set environment. If set to sandbox, the APIs will hit the
+   * sandbox environment.
    * If set to production, the APIs will hit the production environment.
    */
   private static final String ENV_FLAG = "-env";
@@ -127,7 +129,8 @@ public class Main {
     }
 
     // Process arguments associated with the example.
-    // By default, set the value of the access token to the environment variable SQUARE_ACCESS_TOKEN,
+    // By default, set the value of the access token to the environment variable
+    // SQUARE_ACCESS_TOKEN,
     // as mentioned in the README.
     String accessToken = System.getenv("SQUARE_ACCESS_TOKEN");
     boolean cleanup = false;
@@ -192,7 +195,8 @@ public class Main {
     }
 
     // Decide on environment.
-    // If both environment and base-url were set, the environment choice will override.
+    // If both environment and base-url were set, the environment choice will
+    // override.
     Environment env;
     if (environment == null) {
       // if environment was not set, check if base url was provided. If so, set
@@ -208,7 +212,8 @@ public class Main {
     }
 
     // Build the client using the arguments provided
-    SquareClient apiClient = apiClientBuilder.environment(env).accessToken(accessToken).build();
+    SquareClient apiClient = apiClientBuilder.environment(env).accessToken(accessToken)
+        .userAgentDetail("sample_app_java_catalog").build();
 
     CatalogApi catalogApi = apiClient.getCatalogApi();
     LocationsApi locationsApi = apiClient.getLocationsApi();
@@ -284,10 +289,14 @@ public class Main {
   }
 
   /**
-   * Finds out the currency to be used across all examples. The listLocation api call will block, as
-   * we need the currency information in order to proceed with processing the examples. NOTE: This
-   * step can be avoided if you know what currency you will be using. In that case, you can simply
-   * comment out the below function, and call 'Moneys.setCurrency(<YOUR APP CURRENCY>);' with values
+   * Finds out the currency to be used across all examples. The listLocation api
+   * call will block, as
+   * we need the currency information in order to proceed with processing the
+   * examples. NOTE: This
+   * step can be avoided if you know what currency you will be using. In that
+   * case, you can simply
+   * comment out the below function, and call 'Moneys.setCurrency(<YOUR APP
+   * CURRENCY>);' with values
    * such as CAD, USD, EUR, GBP, etc.
    *
    * @param locationsApi the LocationsApi utility

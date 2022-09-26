@@ -25,6 +25,7 @@ namespace csharp_checkout.Pages
       client = new SquareClient.Builder()
         .Environment(environment)
         .AccessToken(configuration["AppSettings:AccessToken"])
+        .UserAgentDetail("sample_app_csharp_checkout")
         .Build();
 
       locationId = configuration["AppSettings:LocationId"];

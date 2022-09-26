@@ -19,7 +19,7 @@ There are two sections in this ReadMe.
 
 1. Ensure you have Ruby `2.7.2` installed (`ruby -v` in your terminal). If not please follow the instructions for your OS: https://www.ruby-lang.org/en/downloads/
 
-1. Ensure you have Bundler installed (`bundle -v`) in  your terminal). If not, install it: `gem install bundler`.
+1. Ensure you have Bundler installed (`bundle -v`) in your terminal). If not, install it: `gem install bundler`.
 
 1. Open your terminal and type the following to install the packages:
 
@@ -30,7 +30,7 @@ There are two sections in this ReadMe.
 1. Then to run the server:
 
    ```
-   bin/rails start
+   bin/rails server
    ```
 
 1. Open a browser and navigate to [localhost:3000](http://localhost:3000)
@@ -68,19 +68,20 @@ When the page loads it renders the form defined in the **app/views/welcome/index
   - `sq-apple-pay.js`
 
 - Provides the global method that fires a `fetch` request to the server after receiving the payment token.
+
   ```javascript
-  window.createPayment = async function(token) {
+  window.createPayment = async function (token) {
     const dataJsonString = JSON.stringify({
-      token
+      token,
     });
 
     try {
-      const response = await fetch('process-payment', {
-        method: 'POST',
+      const response = await fetch("process-payment", {
+        method: "POST",
         headers: {
-        'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: dataJsonString
+        body: dataJsonString,
       });
 
       const data = await response.json();
@@ -89,15 +90,15 @@ When the page loads it renders the form defined in the **app/views/welcome/index
         if (data.errors[0].detail) {
           window.showError(data.errors[0].detail);
         } else {
-          window.showError('Payment Failed.');
+          window.showError("Payment Failed.");
         }
       } else {
-        window.showSuccess('Payment Successful!');
+        window.showSuccess("Payment Successful!");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
-  }
+  };
   ```
 
 ### Step 2: Charge the Payment Source Using the Token
@@ -134,6 +135,7 @@ end
 
 Copyright 2021 Square, Inc.
 ​
+
 ```
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

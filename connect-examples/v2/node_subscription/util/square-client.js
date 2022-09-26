@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const{ Client, Environment } = require("square");
-const axios = require('axios').default;
-const colors = require('colors');
+const { Client, Environment } = require("square");
+const axios = require("axios").default;
+const colors = require("colors");
 
 // Load environment variables from .env file
-const { error } = require('dotenv').config();
+const { error } = require("dotenv").config();
 if (error && process.env.NODE_ENV !== "production") {
   const warningMessage = `WARNING: Failed to load .env file. Be sure that create a .env file at the root of this examples directory
 or set environment variables.You can find an example in the .env.example file provided.`;
@@ -29,8 +29,9 @@ or set environment variables.You can find an example in the .env.example file pr
 // Set Square Connect credentials
 const config = {
   environment: process.env.NODE_ENV,
-  accessToken: process.env.SQUARE_ACCESS_TOKEN
-}
+  accessToken: process.env.SQUARE_ACCESS_TOKEN,
+  userAgentDetail: "sample_app_node_subscription"
+};
 
 // Create new Client instance
 // Extract instances of the API that are used
@@ -49,14 +50,14 @@ const {
  * Currently Square's Node.js sdk does not support sending nulls.
  * @param {subscriptionId, version} object
  */
-const revertCanceledSubscription = async ( { subscriptionId, version } ) => {
+const revertCanceledSubscription = async ({ subscriptionId, version }) => {
   // Conditionally set base URL for Environment
   let baseUrl = config.environment === Environment.Production
-  ? `https://connect.squareup.com/v2` : `https://connect.squareupsandbox.com/v2`;
+    ? "https://connect.squareup.com/v2" : "https://connect.squareupsandbox.com/v2";
 
   try {
-    const result = await axios(`${baseUrl}/subscriptions/${subscriptionId}`, {
-      method: 'PUT',
+    await axios(`${baseUrl}/subscriptions/${subscriptionId}`, {
+      method: "PUT",
       data: {
         subscription: {
           version: parseInt(version),
@@ -67,24 +68,24 @@ const revertCanceledSubscription = async ( { subscriptionId, version } ) => {
       },
       headers: {
         Authorization: `Bearer ${config.accessToken}`,
-        'Square-Version': '2020-11-18'
+        "Square-Version": "2020-11-18"
       }
     });
   } catch (error) {
-    const { response } = error
+    const { response } = error;
 
-    let newError = new Error('Failed to revert canceled subscription')
+    let newError = new Error("Failed to revert canceled subscription");
     if (response && response.status) {
-      newError.status = response.status
+      newError.status = response.status;
     }
     if (response && response.data && response.data.errors) {
-      newError.errors = response.data.errors
+      newError.errors = response.data.errors;
     }
 
     // Throws new error object in the format the example expects.
     throw newError;
   }
-}
+};
 
 // Makes API instances and util functions importable
 module.exports = {

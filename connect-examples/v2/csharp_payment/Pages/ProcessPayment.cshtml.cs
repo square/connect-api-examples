@@ -28,6 +28,7 @@ namespace sqRazorSample.Pages
       client = new SquareClient.Builder()
           .Environment(environment)
           .AccessToken(configuration["AppSettings:AccessToken"])
+          .UserAgentDetail("sample_app_csharp_payment")
           .Build();
 
       locationId = configuration["AppSettings:LocationId"];
