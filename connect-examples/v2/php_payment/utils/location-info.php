@@ -19,6 +19,7 @@ class LocationInfo {
   // Initialize the Square client.
   var $currency;
   var $country;
+  var $location_id;
 
   function __construct() {
     $access_token =  getenv('SQUARE_ACCESS_TOKEN');
@@ -28,6 +29,7 @@ class LocationInfo {
       'environment' => getenv('ENVIRONMENT')
     ]);
     $location = $this->square_client->getLocationsApi()->retrieveLocation(getenv('SQUARE_LOCATION_ID'))->getResult()->getLocation();
+    $this->location_id = $location->getId();
     $this->currency = $location->getCurrency();
     $this->country = $location->getCountry();  
   }
@@ -38,6 +40,10 @@ class LocationInfo {
 
   public function getCountry() {
     return $this->country;
+  }
+
+  public function getId() {
+    return $this->location_id;
   }
 }
 

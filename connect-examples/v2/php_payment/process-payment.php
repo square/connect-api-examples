@@ -51,6 +51,7 @@ try {
 // it with the same idempotency key without worrying about double charging
 // the buyer.
   $create_payment_request = new CreatePaymentRequest($token, Uuid::uuid4(), $money);
+  $create_payment_request->setLocationId($location_info->getId());
 
   $response = $payments_api->createPayment($create_payment_request);
 
