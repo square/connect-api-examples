@@ -68,7 +68,7 @@ public class Main {
     squareClient = new SquareClient.Builder()
         .environment(Environment.fromString(squareEnvironment))
         .accessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR))
-        .userAgentDetail("sample_app_java_payment")
+        .userAgentDetail("sample_app_java_payment") // Remove or replace this detail when building your own app
         .build();
   }
 

@@ -21,7 +21,7 @@ const accessToken = process.env["SQUARE_ACCESS_TOKEN"];
 const config = {
   accessToken,
   environment: env,
-  userAgentDetail: "sample_app_node_bookings"
+  userAgentDetail: "sample_app_node_bookings" // Remove or replace this detail when building your own app
 };
 
 // Extract instances of Api that are used

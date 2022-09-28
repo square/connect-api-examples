@@ -28,7 +28,7 @@ const squareApplicationId = process.env["SQUARE_APPLICATION_ID"];
 const config = {
   accessToken,
   environment: env,
-  userAgentDetail: "sample_app_node_orders-payments"
+  userAgentDetail: "sample_app_node_orders-payments" // Remove or replace this detail when building your own app
 };
 
 // Extract instances of Api that are used

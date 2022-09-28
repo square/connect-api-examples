@@ -5,7 +5,7 @@ module SquareApiHelper
     @api_client ||= Square::Client.new(
       access_token: Rails.application.secrets.square_access_token,
       environment: ENV['ENVIRONMENT'],
-      user_agent_detail: "sample_app_rails_payment"
+      user_agent_detail: "sample_app_rails_payment" # Remove or replace this detail when building your own app
     )
   end
 end

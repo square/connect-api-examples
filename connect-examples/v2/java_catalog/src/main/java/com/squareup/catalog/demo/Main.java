@@ -212,8 +212,11 @@ public class Main {
     }
 
     // Build the client using the arguments provided
-    SquareClient apiClient = apiClientBuilder.environment(env).accessToken(accessToken)
-        .userAgentDetail("sample_app_java_catalog").build();
+    SquareClient apiClient = apiClientBuilder
+        .environment(env)
+        .accessToken(accessToken)
+        .userAgentDetail("sample_app_java_catalog") // Remove or replace this detail when building your own app
+        .build();
 
     CatalogApi catalogApi = apiClient.getCatalogApi();
     LocationsApi locationsApi = apiClient.getLocationsApi();

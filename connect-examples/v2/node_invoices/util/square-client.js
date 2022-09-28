@@ -29,7 +29,7 @@ or set environment variables.You can find an example in the .env.example file pr
 const clientConfig = {
   environment: process.env.NODE_ENV,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  userAgentDetail: "sample_app_node_invoices"
+  userAgentDetail: "sample_app_node_invoices" // Remove or replace this detail when building your own app
 };
 
 const defaultClient = new Client(clientConfig);

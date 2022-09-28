@@ -30,7 +30,7 @@ or set environment variables.You can find an example in the .env.example file pr
 const config = {
   environment: process.env.NODE_ENV,
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  userAgentDetail: "sample_app_node_subscription"
+  userAgentDetail: "sample_app_node_subscription" // Remove or replace this detail when building your own app
 };
 
 // Create new Client instance
