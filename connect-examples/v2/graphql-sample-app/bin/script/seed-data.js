@@ -30,7 +30,8 @@ if (!process.env.LOCATION_ID) {
 // We don't recommend to run this script in the production environment
 const config = {
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: Environment.Sandbox
+  environment: Environment.Sandbox,
+  userAgentDetail: "sample_app_graphql-sample-app" // Remove or replace this detail when building your own app
 };
 
 const {

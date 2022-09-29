@@ -29,7 +29,8 @@ $token = $data->token;
 
 $square_client = new SquareClient([
   'accessToken' => getenv('SQUARE_ACCESS_TOKEN'),
-  'environment' => getenv('ENVIRONMENT')
+  'environment' => getenv('ENVIRONMENT'),
+  'userAgentDetail' => 'sample_app_php_payment', // Remove or replace this detail when building your own app
 ]);
 
 $payments_api = $square_client->getPaymentsApi();

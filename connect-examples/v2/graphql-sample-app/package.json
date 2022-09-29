@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/squareup/graphql-sample-app#readme",
   "devDependencies": {
-    "eslint": "^8.22.0",
+    "eslint": "^7.12.1",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-node": "^11.1.0",
@@ -31,7 +31,7 @@
     "graphql": "^15.5.2",
     "graphql-request": "^4.3.0",
     "prompts": "^2.4.1",
-    "square": "^21.1.0",
+    "square": "^22.0.0",
     "uuid": "^8.3.2"
   }
 }

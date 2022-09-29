@@ -17,6 +17,8 @@ package com.squareup.catalog.demo.example.clone;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.ArrayList;
+
 import com.squareup.catalog.demo.util.Moneys;
 import com.squareup.square.models.CatalogCategory;
 
@@ -35,7 +37,7 @@ public class CategoryCloneUtilTest {
 
   @Test
   public void encodeCatalogData() {
-    CatalogCategory category = new CatalogCategory("TestCategory");
+    CatalogCategory category = new CatalogCategory("TestCategory", new ArrayList<String>());
     assertThat(cloneUtil.encodeCatalogData(category)).isEqualTo("TestCategory");
   }
 }

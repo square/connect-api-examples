@@ -15,20 +15,21 @@ limitations under the License.
 */
 
 const { Client } = require("square");
-require('dotenv').config()
+require("dotenv").config();
 
 const OrderInfo = require("../models/order-info");
 const LocationInfo = require("../models/location-info");
 
 const env = process.env.NODE_ENV;
-const accessToken = process.env[`SQUARE_ACCESS_TOKEN`]
-const squareApplicationId = process.env[`SQUARE_APPLICATION_ID`]
+const accessToken = process.env["SQUARE_ACCESS_TOKEN"];
+const squareApplicationId = process.env["SQUARE_APPLICATION_ID"];
 
 // Set Square credentials
 const config = {
   accessToken,
-  environment:env
-}
+  environment: env,
+  userAgentDetail: "sample_app_node_orders-payments" // Remove or replace this detail when building your own app
+};
 
 // Extract instances of Api that are used
 // You can add additional APIs here if you so choose
@@ -38,7 +39,7 @@ const {
   ordersApi,
   paymentsApi,
   loyaltyApi
-} = new Client(config)
+} = new Client(config);
 
 /**
  * Description:
@@ -49,8 +50,8 @@ const {
  *
  * @returns object{ orderInfo, locationInfo }
  */
-const retrieveOrderAndLocation = async  (orderId, locationId) => {
-  const { result : { orders } } = await ordersApi.batchRetrieveOrders({
+const retrieveOrderAndLocation = async (orderId, locationId) => {
+  const { result: { orders } } = await ordersApi.batchRetrieveOrders({
     locationId,
     orderIds: [orderId],
   });
@@ -65,7 +66,7 @@ const retrieveOrderAndLocation = async  (orderId, locationId) => {
     orderInfo: new OrderInfo(orders[0]),
     locationInfo: new LocationInfo(location),
   };
-}
+};
 
 /**
  * Description:
@@ -76,7 +77,7 @@ const retrieveOrderAndLocation = async  (orderId, locationId) => {
 const getDefaultLoyaltyProgram = async () => {
   const { result: { programs } } = await loyaltyApi.listLoyaltyPrograms();
   return programs && programs.length > 0 ? programs[0] : null;
-}
+};
 
 /**
  * Description:
@@ -130,7 +131,7 @@ async function getLoyaltyRewardInformation(orderInfo, loyaltyAccountId) {
       //  * the reward can be applied to the order item and
       //  * the point balance of the account is greater than the reward point
       try {
-        const { result: { loyaltyAccount }} = await loyaltyApi.retrieveLoyaltyAccount(loyaltyAccountId);
+        const { result: { loyaltyAccount } } = await loyaltyApi.retrieveLoyaltyAccount(loyaltyAccountId);
 
         loyaltyRewardInfo.loyaltyAccountId = loyaltyAccountId;
         loyaltyRewardInfo.balance = loyaltyAccount.balance;

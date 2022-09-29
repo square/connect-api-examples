@@ -28,6 +28,7 @@ ACCESS_TOKEN = config.get(CONFIG_TYPE, "square_access_token")
 client = Client(
     access_token=ACCESS_TOKEN,
     environment=config.get("DEFAULT", "environment"),
+    user_agent_detail="sample_app_python_payment", # Remove or replace this detail when building your own app
 )
 
 location = client.locations.retrieve_location(location_id=LOCATION_ID).body["location"]

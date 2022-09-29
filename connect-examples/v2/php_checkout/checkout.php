@@ -24,7 +24,8 @@ $location_id =  getenv('SQUARE_LOCATION_ID');
 // Initialize the authorization for Square
 $client = new SquareClient([
   'accessToken' => $access_token,
-  'environment' => getenv('ENVIRONMENT')
+  'environment' => getenv('ENVIRONMENT'),
+  'userAgentDetail' => 'sample_app_php_checkout', // Remove or replace this detail when building your own app
 ]);
 
 // make sure we actually are on a POST with an amount

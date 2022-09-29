@@ -19,6 +19,7 @@ import static com.squareup.catalog.demo.util.Prompts.promptUserInput;
 
 import com.squareup.square.exceptions.ApiException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.squareup.catalog.demo.Logger;
@@ -49,7 +50,8 @@ public class RetrieveCatalogObjectExample extends Example {
   @Override
   public void execute(CatalogApi catalogApi, LocationsApi locationsApi) {
     String catalogObjectId = promptUserInput("Enter catalog object ID: ");
-    // Send a request to retrieve the catalog object by ID. The second boolean argument indicates
+    // Send a request to retrieve the catalog object by ID. The second boolean
+    // argument indicates
     // that we want related objects, such as the taxes linked to an item.
     // Optional variable version is set to null.
     Long catalogVersion = null;
@@ -156,10 +158,10 @@ public class RetrieveCatalogObjectExample extends Example {
         .append(item.getName()).append("\n  ID: ")
         .append(itemObject.getId());
 
-    // Append image id if one exists.
-    if (itemObject.getImageId() != null) {
-      logMessage.append("\n  Image ID: ")
-          .append(itemObject.getImageId());
+    // Append image ids if exists.
+    if (itemObject.getItemData().getImageIds() != null) {
+      logMessage.append("\n  Image IDs: ")
+          .append(String.join(",", itemObject.getItemData().getImageIds()));
     }
 
     // Get the category from the related objects.
@@ -206,9 +208,12 @@ public class RetrieveCatalogObjectExample extends Example {
     boolean hasModifierList = false;
     if (item.getModifierListInfo() != null) {
       for (CatalogItemModifierListInfo modifierListInfo : item.getModifierListInfo()) {
-        // If a CatalogItemModifierListInfo is disabled, it means that the item was once linked to
-        // the modifier list, but has since been unlinked. We keep the CatalogItemModifierListInfo
-        // around so we can restore the item-specific modifier list configuration (ex. pre-selected
+        // If a CatalogItemModifierListInfo is disabled, it means that the item was once
+        // linked to
+        // the modifier list, but has since been unlinked. We keep the
+        // CatalogItemModifierListInfo
+        // around so we can restore the item-specific modifier list configuration (ex.
+        // pre-selected
         // modifiers) when the item is re-linked to the modifier list.
         Boolean modifierListEnabledForItem = modifierListInfo.getEnabled();
         if (modifierListEnabledForItem != null && modifierListEnabledForItem) {
@@ -231,9 +236,12 @@ public class RetrieveCatalogObjectExample extends Example {
     // Add image. If the image_id exists, we can grab the image object from the
     // related objects map and log it.
     logMessage.append("\n  Image:");
-    if (itemObject.getImageId() != null) {
-      logMessage.append("\n")
-          .append(getImageLogMessage(relatedObjectsMap.get(itemObject.getImageId()), "    "));
+    List<String> imageIds = itemObject.getItemData().getImageIds();
+    if (imageIds != null) {
+      for (String id : imageIds) {
+        logMessage.append("\n")
+            .append(getImageLogMessage(relatedObjectsMap.get(id), "    "));
+      }
     } else {
       logMessage.append(" <none>");
     }

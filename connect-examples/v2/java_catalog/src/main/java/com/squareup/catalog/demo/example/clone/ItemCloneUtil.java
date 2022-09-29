@@ -73,8 +73,7 @@ public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
       CatalogItemVariation oldItemVariationData = oldVariation.getItemVariationData();
       CatalogObject newVariation = super.removeSourceAccountMetaData(oldVariation).toBuilder()
           .itemVariationData(
-              oldItemVariationData.toBuilder().itemId(null).locationOverrides(null).build()
-          )
+              oldItemVariationData.toBuilder().itemId(null).locationOverrides(null).build())
           .build();
       newVariations.add(newVariation);
     }
@@ -87,7 +86,6 @@ public class ItemCloneUtil extends CatalogObjectCloneUtil<CatalogItem> {
             .categoryId(null)
             .build())
         .presentAtAllLocations(true)
-        .imageId(null)
         .build();
   }
 }
