@@ -1,9 +1,10 @@
 # Useful Links
 
-* [Square PHP SDK](https://developer.squareup.com/docs/sdks/php)
-- [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
-- [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
-- [Payments API Reference](https://developer.squareup.com/reference/square/payments-api)
+- [Square PHP SDK](https://developer.squareup.com/docs/sdks/php)
+
+* [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview)
+* [Web Payments SDK Reference](https://developer.squareup.com/reference/sdks/web/payments)
+* [Payments API Reference](https://developer.squareup.com/reference/square/payments-api)
 
 # Payment processing example: PHP
 
@@ -16,7 +17,7 @@ There are two sections in this README.
 
 ### Requirements
 
-* 7.1 <= PHP
+- 8.0 <= PHP
 
 ### Install the PHP client library
 
@@ -24,30 +25,29 @@ This sample already includes the `square/square` dependency in its `composer.jso
 file. To install the client library:
 
 1. Make sure you've downloaded Composer, following the instructions
-[here](https://getcomposer.org/download/).
+   [here](https://getcomposer.org/download/).
 
 2. Run the following command from the directory containing `composer.json`:
 
-    ```
-    composer install
-    ```
+   ```
+   php composer.phar install
+   ```
 
 ### Specify your application credentials
 
 In order for the example to work, you must create a new file `.env` by copying the contents of the `.env.example` file. Edit this file with your application credentials and environment configuration.
-   <b>WARNING</b>: never save your credentials in your code.
-
+<b>WARNING</b>: never save your credentials in your code.
 
 Open your [developer dashboard](https://developer.squareup.com/apps). Now supply either production, sandbox, or both credentials. Open this file and update the following variables:
-* WARNING: never upload .env with your credential/access_token
 
-| Variable               |  Type    |   Description   |
-|------------------------|:---------|-----------------|
-| ENVIRONMENT            | `string` | `production` or `sandbox` depending on what type of endpoint you want to hit. For testing purposes please use the sandbox mode (already configured in the `.env`)   |
-| SQUARE_APPLICATION_ID  | `string` | Application ID found on your Developer App Dashboard, Credentials tab. Must match the corresponding `ENVIRONMENT`.  |
-| SQUARE_ACCESS_TOKEN    | `string` | Access Token found at the Developer App Dashboard, Credentials tab. Must match the corresponding `ENVIRONMENT`.  |
-| SQUARE_LOCATION_ID     | `string` | Location found at the Developer App Dashboard, Location tab. Must match the corresponding `ENVIRONMENT`. |
+- WARNING: never upload .env with your credential/access_token
 
+| Variable              | Type     | Description                                                                                                                                                       |
+| --------------------- | :------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ENVIRONMENT           | `string` | `production` or `sandbox` depending on what type of endpoint you want to hit. For testing purposes please use the sandbox mode (already configured in the `.env`) |
+| SQUARE_APPLICATION_ID | `string` | Application ID found on your Developer App Dashboard, Credentials tab. Must match the corresponding `ENVIRONMENT`.                                                |
+| SQUARE_ACCESS_TOKEN   | `string` | Access Token found at the Developer App Dashboard, Credentials tab. Must match the corresponding `ENVIRONMENT`.                                                   |
+| SQUARE_LOCATION_ID    | `string` | Location found at the Developer App Dashboard, Location tab. Must match the corresponding `ENVIRONMENT`.                                                          |
 
 ## Running the sample
 
@@ -60,10 +60,10 @@ You can then visit [`localhost:8888`](http://localhost:8888) in your browser to 
 If you're using your sandbox credentials, you can test a valid credit card
 payment by providing the following card information in the form:
 
-* Card Number `4111 1111 1111 1111`
-* Card CVV `111`
-* Card Expiration (Any time in the future)
-* Card Postal Code (Any valid US postal code)
+- Card Number `4111 1111 1111 1111`
+- Card CVV `111`
+- Card Expiration (Any time in the future)
+- Card Postal Code (Any valid US postal code)
 
 You can find more testing values in this [article](https://developer.squareup.com/docs/testing/test-values).
 
@@ -101,19 +101,20 @@ When the page loads it renders the form defined in the **index.php** file. The p
   - `sq-apple-pay.js`
 
 - Provides the global method that fires a `fetch` request to the server after receiving the payment token.
+
   ```javascript
-  window.createPayment = async function(token) {
+  window.createPayment = async function (token) {
     const dataJsonString = JSON.stringify({
-      token
+      token,
     });
 
     try {
-      const response = await fetch('process-payment', {
-        method: 'POST',
+      const response = await fetch("process-payment", {
+        method: "POST",
         headers: {
-        'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: dataJsonString
+        body: dataJsonString,
       });
 
       const data = await response.json();
@@ -122,24 +123,25 @@ When the page loads it renders the form defined in the **index.php** file. The p
         if (data.errors[0].detail) {
           window.showError(data.errors[0].detail);
         } else {
-          window.showError('Payment Failed.');
+          window.showError("Payment Failed.");
         }
       } else {
-        window.showSuccess('Payment Successful!');
+        window.showSuccess("Payment Successful!");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
-  }
+  };
   ```
 
 ### Step 2: Charge the Payment Source Using the Token
 
-All the remaining actions take place in the **process-payment.php** file. This server-side component uses the [Square PHP SDK](https://developer.squareup.com/docs/sdks/php) library to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment. 
+All the remaining actions take place in the **process-payment.php** file. This server-side component uses the [Square PHP SDK](https://developer.squareup.com/docs/sdks/php) library to call the Connect V2 **Payments** API to charge the payment source using the token as shown in the following code fragment.
+
 ```php
 ...
 $square_client = new SquareClient([
-  'accessToken' => $access_token,  
+  'accessToken' => $access_token,
   'environment' => getenv('ENVIRONMENT')
 ]);
 
@@ -167,4 +169,5 @@ if ($response->isSuccess()) {
 ```
 
 ## Feedback
+
 Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!
