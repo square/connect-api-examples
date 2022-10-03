@@ -22,6 +22,7 @@ client_secret = os.environ['application_secret']
 # initialize square oauth client
 square_client = Client(
   environment=os.environ['environment'],
+  user_agent_detail='sample_app_oauth_python-aws-chalice'
 )
 oauth_api = square_client.o_auth
 

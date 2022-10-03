@@ -21,7 +21,8 @@ function obtainOAuthToken($authorizationCode) {
   // Initialize Square PHP SDK OAuth API client.
   $environment = getenv('SQ_ENVIRONMENT') == "sandbox" ? Environment::SANDBOX : Environment::PRODUCTION;
   $apiClient = new SquareClient([
-    'environment' => $environment
+    'environment' => $environment,
+    'useqrAgentDetail' => "sample_app_oauth_php"
   ]);
   $oauthApi = $apiClient->getOAuthApi();
 

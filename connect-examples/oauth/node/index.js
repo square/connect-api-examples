@@ -65,7 +65,8 @@ const messages = require('./messages');
 
 // Configure Square defcault client
 const squareClient = new Client({
-  environment: environment
+  environment: environment,
+  userAgentDetail: "sample_app_oauth_node"
 });
 
 // Configure Square OAuth API instance

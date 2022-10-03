@@ -45,13 +45,17 @@ public class OAuthHandler {
   // Options are Environment.SANDBOX, Environment.PRODUCTION
   private static final Environment ENVIRONMENT = Environment.SANDBOX;
 
-  // Your application's ID and secret, available from the OAuth tab in the Developer Dashboard
-  // If you are testing the OAuth flow in the sandbox, use your sandbox application
-  // ID and secret. If you are testing in production, use the production application ID and secret.
-  private static final String APPLICATION_ID =  "REPLACE ME";
-  private static final String APPLICATION_SECRET =  "REPLACE ME";
+  // Your application's ID and secret, available from the OAuth tab in the
+  // Developer Dashboard
+  // If you are testing the OAuth flow in the sandbox, use your sandbox
+  // application
+  // ID and secret. If you are testing in production, use the production
+  // application ID and secret.
+  private static final String APPLICATION_ID = "REPLACE ME";
+  private static final String APPLICATION_SECRET = "REPLACE ME";
   // Modify this list as needed
-  private static final String[] SCOPES = { "MERCHANT_PROFILE_READ", "PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS", "PAYMENTS_WRITE", "PAYMENTS_READ" };
+  private static final String[] SCOPES = { "MERCHANT_PROFILE_READ", "PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS",
+      "PAYMENTS_WRITE", "PAYMENTS_READ" };
   // Serves the authorize link
 
   static class AuthorizeHandler implements HttpHandler {
@@ -59,7 +63,8 @@ public class OAuthHandler {
     public void handle(HttpExchange t) throws IOException {
 
       String connect_host;
-      // For testing in sandbox, the base url is "https://connect.squareupsandbox.com",
+      // For testing in sandbox, the base url is
+      // "https://connect.squareupsandbox.com",
       // and https://connect.squareup.com for production mode
       if (ENVIRONMENT == Environment.SANDBOX) {
         connect_host = "https://connect.squareupsandbox.com";
@@ -73,13 +78,12 @@ public class OAuthHandler {
         t.getResponseBody().close();
       }
 
-
       String authorizeURL = String.format(
-        "<a href=\"%s/oauth2/authorize?client_id=%s&scope=%s\">Click here</a> ",
-        connect_host,
-        APPLICATION_ID,
-        String.join("+", SCOPES))
-        + "to authorize the application.";
+          "<a href=\"%s/oauth2/authorize?client_id=%s&scope=%s\">Click here</a> ",
+          connect_host,
+          APPLICATION_ID,
+          String.join("+", SCOPES))
+          + "to authorize the application.";
 
       System.out.println(authorizeURL);
 
@@ -111,7 +115,7 @@ public class OAuthHandler {
       for (NameValuePair param : queryParameters) {
         System.out.println(param.getName());
         System.out.println(param.getValue());
-        if(param.getName().equals("code")) {
+        if (param.getName().equals("code")) {
           authorizationCode = param.getValue();
           break;
         }
@@ -128,8 +132,9 @@ public class OAuthHandler {
       }
 
       SquareClient client = new SquareClient.Builder()
-            .environment(ENVIRONMENT)
-            .build();
+          .environment(ENVIRONMENT)
+          .userAgentDetail("sample_app_oauth_java")
+          .build();
 
       List<String> bodyScopes = new LinkedList<>();
       for (String scope : SCOPES) {
@@ -138,19 +143,19 @@ public class OAuthHandler {
 
       // Create obtain token request body
       ObtainTokenRequest body = new ObtainTokenRequest.Builder(
-        APPLICATION_ID,
-        APPLICATION_SECRET,
-        "authorization_code")
-      .code(authorizationCode)
-      .scopes(bodyScopes)
-      .build();
+          APPLICATION_ID,
+          APPLICATION_SECRET,
+          "authorization_code")
+          .code(authorizationCode)
+          .scopes(bodyScopes)
+          .build();
 
       OAuthApi oAuthApi = client.getOAuthApi();
 
       // Call obtain token API and print the results on success
-      // In production, you should never write tokens to the page. 
-      // You should encrypt the tokens and handle them securely. 
-      oAuthApi.obtainTokenAsync(body).thenAccept(result -> {     
+      // In production, you should never write tokens to the page.
+      // You should encrypt the tokens and handle them securely.
+      oAuthApi.obtainTokenAsync(body).thenAccept(result -> {
         if (result != null) {
           System.out.println("Access token: " + result.getAccessToken());
           System.out.println("Refresh token: " + result.getRefreshToken());
