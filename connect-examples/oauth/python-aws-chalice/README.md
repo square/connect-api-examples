@@ -47,7 +47,10 @@ Open `.chalice/config.json`:
 
 1. install [**Chalice**](https://github.com/aws/chalice) and all the project dependencies, **Chalice** is a
    microframework for writing serverless apps in Python. We use this microframework to manage all the elasticsearch management tasks.
-   `bash pip install -r requirements.txt `
+
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 1. Follow [**this Credentials section**](https://github.com/aws/chalice#credentials) to setup aws credentials.
 
