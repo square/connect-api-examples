@@ -1,6 +1,7 @@
 # Connect OAuth Flow Example (Java)
 
-This example demonstrates a bare-bones Java implementation of the Square ConnectOAuth flow. The application links merchants to the OAuth Permissions form and
+This example demonstrates a bare-bones Java implementation of the Square Connect
+OAuth flow. The application links merchants to the OAuth Permissions form and
 handles the result of the authorization, which is sent to the application's Redirect URL.
 
 For more information, see [OAuth Overview](https://developer.squareup.com/docs/oauth-api/overview),
@@ -20,14 +21,16 @@ If you want to run this sample against the Square Sandbox environment:
    b. Give the account a name and pick a country. <br>
    c. Uncheck **Automatically create authorizations for all my current apps**.<br>
 
-1. Click **Launch** on the new test account to open the sandbox seller dashboard for the account. The OAuth flow will create an authorization for this account.
+1. Click **Launch** on the new test account to open the sandbox seller dashboard for
+   the account. The OAuth flow will create an authorization for this account.
 
 ### Set your application's Redirect URL
 
 On your application dashboard, set your application's Redirect URL to
 `http://localhost:8000/callback`.
 
-Note that applications that don't use a `localhost` URL must use HTTPS. HTTP is allowed for `localhost` URLs to simplify the development process.
+Note that applications that don't use a `localhost` URL must use HTTPS. HTTP is
+allowed for `localhost` URLs to simplify the development process.
 
 ### Specify your application credentials
 
