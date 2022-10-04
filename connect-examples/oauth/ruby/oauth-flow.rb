@@ -30,7 +30,8 @@ else
 end
 
 client = Square::Client.new(
-  environment: environment
+  environment: environment,
+  user_agent_detail: "sample_app_oauth_ruby" # Remove or replace this detail when building your own app
 )
 oauth_api = client.o_auth
 

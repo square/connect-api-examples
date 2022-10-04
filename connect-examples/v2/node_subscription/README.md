@@ -132,10 +132,6 @@ The application uses the following JSON in a [UpsertCatalogObject](https://devel
   }
   ```
 
-  ```
-
-  ```
-
 - **Spa Service plan.** The plan is a two-phase subscription. The first phase identifies a 2-week free period and the second phase identifies a monthly cadence at $80. Note that when a customer subscribes to this plan, Square bills the customer only after the free 2-week phase ends.
 
       ```json

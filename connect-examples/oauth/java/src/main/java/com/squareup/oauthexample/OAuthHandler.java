@@ -133,7 +133,7 @@ public class OAuthHandler {
 
       SquareClient client = new SquareClient.Builder()
           .environment(ENVIRONMENT)
-          .userAgentDetail("sample_app_oauth_java")
+          .userAgentDetail("sample_app_oauth_java") // Remove or replace this detail when building your own app
           .build();
 
       List<String> bodyScopes = new LinkedList<>();
