@@ -18,8 +18,7 @@ It takes a single payment, declared by the user, and creates an order to use in 
 
 ### Install the PHP client library
 
-This sample already includes the `square/square` dependency in its `composer.json`
-file. To install the client library:
+This sample already includes the `square/square` dependency in its `composer.json` file. To install the client library:
 
 1. Make sure you've downloaded Composer, following the instructions
    [here](https://getcomposer.org/download/).

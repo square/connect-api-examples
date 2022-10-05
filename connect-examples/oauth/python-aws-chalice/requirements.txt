@@ -1,4 +1,4 @@
 chalice==1.12.0
 boto3==1.11.11
-squareup===5.1.0.20200325
+squareup==22.0.0.20220921
 cryptography===3.3.2

@@ -20,7 +20,8 @@ load_dotenv()  # take environment variables from .env.
 
 environment = os.getenv('SQ_ENVIRONMENT').lower()
 client = Client(
-  environment = environment
+  environment = environment,
+  user_agent_detail = "sample_app_oauth_python" # Remove or replace this detail when building your own app
 )
 obtain_token = client.o_auth.obtain_token
 

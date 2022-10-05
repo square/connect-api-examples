@@ -8,8 +8,7 @@
 
 # Payment processing example: Python
 
-This sample demonstrates processing card payments with Square Connect API, using the
-Square Connect Python client library.
+This sample demonstrates processing card payments with Square Connect API, using the Square Connect Python client library.
 
 ## Requirements
 
@@ -31,8 +30,7 @@ Create a `config.ini` file at the root directory by copying the contents of the 
 Do not use quotes around the strings in the `config.ini` file.
 (**WARNING**: never upload `config.ini` with your credentials/access_token.)
 
-If you're just testing things out, it's recommended that you use your _sandbox_
-credentials for now. See
+If you're just testing things out, it's recommended that you use your _sandbox_ credentials for now. See
 [this article](https://developer.squareup.com/docs/testing/sandbox)
 for more information on the API sandbox.
 
@@ -54,8 +52,7 @@ transaction by providing the following card information in the form:
 
 You can find more testing values in this [article](https://developer.squareup.com/docs/testing/test-values)
 
-**Note that if you are _not_ using your sandbox credentials and you enter _real_
-credit card information, YOU WILL CHARGE THE CARD.**
+**Note that if you are _not_ using your sandbox credentials and you enter _real_ credit card information, YOU WILL CHARGE THE CARD.**
 
 ## Application Flow
 
@@ -67,8 +64,7 @@ Square Online payment solution is a 2-step process:
 
    NOTE: The Web Payments SDK renders the card inputs and digital wallet buttons that make up the payment form and returns a secure payment token. For more information, see the [Web Payments SDK Overview](https://developer.squareup.com/docs/web-payments/overview).
 
-2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2
-   **Payments** API, you charge the payment source using the secure payment token.
+2. Charge the payment source using the token - Using a server-side component, that uses the Connect V2 **Payments** API, you charge the payment source using the secure payment token.
 
 The following sections describe how the Python sample implements these steps.
 
@@ -98,18 +94,18 @@ which downloads and executes the following scripts:
 - Provides the global method that fires a `fetch` request to the server after receiving the payment token.
 
   ```javascript
-  window.createPayment = async function(token) {
+  window.createPayment = async function (token) {
     const dataJsonString = JSON.stringify({
-      token
+      token,
     });
 
     try {
-      const response = await fetch('process-payment', {
-        method: 'POST',
+      const response = await fetch("process-payment", {
+        method: "POST",
         headers: {
-        'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: dataJsonString
+        body: dataJsonString,
       });
 
       const data = await response.json();
@@ -118,15 +114,15 @@ which downloads and executes the following scripts:
         if (data.errors[0].detail) {
           window.showError(data.errors[0].detail);
         } else {
-          window.showError('Payment Failed.');
+          window.showError("Payment Failed.");
         }
       } else {
-        window.showSuccess('Payment Successful!');
+        window.showSuccess("Payment Successful!");
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
-  }
+  };
   ```
 
 ### Step 2: Charge the Payment Source Using the Token
@@ -178,4 +174,5 @@ limitations under the License.
 ```
 
 ## Feedback
+
 Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!

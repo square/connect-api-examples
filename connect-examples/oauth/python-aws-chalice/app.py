@@ -209,7 +209,8 @@ def check_access_token_status(merchant_id):
     # you can use other endpoint to check the access token status within the api permission scope
     square_client_with_auth = Client(
       environment=os.environ['environment'],
-      access_token=access_token
+      access_token=access_token,
+      user_agent_detail="sample_app_oauth_python-aws-chalice" # Remove or replace this detail when building your own app
     )
     api_payments = square_client_with_auth.payments
     response = api_payments.list_payments(
