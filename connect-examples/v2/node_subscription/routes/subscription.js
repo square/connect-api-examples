@@ -54,8 +54,16 @@ router.get("/view/:locationId/:customerId/:subscriptionPlanId", async (req, res,
     const { result: { object } } = await catalogApi.retrieveCatalogObject(subscriptionPlanId);
     const subscriptionPlan = object.subscriptionPlanData;
     const { result: { subscriptions } } = await subscriptionsApi.searchSubscriptions({
-      locationIds: [locationId],
-      customerIds: [customerId]
+      query: {
+        filter: {
+          customerIds: [
+            customerId
+          ],
+          locationIds: [
+            locationId
+          ]
+        }
+      }
     });
 
     // find the first active subscription for the current plan
