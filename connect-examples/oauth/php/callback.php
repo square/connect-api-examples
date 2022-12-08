@@ -25,15 +25,14 @@ function obtainOAuthToken($authorizationCode) {
     'userAgentDetail' => "sample_app_oauth_php" // Remove or replace this detail when building your own app
   ]);
   $oauthApi = $apiClient->getOAuthApi();
-
   // Initialize the request parameters for the obtainToken request.
   $body_grantType = 'authorization_code';
   $body = new ObtainTokenRequest(
     getenv('SQ_APPLICATION_ID'),
-    getenv('SQ_APPLICATION_SECRET'),
     $body_grantType
   );
   $body->setCode($authorizationCode);
+  $body->setClientSecret(getenv('SQ_APPLICATION_SECRET'));
 
   // Call obtainToken endpoint to get the OAuth tokens.
   try {
