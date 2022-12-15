@@ -22,7 +22,7 @@ Make sure you have Python >= 3.4
 
 2. Run the following command to install `squareup` package and other dependencies:
 
-   `pip install -r requirements.txt`
+   `pip install -r requirements.txt` or `pip3 install -r requirements.txt`
 
 ### Provide required credentials
 

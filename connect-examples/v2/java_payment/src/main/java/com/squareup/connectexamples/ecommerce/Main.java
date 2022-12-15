@@ -121,31 +121,26 @@ public class Main {
         .currency(currency)
         .build();
 
-    System.out.println(tokenObject.getIdempotencyKey());
     CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
         tokenObject.getToken(),
         tokenObject.getIdempotencyKey(),
         bodyAmountMoney).locationId(squareLocationId)
         .build();
 
-    PaymentsApi paymentsApi = squareClient.getPaymentsApi();
-    System.out.println(createPaymentRequest);
-    paymentsApi.createPaymentAsync(createPaymentRequest).thenAccept(result -> {
-      System.out.println("Success! aASDFASDFASDF");
-  }).exceptionally(exception -> {
-      System.out.println("Failed to make the request");
-      System.out.println(String.format("Exception: %s", exception.getMessage()));
-      return null;
-  });
-
-  SquareClient.shutdown();
-  return null;
+        PaymentsApi paymentsApi = squareClient.getPaymentsApi();
+        return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
+          return new PaymentResult("SUCCESS", null);
+        }).exceptionally(exception -> {
+          ApiException e = (ApiException) exception.getCause();
+          System.out.println("Failed to make the request");
+          System.out.printf("Exception: %s%n", e.getMessage());
+          return new PaymentResult("FAILURE", e.getErrors());
+        }).join();
   }
 
   /**
    * Helper method that makes a retrieveLocation API call using the configured
-   * locationId and
-   * returns the future containing the response
+   * locationId and returns the future containing the response
    *
    * @param squareClient the API client
    * @return a future that holds the retrieveLocation response

@@ -28,7 +28,6 @@ router.get('/', async function (req, res) {
 router.post('/process-payment', async (req, res) => {
   const token = req.body.token;
   const idempotencyKey = req.body.idempotencyKey;
-  console.log(idempotencyKey);
 
   // get the currency for the location
   const locationResponse = await locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID);
