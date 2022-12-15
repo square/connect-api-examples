@@ -65,12 +65,11 @@ public class Main {
     squareAppId = mustLoadEnvironmentVariable(SQUARE_APP_ID_ENV_VAR);
     squareLocationId = mustLoadEnvironmentVariable(SQUARE_LOCATION_ID_ENV_VAR);
 
-    System.out.println(squareEnvironment);
     squareClient = new SquareClient.Builder()
         .environment(Environment.fromString(squareEnvironment))
         .accessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR))
+        .userAgentDetail("sample_app_java_payment") // Remove or replace this detail when building your own app
         .build();
-    System.out.println(squareClient);
   }
 
   public static void main(String[] args) throws Exception {
@@ -124,18 +123,18 @@ public class Main {
     CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
         tokenObject.getToken(),
         tokenObject.getIdempotencyKey(),
-        bodyAmountMoney).locationId(squareLocationId)
+        bodyAmountMoney)
         .build();
 
-        PaymentsApi paymentsApi = squareClient.getPaymentsApi();
-        return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
-          return new PaymentResult("SUCCESS", null);
-        }).exceptionally(exception -> {
-          ApiException e = (ApiException) exception.getCause();
-          System.out.println("Failed to make the request");
-          System.out.printf("Exception: %s%n", e.getMessage());
-          return new PaymentResult("FAILURE", e.getErrors());
-        }).join();
+    PaymentsApi paymentsApi = squareClient.getPaymentsApi();
+    return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
+      return new PaymentResult("SUCCESS", null);
+    }).exceptionally(exception -> {
+      ApiException e = (ApiException) exception.getCause();
+      System.out.println("Failed to make the request");
+      System.out.printf("Exception: %s%n", e.getMessage());
+      return new PaymentResult("FAILURE", e.getErrors());
+    }).join();
   }
 
   /**
