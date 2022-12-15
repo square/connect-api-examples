@@ -38,12 +38,8 @@ namespace sqRazorSample.Pages
     {
       var request = JObject.Parse(await new StreamReader(Request.Body).ReadToEndAsync());
       var token = (String)request["token"];
+      var idempotencyKey = (String)request["idempotencyKey"];
       var PaymentsApi = client.PaymentsApi;
-      // Every payment you process with the SDK must have a unique idempotency key.
-      // If you're unsure whether a particular payment succeeded, you can reattempt
-      // it with the same idempotency key without worrying about double charging
-      // the buyer.
-      string uuid = NewIdempotencyKey();
 
       // Get the currency for the location
       var retrieveLocationResponse = await client.LocationsApi.RetrieveLocationAsync(locationId: locationId);
@@ -62,7 +58,7 @@ namespace sqRazorSample.Pages
       // (https://developer.squareup.com/docs/payments-api/overview).
       var createPaymentRequest = new CreatePaymentRequest.Builder(
           sourceId: token,
-          idempotencyKey: uuid,
+          idempotencyKey: idempotencyKey,
           amountMoney: amount)
           .Build();
 
@@ -75,11 +71,6 @@ namespace sqRazorSample.Pages
       {
         return new JsonResult(new { errors = e.Errors });
       }
-    }
-
-    private static string NewIdempotencyKey()
-    {
-      return Guid.NewGuid().ToString();
     }
   }
 }

@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 $json = file_get_contents('php://input');
 $data = json_decode($json);
 $token = $data->token;
+$idempotencyKey = $data->idempotencyKey;
 
 $square_client = new SquareClient([
   'accessToken' => getenv('SQUARE_ACCESS_TOKEN'),
@@ -47,11 +48,11 @@ $money->setAmount(100);
 $money->setCurrency($location_info->getCurrency());
 
 try {
-// Every payment you process with the SDK must have a unique idempotency key.
-// If you're unsure whether a particular payment succeeded, you can reattempt
-// it with the same idempotency key without worrying about double charging
-// the buyer.
-  $create_payment_request = new CreatePaymentRequest($token, Uuid::uuid4(), $money);
+  // Every payment you process with the SDK must have a unique idempotency key.
+  // If you're unsure whether a particular payment succeeded, you can reattempt
+  // it with the same idempotency key without worrying about double charging
+  // the buyer.
+  $create_payment_request = new CreatePaymentRequest($token, $idempotencyKey, $money);
   $create_payment_request->setLocationId($location_info->getId());
 
   $response = $payments_api->createPayment($create_payment_request);

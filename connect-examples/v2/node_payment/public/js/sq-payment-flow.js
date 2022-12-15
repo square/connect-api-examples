@@ -31,7 +31,8 @@ window.showError = function(message) {
 
 window.createPayment = async function(token) {
   const dataJsonString = JSON.stringify({
-    token
+    token,
+    idempotencyKey: window.idempotencyKey
   });
 
   try {

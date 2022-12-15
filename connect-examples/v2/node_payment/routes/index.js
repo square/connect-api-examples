@@ -11,6 +11,7 @@ router.get('/', async function (req, res) {
   const locationResponse = await locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID);
   const currency = locationResponse.result.location.currency;
   const country = locationResponse.result.location.country;
+  const idempotencyKey = uuidv4();
 
   // Set the app and location ids for Payment Web SDK to use
   res.render('index', {
@@ -20,14 +21,14 @@ router.get('/', async function (req, res) {
     squareLocationId: process.env.SQUARE_LOCATION_ID,
     squareAccountCountry: country,
     squareAccountCurrency: currency,
+    idempotencyKey
   });
 });
 
 router.post('/process-payment', async (req, res) => {
   const token = req.body.token;
-
-  // length of idempotency_key should be less than 45
-  const idempotencyKey = uuidv4();
+  const idempotencyKey = req.body.idempotencyKey;
+  console.log(idempotencyKey);
 
   // get the currency for the location
   const locationResponse = await locationsApi.retrieveLocation(process.env.SQUARE_LOCATION_ID);

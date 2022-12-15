@@ -20,10 +20,14 @@ class PaymentsController < ApplicationController
         :amount => 100,
         :currency => currency
       },
-      :idempotency_key => SecureRandom.uuid
+      :idempotency_key => params[:idempotencyKey]
     }
 
     resp = square_api_client.payments.create_payment(body: request_body)
-    render json: resp.data.payment
+    if resp.success?
+      render json: resp.data.payment
+    elsif resp.error?
+      render json: resp
+    end
   end
 end

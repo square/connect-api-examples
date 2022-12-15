@@ -65,11 +65,12 @@ public class Main {
     squareAppId = mustLoadEnvironmentVariable(SQUARE_APP_ID_ENV_VAR);
     squareLocationId = mustLoadEnvironmentVariable(SQUARE_LOCATION_ID_ENV_VAR);
 
+    System.out.println(squareEnvironment);
     squareClient = new SquareClient.Builder()
         .environment(Environment.fromString(squareEnvironment))
         .accessToken(mustLoadEnvironmentVariable(SQUARE_ACCESS_TOKEN_ENV_VAR))
-        .userAgentDetail("sample_app_java_payment") // Remove or replace this detail when building your own app
         .build();
+    System.out.println(squareClient);
   }
 
   public static void main(String[] args) throws Exception {
@@ -98,6 +99,7 @@ public class Main {
     model.put("appId", squareAppId);
     model.put("currency", locationResponse.getLocation().getCurrency());
     model.put("country", locationResponse.getLocation().getCountry());
+    model.put("idempotencyKey", UUID.randomUUID().toString());
 
     return "index";
   }
@@ -119,21 +121,25 @@ public class Main {
         .currency(currency)
         .build();
 
+    System.out.println(tokenObject.getIdempotencyKey());
     CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
         tokenObject.getToken(),
-        UUID.randomUUID().toString(),
-        bodyAmountMoney)
+        tokenObject.getIdempotencyKey(),
+        bodyAmountMoney).locationId(squareLocationId)
         .build();
 
     PaymentsApi paymentsApi = squareClient.getPaymentsApi();
-    return paymentsApi.createPaymentAsync(createPaymentRequest).thenApply(result -> {
-      return new PaymentResult("SUCCESS", null);
-    }).exceptionally(exception -> {
-      ApiException e = (ApiException) exception.getCause();
+    System.out.println(createPaymentRequest);
+    paymentsApi.createPaymentAsync(createPaymentRequest).thenAccept(result -> {
+      System.out.println("Success! aASDFASDFASDF");
+  }).exceptionally(exception -> {
       System.out.println("Failed to make the request");
-      System.out.printf("Exception: %s%n", e.getMessage());
-      return new PaymentResult("FAILURE", e.getErrors());
-    }).join();
+      System.out.println(String.format("Exception: %s", exception.getMessage()));
+      return null;
+  });
+
+  SquareClient.shutdown();
+  return null;
   }
 
   /**
