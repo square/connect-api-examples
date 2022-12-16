@@ -3,6 +3,7 @@ require 'vendor/autoload.php';
 include 'utils/location-info.php';
 
 use Square\Environment;
+use Ramsey\Uuid\Uuid;
 // dotenv is used to read from the '.env' file created for credentials
 $dotenv = Dotenv\Dotenv::create(__DIR__);
 $dotenv->load();
@@ -35,6 +36,10 @@ $web_payment_sdk_url = $_ENV["ENVIRONMENT"] === Environment::PRODUCTION ? "https
     window.country =
       "<?php
         echo $location_info->getCountry();
+        ?>";
+    window.idempotencyKey =
+      "<?php
+        echo Uuid::uuid4();
         ?>";
   </script>
   <link rel="stylesheet" type="text/css" href="public/stylesheets/style.css">

@@ -6,6 +6,7 @@ package com.squareup.connectexamples.ecommerce;
 public class TokenWrapper {
 
     private String token;
+    private String idempotencyKey;
 
     public String getToken() {
         return token;
@@ -13,5 +14,13 @@ public class TokenWrapper {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getIdempotencyKey() {
+      return idempotencyKey;
+    }
+
+    public void setIdempotencyKey(String idempotencyKey) {
+      this.idempotencyKey = idempotencyKey;
     }
 }

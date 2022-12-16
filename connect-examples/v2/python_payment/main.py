@@ -35,7 +35,6 @@ location = client.locations.retrieve_location(location_id=LOCATION_ID).body["loc
 ACCOUNT_CURRENCY = location["currency"]
 ACCOUNT_COUNTRY = location["country"]
 
-
 def generate_index_html():
     html_content = (
         """<!DOCTYPE html>
@@ -63,6 +62,9 @@ def generate_index_html():
         + """';
             window.country = '"""
         + ACCOUNT_COUNTRY
+        + """';
+            window.idempotencyKey = '"""
+        + str(uuid.uuid4())
         + """';
         </script>
 
@@ -121,6 +123,7 @@ def generate_index_html():
 
 class Payment(BaseModel):
     token: str
+    idempotencyKey: str
 
 
 app = FastAPI()
@@ -139,7 +142,7 @@ def create_payment(payment: Payment):
     create_payment_response = client.payments.create_payment(
         body={
             "source_id": payment.token,
-            "idempotency_key": str(uuid.uuid4()),
+            "idempotency_key": payment.idempotencyKey,
             "amount_money": {
                 "amount": 100,  # $1.00 charge
                 "currency": ACCOUNT_CURRENCY,

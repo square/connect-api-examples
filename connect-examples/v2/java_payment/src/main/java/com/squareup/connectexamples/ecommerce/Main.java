@@ -98,6 +98,7 @@ public class Main {
     model.put("appId", squareAppId);
     model.put("currency", locationResponse.getLocation().getCurrency());
     model.put("country", locationResponse.getLocation().getCountry());
+    model.put("idempotencyKey", UUID.randomUUID().toString());
 
     return "index";
   }
@@ -121,7 +122,7 @@ public class Main {
 
     CreatePaymentRequest createPaymentRequest = new CreatePaymentRequest.Builder(
         tokenObject.getToken(),
-        UUID.randomUUID().toString(),
+        tokenObject.getIdempotencyKey(),
         bodyAmountMoney)
         .build();
 
@@ -138,8 +139,7 @@ public class Main {
 
   /**
    * Helper method that makes a retrieveLocation API call using the configured
-   * locationId and
-   * returns the future containing the response
+   * locationId and returns the future containing the response
    *
    * @param squareClient the API client
    * @return a future that holds the retrieveLocation response

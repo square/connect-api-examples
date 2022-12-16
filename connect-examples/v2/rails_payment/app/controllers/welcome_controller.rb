@@ -9,6 +9,7 @@ class WelcomeController < ApplicationController
 
     @country = location[:country]
     @currency = location[:currency]
+    @idempotencyKey = SecureRandom.uuid
 
     render layout: 'index'
   end

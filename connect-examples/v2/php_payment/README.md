@@ -17,7 +17,7 @@ There are two sections in this README.
 
 ### Requirements
 
-- 8.0 <= PHP
+- 8.0 <= PHP < 8.2
 
 ### Install the PHP client library
 
