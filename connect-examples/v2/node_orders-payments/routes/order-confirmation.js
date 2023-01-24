@@ -120,7 +120,7 @@ router.post("/add-loyalty-point", async (req, res, next) => {
     }
 
     // Up to this point, we have a valid loyalty account to accumulate points on.
-    // We can pass order id to seemlessly calculate the eligible points and add to the loyalty account.
+    // We can pass order id to seamlessly calculate the eligible points and add to the loyalty account.
     await loyaltyApi.accumulateLoyaltyPoints(currentLoyaltyAccount.id, {
       idempotencyKey,
       locationId,
