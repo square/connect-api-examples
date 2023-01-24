@@ -101,8 +101,8 @@ router.post("/add-loyalty-point", async (req, res, next) => {
     // Get the program that we'd use for loyalty point accumulate
     const program = await getDefaultLoyaltyProgram();
     // the phone number must be in format like "+12223335252"
-    const formatedPhoneNumber = `+1${phoneNumber}`;
-    let currentLoyaltyAccount = await getLoyaltyAccountByPhoneNumber(formatedPhoneNumber);
+    const formattedPhoneNumber = `+1${phoneNumber}`;
+    let currentLoyaltyAccount = await getLoyaltyAccountByPhoneNumber(formattedPhoneNumber);
 
     if (!currentLoyaltyAccount) {
       // Here we silently create a loyalty account for this new phone number.
@@ -110,10 +110,9 @@ router.post("/add-loyalty-point", async (req, res, next) => {
       const { result: { loyaltyAccount } } = await loyaltyApi.createLoyaltyAccount({
         idempotencyKey,
         loyaltyAccount: {
-          mappings: [{
-            type: "PHONE",
-            value: formatedPhoneNumber
-          }],
+          mapping: {
+            phoneNumber: formattedPhoneNumber
+          },
           programId: program.id
         }
       });
