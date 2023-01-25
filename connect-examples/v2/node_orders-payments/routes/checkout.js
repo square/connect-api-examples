@@ -493,8 +493,8 @@ router.post("/add-loyalty-account", async (req, res, next) => {
     phoneNumber
   } = req.body;
   try {
-    const formatedPhoneNumber = `+1${phoneNumber}`;
-    const currentLoyaltyAccount = await getLoyaltyAccountByPhoneNumber(formatedPhoneNumber);
+    const formattedPhoneNumber = `+1${phoneNumber}`;
+    const currentLoyaltyAccount = await getLoyaltyAccountByPhoneNumber(formattedPhoneNumber);
     if (currentLoyaltyAccount) {
       // Get the referrer path and redirect back with the loyalty account id
       const referrerPath = url.parse(req.get("referrer")).pathname;

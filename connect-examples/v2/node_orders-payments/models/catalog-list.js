@@ -52,7 +52,10 @@ class CatalogList {
 
     // Reassigns this.items to be an array of CatalogItem instances
     this.items = catalogItemObjects.map(item => {
-      const imageObject = catalogImageObjectsMap[item.imageId];
+      let imageObject = null;
+      if (item.itemData.imageIds) {
+        imageObject = catalogImageObjectsMap[item.itemData.imageIds[0]];
+      }
       return new CatalogItem(item, imageObject);
     });
   }

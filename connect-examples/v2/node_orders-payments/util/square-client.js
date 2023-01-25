@@ -75,26 +75,25 @@ const retrieveOrderAndLocation = async (orderId, locationId) => {
  * @returns The loyalty propgram; if there is no loyalty program, return `null`.
  */
 const getDefaultLoyaltyProgram = async () => {
-  const { result: { programs } } = await loyaltyApi.listLoyaltyPrograms();
-  return programs && programs.length > 0 ? programs[0] : null;
+  const { result: { program } } = await loyaltyApi.retrieveLoyaltyProgram("main");
+  return program;
 };
 
 /**
  * Description:
  * Get the loyalty account from a phone number.
  *
- * @param {*} formatedPhoneNumber The phone number that's formatted as expected.
+ * @param {*} formattedPhoneNumber The phone number that's formatted as expected.
  *                                  The format must be like "+13334441111"
  *
  * @returns The loyalty account that associate with the phone number; If not found, return `null`.
  */
-async function getLoyaltyAccountByPhoneNumber(formatedPhoneNumber) {
+async function getLoyaltyAccountByPhoneNumber(formattedPhoneNumber) {
   const { result: { loyaltyAccounts } } = await loyaltyApi.searchLoyaltyAccounts({
     query: {
       mappings: [
         {
-          type: "PHONE",
-          value: formatedPhoneNumber
+          phoneNumber: formattedPhoneNumber
         }
       ]
     }
@@ -111,8 +110,8 @@ async function getLoyaltyAccountByPhoneNumber(formatedPhoneNumber) {
  *
  * Note: This method should be called before the order is paid
  *
- * @param {*} formatedPhoneNumber The phone number that's formatted as expected.
- *                                  The format must be like "+13334441111"
+ * @param {*} orderInfo Information about the order
+ * @param {*} loyaltyAccountId Loyalty account ID
  *
  * @returns The loyalty reward information.
  */
