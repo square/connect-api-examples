@@ -5,16 +5,16 @@ module Square
   class SquareApiClient
     attr_writer :access_token
     CONNECT_BASE_URL =  'https://connect.squareup.com'
-    
+
     # GET /v2/sites
     def list_sites
       response = RestClient.get(build_path('/v2/sites'), get_headers)
       JSON.parse(response)["sites"].map {|site| Site.new(site)}
     end
 
-    # GET /v2/sites/:site_id/snippet 
+    # GET /v2/sites/:site_id/snippet
     def get_snippet(site_id)
-      # rescue nil is not recommended for a production application 
+      # rescue nil is not recommended for a production application
       # this is a quick and dirty way of handling 404 responses for the sample
       response = RestClient.get(build_path("/v2/sites/#{site_id}/snippet"), get_headers) rescue nil
       Snippet.new(JSON.parse(response)["snippet"]) unless response.nil?
@@ -32,7 +32,7 @@ module Square
       response = RestClient.delete(build_path("/v2/sites/#{site_id}/snippet"), get_headers)
     end
 
-    private 
+    private
 
     def build_path(path)
       "#{CONNECT_BASE_URL}#{path}"
@@ -40,7 +40,7 @@ module Square
 
     def get_headers
       {
-        'Content-Type': 'application/json', 
+        'Content-Type': 'application/json',
         'Authorization': "Bearer #{@access_token}"
       }
     end

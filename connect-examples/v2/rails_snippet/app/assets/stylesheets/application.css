@@ -13,10 +13,57 @@
  *= require_tree .
  *= require_self
  */
-@import url(https://square-fonts-production-f.squarecdn.com/square-sans.min.css);
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: normal;
+  font-weight: 400;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-regular.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: italic;
+  font-weight: 400;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-regular-italic.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: normal;
+  font-weight: 500;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-medium.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: italic;
+  font-weight: 500;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-medium-italic.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: normal;
+  font-weight: 600;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-medium.woff") format("woff");
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Square Market';
+  font-style: italic;
+  font-weight: 600;
+  src: url("//cdn2.editmysite.com/fonts/SQ_Market/sqmarket-medium-italic.woff") format("woff");
+  font-display: fallback;
+}
 
 body {
-  font-family: var(--square-sans-text);
+  font-family: 'Square Market';
   margin: 0;
   background: #FFFFFF;
 }
@@ -36,7 +83,7 @@ body {
 }
 
 .subheading {
-  font-family: var(--square-sans-display);
+  font-family: SQ Market;
   font-size: 12px;
   line-height: 20px;
 
@@ -49,7 +96,7 @@ body {
 
 .heading {
   margin: 0;
-  font-family: var(--square-sans-display);
+  font-family: SQ Market;
   font-size: 24px;
   line-height: 32px;
   /* identical to box height, or 133% */
@@ -128,7 +175,7 @@ body {
 
 .remove-cursor {
   background: 0;
-  font-family: var(--square-sans-text);
+  font-family: 'Square Market';
   font-weight: bold;
   height: 48px;
   color: #CC0023;
