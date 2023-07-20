@@ -28,7 +28,7 @@ Before you begin, note the following:
 1. Ensure you have npm installed (`npm -v` in your terminal)
    If not please follow the instructions for your OS: https://www.npmjs.com/get-npm
 
-1. Ensure you have node installed (`node -v`) with version v10 or greater.
+1. Ensure you have node installed (`node -v`) with version v14 or greater.
 
 1. Set your credentials.
 
@@ -96,15 +96,15 @@ The application flow is explained with the assumption that you are familiar with
    <img src="./bin/images/screenshot-1.png" width="300"/>
 
    For each customer, the UI shows whether the customer has a card on file:
-    * If you choose a customer with a card on file, the application configures the invoice payment request method to CHARGE_CARD_ON_FILE. On the due date, Square charges the customer’s card on file.
-    * If you choose a customer without a card on file, the application chooses the EMAIL payment request method. In this case, the customer follows the URL to the Square-hosted invoice page to pay the invoice. 
+    * If you choose a customer with a card on file, the application configures the EMAIL delivery method and the CARD_ON_FILE automatic payment source for the payment request. On the due date, Square charges the customer’s card on file.
+    * If you choose a customer without a card on file, the application configures the EMAIL delivery method and retains the NONE automatic payment source for the payment request. In this case, the customer follows the URL to the Square-hosted invoice page to pay the invoice.
 
       > NOTE: You are testing the application in the Square Sandbox. The Sandbox does not send emails, but Square hosts these invoice pages that customers can access and pay so you can test the customer experience.
 
     The controller makes the following Square API calls:
 
     * `listCustomers` (Customers API). Returns a list of customer profiles from the seller’s Customer Directory.
-    * `retrieveLocation `(Locations API). Returns the seller’s main location. The example uses the seller’s main location ID when creating orders and invoices.
+    * `retrieveLocation `(Locations API). Returns the seller’s main location. This will be used to determine the currency for the seller. In addition, the example uses the seller’s main location ID when creating orders.
 
     The controller then calls `res.render("index")` to compile the template (`/views/index.pug`) with the customer list and location ID. This index.pug file creates an HTML output and sends it to the customer (the preceding screenshot).
 
@@ -126,18 +126,21 @@ Regardless of whether a customer has a card on file, the creation of the invoice
 
 1. After the customer chooses the **Create Invoice** button, the corresponding form action sends a POST request to the `router.post("/create", …) `controller in [invoice.js](routes/invoice.js#L66) to create an invoice.
 2. The controller first makes these Square API calls:
-    * `createOrder (Orders API)`. You need an order for the contractor service. 
+    * `listCards` (Cards API). You need to use a card on file if the customer has one.
+    * `createOrder` (Orders API). You need an order for the contractor service.
     * `createInvoice` (Invoice API). Creates an invoice by specifying the order ID and customer ID who pays for the invoice.  
  
-       For illustration, the application sets the optional `scheduled_at` parameter that directs Square to process the invoice 10 minutes after creation (by default, Square processes invoices soon after they are published). In addition, the `createInvoice` call includes one payment request configured as follows: 
+       For illustration, the application sets the optional `scheduled_at` parameter that directs Square to process the invoice 10 minutes after creation (by default, Square processes invoices soon after they are published). In addition, the `createInvoice` call includes one payment request configured as follows:
 
-        * `due_date` sets the payment due date to 7 days from the current date. 
-        * `request_method` is set to CHARGE_CARD_ON_FILE or EMAIL depending on whether the customer has a card on file. If set to CHARGE_CARD_ON_FILE, the payment request includes the card ID.
+        * `due_date` sets the payment due date to 7 days from the current date.
+        * `automatic_payment_source` is set to CARD_ON_FILE depending on whether the customer has a card on file. If set to CARD_ON_FILE, the payment request includes `card_id`.
+
+       In case of an error when creating the invoice, the application will check what type of error is returned. If the error code is `MERCHANT_SUBSCRIPTION_NOT_FOUND`, the request should be retried with a modified payload according to: https://developer.squareup.com/docs/invoices-api/overview#migration-notes.
 
     The controller then calls ``res.redirect(`view/${location_id}/${customer_id}/${result.invoice.id}`);`` to redirect the customer to the invoice view page, which is handled by the `router.get("/view/:location_id/:customer_id/:invoice_id",...) `controller in the same [invoice.js](routes/invoice.js#L31) file.
 
 3. The controller does the following:
-    1. First retrieves the invoice, created in the preceding step, by calling `getInvoice`. 
+    1. First retrieves the invoice, created in the preceding step, by calling `getInvoice`.
     2. Then calls `res.render("invoice", ....)` to compile the template (`invoice.pug`) with the invoice information, create an HTML output, and send it to the customer.  
 
       <img src="./bin/images/screenshot-3.png" width="300"/>

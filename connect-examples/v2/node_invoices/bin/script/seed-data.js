@@ -20,17 +20,18 @@ const { Client, Environment } = require("square");
 const readline = require("readline");
 const { v4: uuidv4 } = require("uuid");
 const { program } = require("commander");
-require('dotenv').config()
+require("dotenv").config();
 
 // We don't recommend to run this script in production environment
 const config = {
   environment: Environment.Sandbox,
   accessToken: process.env.SQUARE_ACCESS_TOKEN
 
-}
+};
 
 // Configure customer API instance
 const {
+  cardsApi,
   customersApi
 } = new Client(config);
 
@@ -49,8 +50,12 @@ async function addCustomers() {
       emailAddress: "nakamura710@square-example.com" // it is a fake email
     });
 
-    await customersApi.createCustomerCard(customer.id, {
-      cardNonce: "cnon:card-nonce-ok"
+    await cardsApi.createCard({
+      idempotencyKey: uuidv4(),
+      sourceId: "cnon:card-nonce-ok",
+      card: {
+        customerId: customer.id
+      }
     });
 
     // create second customer with no card on file
