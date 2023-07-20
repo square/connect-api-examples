@@ -19,6 +19,7 @@ const {
   v4: uuidv4
 } = require("uuid");
 const {
+  cardsApi,
   ordersApi,
   invoicesApi,
   customersApi,
@@ -26,6 +27,8 @@ const {
 } = require("../util/square-client");
 
 const router = express.Router();
+
+const MERCHANT_SUBSCRIPTION_NOT_FOUND_CODE = "MERCHANT_SUBSCRIPTION_NOT_FOUND";
 
 
 /**
@@ -91,12 +94,16 @@ router.post("/create", async (req, res, next) => {
     priceAmount,
     name,
   } = req.body;
+
   try {
-    const { result : { customer } } = await customersApi.retrieveCustomer(customerId);
+    // Step 1: Fetch cards for the customer
+    const { result : { cards } } = await cardsApi.listCards(undefined, customerId);
+
+    // Step 2: Fetch location currency
     const locationResponse = await locationsApi.retrieveLocation(locationId);
     const currency = locationResponse.result.location.currency;
 
-    // Create an order to be attached to invoice
+    // Step 3: Create an order to be attached to the invoice
     const { result : { order } } = await ordersApi.createOrder({
       order: {
         locationId,
@@ -122,17 +129,18 @@ router.post("/create", async (req, res, next) => {
     // it will charge at the scheduledAt time and send a receipt after, instead of sending the upcoming charge notification.
     // scheduledAt should be never after dueDate.
 
-    // Set the due date to 7 days from today
+    // Step 4: Set the due date to 7 days from today
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 7);
     const dueDateString = dueDate.toISOString().split("T")[0];
-    // Set the scheduledAt to next 10 minutes
+
+    // Step 5: Set the scheduledAt to next 10 minutes
     const scheduledAt = new Date(Date.now() + 10 * 60 * 1000);
     const scheduledAtString = scheduledAt.toISOString();
 
-    // Set the payment request based on the customer's card on file status
+    // Step 6: Set the payment request based on the customer's card on file status
     let paymentRequest = null;
-    if (customer.cards && customer.cards.length > 0) {
+    if (cards && cards.length > 0) {
       // the current customer has a card on file
       // creating invoice with the payment request method CARD_ON_FILE
       // the invoice will be charged with the card on file on the due date
@@ -140,7 +148,7 @@ router.post("/create", async (req, res, next) => {
         requestType: "BALANCE",
         automaticPaymentSource: "CARD_ON_FILE",
         dueDate: dueDateString,
-        cardId: customer.cards[0].id // Take the first card
+        cardId: cards[0].id // Take the first card
       };
     } else {
       // the current customer doesn't have a card on file
@@ -159,12 +167,12 @@ router.post("/create", async (req, res, next) => {
       };
     }
 
+    // Step 7: Create the invoice
     const requestBody = {
       idempotencyKey,
       invoice: {
         deliveryMethod: "EMAIL",
         orderId: order.id,
-        locationId: locationId,
         title: name,
         scheduledAt: scheduledAtString,
         primaryRecipient: {
@@ -181,16 +189,37 @@ router.post("/create", async (req, res, next) => {
       }
     };
 
-    console.log(requestBody);
-    const { result : { invoice } } = await invoicesApi.createInvoice(requestBody);
+    let invoice;
+    try {
+      const invoiceResponse = await invoicesApi.createInvoice(requestBody);
+      invoice = invoiceResponse.result.invoice;
+    } catch (error) {
+      /**
+       * We need to check if the error is related to the invoice containing unsupported/premium features.
+       * More information can be found here: https://developer.squareup.com/docs/invoices-api/overview#migration-notes
+       */
+      if (error.errors[0].code === MERCHANT_SUBSCRIPTION_NOT_FOUND_CODE) {
+        /**
+         * According to the migration guide linked above, we should retry the request after verifying the following:
+         * 1. `custom_fields` must be empty or omitted.
+         * 2. `payment_requests` cannot contain a payment request of the INSTALLMENT type.
+         * The following piece of code is for demonstration purposes only and will not be used in this sample app as we hardcode the request body values.
+         * To see it in action, change the above request type for the paymentRequest above to `INSTALLMENT`.
+         * */
+        const cleanRequestBody = { ...requestBody };
+        cleanRequestBody.invoice.customFields = [];
+        cleanRequestBody.invoice.paymentRequests[0].requestType = "BALANCE";
 
+        const invoiceResponse = await invoicesApi.createInvoice(cleanRequestBody);
+        invoice = invoiceResponse.result.invoice;
+      } else {
+        // If it's not a migration error, pass the error to the next middleware
+        throw error;
+      }
+    }
     res.redirect(`view/${locationId}/${customerId}/${invoice.id}`);
   } catch (error) {
-    if (error.errrors) {
-      next(error.errrors);
-    } else {
-      next(error);
-    }
+    next(error);
   }
 });
 

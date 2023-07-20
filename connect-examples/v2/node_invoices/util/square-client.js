@@ -37,6 +37,7 @@ const defaultClient = new Client(clientConfig);
 // Instances of Api that are used
 // You can add additional APIs here if you so choose
 const {
+  cardsApi,
   customersApi,
   locationsApi,
   ordersApi,
@@ -45,6 +46,7 @@ const {
 
 // Makes API instances and util functions importable
 module.exports = {
+  cardsApi,
   customersApi,
   locationsApi,
   ordersApi,
