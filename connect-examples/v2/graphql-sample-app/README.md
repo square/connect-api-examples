@@ -121,17 +121,14 @@ The first part of the output shows the GraphQL query to be executed:
 
 ```text
 Running the query: 
-  query CATALOG_SAMPLE_APP_QUERY(
-    $after: Cursor,
-    $merchantIds: [ID!]!
+  query CATALOG_QUERY(
+    $after: Cursor 
+    $merchantId: ID!
   ) {
-    catalog {
-      all(
-        after: $after
-        filter: {
-          merchants: { equalToAnyOf: $merchantIds }
-        }
-      ) {
+    catalog(
+      after: $after
+      filter: { merchantId: { equalToAnyOf: [$merchantId] } }
+    ) {
         pageInfo {
           ...PageInfoFragment
         }

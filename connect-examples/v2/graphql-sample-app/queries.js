@@ -5,100 +5,76 @@ const CATALOG_QUERY = gql`
     $after: Cursor
     $merchantId: ID!
   ) {
-    catalog (
-      merchants: { equalToAnyOf: [$merchantId] }
+    catalog(
+      after: $after
+      filter: {
+        merchantId: { equalToAnyOf: [$merchantId] }
+      }
     ) {
-      all(after: $after) {
-        pageInfo {
-          hasNextPage
-          endCursor
-          startCursor
-        }
-        nodes {
-          __typename
+      pageInfo {
+        hasNextPage
+        endCursor
+        startCursor
+      }
+      nodes {
+        __typename
+        id
+        version
+        isDeleted
+        updatedAt
+        absentAt {
           id
-          version
-          isDeleted
-          updatedAt
-          absentAt {
+        }
+        presentAt {
+          id
+        }
+        presentAtAll
+        ... on CatalogCategory {
+          name
+        }
+        ... on CatalogItem {
+          abbreviation
+          availableElectronically
+          availableForPickup
+          availableOnline
+          category {
             id
           }
-          presentAt {
+          description
+          options {
             id
-          }
-          presentAtAll
-          ... on CatalogCategory {
             name
           }
-          ... on CatalogItem {
-            abbreviation
-            availableElectronically
-            availableForPickup
-            availableOnline
-            category {
+          labelColor
+          modifierListInfos {
+            modifierList {
               id
             }
-            description
-            image {
-              id
-              url
-            }
-            options {
-              id
-              name
-            }
-            labelColor
-            modifierListInfos {
-              modifierList {
+            enabled
+            maxSelectedModifiers
+            minSelectedModifiers
+            modifierOverrides {
+              modifier {
                 id
               }
-              enabled
-              maxSelectedModifiers
-              minSelectedModifiers
-              modifierOverrides {
-                modifier {
-                  id
-                }
-                onByDefault
-              }
-            }
-            name
-            productType
-            skipModifierScreen
-            taxes {
-              id
-              name
-            }
-            variations {
-              id
-              name
+              onByDefault
             }
           }
-          ... on CatalogItemVariation {
+          name
+          productType
+          skipModifierScreen
+          taxes {
+            id
             name
-            sku
           }
-          ... on CatalogItemOptionValue {
+          variations {
+            id
             name
-            option {
-              description
-              name
-              showColors
-            }
           }
-          ... on CatalogProductSet {
-            allProducts
-            name
-            productsAll {
-              id
-            }
-            productsAny {
-              id
-            }
-            quantityExact
-            quantityMax
-            quantityMin
-          }
+        }
+        ... on CatalogItemVariation {
+          name
+          sku
         }
       }
     }
@@ -113,9 +89,7 @@ const CUSTOMERS_QUERY = gql`
     customers(
       after: $after
       filter: {
-        merchantId: {
-          equalToAnyOf: [ $merchantId ]
-        }
+        merchantId: { equalToAnyOf: [$merchantId] }
       }
     ) {
       pageInfo {
@@ -152,7 +126,7 @@ const MERCHANTS_QUERY = gql`
   ) {
     merchants(
       filter: {
-        merchants: [ $merchantId ]
+        id: { equalToAnyOf: [$merchantId] }
       }
     ) {
       nodes {
@@ -188,8 +162,8 @@ const ORDERS_QUERY = gql`
     orders(
       after: $after
       filter: {
-        merchants: { equalToAnyOf: [$merchantId] }
-        locations: { equalToAnyOf: [$locationId] }
+        merchantId: { equalToAnyOf: [$merchantId] }
+        location: { equalToAnyOf: [$locationId] }
       }
     ) {
       pageInfo {

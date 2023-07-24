@@ -17,7 +17,7 @@ const prompts = require("prompts");
 const QUERIES = require("./queries");
 require("dotenv").config();
 
-const GRAPHQL_SANDBOX_SERVER_URL = "https://connect.squareupsandbox.com/alpha/graphql";
+const GRAPHQL_SANDBOX_SERVER_URL = "https://connect.squareupsandbox.com/public/graphql";
 const GRAPHQL_EXPLORER_URL = "https://developer.squareup.com/explorer/graphql";
 
 /**
@@ -80,7 +80,7 @@ async function query(queryName, queryVariables) {
     while (hasNextPage) {
       queryVariables.after = prevEndCursor ? prevEndCursor : null;
       const data = await getGraphQlClient().request(sampleQuery, queryVariables);
-      const dataObj = queryName === "catalog" ? data[queryName].all : data[queryName];
+      const dataObj = data[queryName];
       if (!dataObj) {
         console.log("No objects returned from query");
         return;
