@@ -86,10 +86,9 @@ const scopes = [
  *  Serves the link that merchants click to authorize your application
  */
 app.get("/request_token", (req, res) => {
-  // Set the Auth_State cookie with a random md5 string to protect against cross-site request forgery.
+  // Set the Auth_State cookie with a random string to protect against cross-site request forgery.
   // Auth_State will expire in 300 seconds (5 mins) after the page is loaded.
-  const data = new Date().toISOString();
-  var state = crypto.createHash('md5').update(data).digest("hex");
+  const state = crypto.randomBytes(32).toString('hex');
   var url = basePath + `/oauth2/authorize?client_id=${process.env.SQ_APPLICATION_ID}&` + `response_type=code&` + `scope=${scopes.join('+')}` + `&state=` + state
   content = `
     <link type="text/css" rel="stylesheet" href="style.css">
