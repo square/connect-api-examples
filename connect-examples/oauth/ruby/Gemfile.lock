@@ -43,11 +43,13 @@ GEM
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
     crass (1.0.6)
+    daemons (1.4.1)
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
       railties (>= 3.2)
     erubi (1.11.0)
+    eventmachine (1.2.7)
     faraday (2.7.12)
       base64
       faraday-net_http (>= 2.0, < 3.1)
@@ -114,6 +116,10 @@ GEM
       apimatic_core (~> 0.3.0)
       apimatic_core_interfaces (~> 0.2.0)
       apimatic_faraday_client_adapter (~> 0.1.0)
+    thin (1.8.2)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0, >= 1.0.4)
+      rack (>= 1, < 3)
     thor (1.2.1)
     tilt (2.3.0)
     tzinfo (2.0.6)
@@ -129,6 +135,7 @@ DEPENDENCIES
   dotenv-rails
   sinatra (~> 3.1.0)
   square.rb (~> 34.0.0.20231115)
+  thin (~> 1.8.0)
 
 RUBY VERSION
    ruby 3.2.2p53
