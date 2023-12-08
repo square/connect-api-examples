@@ -6,10 +6,16 @@ For more information, see [OAuth Overview](https://developer.squareup.com/docs/o
 
 ## Setup
 
+### Create and activate a virtual environment
+```
+ python3 -m venv ./venv
+ . ./venv/bin/activate
+```
+
 ### Install Required Modules
 Open your terminal at this directory and type:
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ### Uses Flask

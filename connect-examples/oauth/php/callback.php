@@ -10,16 +10,15 @@ use Square\Exceptions\ApiException;
 use Square\SquareClient;
 use Square\Environment;
 use Square\Models\ObtainTokenRequest;
-use Dotenv\Dotenv;
 
-$dotenv = Dotenv::create(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 // The obtainOAuthToken function shows you how to obtain a OAuth access token
 // with the OAuth API with the authorization code returned to OAuth callback.
 function obtainOAuthToken($authorizationCode) {
   // Initialize Square PHP SDK OAuth API client.
-  $environment = getenv('SQ_ENVIRONMENT') == "sandbox" ? Environment::SANDBOX : Environment::PRODUCTION;
+  $environment = $_ENV['SQ_ENVIRONMENT'] == "sandbox" ? Environment::SANDBOX : Environment::PRODUCTION;
   $apiClient = new SquareClient([
     'environment' => $environment,
     'userAgentDetail' => "sample_app_oauth_php" // Remove or replace this detail when building your own app
@@ -28,11 +27,11 @@ function obtainOAuthToken($authorizationCode) {
   // Initialize the request parameters for the obtainToken request.
   $body_grantType = 'authorization_code';
   $body = new ObtainTokenRequest(
-    getenv('SQ_APPLICATION_ID'),
+    $_ENV['SQ_APPLICATION_ID'],
     $body_grantType
   );
   $body->setCode($authorizationCode);
-  $body->setClientSecret(getenv('SQ_APPLICATION_SECRET'));
+  $body->setClientSecret($_ENV['SQ_APPLICATION_SECRET']);
 
   // Call obtainToken endpoint to get the OAuth tokens.
   try {

@@ -8,12 +8,10 @@
   },
   "keywords": [],
   "dependencies": {
-    "axios": "^0.21.2",
     "cookie-parser": "*",
     "dotenv": "^8.2.0",
     "express": "*",
-    "md5": "*",
-    "square": "^22.0.0",
+    "square": "^33.0.0",
     "ejs": "*"
   }
 }

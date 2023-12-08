@@ -10,9 +10,7 @@
 require 'vendor/autoload.php';
 require_once('messages.php');
 
-use Dotenv\Dotenv;
-
-$dotenv = Dotenv::create(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 // Specify the permissions and url encode the spaced separated list.
@@ -26,8 +24,8 @@ $permissions = urlencode(
 
 // Set the Auth_State cookie with a random md5 string to protect against cross-site request forgery.
 // Auth_State will expire in 60 seconds (1 mins) after the page is loaded.
-$application_id = getenv('SQ_APPLICATION_ID');    
-$environment =  getenv('SQ_ENVIRONMENT');
+$application_id = $_ENV['SQ_APPLICATION_ID'];    
+$environment =  $_ENV['SQ_ENVIRONMENT'];
 
 if ($environment == "sandbox") {
   $base_url = "https://connect.squareupsandbox.com";

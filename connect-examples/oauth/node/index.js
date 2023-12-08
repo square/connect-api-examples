@@ -1,5 +1,5 @@
 /*
-Copyright 2020 Square Inc.
+Copyright 2023 Square Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ This sample requires the following dependencies:
 const dotenv = require('dotenv').config(); // Loads .env file
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const md5 = require('md5');
+const crypto = require('crypto')
 const { ApiError, Client, Environment } = require('square');
 const app = express();
 app.use(cookieParser());
@@ -88,7 +88,8 @@ const scopes = [
 app.get("/request_token", (req, res) => {
   // Set the Auth_State cookie with a random md5 string to protect against cross-site request forgery.
   // Auth_State will expire in 300 seconds (5 mins) after the page is loaded.
-  var state = md5(Date.now())
+  const data = new Date().toISOString();
+  var state = crypto.createHash('md5').update(data).digest("hex");
   var url = basePath + `/oauth2/authorize?client_id=${process.env.SQ_APPLICATION_ID}&` + `response_type=code&` + `scope=${scopes.join('+')}` + `&state=` + state
   content = `
     <link type="text/css" rel="stylesheet" href="style.css">
