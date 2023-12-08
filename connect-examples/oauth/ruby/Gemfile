@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
-ruby '2.6.8'
-gem 'square.rb', '~> 22.0.0.20220817 '
-gem 'sinatra', '~> 2.0'
+ruby '3.2.2'
+gem 'square.rb', '~> 34.0.0.20231115 '
+gem 'sinatra', '~> 3.1.0'
+gem 'thin', '~> 1.8.0'
 gem 'dotenv-rails', groups: [:development, :test]
