@@ -31,6 +31,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
+import java.io.OutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -51,8 +52,8 @@ public class OAuthHandler {
   // application
   // ID and secret. If you are testing in production, use the production
   // application ID and secret.
-  private static final String APPLICATION_ID = "REPLACE ME";
-  private static final String APPLICATION_SECRET = "REPLACE ME";
+  private static final String APPLICATION_ID = "REPLACE_ME";
+  private static final String APPLICATION_SECRET = "REPLACE_ME";
   // Modify this list as needed
   private static final String[] SCOPES = { "MERCHANT_PROFILE_READ", "PAYMENTS_WRITE_ADDITIONAL_RECIPIENTS",
       "PAYMENTS_WRITE", "PAYMENTS_READ" };
@@ -144,14 +145,14 @@ public class OAuthHandler {
       // Create obtain token request body
       ObtainTokenRequest body = new ObtainTokenRequest.Builder(
           APPLICATION_ID,
-          APPLICATION_SECRET,
           "authorization_code")
+          .clientSecret(APPLICATION_SECRET)
           .code(authorizationCode)
           .scopes(bodyScopes)
           .build();
 
       OAuthApi oAuthApi = client.getOAuthApi();
-
+      System.out.println("Obtaining token from authorization code...");
       // Call obtain token API and print the results on success
       // In production, you should never write tokens to the page.
       // You should encrypt the tokens and handle them securely.
@@ -161,15 +162,25 @@ public class OAuthHandler {
           System.out.println("Refresh token: " + result.getRefreshToken());
           System.out.println("Merchant id: " + result.getMerchantId());
           System.out.println("Authorization succeeded!");
+
+          // Send the response to the browser
           try {
-            t.sendResponseHeaders(200, 0);
-            t.getResponseBody().close();
+              String response = "Authorization succeeded!\n" +
+                                "Access token: " + result.getAccessToken() + "\n" +
+                                "Refresh token: " + result.getRefreshToken() + "\n" +
+                                "Merchant id: " + result.getMerchantId();
+
+              t.sendResponseHeaders(200, response.length());
+              OutputStream os = t.getResponseBody();
+              os.write(response.getBytes());
+              os.close();
           } catch (IOException e) {
-            e.printStackTrace();
+              e.printStackTrace();
           }
-        }
+      }
       }).exceptionally(exception -> {
         try {
+          System.out.println(exception.getMessage());
           t.sendResponseHeaders(405, 0);
           t.getResponseBody().close();
         } catch (IOException e) {
