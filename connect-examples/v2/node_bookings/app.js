@@ -24,11 +24,11 @@ const app = express();
 if (!process.env["ENVIRONMENT"]) {
   console.error(".env file missing required field \"ENVIRONMENT\".");
   process.exit(1);
-} else if (!process.env["SQUARE_ACCESS_TOKEN"]) {
-  console.error(".env file missing required field \"SQUARE_ACCESS_TOKEN\".");
+} else if (!process.env["SQ_ACCESS_TOKEN"]) {
+  console.error(".env file missing required field \"SQ_ACCESS_TOKEN\".");
   process.exit(1);
-} else if (!process.env["SQUARE_LOCATION_ID"]) {
-  console.error(".env file missing required field \"SQUARE_LOCATION_ID\".");
+} else if (!process.env["SQ_LOCATION_ID"]) {
+  console.error(".env file missing required field \"SQ_LOCATION_ID\".");
   process.exit(1);
 }
 
@@ -36,7 +36,7 @@ const routes = require("./routes/index");
 const { locationsApi } = require("./util/square-client");
 
 // Get location information and store it in app.locals so it is accessible in all pages.
-locationsApi.retrieveLocation(process.env["SQUARE_LOCATION_ID"]).then(function(response) {
+locationsApi.retrieveLocation(process.env["SQ_LOCATION_ID"]).then(function(response) {
   app.locals.location = response.result.location;
 }).catch(function(error) {
   if (error.statusCode === 401) {

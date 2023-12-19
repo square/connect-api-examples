@@ -15,7 +15,7 @@ const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 
-const locationId = process.env["SQUARE_LOCATION_ID"];
+const locationId = process.env["SQ_LOCATION_ID"];
 
 const {
   catalogApi,
