@@ -16,13 +16,13 @@ limitations under the License.
 const sampleData = require("./service-items.json");
 const { Client, Environment } = require("square");
 const readline = require("readline");
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
 const { program } = require("commander");
 require("dotenv").config();
 
 // We don't recommend to run this script in the production environment
 const config = {
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
+  accessToken: process.env.SQ_ACCESS_TOKEN,
   environment: Environment.Sandbox,
 };
 
@@ -88,7 +88,7 @@ async function createAppointmentServices(teamMemberIds, location) {
           objects: items,
         }
       ],
-      idempotencyKey: uuidv4(),
+      idempotencyKey: crypto.randomUUID()
     });
     console.log("Creation of appointment services succeeded");
   } catch (error) {
@@ -120,7 +120,7 @@ async function createTeamMembers(locationId) {
   try {
     const responses = await Promise.all(teamMembers.map(newTeamMember =>
       teamApi.createTeamMember({
-        idempotencyKey: uuidv4(),
+        idempotencyKey: crypto.randomUUID(),
         teamMember: {
           assignedLocations: {
             assignmentType: "EXPLICIT_LOCATIONS",
@@ -277,7 +277,7 @@ program
   .description("creates two team members using team API and hair services using catalog API")
   .action(async() => {
     // retrieve the location
-    const locationId = process.env.SQUARE_LOCATION_ID;
+    const locationId = process.env.SQ_LOCATION_ID;
     const location = await retrieveLocation(locationId);
     if (!location) {
       console.error("Fetching location failed. Exiting script");
@@ -299,7 +299,7 @@ program
       input: process.stdin,
       output: process.stdout,
     });
-    const locationId = process.env.SQUARE_LOCATION_ID;
+    const locationId = process.env.SQ_LOCATION_ID;
     rl.question(`Are you sure you want to clear all appointment services created for location ${locationId}, deactivate team members and remove all customers created by the app? (y/n) `, async(ans) => {
       if (ans.toUpperCase() === "Y") {
         // deactivate team members

@@ -15,7 +15,7 @@ const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 
-const locationId = process.env["SQUARE_LOCATION_ID"];
+const locationId = process.env["SQ_LOCATION_ID"];
 
 const {
   bookingsApi,
@@ -43,7 +43,6 @@ router.get("/:serviceId", async (req, res, next) => {
 
     // Send request to list staff booking profiles for the current location.
     const listBookingProfilesPromise = bookingsApi.listTeamMemberBookingProfiles(true, undefined, undefined, locationId);
-
     // Send request to list all active team members for this merchant at this location.
     const listActiveTeamMembersPromise = teamApi.searchTeamMembers({
       query: {

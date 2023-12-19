@@ -41,7 +41,7 @@ In addition to using the Bookings API, the application demonstrates how to integ
     a. You need an *.env* file at the top directory to provide credentials. You can copy the content in the *.env.example* file provided in the project and use it as a template.
     b. In the file:
         * Set `ENVIRONMENT` to `sandbox` (for testing) or `production`.
-        * Replace the placeholder texts of `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID` with your access token and your seller location ID, respectively, for the chosen environment.
+        * Replace the placeholder texts of `SQ_ACCESS_TOKEN` and `SQ_LOCATION_ID` with your access token and your seller location ID, respectively, for the chosen environment.
 
     You can find your Square credentials in the Square Developer Dashboard. For more information, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application).
 
@@ -59,7 +59,7 @@ To set up the appointments service in the Sandbox, follow these steps:
 
 #### 1. Initialize test data
 
-a. Ensure that your *.env* file has `ENVIRONMENT` set to `sandbox` and provides the Sandbox environment values for `SQUARE_ACCESS_TOKEN` and `SQUARE_LOCATION_ID`.
+a. Ensure that your *.env* file has `ENVIRONMENT` set to `sandbox` and provides the Sandbox environment values for `SQ_ACCESS_TOKEN` and `SQ_LOCATION_ID`.
 
 b. Run the seeding script provided in this sample application to create some services and staff members:
   
@@ -100,7 +100,7 @@ You now have Appointments enabled.
 
 a. Choose the **Staff** tab on the left pane.
 
-b. Choose the **Add Employee** button on the right side of the page.
+b. Choose the **Add Staff** button on the right side of the page.
 
 c. Choose one of the two employees (Amy Johnson or John Smith) created by the seeding command, set optional configurations for the selected employee on the right-side pane, and then choose the **Save** button on the right bottom corner of the page.
 
@@ -176,7 +176,7 @@ The `/staff/:serviceId` route is handled by the route handler defined in [_/rout
 * Calls the [RetrieveCatalogObject](https://developer.squareup.com/reference/square/catalog/retrieve-catalog-object) endpoint of the Catalog API to retrieve the `CatalogObject` of the specified service ID.
 * Calls the [SearchTeamMembers](https://developer.squareup.com/reference/square/team/search-team-members) endpoint of the Team API to find all active team members capable of providing the chosen service.
 * Calls the [ListTeamMemberBookingProfiles](https://developer.squareup.com/reference/square/bookings/list-team-member-booking-profiles) endpoint of the Bookings API to verify that the team members are bookable.
-* Renders the [select-stff.ejs](views/pages/select-staff.ejs) page for the user to select a servicing staff member.
+* Renders the [select-staff.ejs](views/pages/select-staff.ejs) page for the user to select a servicing staff member.
 
 <img src="./bin/images/select-staff-screenshot.png" width="700">
 

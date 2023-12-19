@@ -19,10 +19,10 @@ const {
   catalogApi,
   customersApi,
 } = require("../util/square-client");
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
 
 require("dotenv").config();
-const locationId = process.env["SQUARE_LOCATION_ID"];
+const locationId = process.env["SQ_LOCATION_ID"];
 
 /**
  * POST /booking/create
@@ -70,7 +70,7 @@ router.post("/create", async (req, res, next) => {
         locationId,
         startAt,
       },
-      idempotencyKey: uuidv4(),
+      idempotencyKey: crypto.randomUUID(),
     });
 
     res.redirect("/booking/" + booking.id);
@@ -248,7 +248,7 @@ async function getCustomerID(givenName, familyName, emailAddress) {
     emailAddress,
     familyName,
     givenName,
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     referenceId: "BOOKINGS-SAMPLE-APP",
   });
 
