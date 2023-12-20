@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto")
 
 const express = require("express");
 const logger = require("morgan");
@@ -28,7 +28,7 @@ const app = express();
 const { locationsApi } = require("./util/square-client");
 app.locals.currency = "USD";
 app.locals.maxLimit = 200000;
-locationsApi.retrieveLocation(process.env[`SQUARE_LOCATION_ID`]).then(function(response) {
+locationsApi.retrieveLocation(process.env[`SQ_LOCATION_ID`]).then(function(response) {
   app.locals.currency = response.result.location.currency;
 
   // If the currency is one of the following currencies, we have to change our maximum allowed balance.
@@ -63,7 +63,7 @@ app.use(express.urlencoded({
 
 app.use(session({
   genid: function(req) {
-    return uuidv4() // use UUIDs for session IDs
+    return crypto.randomUUID() // use UUIDs for session IDs
   },
 	secret: 'secret', // in production, use a unique and random generated string and store it in an environment variable
 	resave: true,

@@ -16,8 +16,8 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
-const { v4: uuidv4 } = require("uuid");
-const locationId = process.env[`SQUARE_LOCATION_ID`];
+const crypto = require("crypto")
+const locationId = process.env[`SQ_LOCATION_ID`];
 const {
   giftCardsApi,
   giftCardActivitiesApi,
@@ -183,7 +183,7 @@ router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res
  */
 function generateOrderRequest(customerId, amount, currency) {
   return {
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     order: {
       lineItems: [
         {
@@ -208,7 +208,7 @@ function generateOrderRequest(customerId, amount, currency) {
  */
 function generatePaymentRequest(customerId, amount, currency, paymentSource, orderId) {
   return {
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     sourceId: paymentSource,
     amountMoney: {
       amount,
@@ -226,7 +226,7 @@ function generatePaymentRequest(customerId, amount, currency, paymentSource, ord
  */
 function generateGiftCardRequest() {
   return {
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     locationId,
     giftCard: {
       type: "DIGITAL"
@@ -243,7 +243,7 @@ function generateGiftCardActivityRequest(activityType, giftCardGan, orderId, lin
   const [key] = Object.keys(activityObject);
   const [value] = Object.values(activityObject);
   const request = {
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     giftCardActivity: {
       giftCardGan,
       type: activityType,

@@ -47,8 +47,8 @@ The sample application does not implement a login authentication mechanism that 
    1. Create a `.env` file at the top of this directory by copying the contents of the `.env.example` file
    2. In the file, replace the placeholder texts with actual values for:
       - `ENVIRONMENT` should be set to `sandbox` or `production`
-      - `SQUARE_APPLICATION_ID` and `SQUARE_ACCESS_TOKEN` can be found under the _Credentials_ tab in your Square application
-      - `SQUARE_LOCATION_ID` can be found under the _Locations_ tabs in your Square application
+      - `SQ_APPLICATION_ID` and `SQ_ACCESS_TOKEN` can be found under the _Credentials_ tab in your Square application
+      - `SQ_LOCATION_ID` can be found under the _Locations_ tabs in your Square application
 
    Navigate to the [Developer Dashboard](https://developer.squareup.com/apps) to manage and retrieve credentials for Square applications. For more information on creating a Square application, see [Getting Started](https://developer.squareup.com/docs/get-started#step-2-create-an-application).
 
@@ -86,7 +86,7 @@ This Express.js project is organized as follows:
   - **gift-card.js** contains routes for managing gift cards. This includes gift card creation and managing gift card activities
   - **seed.js** contains routes for managing test data when using the `sandbox` environment
 - **./util/** includes the following:
-  - **square_client.js** a utility module for initializing the Square SDK client
+  - **SQ_client.js** a utility module for initializing the Square SDK client
   - **middleware.js** contains middleware functions for verifying permissions
 - **./views/** contains template (.ejs) files.
 

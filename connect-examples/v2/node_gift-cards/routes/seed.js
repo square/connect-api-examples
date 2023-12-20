@@ -16,7 +16,7 @@ limitations under the License.
 
 const express = require("express");
 const router = express.Router();
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto")
 const {
   customersApi,
   giftCardsApi,
@@ -24,8 +24,8 @@ const {
   cardsApi
 } = require("../util/square-client");
 
-const locationId = process.env[`SQUARE_LOCATION_ID`];
-const faker = require("faker");
+const locationId = process.env[`SQ_LOCATION_ID`];
+const {faker} = require("@faker-js/faker");
 const { checkLoginStatus, checkCustomerIdMatch, checkSandboxEnv } = require("../util/middleware");
 const REFERENCE_ID = "GiftCardSampleApp";
 
@@ -63,11 +63,11 @@ router.post("/:customerId/create-card", checkLoginStatus, checkCustomerIdMatch, 
  */
 router.post("/create-customer", async (req, res, next) => {
   try {
-    const [givenName, familyName] = faker.name.findName().split(" ");
+    const [givenName, familyName] = faker.person.fullName().split(" ");
 
     // Create a customer with a fake name.
     const { result: { customer } } = await customersApi.createCustomer({
-      idempotencyKey: uuidv4(),
+      idempotencyKey: crypto.randomUUID(),
       givenName,
       familyName,
       referenceId: REFERENCE_ID
@@ -208,7 +208,7 @@ function generateSearchCustomersRequest() {
  */
 function generateGiftCardDecativationRequest(gan) {
   return {
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     giftCardActivity: {
       giftCardGan: gan,
       locationId,
@@ -226,7 +226,7 @@ function generateGiftCardDecativationRequest(gan) {
  */
 function generateCreateCardRequest(customerId) {
   return {
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     sourceId: "cnon:card-nonce-ok",
     card: {
       customerId
