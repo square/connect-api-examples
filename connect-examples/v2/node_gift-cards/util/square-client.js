@@ -18,7 +18,7 @@ const { Client } = require("square");
 require('dotenv').config();
 
 const env = process.env[`ENVIRONMENT`].toLowerCase();
-const accessToken = process.env[`SQUARE_ACCESS_TOKEN`];
+const accessToken = process.env[`SQ_ACCESS_TOKEN`];
 
 // Set Square credentials
 const config = {
