@@ -22,9 +22,8 @@
     "pug": "^3.0.0",
     "request": "^2.88.0",
     "serve-favicon": "^2.5.0",
-    "square": "^28.0.0",
-    "tslib": "^2.6.0",
-    "uuid": "^8.3.0"
+    "square": "^33.0.0",
+    "tslib": "^2.6.0"
   },
   "devDependencies": {
     "eslint": "^6.1.0",
