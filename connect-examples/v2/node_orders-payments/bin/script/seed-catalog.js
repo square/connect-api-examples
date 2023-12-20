@@ -17,7 +17,7 @@ limitations under the License.
 /* eslint no-console: 0 */
 
 const { Client, Environment, FileWrapper } = require("square");
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
 const sampleData = require("./sample-seed-data.json");
 const fs = require("fs");
 const readline = require("readline");
@@ -27,7 +27,7 @@ require('dotenv').config();
 // Configure OAuth2 access token for authorization: oauth2
 const config = {
   environment: Environment.Sandbox,
-  accessToken: process.env.SQUARE_ACCESS_TOKEN
+  accessToken: process.env.SQ_ACCESS_TOKEN
 };
 // Configure catalog API instance
 const { catalogApi, locationsApi } = new Client(config);
@@ -43,7 +43,7 @@ const { catalogApi, locationsApi } = new Client(config);
 const addImages = async (image, catalogObjectId, success) => {
   // Create JSON request with required image information requirements.
   const request = {
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     objectId: catalogObjectId,
     image: {
       id: image.id,
@@ -99,7 +99,7 @@ const addItems = async () => {
     }];
     const batchUpsertCatalogRequest = {
       // Each request needs a unique idempotency key.
-      idempotencyKey: uuidv4(),
+      idempotencyKey: crypto.randomUUID(),
       batches: batches,
     };
 
