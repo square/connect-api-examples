@@ -109,7 +109,7 @@ If you are not logged in, you will be redirected to the _/login_ page, where the
 
 After logging in as a customer, the customer ID and login status are stored in a session, then you are redirected to the _/dashboard_. See code in [index.js](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/routes/index.js):
 
-```
+```javascript
 router.get("/", async (req, res, next) => {
   if (req.session.loggedIn) {
     res.redirect('/dashboard');
@@ -155,7 +155,7 @@ You can click on _Reset now_ on the login page to delete customer data created b
 
 Once you are logged in as a customer, you are then redirected to the _/dashboard_ page. This page displays a list of gift cards that are retrieved using the [List gift cards API](https://developer.squareup.com/reference/square/gift-cards-api/list-gift-cards). See code in [dashboard.js](https://github.com/square/connect-api-examples/blob/master/connect-examples/v2/node_gift-cards/routes/dashboard.js):
 
-```
+```javascript
 router.get("/", checkLoginStatus, async (req, res, next) => {
   // display a list of gift cards linked to the customer's account
   const deletion = req.query.deletion;
@@ -189,13 +189,13 @@ The following screenshot shows a dashboard with no gift cards and a button to cr
 
 From the _/dashboard_ page, you may add a new gift card. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L38):
 
-```
+```javascript
 router.post("/create", checkLoginStatus, async (req, res, next) => {
   try {
     // The following information will come from the request/session.
     const customerId = req.session.customerId;
 
-    // Create an inactive gift card.
+    // Create a pending gift card.
     const giftCardRequest = generateGiftCardRequest();
     const { result: { giftCard }} = await giftCardsApi.createGiftCard(giftCardRequest);
 
@@ -224,7 +224,7 @@ The above handler makes the following Gift Cards API calls:
 
 Once a new gift card is created, you are redirected to the card's details page; you may also access this page through the dashboard. At this time, the card is not activated and it has no funds. See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L63):
 
-```
+```javascript
 router.get("/:gan", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const giftCard = res.locals.giftCard;
   const payment = req.query.payment;
@@ -243,7 +243,7 @@ To "delete" a gift card in the application, go to the ellipsis menu and click th
 
 See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L93):
 
-```
+```javascript
 router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkPendingCard, async (req, res, next) => {
   try {
     const giftCard = res.locals.giftCard;
@@ -262,7 +262,7 @@ router.post("/:gan/delete", checkLoginStatus, checkCardOwner, checkPendingCard, 
 
 Once a gift card is activated, you may view the transaction history of a gift card by clicking on the ellipsis menu on a gift card's details page and then clicking the _Transaction history_ button. You are then directed to the _/gift-card/:gan/history_ page where a list of gift card activities is retrieved and displayed using the [List gift card activities API](https://developer.squareup.com/reference/square/gift-card-activities-api/list-gift-card-activities). See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L75):
 
-```
+```javascript
 router.get("/:gan/history", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   try {
     const giftCard = res.locals.giftCard;
@@ -281,7 +281,7 @@ From the card's details page described above, you may add funds to the gift card
 
 The customer's cards on file are retrieved using the [List cards API](https://developer.squareup.com/reference/square/cards-api/list-cards). See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L113):
 
-```
+```javascript
 router.get("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   const cardCreated = req.query.cardCreated;
   const giftCard = res.locals.giftCard;
@@ -320,7 +320,7 @@ The following APIs are used to add funds to a gift card:
 
 See code in [gift-card.js](https://github.com/square/connect-api-examples/blob/8db0b397f9c9245d7e9d78f1924f39f59f2a4de2/connect-examples/v2/node_gift-cards/routes/gift-card.js#L140):
 
-```
+```javascript
 router.post("/:gan/add-funds", checkLoginStatus, checkCardOwner, async (req, res, next) => {
   try {
     // The following information will come from the request/session.
