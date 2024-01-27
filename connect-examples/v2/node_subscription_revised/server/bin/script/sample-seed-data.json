@@ -1,0 +1,577 @@
+{
+    "#Breakfast Category": {
+      "data": {
+        "type": "CATEGORY",
+        "id": "#Breakfast Category",
+        "presentAtAllLocations": true,
+        "categoryData": {
+          "name": "Breakfast"
+        }
+      }
+    },
+    "#Entree Category": {
+      "data": {
+        "type": "CATEGORY",
+        "id": "#Entree Category",
+        "presentAtAllLocations": true,
+        "categoryData": {
+          "name": "Entree"
+        }
+      }
+    },
+    "#Dessert Category": {
+        "data": {
+          "type": "CATEGORY",
+          "id": "#Dessert Category",
+          "presentAtAllLocations": true,
+          "categoryData": {
+            "name": "Dessert"
+          }
+        }
+      },
+    "#Bacon Cheeseburger": {
+      "image": {
+        "url": "./bin/script/img/bacon-burger@2x.png",
+        "id": "#Bacon Cheeseburger",
+        "caption": "A picture of a bacon cheeseburger."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Bacon Cheeseburger",
+        "presentAtAllLocations": true,
+        "itemData": {
+          "name": "Bacon Cheeseburger",
+          "description": "One mouth-watering, flame-grilled, quarter-pound angus beef burger with your choice of cheese on a sesame seed bun. Comes with a side of fries.",
+          "categories": [
+            {
+              "id": "#Entree Category"
+            }
+          ],
+          "variations": [{
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Bacon Cheeseburger",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Bacon Cheeseburger",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 995,
+                "currency": "CURRENCY"
+              }
+            }
+          }]
+        }
+      }
+    },
+    "#Fried Chicken Sandwich": {
+      "image": {
+        "url": "./bin/script/img/chicken-sandwich@2x.png",
+        "id": "#Fried Chicken Sandwich",
+        "caption": "A picture of a fried chicken sandwich."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Fried Chicken Sandwich",
+        "itemData": {
+          "name": "Fried Chicken Sandwich",
+          "description": "A buttermilk fried chicken thigh with crispy skin on a sesame seed bun. Topped with fresh red cabbage slaw and jalapeños and our house hot sauce.",
+          "abbreviation": "FCS",
+          "categories": [
+            {
+              "id": "#Entree Category"
+            }
+          ],
+          "variations": [{
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Fried Chicken Sandwich",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Fried Chicken Sandwich",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 675,
+                "currency": "CURRENCY"
+              }
+            }
+          }]
+        }
+      }
+    },
+    "#Sunny-Side Egg on Toast": {
+      "image": {
+        "url": "./bin/script/img/egg-sunnyside-up-on-toast@2x.png",
+        "id": "#Sunny-Side Egg on Toast",
+        "caption": "A picture of Sunny-Side Egg on Toast."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Sunny-Side Egg on Toast",
+        "itemData": {
+          "name": "Sunny-Side Egg on Toast",
+          "description": "One farm-fresh sunny side up egg, tomato, and green peppers on a slice of our toast fresh from our bakehouse.",
+          "abbreviation": "ET",
+          "categories": [
+            {
+              "id": "#Breakfast Category"
+            }
+          ],
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "#Regular Sunny-Side Egg on Toast",
+              "isDeleted": false,
+              "presentAtAllLocations": true,
+              "itemVariationData": {
+                "itemId": "#Sunny-Side Egg on Toast",
+                "name": "Regular",
+                "pricingType": "FIXED_PRICING",
+                "priceMoney": {
+                  "amount": 495,
+                  "currency": "CURRENCY"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "#Grilled Steak": {
+      "image": {
+        "url": "./bin/script/img/grilled-steak@2x.png",
+        "id": "#Grilled Steak",
+        "caption": "A picture of grilled steak."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Grilled Steak",
+        "itemData": {
+          "name": "Grilled Steak",
+          "description": "Perfectly grilled flank steak that's been marinated in our award winning sauce, paired with fresh-from-the-farm veggies.",
+          "abbreviation": "BRF",
+          "categories": [
+            {
+              "id": "#Entree Category"
+            }
+          ],
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "#Regular Grilled Steak",
+              "isDeleted": false,
+              "presentAtAllLocations": true,
+              "itemVariationData": {
+                "itemId": "#Grilled Steak",
+                "name": "Regular",
+                "pricingType": "FIXED_PRICING",
+                "priceMoney": {
+                  "amount": 1195,
+                  "currency": "CURRENCY"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "#Italian Sandwich": {
+      "image": {
+        "url": "./bin/script/img/italian-sandwich@2x.png",
+        "id": "#Italian Sandwich",
+        "caption": "A picture of a sandwich."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Italian Sandwich",
+        "itemData": {
+          "name": "Italian Sandwich",
+          "description": "Salami, capicolla, ham, provolone, fresh lettuce, peppers, onion, and olive oil served on our homemade sourdough. What more could you want in a sandwich?",
+          "abbreviation": "IS",
+          "categories": [
+            {
+              "id": "#Entree Category"
+            }
+          ],
+          "variations": [{
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Italian Sandwich",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Italian Sandwich",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 895,
+                "currency": "CURRENCY"
+              }
+            }
+          }]
+        }
+      }
+    },
+    "#Meatballs": {
+      "image": {
+        "url": "./bin/script/img/meatballs@2x.png",
+        "id": "#Meatballs",
+        "caption": "A picture of meatballs."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Meatballs",
+        "itemData": {
+          "name": "Meatballs",
+          "description": "Lean grilled lamb meatballs served with fresh greens. Perfect for those on a ketogenic diet.",
+          "abbreviation": "MB",
+          "categories": [
+            {
+              "id": "#Entree Category"
+            }
+          ],
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "#Regular Meatballs",
+              "isDeleted": false,
+              "presentAtAllLocations": true,
+              "itemVariationData": {
+                "itemId": "#Meatballs",
+                "name": "Regular",
+                "pricingType": "FIXED_PRICING",
+                "priceMoney": {
+                  "amount": 695,
+                  "currency": "CURRENCY"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "#Mediterranean Yogurt Bowl": {
+      "image": {
+        "url": "./bin/script/img/mediterranean-yogurt-bowl@2x.png",
+        "id": "#Mediterranean Yogurt Bowl",
+        "caption": "A picture of a Mediterranean Yogurt Bowl."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Mediterranean Yogurt Bowl",
+        "itemData": {
+          "name": "Mediterranean Yogurt Bowl",
+          "description": "Greek yogurt topped with olives, chopped peppers, cucumber, crispy chickpeas, beans, and figs. Served with our fresh homemade pita.",
+          "abbreviation": "MYB",
+          "categories": [
+            {
+              "id": "#Entree Category"
+            }
+          ],
+          "variations": [{
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Mediterranean Yogurt Bowl",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Mediterranean Yogurt Bowl",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 495,
+                "currency": "CURRENCY"
+              }
+            }
+          }]
+        }
+      }
+    },
+    "#Oatmeal with Fruit": {
+      "image": {
+        "url": "./bin/script/img/oatmeal-with-fruit@2x.png",
+        "id": "#Oatmeal with Fruit",
+        "caption": "A picture of Oatmeal with Fruit."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Oatmeal with Fruit",
+        "itemData": {
+          "name": "Oatmeal with Fruit",
+          "description": "A classic hot breakfast comprised of our famous steel-cut oats topped with fruit and almond slices straight from locally owned farms.",
+          "abbreviation": "SB",
+          "categories": [
+            {
+              "id": "#Breakfast Category"
+            }
+          ],
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "#Regular Oatmeal with Fruit",
+              "isDeleted": false,
+              "presentAtAllLocations": true,
+              "itemVariationData": {
+                "itemId": "#Oatmeal with Fruit",
+                "name": "Regular",
+                "pricingType": "FIXED_PRICING",
+                "priceMoney": {
+                  "amount": 495,
+                  "currency": "CURRENCY"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "#Pancakes with Fruit": {
+      "image": {
+        "url": "./bin/script/img/pancakes-with-fruit@2x.png",
+        "id": "#Pancakes with Fruit",
+        "caption": "A picture of Pancakes with Fruit."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Pancakes with Fruit",
+        "itemData": {
+          "name": "Pancakes with Fruit",
+          "description": "The fluffiest, most perfectly golden pancakes you've ever had topped with fresh fruit from local farms. Real Canadian maple syrup served on the side.",
+          "abbreviation": "PF",
+          "categories": [
+            {
+              "id": "#Breakfast Category"
+            }
+          ],
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "#Regular Pancakes with Fruit",
+              "isDeleted": false,
+              "presentAtAllLocations": true,
+              "itemVariationData": {
+                "itemId": "#Pancakes with Fruit",
+                "name": "Regular",
+                "pricingType": "FIXED_PRICING",
+                "priceMoney": {
+                  "amount": 995,
+                  "currency": "CURRENCY"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "#Salmon with Zucchini": {
+      "image": {
+        "url": "./bin/script/img/salmon-with-zucchini@2x.png",
+        "id": "#Salmon with Zucchini",
+        "caption": "A picture of chicken."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Salmon with Zucchini",
+        "itemData": {
+          "name": "Salmon with Zucchini",
+          "description": "Fresh caught Alaskan king salmon served on a bed of braised spinach and diced zucchini.",
+          "abbreviation": "SZ",
+          "categories": [
+            {
+              "id": "#Entree Category"
+            }
+          ],
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "#Regular Salmon with Zucchini",
+              "isDeleted": false,
+              "presentAtAllLocations": true,
+              "itemVariationData": {
+                "itemId": "#Salmon with Zucchini",
+                "name": "Regular",
+                "pricingType": "FIXED_PRICING",
+                "priceMoney": {
+                  "amount": 1495,
+                  "currency": "CURRENCY"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "#Steak Tacos": {
+      "image": {
+        "url": "./bin/script/img/steak-tacos@2x.png",
+        "id": "#Steak Tacos",
+        "caption": "A picture of Steak Tacos."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Steak Tacos",
+        "itemData": {
+          "name": "Steak Tacos",
+          "description": "Two tacos with flank steak marinated for a minimum of 24 hours in our award-winning marinade. Topped with a mix of fresh cilantro and cooling cucumber.",
+          "abbreviation": "ST",
+          "categories": [
+            {
+              "id": "#Entree Category"
+            }
+          ],
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "#Regular Steak Tacos",
+              "isDeleted": false,
+              "presentAtAllLocations": true,
+              "itemVariationData": {
+                "itemId": "#Steak Tacos",
+                "name": "Regular",
+                "pricingType": "FIXED_PRICING",
+                "priceMoney": {
+                  "amount": 695,
+                  "currency": "CURRENCY"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "#Autumn Soup": {
+      "image": {
+        "url": "./bin/script/img/autumn-soup@2x.png",
+        "id": "#Autumn Soup",
+        "caption": "A picture of Autumn Soup."
+      },
+      "data": {
+        "type": "ITEM",
+        "id": "#Autumn Soup",
+        "itemData": {
+          "name": "Autumn Soup",
+          "description": "The smoothest butternut squash soup you've ever had served with locally made goat cheese and toasted nuts.",
+          "abbreviation": "AS",
+          "variations": [
+            {
+              "type": "ITEM_VARIATION",
+              "id": "#Regular Autumn Soup",
+              "isDeleted": false,
+              "presentAtAllLocations": true,
+              "itemVariationData": {
+                "itemId": "#Autumn Soup",
+                "name": "Regular",
+                "pricingType": "FIXED_PRICING",
+                "priceMoney": {
+                  "amount": 695,
+                  "currency": "CURRENCY"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "#One-meal-a-week": {
+        "data": {
+          "type": "SUBSCRIPTION_PLAN",
+          "id": "#One-meal-a-week",
+          "subscriptionPlanData": {
+            "name": "One Meal A Week",
+            "eligibleCategoryIds": ["#Breakfast Category", "#Entree Category"],
+            "subscriptionPlanVariations": [
+              {
+                "id": "#One-Meal-A-Week-Promo",
+                "type": "SUBSCRIPTION_PLAN_VARIATION",
+                "subscriptionPlanVariationData":{
+                  "name": "One Meal a Week Promo",
+                  "phases": [
+                    {
+                      "cadence": "EVERY_TWO_WEEKS",
+                      "periods": 1,
+                      "pricing": {
+                        "type": "RELATIVE"
+                      }
+                    },
+                    {
+                      "cadence": "MONTHLY",
+                      "pricing": {
+                        "type": "RELATIVE"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "#Two-meals-a-week": {
+        "data": {
+          "type": "SUBSCRIPTION_PLAN",
+          "id": "#Two-meals-a-week",
+          "subscriptionPlanData": {
+            "name": "Two Meals A Week",
+            "eligibleCategoryIds": ["#Breakfast Category", "#Entree Category"],
+            "subscriptionPlanVariations": [
+              {
+                "id": "#Two-Meals-A-Week-Promo",
+                "type": "SUBSCRIPTION_PLAN_VARIATION",
+                "subscriptionPlanVariationData": {
+                  "name": "Two Meals a Week Promo",
+                  "phases": [
+                    {
+                      "cadence": "EVERY_TWO_WEEKS",
+                      "periods": 1,
+                      "pricing": {
+                        "type": "RELATIVE"
+                      }
+                    },
+                    {
+                      "cadence": "MONTHLY",
+                      "pricing": {
+                        "type": "RELATIVE"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "#Family-meal-plan": {
+        "data": {
+          "type": "SUBSCRIPTION_PLAN",
+          "id": "#Family-meal-plan",
+          "subscriptionPlanData": {
+            "name": "Family Meal Plan",
+            "eligibleCategoryIds": ["#Breakfast Category", "#Entree Category", "#Dessert Category"],
+            "subscriptionPlanVariations": [
+              {
+                "id": "#Family-Meal-Plan-Promo",
+                "type": "SUBSCRIPTION_PLAN_VARIATION",
+                "subscriptionPlanVariationData": {
+                  "name": "Family Meal Plan Promo",
+                  "phases": [
+                    {
+                      "cadence": "EVERY_TWO_WEEKS",
+                      "periods": 1,
+                      "pricing": {
+                        "type": "RELATIVE"
+                      }
+                    },
+                    {
+                      "cadence": "MONTHLY",
+                      "pricing": {
+                        "type": "RELATIVE"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+  }
