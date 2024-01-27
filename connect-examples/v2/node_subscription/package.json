@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production nodemon -e js,pug ./bin/www",
-    "test": "NODE_ENV=sandbox nodemon -e js,pug ./bin/www",
+    "dev": "NODE_ENV=sandbox nodemon -e js,pug ./bin/www",
     "seed": "NODE_ENV=sandbox node ./bin/script/seed-data.js generate",
     "clear": "NODE_ENV=sandbox node ./bin/script/seed-data.js clear",
     "help": "NODE_ENV=sandbox node ./bin/script/seed-data.js --help"
@@ -23,8 +22,8 @@
     "pug": "^3.0.0",
     "request": "^2.88.0",
     "serve-favicon": "^2.5.0",
-    "uuid": "^8.3.0",
-    "square": "^22.0.0"
+    "square": "^33.0.0",
+    "tslib": "^2.6.2"
   },
   "devDependencies": {
     "eslint": "^6.1.0",

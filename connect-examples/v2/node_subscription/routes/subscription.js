@@ -15,11 +15,9 @@ limitations under the License.
 */
 
 const express = require("express");
+const crypto = require("crypto");
 const {
-  v4: uuidv4
-} = require("uuid");
-const {
-  revertCanceledSubscription,
+//  revertCanceledSubscription,
   catalogApi,
   customersApi,
   subscriptionsApi,
@@ -81,7 +79,7 @@ router.get("/view/:locationId/:customerId/:subscriptionPlanId", async (req, res,
 
     // render the subscription plan information and its subscription status
     res.render("subscription", {
-      idempotencyKey: uuidv4(),
+      idempotencyKey: crypto.randomUUID(),
       locationId,
       customer,
       subscriptionPlanId,
@@ -120,7 +118,8 @@ router.post("/subscribe", async (req, res, next) => {
       await subscriptionsApi.createSubscription({
         idempotencyKey,
         locationId,
-        planId,
+        planId: planId,
+        planVariationId: planId,
         customerId,
         cardIsd: customer.cards[0].id,
       });
@@ -167,10 +166,16 @@ router.post("/revertcancel", async (req, res, next) => {
 
     // revert a cancelling subscription by
     // removing the `canceledDate` field from the subscription
-    await revertCanceledSubscription({
-      subscriptionId,
-      version: subscriptionVersion
+    await subscriptionsApi.updateSubscription(subscriptionId, {
+      subscription: {
+        version: subscriptionVersion,
+        canceledDate: null
+      }
     });
+    // await revertCanceledSubscription({
+    //   subscriptionId,
+    //   version: subscriptionVersion
+    // });
 
     // redirect to the subscription plan detail page
     res.redirect(`view/${locationId}/${customerId}/${planId}`);

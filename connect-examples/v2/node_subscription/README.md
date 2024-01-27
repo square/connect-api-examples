@@ -33,7 +33,7 @@ Before you begin, note the following:
 1.  Set your credentials.
 
     Create a `.env` file in the root of this directory. Populate the file with the following
-    line `SQUARE_ACCESS_TOKEN=YOUR_ACCESS_TOKEN`. Replace the placeholder for `SQUARE_ACCESS_TOKEN` with your
+    line `SQ_ACCESS_TOKEN=YOUR_ACCESS_TOKEN`. Replace the placeholder for `SQ_ACCESS_TOKEN` with your
     own production or sandbox credentials. For more help, see our [guide on how to get
     your credentials](https://developer.squareup.com/docs/orders-api/quick-start/step-1).
 
@@ -90,7 +90,7 @@ This Express.js project is organized as follows:
 ## Sample Data
 
 The `npm run seed` script described in the Setup section provides you
-with the following two customer profiles (in the Customer Directory) and three subsciption plans to create subscriptions:
+with the following two customer profiles (in the Customer Directory) and three subscription plans to create subscriptions:
 
 - Two customers are added to the seller’s Customer Directory: Amelia Earhart and John Doe. Joe Doe has a card on file so when John subscribes to a plan, the application includes the card ID in the `CreateSubscription` request. In this case, Square can charge the card on file.
 

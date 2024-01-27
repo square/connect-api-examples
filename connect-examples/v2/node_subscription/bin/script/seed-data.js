@@ -19,7 +19,7 @@ limitations under the License.
 const { Client, Environment } = require("square");
 
 const readline = require("readline");
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
 const { program } = require("commander");
 const sampleData = require("./sample-seed-data.json");
 require('dotenv').config()
@@ -27,12 +27,13 @@ require('dotenv').config()
 // Client configuration
 const config = {
   environment: Environment.Sandbox,
-  accessToken: process.env.SQUARE_ACCESS_TOKEN
+  accessToken: process.env.SQ_ACCESS_TOKEN
 }
 
 // Configure API instances
 const {
   catalogApi,
+  cardsApi,
   customersApi,
   merchantsApi
 } = new Client(config)
@@ -46,19 +47,23 @@ async function addCustomers() {
   try {
     // Create first customer with card on file
     const { result : { customer } } = await customersApi.createCustomer({
-      idempotencyKey: uuidv4(),
+      idempotencyKey: crypto.randomUUID(),
       givenName: "John",
       familyName: "Doe",
       emailAddress: "johndoe@square-example.com" // it is a fake email
     });
-
-    await customersApi.createCustomerCard(customer.id, {
-      cardNonce: "cnon:card-nonce-ok"
+    
+    await cardsApi.createCard({
+      idempotencyKey: crypto.randomUUID(),
+      sourceId: 'cnon:card-nonce-ok',
+      card: {
+        customerId: customer.id,
+      }
     });
 
     // create second customer with no card on file
     await customersApi.createCustomer({
-      idempotencyKey: uuidv4(),
+      idempotencyKey: crypto.randomUUID(),
       givenName: "Amelia",
       familyName: "Earhart",
       emailAddress: "ameliae@square-example.com" // it is a fake email
@@ -102,7 +107,7 @@ async function addSubscriptionPlans() {
   }];
   const batchUpsertCatalogRequest = {
     // Each request needs a unique idempotency key.
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     batches: batches,
   };
 
@@ -114,10 +119,11 @@ async function addSubscriptionPlans() {
   for (const key in sampleData) {
     const currentCatalogItem = sampleData[key];
     // Set the currency for each see data
-    currentCatalogItem.data.subscriptionPlanData.phases.forEach(phase => phase.recurringPriceMoney.currency = currency);
+    // currentCatalogItem.data.subscriptionPlanData.phases.forEach(phase => phase.recurringPriceMoney.currency = currency);
     // Add the object data to the batch request item.
     batchUpsertCatalogRequest.batches[0].objects.push(currentCatalogItem.data);
   }
+  console.log(JSON.stringify(batchUpsertCatalogRequest))
 
   try {
     // We call the Catalog API function batchUpsertCatalogObjects to upload all our
@@ -130,6 +136,7 @@ async function addSubscriptionPlans() {
   } catch (error) {
     console.error("Updating catalog items failed: ", error);
   }
+  console.log('done')
 }
 
 /**
@@ -141,7 +148,7 @@ async function disableSubscriptionPlans() {
   }];
   const batchUpsertCatalogRequest = {
     // Each request needs a unique idempotency key.
-    idempotencyKey: uuidv4(),
+    idempotencyKey: crypto.randomUUID(),
     batches: batches,
   };
 
@@ -150,6 +157,13 @@ async function disableSubscriptionPlans() {
     if (objects && objects.length > 0) {
       for (const key in objects) {
         const object = objects[key];
+
+        // Set `presentAtAllLocations:false` for all variations within a subscription plan.
+        object.subscriptionPlanData.subscriptionPlanVariations.forEach(variation => {
+          console.log(variation)
+          variation.presentAtAllLocations = false
+        })
+
         // Add the object data with `presentAtAllLocations: false` to the batch request item.
         batchUpsertCatalogRequest.batches[0].objects.push({
           id: object.id,
@@ -157,7 +171,8 @@ async function disableSubscriptionPlans() {
           presentAtAllLocations: false,
           subscriptionPlanData: {
             name: object.subscriptionPlanData.name,
-            phases: object.subscriptionPlanData.phases
+            phases: object.subscriptionPlanData.phases,
+            subscriptionPlanVariations: object.subscriptionPlanData.subscriptionPlanVariations
           },
           version: object.version
         });

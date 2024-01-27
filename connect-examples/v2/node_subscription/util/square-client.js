@@ -29,7 +29,7 @@ or set environment variables.You can find an example in the .env.example file pr
 // Set Square Connect credentials
 const config = {
   environment: process.env.NODE_ENV,
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
+  accessToken: process.env.SQ_ACCESS_TOKEN,
   userAgentDetail: "sample_app_node_subscription" // Remove or replace this detail when building your own app
 };
 
@@ -50,46 +50,46 @@ const {
  * Currently Square's Node.js sdk does not support sending nulls.
  * @param {subscriptionId, version} object
  */
-const revertCanceledSubscription = async ({ subscriptionId, version }) => {
-  // Conditionally set base URL for Environment
-  let baseUrl = config.environment === Environment.Production
-    ? "https://connect.squareup.com/v2" : "https://connect.squareupsandbox.com/v2";
+// const revertCanceledSubscription = async ({ subscriptionId, version }) => {
+//   // Conditionally set base URL for Environment
+//   let baseUrl = config.environment === Environment.Production
+//     ? "https://connect.squareup.com/v2" : "https://connect.squareupsandbox.com/v2";
 
-  try {
-    await axios(`${baseUrl}/subscriptions/${subscriptionId}`, {
-      method: "PUT",
-      data: {
-        subscription: {
-          version: parseInt(version),
-          // Note: Since this is a direct call to Square's servers the
-          // fields are snake case.
-          canceled_date: null
-        }
-      },
-      headers: {
-        Authorization: `Bearer ${config.accessToken}`,
-        "Square-Version": "2020-11-18"
-      }
-    });
-  } catch (error) {
-    const { response } = error;
+//   try {
+//     await axios(`${baseUrl}/subscriptions/${subscriptionId}`, {
+//       method: "PUT",
+//       data: {
+//         subscription: {
+//           version: parseInt(version),
+//           // Note: Since this is a direct call to Square's servers the
+//           // fields are snake case.
+//           canceled_date: null
+//         }
+//       },
+//       headers: {
+//         Authorization: `Bearer ${config.accessToken}`,
+//         "Square-Version": "2020-11-18"
+//       }
+//     });
+//   } catch (error) {
+//     const { response } = error;
 
-    let newError = new Error("Failed to revert canceled subscription");
-    if (response && response.status) {
-      newError.status = response.status;
-    }
-    if (response && response.data && response.data.errors) {
-      newError.errors = response.data.errors;
-    }
+//     let newError = new Error("Failed to revert canceled subscription");
+//     if (response && response.status) {
+//       newError.status = response.status;
+//     }
+//     if (response && response.data && response.data.errors) {
+//       newError.errors = response.data.errors;
+//     }
 
-    // Throws new error object in the format the example expects.
-    throw newError;
-  }
-};
+//     // Throws new error object in the format the example expects.
+//     throw newError;
+//   }
+// };
 
 // Makes API instances and util functions importable
 module.exports = {
-  revertCanceledSubscription,
+  //revertCanceledSubscription,
   catalogApi,
   locationsApi,
   customersApi,

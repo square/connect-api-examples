@@ -46,6 +46,7 @@ router.get("/", async (req, res, next) => {
   try {
     // Retrieve the main location which is the very first location merchant has
     const { result : { location } } = await locationsApi.retrieveLocation("main");
+    console.log(location)
     // Retrieves customers for this current merchant
     let { result: { customers } } = await customersApi.listCustomers();
     // Subscriptions API should work with the customers that have an email.
@@ -62,6 +63,7 @@ router.get("/", async (req, res, next) => {
       customers,
     });
   } catch (error) {
+    console.log('the error; ', error)
     next(error);
   }
 });
