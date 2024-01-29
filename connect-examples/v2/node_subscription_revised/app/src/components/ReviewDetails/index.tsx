@@ -17,7 +17,7 @@ const ReviewDetails: React.FC<ReviewDetailsProps> = ({customer, subscriptionPlan
 
     const onSubmitOrder = async () => {
         try {
-            const response = await fetch('/create_subscription', {
+            const response = await fetch('/subscriptions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -54,7 +54,7 @@ const SubscriptionPlans: React.FC<SubscriptionPlanProps> = ({onSelectSubscriptio
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('/subscription_plans');
+            const response = await fetch('/subscriptions');
             const data = await response.json();
             setSubscriptionPlans(data);
           } catch (error) {

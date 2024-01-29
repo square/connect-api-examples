@@ -26,7 +26,7 @@ const ItemCatalog: React.FC<ItemCatalogProps> = ({categoryIds, setIsNextDisabled
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('/catalog_items', {
+            const response = await fetch('/catalog', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
