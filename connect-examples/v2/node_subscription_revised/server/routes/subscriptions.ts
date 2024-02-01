@@ -107,4 +107,44 @@ router.get('/', async (req: Request, res: Response) => {
   
   });
 
+  router.post('/search', async (req: Request, res: Response) => {
+    try {
+      const {result: {subscriptions}} = await squareClient.subscriptionsApi.searchSubscriptions({
+        query: {
+          filter: {
+            customerIds: [
+              req.body.customerId
+            ]
+          }
+        }
+      });
+
+      const subscriptionVariationIds: string[] = []
+      subscriptions?.forEach((subscription) => {
+        if (subscription.planVariationId) {
+          subscriptionVariationIds.push(subscription.planVariationId)
+        }
+      })
+      if (subscriptionVariationIds.length > 0) {
+        const { result: {objects} } = await squareClient.catalogApi.batchRetrieveCatalogObjects({
+          objectIds: subscriptionVariationIds,
+        })
+        const final = subscriptions?.map((subscription) => {
+          const subscriptionVariation = objects?.find((object) => {
+            return object.id === subscription.planVariationId
+          })
+          return {
+            ...subscription,
+            name: subscriptionVariation?.subscriptionPlanVariationData?.name
+          }
+        })
+        res.json(final)
+      }
+
+    } catch (error) {
+      console.error('Error searching Square Subscription Plans:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
 export default router;

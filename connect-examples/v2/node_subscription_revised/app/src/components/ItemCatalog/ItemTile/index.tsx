@@ -22,7 +22,7 @@ const ItemTile : React.FC<ItemTileProps> = ({ item, onHandleItemSelection, selec
   return (
     <Card
       onClick={onHandleItemSelection ?  () => onHandleItemSelection(item) : () => {}}
-      className={`max-w-sm mb-4 ${onHandleItemSelection ? `cursor-pointer`: ``} ${selectedItems.find((selectedItem: Item) => selectedItem.id === item.id) ? 'border-solid border-4 border-sky-500' : ''}`}
+      className={`max-w-sm mb-4 mr-4 ${onHandleItemSelection ? `cursor-pointer`: ``} ${selectedItems.find((selectedItem: Item) => selectedItem.id === item.id) ? 'border-solid border-4 border-sky-500' : ''}`}
       renderImage={(props) => {
         return (
           <img

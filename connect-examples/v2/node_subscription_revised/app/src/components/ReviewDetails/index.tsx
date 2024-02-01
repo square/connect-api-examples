@@ -1,21 +1,37 @@
-import { SubscriptionPlanIds } from "../../App";
+import { useState } from "react";
+import { SubscriptionPlanIds } from "../../routes/Home";
 import { CustomerData } from "../Customers";
 import CustomerTile from "../Customers/CustomerTile";
 import { Item } from "../ItemCatalog";
 import ItemTile from "../ItemCatalog/ItemTile";
 import { SubscriptionPlanData } from "../SubscriptionsPlans";
 import SubscriptionTile from "../SubscriptionsPlans/SubscriptionTile";
+import { Spinner } from 'flowbite-react';
 
 interface ReviewDetailsProps {
     customer: CustomerData;
     subscriptionPlanIds: SubscriptionPlanIds;
     subscriptionPlan: SubscriptionPlanData;
     subscribed_items: Item[];
+    setShowToast: (showToast: boolean) => void;
+    setCurrentStep: (step: number) => void;
+    currentStep: number;
 }
 
-const ReviewDetails: React.FC<ReviewDetailsProps> = ({customer, subscriptionPlanIds, subscriptionPlan, subscribed_items}) => {
+const ReviewDetails: React.FC<ReviewDetailsProps> = ({
+    customer, 
+    subscriptionPlanIds, 
+    subscriptionPlan, 
+    subscribed_items,
+    setShowToast,
+    setCurrentStep,
+    currentStep
+}) => {
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onSubmitOrder = async () => {
+        setIsLoading(true);
         try {
             const response = await fetch('/subscriptions', {
                 method: 'POST',
@@ -29,6 +45,9 @@ const ReviewDetails: React.FC<ReviewDetailsProps> = ({customer, subscriptionPlan
                 })
             });
             const data = await response.json();
+            setIsLoading(false);
+            setCurrentStep(0);
+            setShowToast(true);
             console.log('this is the data', data)
         } catch (error) {
             console.error('Error fetching customer data:', error);
@@ -69,7 +88,9 @@ const ReviewDetails: React.FC<ReviewDetailsProps> = ({customer, subscriptionPlan
             </div>
             <button
             className={`px-4 py-2 text-white bg-blue-500 hover:bg-blue-700`}
-             onClick={onSubmitOrder}>Submit Order</button>
+             onClick={onSubmitOrder}>
+                {isLoading ? <Spinner aria-label="loading status" /> : <>Submit Order</> }
+            </button>
         </div>
     )
 }

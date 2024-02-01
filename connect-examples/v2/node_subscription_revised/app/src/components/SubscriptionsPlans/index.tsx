@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SubscriptionPlanIds } from '../../App';
+import { SubscriptionPlanIds } from '../../routes/Home';
 import SubscriptionTile from './SubscriptionTile';
 
 interface SubscriptionPlanProps {

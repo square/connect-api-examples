@@ -20,13 +20,15 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({ currentStep, onPr
       >
         Previous
       </Button>
-      <Button
-        className={`${isNextDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700'}`}
-        onClick={onNextClick}
-        disabled={isNextDisabled}
-      >
-        Step {currentStep + 2}
-      </Button>
+      {currentStep !== 3 &&
+        <Button
+          className={`${isNextDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700'}`}
+          onClick={onNextClick}
+          disabled={isNextDisabled}
+        >
+        {currentStep === 0 ? 'Subscription Flow' : `Step ${currentStep + 1}`}
+        </Button>
+      }
     </div>
   )
 }
