@@ -1,42 +1,41 @@
-import { Table } from 'flowbite-react';
-import { useEffect, useState } from 'react';
-import Skeleton from '../../../components/Skeleton';
+import { Table } from "flowbite-react";
+import { useEffect, useState } from "react";
+import Skeleton from "../../../components/Skeleton";
 
 interface SubscriptionsTableProps {
-  customerId: string
-  setOpenModal: (openModal: boolean) => void
+  customerId: string;
+  setOpenModal: (openModal: boolean) => void;
 }
 
 const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
   customerId,
-  setOpenModal
+  setOpenModal,
 }) => {
   const [subscriptions, setSubscriptions] = useState<any[]>([]); // [1
   const [isDataFetched, setIsDataFetched] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/subscriptions/search',{
-          method: 'POST',
+        const response = await fetch("/subscriptions/search", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            customerId: customerId
-          })
+            customerId: customerId,
+          }),
         });
         const data = await response.json();
         setSubscriptions(data);
         setIsDataFetched(true);
       } catch (error) {
-        console.error('Error fetching customer data:', error);
+        console.error("Error fetching customer data:", error);
       }
     };
     if (!isDataFetched) {
       fetchData();
     }
   }, [isDataFetched]); // Empty dependency array ensures the effect runs once when the component mounts
-
 
   return (
     <div className="max-w-[600px]">
@@ -49,28 +48,38 @@ const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
             <span className="sr-only">Edit</span>
           </Table.HeadCell>
         </Table.Head>
-        {isDataFetched ? 
+        {isDataFetched ? (
           <Table.Body className="divide-y">
-            {subscriptions.map((subscription: any, i:number) => {
-              return <Table.Row key={i} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-              <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                {subscription.name}
-              </Table.Cell>
-              <Table.Cell>{subscription.startDate}</Table.Cell>
-              <Table.Cell>{subscription.status}</Table.Cell>
-              <Table.Cell>
-                <p className="font-medium text-cyan-600 cursor-pointer hover:underline dark:text-cyan-500"
-                onClick={() => setOpenModal(true)}>
-                  Edit
-                </p>
-              </Table.Cell>
-            </Table.Row>
+            {subscriptions.map((subscription: any, i: number) => {
+              return (
+                <Table.Row
+                  key={i}
+                  className="bg-white dark:border-gray-30 dark:bg-gray-10"
+                >
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-10 dark:text-white">
+                    {subscription.name}
+                  </Table.Cell>
+                  <Table.Cell>{subscription.startDate}</Table.Cell>
+                  <Table.Cell>{subscription.status}</Table.Cell>
+                  <Table.Cell>
+                    <p
+                      className="font-medium text-cyan-600 cursor-pointer hover:underline dark:text-cyan-500"
+                      onClick={() => setOpenModal(true)}
+                    >
+                      Edit
+                    </p>
+                  </Table.Cell>
+                </Table.Row>
+              );
             })}
-          </Table.Body> : <Skeleton/>        
-      }
+          </Table.Body>
+        ) : (
+          // <Skeleton />
+          <div>insert skeleton here</div>
+        )}
       </Table>
     </div>
   );
-}
+};
 
-export default SubscriptionsTable
+export default SubscriptionsTable;
