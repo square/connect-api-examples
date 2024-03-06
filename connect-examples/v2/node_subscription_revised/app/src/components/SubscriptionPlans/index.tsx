@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { SubscriptionPlanIds } from '../../routes/Home';
+import React, { useContext, useEffect, useState } from 'react';
 import SubscriptionTile from './SubscriptionTile';
+import { Card } from 'flowbite-react';
+import Skeleton from '../Skeleton';
 
-interface SubscriptionPlanProps {
-    onSelectSubscriptionPlanIds: (subscriptionPlanIds: SubscriptionPlanIds) => void;
-    selectedSubscriptionPlanId: string | null;
-    setEligibleCategoryIds: (eligibleCategoryIds: string[]) => void;
-    setSubscriptionPlan: (subscriptionPlan: SubscriptionPlanData) => void;
-    setIsNextDisabled: (isNextDisabled: boolean) => void;
-}
+interface SubscriptionPlanProps {}
 
 export interface Phase {
     uid: string;
@@ -48,8 +43,9 @@ export interface SubscriptionPlanData {
 }
 
 
-const SubscriptionPlans: React.FC<SubscriptionPlanProps> = ({onSelectSubscriptionPlanIds, setIsNextDisabled, setEligibleCategoryIds, selectedSubscriptionPlanId, setSubscriptionPlan}) => {
+const SubscriptionPlans: React.FC<SubscriptionPlanProps> = ({}) => {
     const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlanData[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,6 +53,7 @@ const SubscriptionPlans: React.FC<SubscriptionPlanProps> = ({onSelectSubscriptio
             const response = await fetch('/subscriptions');
             const data = await response.json();
             setSubscriptionPlans(data);
+            setIsLoading(false);
           } catch (error) {
             console.error('Error fetching customer data:', error);
           }
@@ -64,18 +61,14 @@ const SubscriptionPlans: React.FC<SubscriptionPlanProps> = ({onSelectSubscriptio
     
         fetchData();
       }, []); // Empty dependency array ensures the effect runs once when the component mounts
-    
-      const handleSubscriptionPlanSelection = (subscriptionPlan: SubscriptionPlanData, subscriptionPlanVariationId: string) => {
-        onSelectSubscriptionPlanIds({subscriptionPlanId:subscriptionPlan.id, subscriptionPlanVariationId});
-        setIsNextDisabled(false);
-        setEligibleCategoryIds(subscriptionPlan.subscriptionPlanData.eligibleCategoryIds)
-        setSubscriptionPlan(subscriptionPlan)
-      };
-    
+        
     return (
         <>
-        {subscriptionPlans.map((subscriptionPlan: SubscriptionPlanData, i:number) => (
-            <SubscriptionTile key={i} subscriptionPlan={subscriptionPlan} handleSubscriptionPlanSelection={handleSubscriptionPlanSelection} selectedSubscription={selectedSubscriptionPlanId}/>
+        {isLoading ? <Card>
+            <Skeleton/>
+        </Card> :
+        subscriptionPlans.map((subscriptionPlan: SubscriptionPlanData, i:number) => (
+            <SubscriptionTile key={i} subscriptionPlan={subscriptionPlan} showButton={true}/>
         ))}
       </>
     );

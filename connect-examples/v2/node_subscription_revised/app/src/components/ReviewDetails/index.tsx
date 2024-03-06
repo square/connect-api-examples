@@ -1,96 +1,101 @@
-import { useState } from "react";
-import { SubscriptionPlanIds } from "../../routes/Home";
-import { CustomerData } from "../Customers";
+import { useContext } from "react";
 import CustomerTile from "../Customers/CustomerTile";
-import { Item } from "../ItemCatalog";
 import ItemTile from "../ItemCatalog/ItemTile";
-import { SubscriptionPlanData } from "../SubscriptionsPlans";
-import SubscriptionTile from "../SubscriptionsPlans/SubscriptionTile";
-import { Spinner } from 'flowbite-react';
+import SubscriptionTile from "../SubscriptionPlans/SubscriptionTile";
+import CreditCardGroup from "../CreditCardGroup";
+import { AppContext } from "../../context/AppContext";
+import { Card } from "flowbite-react";
 
-interface ReviewDetailsProps {
-    customer: CustomerData;
-    subscriptionPlanIds: SubscriptionPlanIds;
-    subscriptionPlan: SubscriptionPlanData;
-    subscribed_items: Item[];
-    setShowToast: (showToast: boolean) => void;
-    setCurrentStep: (step: number) => void;
-    currentStep: number;
-}
+interface ReviewDetailsProps {}
 
-const ReviewDetails: React.FC<ReviewDetailsProps> = ({
-    customer, 
-    subscriptionPlanIds, 
-    subscriptionPlan, 
-    subscribed_items,
-    setShowToast,
-    setCurrentStep,
-    currentStep
-}) => {
+const ReviewDetails: React.FC<ReviewDetailsProps> = ({}) => {
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const {
+        selectedCustomer,
+        selectedSubscriptionPlan,
+        selectedItems,
+    } = useContext(AppContext)
 
-    const onSubmitOrder = async () => {
-        setIsLoading(true);
-        try {
-            const response = await fetch('/subscriptions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    customerId: customer.id,
-                    subscriptionVariationId: subscriptionPlanIds.subscriptionPlanVariationId,
-                    itemIds: subscribed_items.map((item) => item.itemData.variations[0].id)
-                })
-            });
-            const data = await response.json();
-            setIsLoading(false);
-            setCurrentStep(0);
-            setShowToast(true);
-            console.log('this is the data', data)
-        } catch (error) {
-            console.error('Error fetching customer data:', error);
-        }
-    }
+    const originalTotal = selectedItems.reduce((acc, item) => {
+        return acc + Number(item.itemData.variations[0].itemVariationData.priceMoney.amount);
+      }, 0);
+      
+      // Calculate the total price after applying a 10% discount
+      const discountedTotal = originalTotal * 0.9;
+      
+      const formatMoney = (amount: number) => {
+        return (amount / 100).toFixed(2);
+      }
+      const oneWeekFromNow = new Date();
 
+      oneWeekFromNow.setDate(oneWeekFromNow.getDate() + 7);
+      
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: undefined,
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      };
+      
+      const formattedDate = oneWeekFromNow.toLocaleDateString('en-US', options);
     return (
-        <div className="flex-col">
-            <div className="flex">
-                <div className="mr-4 min-w-96">
-                    <CustomerTile 
-                        customer={customer}
-                        handleCustomerSelection={null}
-                        selectedCustomerId={null}
-                    />
+        <div className="flex"> 
+            <div className="flex-col bg-white p-4 rounded mr-4">
+                <div className="flex">
+                    <div className="mr-4 min-w-96">
+                        <CustomerTile 
+                            customer={selectedCustomer}
+                            isActionable={false}
+                        />
+                    </div>
+                    <div className="mr-4 min-w-96">
+                        <SubscriptionTile
+                            showButton={false}
+                            subscriptionPlan={selectedSubscriptionPlan}
+                        />
+                    </div>
                 </div>
-                <div className="mr-4 min-w-96">
-                    <SubscriptionTile
-                        selectedSubscription={null}
-                        subscriptionPlan={subscriptionPlan}
-                        handleSubscriptionPlanSelection={null}
-                    />
+                <div className="flex mt-4">
+                    {
+                        selectedItems.map((item, i) => (
+                            <div key={i} className="mr-4 min-w-96">
+                                <ItemTile
+                                    item={item}
+                                    isActionable={false}
+                                />
+                            </div>
+                        ))
+                    }
                 </div>
-            </div>
-            <div className="flex mt-4">
-                {
-                    subscribed_items.map((item, i) => (
-                        <div key={i} className="mr-4 min-w-96">
-                            <ItemTile
-                                item={item}
-                                onHandleItemSelection={null}
-                                selectedItems={[]}
-                                setIsNextDisabled={() => {}}
-                            />
+                {/* container */}
+                <div className="mt-8 flex justify-around">
+                    {/* Promotion */}
+                    <div className="mr-4">
+                        {/* Due Today */}
+                        <p className="text-xl font-semibold">Due Today: <span className="text-green-500 font-bold">$1.00</span></p>
+                        <p className="font-semibold mb-2 text-gray-500">1st Week Promo</p>
+                    </div>
+                <div>
+                    {/* Subscription Starts */}
+                    <p className="text-lg font-semibold mb-2">Starting:  <span className="p-2 bg-gray-200 rounded-xl mr-2">{formattedDate}</span></p>
+                    {/* Total Prices */}
+                    <div className="flex flex-col">
+                        <div className="flex items-center">
+                        <p className="font-bold">Regular Total:</p>
+                        <span className="line-through text-gray-500 ml-2 font-bold">${formatMoney(originalTotal)}</span>
                         </div>
-                    ))
-                }
+
+                        <div className="flex items-center">
+                        <p className="font-bold">You Pay:</p>
+                        <span className="text-green-500 font-bold ml-2">${formatMoney(discountedTotal)}</span>
+                        <span className="p-1 rounded-xl bg-green-200 ml-2 font-bold text-green-500">Save 10%</span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
             </div>
-            <button
-            className={`px-4 py-2 text-white bg-blue-500 hover:bg-blue-700`}
-             onClick={onSubmitOrder}>
-                {isLoading ? <Spinner aria-label="loading status" /> : <>Submit Order</> }
-            </button>
+            <CreditCardGroup />
         </div>
     )
 }

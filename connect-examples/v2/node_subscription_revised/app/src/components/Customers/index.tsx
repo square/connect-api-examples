@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CustomerTile from './CustomerTile';
+import { Card as FlowCard} from 'flowbite-react';
+import Skeleton from '../Skeleton';
 
 export interface CustomerData {
   id: string;
@@ -21,14 +23,11 @@ interface Card {
 }
 
 interface CustomerProps {
-  onSelectCustomer: (customer: CustomerData) => void;
-  setIsNextDisabled: (isNextDisabled: boolean) => void;
 }
 
-const Customers: React.FC<CustomerProps> = ({ onSelectCustomer, setIsNextDisabled }) => {
-  const [selectedCustomerId, setSelectedCustomer] = useState<string | null>(null);
+const Customers: React.FC<CustomerProps> = ({}) => {
   const [customers, setCustomers] = useState<CustomerData[]>([]);
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +35,7 @@ const Customers: React.FC<CustomerProps> = ({ onSelectCustomer, setIsNextDisable
         const response = await fetch('/customers');
         const data = await response.json();
         setCustomers(data);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching customer data:', error);
       }
@@ -44,17 +44,14 @@ const Customers: React.FC<CustomerProps> = ({ onSelectCustomer, setIsNextDisable
     fetchData();
   }, []); // Empty dependency array ensures the effect runs once when the component mounts
 
-
-  const handleCustomerSelection = (customer: CustomerData) => {
-    setSelectedCustomer(customer?.id);
-    onSelectCustomer(customer);
-    setIsNextDisabled(false);
-  };
-
   return (
     <>
-    {customers.map((customer, i) =>
-     <CustomerTile key={i} customer={customer} selectedCustomerId={selectedCustomerId} handleCustomerSelection={handleCustomerSelection}/>
+    {isLoading ? <FlowCard>
+        <Skeleton/>
+      </FlowCard> :
+
+    customers.map((customer, i) =>
+     <CustomerTile key={i} customer={customer} isActionable={true}/>
     )}
     </>
   );
