@@ -69,11 +69,6 @@ export const appReducer = (state: State, action: Action) => {
           currentStep: action.payload,
           isNextDisabled: true
         }
-      case 'SET_SHOW_DEBUG':
-        return {
-          ...state,
-          showDebug: action.payload
-        }
       case 'SUBMIT_ORDER':
         return {
           ...state,

@@ -2,7 +2,7 @@
 import { Card, Avatar } from 'flowbite-react';
 import { CustomerData } from '..';
 import { useNavigate } from 'react-router-dom';
-import { Component, useContext } from 'react';
+import { useContext } from 'react';
 import ComponentLayout from '../../ComponentLayout';
 import { AppContext, AppDispatchContext } from '../../../context/AppContext';
 import Skeleton from '../../Skeleton';

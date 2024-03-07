@@ -2,86 +2,24 @@ import React from 'react';
 import { Table } from 'flowbite-react';
 import Skeleton from '../../../components/Skeleton';
 import ComponentLayout from '../../../components/ComponentLayout';
-import { useEffect, useState } from 'react';
-
-export interface Invoice {
-    id: string;
-    startDate: string;
-    invoiceNumber: string;
-    chargedThroughDate: string;
-    status: string;
-    publicUrl: string;
-    paymentRequests: [{
-        totalCompletedAmountMoney: {
-            amount: number;
-            currency: string;
-        }
-    }]
-}
+import { Invoice } from '..';
 
 interface InvoicesTableProps {
-  invoiceIds: string[];
+  invoices: Invoice[];
 }
 
 const InvoicesTable: React.FC<InvoicesTableProps> = ({
-  invoiceIds,
+  invoices,
 }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  
-  //fetch invoices
-  useEffect(() => {
-    console.log('the effect is getting called: ', invoiceIds)
-    // fetch invoices for all invoiceIds
-    const fetchInvoices = async () => {
-        try {
-            const response = await fetch('/invoices', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    invoiceIds: invoiceIds
-                })
-            });
-            const data = await response.json();
-            console.log(data);
-            setInvoices(data);
-            setIsLoading(false);
-        } catch (error) {
-            console.error('Error fetching invoices:', error);
-        }
-
-    };
-    fetchInvoices();
-}, [])
-
-
   return <>
-   {/* <ComponentLayout title="src/routes/SubscriptionDetails/InvoicesTable/index.tsx"> */}
-   {isLoading && (
-      <div className="max-w-[1000px] max-h-[600px] overflow-y-auto">
-        <Table hoverable>
-          <Table.Head>
-            <Table.HeadCell>Invoice #</Table.HeadCell>
-            <Table.HeadCell>Amount</Table.HeadCell>
-            <Table.HeadCell>Status</Table.HeadCell>
-            <Table.HeadCell>Invoice Url</Table.HeadCell>
-            <Table.HeadCell>
-              <span className="sr-only">Details</span>
-            </Table.HeadCell>
-          </Table.Head>
-        </Table>
-        <Skeleton />
-      </div>
-    )}
+   <ComponentLayout title="src/routes/SubscriptionDetails/InvoicesTable/index.tsx">
 
-    {invoices.length === 0 && isLoading === false && (
-      <p className="text-center text-gray-900 dark:text-white">No invoices found</p>
-    )}
+  {invoices.length === 0 && (
+    <p className="text-center text-gray-900 dark:text-white">No invoices found</p>
+  )}
    
 
-  { invoices.length > 0 && isLoading === false && (
+  { invoices.length > 0 && (
     <div className="max-w-[1000px] max-h-[600px] overflow-y-auto rounded border">
       <Table hoverable>
         <Table.Head>
@@ -114,7 +52,7 @@ const InvoicesTable: React.FC<InvoicesTableProps> = ({
       </Table>
     </div>
   )}
-  {/* </ComponentLayout> */}
+  </ComponentLayout>
     </>
 }
 

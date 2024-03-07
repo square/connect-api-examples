@@ -15,26 +15,61 @@ import InvoicesTable from "./InvoicesTable";
 interface SubscriptionDetailsProps {
 }
 
+export interface Invoice {
+  id: string;
+  startDate: string;
+  invoiceNumber: string;
+  chargedThroughDate: string;
+  status: string;
+  publicUrl: string;
+  paymentRequests: [{
+      totalCompletedAmountMoney: {
+          amount: number;
+          currency: string;
+      }
+  }]
+}
+
+
 const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({}) => {
   const [subscription, setSubscription] = useState<any>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [subscriptionChanged, setSubscriptionChanged] = useState<boolean>(false);
   const [subscriptionPlanVariationData, setSubscriptionPlanVariationData] = useState<any>({});
-  
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+
   const {subscriptionId} = useParams();
 
   useEffect(() => {
     // Fetch subscription data
     const fetchSubscriptionData = async () => {
+        let data:any = {};
         try {
           const response = await fetch('/subscriptions/' + subscriptionId);
-          const data = await response.json();
+          data = await response.json();
           setSubscription(data.subscription);
           setSubscriptionPlanVariationData(data.object);
-          setIsLoading(false);
         } catch (error) {
           console.error('Error fetching subscription data:', error);
         }
+        // Fetch invoices
+        try {
+          const response = await fetch('/invoices', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  invoiceIds: data.subscription.invoiceIds
+              })
+          });
+          const invoiceData = await response.json();
+          setInvoices(invoiceData);
+          setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching invoices:', error);
+        }
+
       }
     fetchSubscriptionData();
   }, [subscriptionChanged])
@@ -181,7 +216,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({}) => {
           <p className="text-sm text-gray-500 dark:text-gray-400 mb-4"><span className="font-bold">Status:</span> {subscription.status}</p>
         </div>
           <InvoicesTable
-            invoiceIds={subscription.invoiceIds}
+            invoices={invoices}
           />
         {checkSubStatus()}
       </div>
