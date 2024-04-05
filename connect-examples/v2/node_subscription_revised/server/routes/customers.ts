@@ -3,6 +3,7 @@ import squareClient from '../square-client';
 
 const router = express.Router();
 
+// Get all customers from Square
 router.get('/', async (req: Request, res: Response) => {
     try {
       // Fetch customers using the imported Square client
@@ -16,6 +17,7 @@ router.get('/', async (req: Request, res: Response) => {
     }
   });
 
+// Get a specific customer from Square
 router.get('/:customerId', async (req: Request, res: Response) => {
   try {
     // Fetch the customer using the imported Square client

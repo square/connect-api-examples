@@ -23,7 +23,7 @@ const router = express.Router();
   });
 
   // Request to create a subscription
-  // TODO: Link to Subscription guide, quick explanation that this is a two step process
+  // More information on subscribing and order templates: https://developer.squareup.com/docs/subscriptions-api/manage-subscriptions#phases-and-order-templates
   router.post('/', async (req: Request, res: Response) => {
     let locationId = ""
     let templateOrderId = "";
@@ -44,7 +44,8 @@ const router = express.Router();
       if (object && object.subscriptionPlanVariationData && object.subscriptionPlanVariationData.phases)
       phases = object.subscriptionPlanVariationData.phases
     } catch(e) {
-      console.log('error', e)
+      console.error('Error retrieving catalog object: ', e)
+      res.status(500).json({ error: 'Internal Server Error' });
     }
     // create a draft order with Square for each phase in the subscription
     try {
@@ -195,7 +196,6 @@ const router = express.Router();
   router.get('/:subscriptionId', async (req: Request, res: Response) => {
     try {
       const { result: {subscription} } = await squareClient.subscriptionsApi.retrieveSubscription(req.params.subscriptionId, 'actions')
-      // TODO: Absolutely do not even bother trying to get the image data here, what a nightmare...
       if (subscription?.planVariationId) {
         const { result: {object}} = await squareClient.catalogApi.retrieveCatalogObject(subscription.planVariationId)
         //@ts-ignore
@@ -233,7 +233,6 @@ const router = express.Router();
   
   // Pause a subscription
   router.post('/:subscriptionId/pause', async (req: Request, res: Response) => {
-    console.log('req.body', req.body)
     try {
       const { result: {subscription} } = await squareClient.subscriptionsApi.pauseSubscription(req.params.subscriptionId, {
         pauseCycleDuration: req.body.pauseCycleDuration,
@@ -243,17 +242,6 @@ const router = express.Router();
       res.json(subscription)
     } catch (error) {
       console.error('Error pausing Square Subscription:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  })
-
-  // Resume a subscription
-  router.post('/:subscriptionId/resume', async (req: Request, res: Response) => {
-    try {
-      const { result: {subscription} } = await squareClient.subscriptionsApi.resumeSubscription(req.params.subscriptionId, req.body)
-      res.json(subscription)
-    } catch (error) {
-      console.error('Error resuming Square Subscription:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   })

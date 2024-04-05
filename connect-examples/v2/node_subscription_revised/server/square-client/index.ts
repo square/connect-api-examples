@@ -8,8 +8,10 @@ dotenv.config();
 const squareAccessToken = process.env.SQ_ACCESS_TOKEN as string;
 
 const squareClient = new Square.Client({
-  environment: Square.Environment.Sandbox, // or Square.Environment.Sandbox for testing
-  accessToken: squareAccessToken,
+  bearerAuthCredentials: {
+    accessToken: squareAccessToken
+  },
+  environment: Square.Environment.Sandbox,
 });
 
 export default squareClient;

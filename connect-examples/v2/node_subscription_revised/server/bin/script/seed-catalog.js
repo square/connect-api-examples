@@ -23,6 +23,8 @@ const fs = require("fs");
 const readline = require("readline");
 require('dotenv').config();
 
+const REFERENCE_ID = "SEED_DATA";
+
 // We don't recommend to run this script in production environment
 // Configure OAuth2 access token for authorization: oauth2
 const config = {
@@ -44,7 +46,8 @@ async function addCustomers() {
       idempotencyKey: crypto.randomUUID(),
       givenName: "John",
       familyName: "Doe",
-      emailAddress: "johndoe@square-example.com" // it is a fake email
+      emailAddress: "johndoe@square-example.com", // it is a fake email
+      referenceId: REFERENCE_ID,
     });
     
     await cardsApi.createCard({
@@ -60,7 +63,8 @@ async function addCustomers() {
       idempotencyKey: crypto.randomUUID(),
       givenName: "Amelia",
       familyName: "Earhart",
-      emailAddress: "ameliae@square-example.com" // it is a fake email
+      emailAddress: "ameliae@square-example.com", // it is a fake email
+      referenceId: REFERENCE_ID,
     });
 
     console.log("Successfully created customers");
@@ -75,7 +79,16 @@ async function addCustomers() {
  */
 async function clearCustomers() {
   try {
-    const { result: { customers } } = await customersApi.listCustomers();
+      const {customers} = await customersApi.searchCustomers({
+        query: {
+          filter: {
+            referenceId: {
+              exact: REFERENCE_ID
+            }
+          }
+        }
+      });
+    
     if (customers) {
       for (const key in customers) {
         const customer = customers[key];
@@ -189,13 +202,13 @@ const addItems = async () => {
 
       // The new catalog objects will be returned with a corresponding Square Object ID.
       // Using the new Square Object ID, we map each object with their image and upload their image.
-      idMappings.forEach(function (idMapping) {
+      idMappings.forEach(async (idMapping) => {
         const clientObjectId = idMapping.clientObjectId;
         const objectId = idMapping.objectId;
 
         if (sampleData[clientObjectId] && sampleData[clientObjectId].image) {
           const image = sampleData[clientObjectId].image;
-          addImages(image, objectId, () => {
+          await addImages(image, objectId, () => {
             console.log("Successfully uploaded image for item:", clientObjectId);
           });
         }
@@ -222,7 +235,7 @@ function getCatalogObjectIds(objects) {
 }
 
 /*
- * Function that clears every object in the catalog.
+ * Function that clears EVERY object in the catalog.
  * WARNING: This is permanent and irreversable!
  */
 const clearCatalog = async () => {

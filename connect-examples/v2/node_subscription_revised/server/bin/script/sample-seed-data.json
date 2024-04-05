@@ -882,7 +882,7 @@
               "id": "#Two-Item-Breakfast-Weekly",
               "type": "SUBSCRIPTION_PLAN_VARIATION",
               "subscriptionPlanVariationData":{
-                "name": "Two Breakfast Items a Month - Billed Weekly",
+                "name": "Two Breakfast Items a Week - Billed Weekly",
                 "phases": [
                   {
                     "ordinal": 0,
@@ -911,7 +911,7 @@
               "id": "#Two-Item-Breakfast-Monthly",
               "type": "SUBSCRIPTION_PLAN_VARIATION",
               "subscriptionPlanVariationData":{
-                "name": "Two Breakfast Items a Week - Billed Monthly",
+                "name": "Two Breakfast Items a Month - Billed Monthly",
                 "phases": [
                   {
                     "ordinal": 0,

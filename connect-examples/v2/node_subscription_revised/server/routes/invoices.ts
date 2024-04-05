@@ -3,6 +3,7 @@ import squareClient from '../square-client';
 
 const router = express.Router();
 
+// Fetches invoices based on the invoice IDs provided in the request body
 router.post('/', async (req: Request, res: Response) => {
     const {invoiceIds} = req.body;
     if (!invoiceIds) {

@@ -3,7 +3,7 @@ import squareClient from '../square-client';
 
 const router = express.Router();
 
-
+// Fetches catalog items based on the category IDs provided in the request body
 router.post('/', async (req: Request, res: Response) => {
     try {
       // Fetch items using the imported Square client

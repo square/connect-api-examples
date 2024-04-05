@@ -4,7 +4,9 @@ import crypto from 'crypto';
 
 const router = express.Router();
 
-
+// Create a card on file for a customer
+// For simplicity, we're hardcoding the billing address, and using the postal code from the request body
+// which is collected from the web payment form
 router.post('/', async (req: Request, res: Response) => {
     try {
         const {result: {card} } = await squareClient.cardsApi.createCard({
@@ -21,7 +23,6 @@ router.post('/', async (req: Request, res: Response) => {
             }
         }
         });
-        console.log('Card created:', card);
         res.json(card);
       } catch(error) {
         console.error('Error creating card:', error);
