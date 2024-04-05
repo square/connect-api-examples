@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import {useParams} from 'react-router-dom';
 import Skeleton from "../../components/Skeleton";
+import { formattedDate } from "../../utils/helpers";
 import { 
   PauseSubscriptionSection, 
   PausedInfoSection,
-  ResumeSection,
   CanceledInfoSection,
   CancelSubscriptionSection,
   ActionsSection
 } from "./SubscriptionSections";
 import ComponentLayout from "../../components/ComponentLayout";
 import InvoicesTable from "./InvoicesTable";
+import { Status } from "../../components/HelperComponents/Status";
 
 interface SubscriptionDetailsProps {
 }
@@ -18,6 +19,7 @@ interface SubscriptionDetailsProps {
 export interface Invoice {
   id: string;
   startDate: string;
+  createdAt: string;
   invoiceNumber: string;
   chargedThroughDate: string;
   status: string;
@@ -31,7 +33,7 @@ export interface Invoice {
 }
 
 
-const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({}) => {
+const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = () => {
   const [subscription, setSubscription] = useState<any>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [subscriptionChanged, setSubscriptionChanged] = useState<boolean>(false);
@@ -72,55 +74,51 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({}) => {
 
       }
     fetchSubscriptionData();
-  }, [subscriptionChanged])
+  }, [subscriptionChanged, subscriptionId]);
 
-
- 
-
-  const checkSubStatus = () => {
+  const checkSubscriptionStatus = () => {
 
     // The sub can be paused, canceled, or active
     // The actions can exist which are waiting to be executed.
 
     // The status is also always showing dependent on the last executed action
 
-    // Firstly Check the status, cause if the subscription status is canceled, or paused then we can
-    // show the user the reactivation button, which calls for a RESUME action.
 
 
     // First we want to check if any actions exist
-    if (subscription?.actions?.length >= 0) {
-      const subStatus: any = {
-        canceled: false,
-        paused: false,
-        resumeData: {},
-        pauseData: {},
-        cancelData: {}
-      }
+    // Actions indicate that we have not changed the status of the subscription yet
+    const subscriptionStatus: any = {
+      toBeCanceled: false,
+      toBePaused: false,
+      resumeData: {},
+      toBePausedData: {},
+      toBeCanceledData: {}
+    }
+    if (subscription?.actions?.length >= 0) { 
       subscription?.actions?.forEach((action: any) => {
         if (action.type === 'PAUSE') {
-          subStatus.paused = true;
-          subStatus.pauseData = action;
+          subscriptionStatus.paused = true;
+          subscriptionStatus.toBePausedData = action;
         }
         if (action.type === 'RESUME') {
-          subStatus.resumeData = action;
+          subscriptionStatus.resumeData = action;
         }
         if(action.type === 'CANCEL') {
-          subStatus.canceled = true;
-          subStatus.cancelData = action;
+          subscriptionStatus.canceled = true;
+          subscriptionStatus.toBeCanceledData = action;
         }
       })
 
-      if (subStatus.paused) {
+      if (subscriptionStatus.paused) {
         return <>
           <PausedInfoSection 
-            pauseData={subStatus.pauseData} 
-            resumeData={subStatus.resumeData}
+            toBePausedData={subscriptionStatus.toBePausedData} 
+            resumeData={subscriptionStatus.resumeData}
           />
           <ActionsSection 
             actions={subscription.actions} 
             subscriptionId={subscription.id} 
-            actionId={subStatus.pauseData.id} 
+            actionId={subscriptionStatus.toBePausedData.id} 
             setIsLoading={setIsLoading} 
             subscriptionChanged={subscriptionChanged}
             setSubscriptionChanged={setSubscriptionChanged}
@@ -128,13 +126,13 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({}) => {
         </>
       }
 
-      if (subStatus.canceled) {
+      if (subscriptionStatus.canceled) {
         return<>
-          <CanceledInfoSection cancelData={subStatus.cancelData}/>
+          <CanceledInfoSection toBeCanceledData={subscriptionStatus.toBeCanceledData}/>
           <ActionsSection 
             actions={subscription.actions}
             subscriptionId={subscription.id} 
-            actionId={subStatus.cancelData.id}
+            actionId={subscriptionStatus.toBeCanceledData.id}
             setIsLoading={setIsLoading} 
             subscriptionChanged={setSubscriptionChanged}
             setSubscriptionChanged={setSubscriptionChanged}
@@ -145,40 +143,26 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({}) => {
     }
 
     switch(subscription.status) {
+      // Once the subscription is canceled, there is nothing else to do
+      // No need to display anything further
       case 'CANCELED':
-        return <ResumeSection 
-          subscription={subscription} 
-          resumeEffectiveDate={new Date().toISOString().split('T')[0]}
-          subscriptionChanged={subscriptionChanged}
-          setSubscriptionChanged={setSubscriptionChanged}
-        />
+        return null
+      
       case 'DEACTIVATED':
-        return <ResumeSection 
-          subscription={subscription} 
-          resumeEffectiveDate={new Date().toISOString().split('T')[0]}
-          subscriptionChanged={subscriptionChanged}
-          setSubscriptionChanged={setSubscriptionChanged}
-        />
+        return null
+
       case 'PAUSED':
-        return <ResumeSection 
-          subscription={subscription}
-          subscriptionChanged={subscriptionChanged}
-          setSubscriptionChanged={setSubscriptionChanged}
-        />
-      case 'ACTIVE':
         return <>
-          <PauseSubscriptionSection 
-            subscription={subscription} 
-            setIsLoading={setIsLoading}
+        {subscription?.actions?.length > 0 && 
+        <ActionsSection 
+            actions={subscription.actions} 
+            subscriptionId={subscription.id} 
+            actionId={subscriptionStatus.resumeData.id} 
+            setIsLoading={setIsLoading} 
             subscriptionChanged={subscriptionChanged}
             setSubscriptionChanged={setSubscriptionChanged}
           />
-          <CancelSubscriptionSection 
-            subscription={subscription} 
-            setIsLoading={setIsLoading}
-            subscriptionChanged={subscriptionChanged}
-            setSubscriptionChanged={setSubscriptionChanged}
-          />
+        }
         </>
       default:
         return <>
@@ -209,16 +193,17 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({}) => {
     <ComponentLayout title="src/routes/SubscriptionDetails/SubscriptionDetails/index.tsx">
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{subscriptionPlanVariationData.subscriptionPlanVariationData.name}</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400"><span className="font-bold">ID:</span> {subscription.id}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400"><span className="font-bold">Start Date:</span> {new Date(subscription.startDate).toDateString()}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400"><span className="font-bold">Charge Through Date:</span> {new Date(subscription.chargedThroughDate).toDateString()}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4"><span className="font-bold">Status:</span> {subscription.status}</p>
+          <h3 className="text-lg font-semibold text-gray-900">{subscriptionPlanVariationData.subscriptionPlanVariationData.name}</h3>
+          <p className="text-sm text-gray-500"><span className="font-bold text-black">Subscription ID:</span> {subscription.id}</p>
+          <p className="text-sm text-gray-500"><span className="font-bold text-black">Start Date:</span> {formattedDate(subscription.startDate)}</p>
+          <p className="text-sm text-gray-500"><span className="font-bold text-black">Charge Through Date:</span> {formattedDate(subscription.chargedThroughDate)}</p>
+          <p className="text-sm text-gray-500 mb-4"><span className="font-bold text-black">Status:</span> <Status status={subscription.status}/></p>
         </div>
-          <InvoicesTable
+        {/* Determine which section to show the user */}
+        {checkSubscriptionStatus()}
+        <InvoicesTable
             invoices={invoices}
           />
-        {checkSubStatus()}
       </div>
       </ComponentLayout>
      </div>

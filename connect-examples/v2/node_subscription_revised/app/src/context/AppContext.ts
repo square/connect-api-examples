@@ -16,7 +16,7 @@ type State = {
 }
 
 type Action = {
-    type: 'SET_CUSTOMER' | 'SET_SUBSCRIPTION' | 'SET_CURRENT_STEP' | 'SET_SHOW_DEBUG' | 'SET_ITEMS' | 'SET_NEXT_STATE' | 'SUBMIT_ORDER' | 'DISMISS_TOAST' | 'TOGGLE_DEBUG';
+    type: 'SET_CUSTOMER' | 'SET_SUBSCRIPTION' | 'SET_CURRENT_STEP' | 'SET_SHOW_DEBUG' | 'SET_ITEMS' | 'SET_NEXT_STATE' | 'SUBMIT_ORDER' | 'DISMISS_TOAST' | 'TOGGLE_DEBUG' | 'RESET';
     payload: any;
 }
 
@@ -76,9 +76,22 @@ export const appReducer = (state: State, action: Action) => {
           isNextDisabled: true,
           selectedCustomer: {id: '', givenName: '', familyName: '', emailAddress: ''},
           selectedSubscriptionPlan: {id: '', type: '', updatedAt: '', version: '', isDeleted: false, presentAtAllLocations: true, subscriptionPlanData: {name: '', eligibleCategoryIds: [], subscriptionPlanVariations: []}},
+          selectedSubscriptionPlanVariation: {id: '', type: '', updatedAt: '', version: '', isDeleted: false, presentAtAllLocations: true, subscriptionPlanVariationData: {name: '', phases: []}},
           selectedItems: [],
           eligibleCategoryIds: [],
           showToast: true,
+        }
+      case 'RESET':
+        return {
+          ...state,
+          currentStep: 0,
+          isNextDisabled: true,
+          selectedCustomer: {id: '', givenName: '', familyName: '', emailAddress: ''},
+          selectedSubscriptionPlan: {id: '', type: '', updatedAt: '', version: '', isDeleted: false, presentAtAllLocations: true, subscriptionPlanData: {name: '', eligibleCategoryIds: [], subscriptionPlanVariations: []}},
+          selectedSubscriptionPlanVariation: {id: '', type: '', updatedAt: '', version: '', isDeleted: false, presentAtAllLocations: true, subscriptionPlanVariationData: {name: '', phases: []}},
+          selectedItems: [],
+          eligibleCategoryIds: [],
+          showToast: false,
         }
       case 'DISMISS_TOAST':
         return {

@@ -6,15 +6,18 @@ import ComponentLayout from '../../ComponentLayout';
 interface NewCreditCardInputProps {}
 
 const NewCreditCardInput: React.FC<NewCreditCardInputProps> = ({}) => {
-     // TODO: don't hardcode appId
      const { selectedCustomer, selectedSubscriptionPlan, selectedItems } = useContext(AppContext);
      const dispatch = useContext(AppDispatchContext);
-
+     // Check if the Square Application ID is set in the .env file
+     // If not, display an error message
+    if (!process.env.REACT_APP_SQUARE_APP_ID) {
+        return <h1>Set your Square Application ID in your app/.env</h1>
+    }
     return <div className="flex flex-col justify-center items-center bg-white rounded p-8">
         <ComponentLayout title="src/components/CreditCardGroup/NewCreditCardInput/index.tsx">
          <h4 className="text-lg font-semibold mb-2">Pay with a new card:</h4>
     <PaymentForm
-      applicationId="sandbox-sq0idb-epIM-AU7Zh5_nZX1hv4Tzg"      
+      applicationId={process.env.REACT_APP_SQUARE_APP_ID}
       cardTokenizeResponseReceived={async (token) => {
         try{
             const response = await fetch('/cards', {

@@ -75,12 +75,12 @@ const ItemTile : React.FC<ItemTileProps> = ({ item, isActionable }) => {
     >
       <div className="flex flex-col items-start align-start">
       <ComponentLayout title="src/components/ItemCatalog/ItemTile/index.tsx">
-        <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <h5 className="text-2xl font-bold tracking-tight text-gray-900">
           {item.itemData.name}
         </h5>
         {
           isActionable ?
-          <p className="font-normal text-gray-700 dark:text-gray-400">
+          <p className="font-normal text-gray-700">
               {item.itemData.description}
             </p> 
             :

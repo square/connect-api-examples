@@ -1,12 +1,13 @@
-import { Button, Card, Datepicker, Spinner, Textarea } from "flowbite-react"
+import { Button, Datepicker, Table, Textarea } from "flowbite-react"
 import { useState } from "react";
 import ComponentLayout from "../../../components/ComponentLayout";
+import { formattedDate } from "../../../utils/helpers";
 
-export const CancelSubscriptionSection = ({ subscription, subscriptionChanged, setSubscriptionChanged }: any) => {
-    const [isCancelButtonLoading, setIsCancelButtonLoading] = useState<boolean>(false);
-
+// Allow the user to cancel their subscription
+// This will show if the Subscription is not already canceled, paused, or in the process of being paused
+export const CancelSubscriptionSection = ({ subscription, subscriptionChanged, setSubscriptionChanged, setIsLoading }: any) => {
     const handleCancelSubscription = async () => {
-        setIsCancelButtonLoading(true);
+        setIsLoading(true);
         try {
           const response = await fetch(`/subscriptions/${subscription.id}/cancel`, {
             method: 'POST',
@@ -14,12 +15,11 @@ export const CancelSubscriptionSection = ({ subscription, subscriptionChanged, s
               'Content-Type': 'application/json'
             },
           });
-          const data = response.json();
-          setIsCancelButtonLoading(false);
+          await response.json();
           setSubscriptionChanged(!subscriptionChanged);
         } catch(e) {
           console.error('Error cancelling subscription:', e);
-          setIsCancelButtonLoading(false);
+          setIsLoading(false);
         }
       }
 
@@ -27,14 +27,16 @@ export const CancelSubscriptionSection = ({ subscription, subscriptionChanged, s
     <div className="flex flex-col mt-4">
       <Button
         className='mr-2'
-        color="red" 
+        color="failure"
         onClick={() => handleCancelSubscription()}>
-           {isCancelButtonLoading ? <Spinner/> :  'Cancel Subscription'}
+           Cancel Subscription
       </Button> 
     </div>
     </ComponentLayout>
 }
 
+// Allow the user to pause their subscription
+// This will show if the Subscription is not already canceled, paused, or in the process of being paused
 export const PauseSubscriptionSection = ({ subscription, setIsLoading, subscriptionChanged, setSubscriptionChanged }: any) => {
     const [datePickerValue, setDatePickerValue] = useState<string>(new Date().toDateString());
     const [textareaValue, setTextareaValue] = useState<string>("");
@@ -42,7 +44,7 @@ export const PauseSubscriptionSection = ({ subscription, setIsLoading, subscript
     const handlePauseSubscription = async () => {
         setIsLoading(true);
         try {
-          const response = await fetch(`/subscriptions/${subscription.id}/pause`, {
+          await fetch(`/subscriptions/${subscription.id}/pause`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -93,6 +95,8 @@ export const PauseSubscriptionSection = ({ subscription, setIsLoading, subscript
   </ComponentLayout>
 }
 
+// Show the upcoming actions for the subscription
+// This will show if the subscription has been paused or canceled, but the actions have not yet been processed
 export const ActionsSection = ({actions, subscriptionId, actionId, setIsLoading, setSubscriptionChanged, subscriptionChanged}: any) => {
     const handleCancelActions = async () => {
         setIsLoading(true);
@@ -106,7 +110,7 @@ export const ActionsSection = ({actions, subscriptionId, actionId, setIsLoading,
                     actions: actions
                 })
             });
-            result.json();
+            await result.json();
             setSubscriptionChanged(!subscriptionChanged);
         } catch(e) {
             console.error('Error canceling actions:', e);
@@ -114,20 +118,23 @@ export const ActionsSection = ({actions, subscriptionId, actionId, setIsLoading,
     }
     return <ComponentLayout title="src/routes/SubscriptionDetails/ManageSubscription/SubscriptionSections/index.tsx">
     <p className="text-xl">Upcoming Actions</p>
-    <div className="flex">
-        {actions.map((action: any, i: number) => {
-            return <Card className="max-w-xs mb-4 mr-4" key={i}>
-            <h5 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-              Action Type: {action.type}
-            </h5>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              id: {action.id}
-            </p> 
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Effective Date: {new Date(action.effectiveDate).toDateString()}
-            </p>
-          </Card>
-        })}
+    <div className="">
+      <Table>
+        <Table.Head>
+          <Table.HeadCell>Action Type</Table.HeadCell>
+          <Table.HeadCell>ID</Table.HeadCell>
+          <Table.HeadCell>Effective Date</Table.HeadCell>
+        </Table.Head>
+        <Table.Body>
+          {actions.map((action: any, i: number) => {
+            return <Table.Row key={i}>
+              <Table.Cell>{action.type}</Table.Cell>
+              <Table.Cell>{action.id}</Table.Cell>
+              <Table.Cell>{formattedDate(action.effectiveDate)}</Table.Cell>
+            </Table.Row>
+          })}
+        </Table.Body>
+      </Table>
     </div>
     <Button color="blue"
     onClick={()=>{handleCancelActions()}}
@@ -136,69 +143,21 @@ export const ActionsSection = ({actions, subscriptionId, actionId, setIsLoading,
 
 }
 
-export const CanceledInfoSection = ({ cancelData }: any) => {
+export const CanceledInfoSection = ({ toBeCanceledData }: any) => {
     return <ComponentLayout title="src/routes/SubscriptionDetails/ManageSubscription/SubscriptionSections/index.tsx">
-    <p className="text-xl pt-4 text-red-400">Subscription Canceled</p>
-    <span className="text-sm text-gray-500 dark:text-gray-400">Subscription Active Until: {new Date(cancelData.effectiveDate).toDateString()}</span>
+    <p className="text-xl pt-4 text-red-400">Subscription Cancel Requested</p>
+    <span className="text-sm text-gray-500">Subscription Active Until: {formattedDate(toBeCanceledData.effectiveDate)}</span>
 
 </ComponentLayout>
 }
 
-export const PausedInfoSection = ({ pauseData, resumeData }: any) => {
+export const PausedInfoSection = ({ toBePausedData, resumeData }: any) => {
     return <ComponentLayout title="src/routes/SubscriptionDetails/ManageSubscription/SubscriptionSections/index.tsx">
       <div className="flex flex-col">
-        <p className="text-xl text-yellow-400">Subscription Paused</p>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Subscription Active Until: {new Date(pauseData.effectiveDate).toDateString()}</span>
-        <span className="text-sm text-gray-500 dark:text-gray-400">Subscription will Resume: {new Date(resumeData.effectiveDate).toDateString()}</span>
+        <p className="text-xl text-yellow-400">Subscription Pause Requested</p>
+        <p className="text-sm text-gray-500"><span className="font-bold text-black">Active until:</span> {formattedDate(toBePausedData.effectiveDate)}</p>
+        <p className="text-sm text-gray-500"><span className="font-bold text-black">Resumes:</span> {formattedDate(resumeData.effectiveDate)}</p>
       </div>
     </ComponentLayout>
 }
 
-export const ResumeSection = ({ subscription, resumeEffectiveDate }: any) => {
-
-    const handleResumeSubscription = async () => {
-        try {
-          const response = await fetch(`/subscriptions/${subscription.id}/resume`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              resumeEffectiveDate: resumeEffectiveDate,
-              resumeChangeTiming: 'IMMEDIATE'
-            })
-          });
-          const data = response.json();
-          console.log('resume subscription data:', data)
-        } catch(e) {
-          console.error('Error resuming subscription:', e);
-        }
-      }
-
-    return <ComponentLayout title="src/routes/SubscriptionDetails/ManageSubscription/SubscriptionSections/index.tsx">
-    <div className="flex justify-start">
-        <Button color="green"
-            onClick={()=> handleResumeSubscription()}
-        >Resume Subscription</Button>
-    </div>
-    </ComponentLayout>
-}
-
-// TODO: implement this component in the app if there is demand for it
-export const SwapSubscription = ({ subscription }: any) => {
-    return <ComponentLayout title="src/routes/SubscriptionDetails/ManageSubscription/SubscriptionSections/index.tsx">
-    <p className="text-xl pt-4">Swap Subscription</p>
-    <div className="flex p-8 justify-center border-b-2">
-        {subscription.phases[subscription.phases.length-1].order.lineItems.map((item: any, i: number) => {
-            return  <Card className="max-w-xs mb-4 mr-4" key={i}>
-            <h5 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-              {item.name}
-            </h5>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              ${item.basePriceMoney.amount / 100} {item.basePriceMoney.currency}
-            </p>
-          </Card>
-        })}
-    </div>
-</ComponentLayout>
-}

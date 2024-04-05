@@ -38,10 +38,10 @@ const CustomerTile: React.FC<CustomerTileProps> = ({ customer, isActionable, isL
             <div className="flex items-center mb-4">
                 <Avatar rounded className="pr-4" />
                 <div>
-                    <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <h5 className="text-2xl font-bold tracking-tight text-gray-900">
                         {`${customer.givenName} ${customer.familyName}`}
                     </h5>
-                    <p className="font-normal text-gray-700 dark:text-gray-400">
+                    <p className="font-normal text-gray-700">
                         {`Email: ${customer.emailAddress}`}
                     </p>
                 </div>
@@ -64,7 +64,7 @@ const CustomerTile: React.FC<CustomerTileProps> = ({ customer, isActionable, isL
             isActionable ? 
                 <button
                     type="button"
-                    className={`w-full rounded-lg bg-cyan-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-200 dark:focus:ring-cyan-900 mt-auto`}
+                    className={`w-full rounded-lg bg-cyan-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-200 mt-auto`}
                     onClick={() => navigate(`/customer/${customer.id}`)}
                 >
                     Manage User Subscriptions

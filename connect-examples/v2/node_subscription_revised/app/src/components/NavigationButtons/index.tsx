@@ -4,13 +4,9 @@ import ComponentLayout from '../ComponentLayout';
 import { AppContext, AppDispatchContext } from '../../context/AppContext';
 
 interface NavigationButtonsProps {
-  // currentStep: number;
-  // onPrevClick: () => void;
-  // onNextClick: () => void;
-  // isNextDisabled: boolean;
 }
 
-const NavigationButtons: React.FC<NavigationButtonsProps> = ({}) => {
+const NavigationButtons: React.FC<NavigationButtonsProps> = () => {
   const {currentStep, isNextDisabled} = useContext(AppContext);
   const dispatch = useContext(AppDispatchContext);
 
@@ -32,7 +28,7 @@ const NavigationButtons: React.FC<NavigationButtonsProps> = ({}) => {
           onClick={() => dispatch({type: 'SET_CURRENT_STEP', payload: currentStep + 1})}
           disabled={isNextDisabled}
         >
-        {currentStep === 0 ? 'Subscription Flow' : `Step ${currentStep + 1}`}
+        {currentStep === 0 ? '+ New Subscription' : `Step ${currentStep + 1}`}
         </Button>
       }
     </div>

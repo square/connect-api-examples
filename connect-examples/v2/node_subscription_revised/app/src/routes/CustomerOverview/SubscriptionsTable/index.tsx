@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import { SubscriptionPlanData } from '../../../components/SubscriptionPlans';
 import Skeleton from '../../../components/Skeleton';
 import ComponentLayout from '../../../components/ComponentLayout';
+import { Status } from '../../../components/HelperComponents/Status';
 
 interface SubscriptionsTableProps {
   subscriptions: SubscriptionPlanData[];
@@ -36,7 +37,7 @@ const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
     )}
 
     {subscriptions.length === 0 && isLoading === false && (
-      <p className="text-center text-gray-900 dark:text-white">No subscriptions found</p>
+      <p className="text-center text-gray-900">No subscriptions found</p>
     )}
    
 
@@ -55,21 +56,23 @@ const SubscriptionsTable: React.FC<SubscriptionsTableProps> = ({
         </Table.Head>
         <Table.Body className="divide-y">
           {subscriptions && subscriptions.map((subscription: any, i:number) => {
-                return <Table.Row key={i} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-wrap font-medium text-gray-900 dark:text-white">
+                return <Table.Row key={i} className="bg-white">
+                <Table.Cell className="whitespace-wrap font-medium text-gray-900">
                   
                   {subscription.name.substr(0, 20) + (subscription.name.length > 20 ? '...' : '')}
                 </Table.Cell>
                 <Table.Cell>{subscription.startDate}</Table.Cell>
                 <Table.Cell>{subscription.chargedThroughDate}</Table.Cell>
-                <Table.Cell>{subscription.status}</Table.Cell>
+                <Table.Cell>
+                  <Status status={subscription.status} />
+                </Table.Cell>
                 <Table.Cell>{
                   subscription.paidLastInvoice ? 
                   <p className="text-green-500">Paid</p> :
                   <p className="text-red-500">Overdue</p>
                   }</Table.Cell>
                 <Table.Cell>
-                  <p className="font-medium text-cyan-600 cursor-pointer hover:underline dark:text-cyan-500"
+                  <p className="font-medium text-cyan-600 cursor-pointer hover:underline"
                   onClick={() => {
                     navigate(`/subscription/${subscription.id}`)
                   }}>
