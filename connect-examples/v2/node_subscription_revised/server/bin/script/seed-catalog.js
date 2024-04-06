@@ -20,16 +20,16 @@ const { Client, Environment, FileWrapper } = require("square");
 const crypto = require("crypto");
 const sampleData = require("./sample-seed-data.json");
 const fs = require("fs");
-const readline = require("readline");
 require('dotenv').config();
 
-const REFERENCE_ID = "SEED_DATA";
-
-// We don't recommend to run this script in production environment
+// WARNING: Do not run this script in a production environment. This script is 
+// intended to be used for testing purposes only.
 // Configure OAuth2 access token for authorization: oauth2
 const config = {
-  environment: Environment.Sandbox,
-  accessToken: process.env.SQ_ACCESS_TOKEN
+  environment: Environment.Sandbox, // For sandbox use only
+  bearerAuthCredentials: {
+    accessToken: process.env.SQ_ACCESS_TOKEN
+  },
 };
 // Configure catalog API instance
 const { catalogApi, locationsApi, customersApi, cardsApi } = new Client(config);
@@ -47,7 +47,6 @@ async function addCustomers() {
       givenName: "John",
       familyName: "Doe",
       emailAddress: "johndoe@square-example.com", // it is a fake email
-      referenceId: REFERENCE_ID,
     });
     
     await cardsApi.createCard({
@@ -64,7 +63,6 @@ async function addCustomers() {
       givenName: "Amelia",
       familyName: "Earhart",
       emailAddress: "ameliae@square-example.com", // it is a fake email
-      referenceId: REFERENCE_ID,
     });
 
     console.log("Successfully created customers");
@@ -73,35 +71,6 @@ async function addCustomers() {
   }
 }
 
-/**
- * Function that clears all customers in your sandbox.
- * WARNING: This is permanent and irreversable!
- */
-async function clearCustomers() {
-  try {
-      const {customers} = await customersApi.searchCustomers({
-        query: {
-          filter: {
-            referenceId: {
-              exact: REFERENCE_ID
-            }
-          }
-        }
-      });
-    
-    if (customers) {
-      for (const key in customers) {
-        const customer = customers[key];
-        await customersApi.deleteCustomer(customer.id);
-      }
-      console.log("Successfully deleted customers");
-    } else {
-      console.log("No customers to delete");
-    }
-  } catch (error) {
-    console.error("Error in deleting customers:", error);
-  }
-}
 
 /*
  * Given an object with image data and a corresponding catalogObjectId,
@@ -220,64 +189,14 @@ const addItems = async () => {
 }
 
 /*
- * Given a list of catalogObjects, returns a list of the catalog object IDs.
- * @param Object of CatalogObjects (https://developer.squareup.com/reference/square/catalog-api/list-catalog)
- * @returns Object with an array of Object Ids
- */
-function getCatalogObjectIds(objects) {
-  const catalogObjectIds = {
-    objectIds: []
-  };
-  for (const key in objects) {
-    catalogObjectIds["objectIds"].push(objects[key].id);
-  }
-  return catalogObjectIds;
-}
-
-/*
- * Function that clears EVERY object in the catalog.
- * WARNING: This is permanent and irreversable!
- */
-const clearCatalog = async () => {
-  try {
-    await clearCustomers();
-    const { result: { objects } } = await catalogApi.listCatalog(undefined, "ITEM,ITEM_VARIATION,TAX,IMAGE,CATEGORY");
-    if (objects && objects.length > 0) {
-      const catalogObjectIds = getCatalogObjectIds(objects);
-      const { result: { deletedObjectIds } } = await catalogApi.batchDeleteCatalogObjects(
-        catalogObjectIds
-      );
-      console.log("Successfully deleted catalog items ", deletedObjectIds);
-    } else {
-      console.log("No items to delete from catalog");
-    }
-  } catch (error) {
-    console.error("Error in deleting catalog items:", error);
-  }
-}
-
-/*
  * Main driver for the script.
  */
 const args = process.argv.slice(2);
-if (args[0] == "clear") {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question("Are you sure you want to clear everything in your sandbox catalog? (y/N) ", (ans) => {
-    if (ans.toUpperCase() === "Y") {
-      clearCatalog();
-    } else if (ans.toUpperCase() === "N") {
-      console.log("Aborting clear.");
-    }
-    rl.close();
-  });
-} else if (args[0] == "generate") {
+if (args[0] == "generate") {
   addItems();
 } else if (args[0] == "-h" || args[0] == "--help") {
   console.log(
-    "Please check the README.md for more information on how to run our catalog script.\nAvailable commands include:\n npm run seed - Generates catalog items for your sandbox catalog.\n npm run clear - Clears your sandbox catalog of all items.\n\n More information can also be found on our Quick Start guide at https://developer.squareup.com/docs/orders-api/quick-start/start."
+    "Please check the README.md for more information on how to run our catalog script.\nAvailable commands include:\n npm run seed - Generates catalog items for your sandbox catalog.\n"
   );
 } else {
   console.log("Command not recognized. Please try again.");

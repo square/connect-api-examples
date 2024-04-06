@@ -4,11 +4,10 @@ import ItemTile from "../ItemCatalog/ItemTile";
 import SubscriptionTile from "../SubscriptionPlans/SubscriptionTile";
 import CreditCardGroup from "../CreditCardGroup";
 import { AppContext } from "../../context/AppContext";
-import { Card } from "flowbite-react";
 
-interface ReviewDetailsProps {}
+interface ReviewOrderDetailsProps {}
 
-const ReviewDetails: React.FC<ReviewDetailsProps> = ({}) => {
+const ReviewOrderDetails: React.FC<ReviewOrderDetailsProps> = () => {
 
     const {
         selectedCustomer,
@@ -100,4 +99,4 @@ const ReviewDetails: React.FC<ReviewDetailsProps> = ({}) => {
     )
 }
 
-export default ReviewDetails
+export default ReviewOrderDetails

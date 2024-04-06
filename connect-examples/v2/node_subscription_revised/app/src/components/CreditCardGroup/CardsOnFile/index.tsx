@@ -36,6 +36,8 @@ const CardsOnFile: React.FC<CardsOnFileProps> = ({
             });
             dispatch({type: 'SUBMIT_ORDER', payload: null});
             setIsLoading(false);
+            await new Promise(resolve => setTimeout(resolve, 4000));
+            dispatch({type: 'DISMISS_TOAST', payload: null})
         } catch (error) {
             console.error('Error fetching customer data:', error);
         }

@@ -47,6 +47,8 @@ const NewCreditCardInput: React.FC<NewCreditCardInputProps> = ({}) => {
                     })
                 });
                 dispatch({type: 'SUBMIT_ORDER', payload: null});
+                await new Promise(resolve => setTimeout(resolve, 4000));
+                dispatch({type: 'DISMISS_TOAST', payload: null})
             } catch (error) {
                 console.error('Error fetching customer data:', error);
             }

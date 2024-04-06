@@ -8,7 +8,6 @@
     "start": "node dist/index.js",
     "dev": "nodemon ./index.ts",
     "seed": "NODE_ENV=sandbox node ./bin/script/seed-catalog.js generate",
-    "clear": "NODE_ENV=sandbox node ./bin/script/seed-catalog.js clear",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

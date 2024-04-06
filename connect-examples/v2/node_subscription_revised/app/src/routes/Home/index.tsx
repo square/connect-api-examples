@@ -3,7 +3,7 @@ import Customers, { CustomerData } from '../../components/Customers'; // Adjust 
 import SubscriptionPlans, { SubscriptionPlanData } from '../../components/SubscriptionPlans';
 import ItemCatalog from '../../components/ItemCatalog';
 import Layout from '../../components/Layout';
-import ReviewDetails from '../../components/ReviewDetails';
+import ReviewOrderDetails from '../../components/ReviewOrderDetails';
 import { Toast } from 'flowbite-react';
 import { FcOk } from "react-icons/fc";
 import { AppContext, AppDispatchContext } from '../../context/AppContext';
@@ -37,8 +37,8 @@ const Home: React.FC<HomeProps> = () => {
         </Layout>
         }
         {currentStep === 3 &&
-        <Layout title='Review Details' subTitle='src/components/ReviewDetails/index.tsx'>
-          <ReviewDetails />
+        <Layout title='Review Details' subTitle='src/components/ReviewOrderDetails/index.tsx'>
+          <ReviewOrderDetails />
         </Layout>
         }
         <div className="">
