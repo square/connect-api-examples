@@ -20,15 +20,15 @@ const { Client, Environment, FileWrapper } = require("square");
 const crypto = require("crypto");
 const sampleData = require("./sample-seed-data.json");
 const fs = require("fs");
-require('dotenv').config();
+require("dotenv").config();
 
-// WARNING: Do not run this script in a production environment. This script is 
+// WARNING: Do not run this script in a production environment. This script is
 // intended to be used for testing purposes only.
 // Configure OAuth2 access token for authorization: oauth2
 const config = {
   environment: Environment.Sandbox, // For sandbox use only
   bearerAuthCredentials: {
-    accessToken: process.env.SQ_ACCESS_TOKEN
+    accessToken: process.env.SQ_ACCESS_TOKEN,
   },
 };
 // Configure catalog API instance
@@ -42,19 +42,21 @@ const { catalogApi, locationsApi, customersApi, cardsApi } = new Client(config);
 async function addCustomers() {
   try {
     // Create first customer with card on file
-    const { result : { customer } } = await customersApi.createCustomer({
+    const {
+      result: { customer },
+    } = await customersApi.createCustomer({
       idempotencyKey: crypto.randomUUID(),
       givenName: "John",
       familyName: "Doe",
       emailAddress: "johndoe@square-example.com", // it is a fake email
     });
-    
+
     await cardsApi.createCard({
       idempotencyKey: crypto.randomUUID(),
-      sourceId: 'cnon:card-nonce-ok',
+      sourceId: "cnon:card-nonce-ok",
       card: {
         customerId: customer.id,
-      }
+      },
     });
 
     // create second customer with no card on file
@@ -70,7 +72,6 @@ async function addCustomers() {
     console.error("Create customers failed: ", error);
   }
 }
-
 
 /*
  * Given an object with image data and a corresponding catalogObjectId,
@@ -96,17 +97,18 @@ const addImages = async (image, catalogObjectId, success) => {
 
   const fileReadStream = fs.createReadStream(image.url);
   const imageFile = new FileWrapper(fileReadStream, {
-    contentType: 'image/jpeg',
+    contentType: "image/jpeg",
   });
 
   try {
-    const { result: { image } } = await catalogApi.createCatalogImage(request,imageFile);
+    const {
+      result: { image },
+    } = await catalogApi.createCatalogImage(request, imageFile);
     success();
-
   } catch (error) {
     console.error("Image upload failed with error: ", error);
   }
-}
+};
 
 /*
  * Helper function to get the appropriate currency to be used based on the location ID provided.
@@ -120,7 +122,7 @@ const getCurrency = async () => {
   } catch (error) {
     console.error("Retrieving currency failed: ", error);
   }
-}
+};
 
 /*
  * addItems adds all the objects from the sample-seed-data.json file
@@ -130,14 +132,16 @@ const getCurrency = async () => {
  * https://developer.squareup.com/reference/square/catalog-api/batch-upsert-catalog-objects
  */
 const addItems = async () => {
-  await addCustomers()
+  await addCustomers();
   const currency = await getCurrency();
   // Only proceed if currency is available.
   if (currency) {
     console.log("Currency " + currency + " was successfully detected.");
-    const batches = [{
-      objects: []
-    }];
+    const batches = [
+      {
+        objects: [],
+      },
+    ];
     const batchUpsertCatalogRequest = {
       // Each request needs a unique idempotency key.
       idempotencyKey: crypto.randomUUID(),
@@ -159,15 +163,17 @@ const addItems = async () => {
         }
       }
       // Add the object data to the batch request item.
-      batchUpsertCatalogRequest.batches[0].objects.push(currentCatalogItem.data);
+      batchUpsertCatalogRequest.batches[0].objects.push(
+        currentCatalogItem.data,
+      );
     }
 
     try {
       // We call the Catalog API function batchUpsertCatalogObjects to upload all our
       // items at once.
-      const { result : { idMappings }} = await catalogApi.batchUpsertCatalogObjects(
-        batchUpsertCatalogRequest
-      );
+      const {
+        result: { idMappings },
+      } = await catalogApi.batchUpsertCatalogObjects(batchUpsertCatalogRequest);
 
       // The new catalog objects will be returned with a corresponding Square Object ID.
       // Using the new Square Object ID, we map each object with their image and upload their image.
@@ -178,7 +184,10 @@ const addItems = async () => {
         if (sampleData[clientObjectId] && sampleData[clientObjectId].image) {
           const image = sampleData[clientObjectId].image;
           await addImages(image, objectId, () => {
-            console.log("Successfully uploaded image for item:", clientObjectId);
+            console.log(
+              "Successfully uploaded image for item:",
+              clientObjectId,
+            );
           });
         }
       });
@@ -186,7 +195,7 @@ const addItems = async () => {
       console.error("Updating catalog items failed: ", error);
     }
   }
-}
+};
 
 /*
  * Main driver for the script.
@@ -196,7 +205,7 @@ if (args[0] == "generate") {
   addItems();
 } else if (args[0] == "-h" || args[0] == "--help") {
   console.log(
-    "Please check the README.md for more information on how to run our catalog script.\nAvailable commands include:\n npm run seed - Generates catalog items for your sandbox catalog.\n"
+    "Please check the README.md for more information on how to run our catalog script.\nAvailable commands include:\n npm run seed - Generates catalog items for your sandbox catalog.\n",
   );
 } else {
   console.log("Command not recognized. Please try again.");
