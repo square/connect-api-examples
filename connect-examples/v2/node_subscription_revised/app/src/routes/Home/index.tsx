@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
-import Customers, { CustomerData } from '../../components/Customers'; // Adjust the path accordingly
-import SubscriptionPlans, { SubscriptionPlanData } from '../../components/SubscriptionPlans';
+import React, { useContext } from 'react';
+import Customers from '../../components/Customers'; // Adjust the path accordingly
+import SubscriptionPlans from '../../components/SubscriptionPlans';
 import ItemCatalog from '../../components/ItemCatalog';
 import Layout from '../../components/Layout';
 import ReviewOrderDetails from '../../components/ReviewOrderDetails';

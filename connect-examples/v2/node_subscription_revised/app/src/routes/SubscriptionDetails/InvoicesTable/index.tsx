@@ -13,7 +13,7 @@ const InvoicesTable: React.FC<InvoicesTableProps> = ({
   return <>
    <ComponentLayout 
      title="src/routes/SubscriptionDetails/InvoicesTable/index.tsx"
-     note={<span>Square subscriptions are powered by invoices - read more about it <a className='underline text-blue-600' href='https://developer.squareup.com/docs/subscriptions-api/subscription-billing' target='_blank'>here</a></span>}
+     note={<span>Square subscriptions are powered by invoices - read more about it <a className='underline text-blue-600' href='https://developer.squareup.com/docs/subscriptions-api/subscription-billing' rel="noreferrer" target='_blank'>here</a></span>}
    >
 
   {invoices.length === 0 && (
@@ -44,7 +44,7 @@ const InvoicesTable: React.FC<InvoicesTableProps> = ({
                 <Table.Cell>{new Date(invoice.createdAt).toLocaleDateString()}</Table.Cell>
                 <Table.Cell>
                   <p className="font-medium text-cyan-600 cursor-pointer hover:underline">
-                    <a href={invoice.publicUrl} target="_blank">
+                    <a href={invoice.publicUrl} rel="noreferrer" target="_blank">
                         Invoice URL                    
                     </a>
                   </p>

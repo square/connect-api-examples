@@ -6,7 +6,7 @@ import ComponentLayout from "../ComponentLayout";
 
 interface CreditCardGroupProps {}
 
-const CreditCardGroup: React.FC<CreditCardGroupProps> = ({}) => {
+const CreditCardGroup: React.FC<CreditCardGroupProps> = () => {
     const { selectedCustomer } = useContext(AppContext)
     return <ComponentLayout title={"src/components/CreditCardGroup/index.tsx"}>
     {selectedCustomer?.cards?.length ?

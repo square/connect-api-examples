@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SubscriptionTile from './SubscriptionTile';
 import { Card } from 'flowbite-react';
 import Skeleton from '../Skeleton';
@@ -43,7 +43,7 @@ export interface SubscriptionPlanData {
 }
 
 
-const SubscriptionPlans: React.FC<SubscriptionPlanProps> = ({}) => {
+const SubscriptionPlans: React.FC<SubscriptionPlanProps> = () => {
     const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlanData[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 

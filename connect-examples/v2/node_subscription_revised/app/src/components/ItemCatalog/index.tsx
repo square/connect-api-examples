@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import ItemTile from './ItemTile';
 import { Card } from 'flowbite-react';
 import Skeleton from '../Skeleton';
-import { AppContext, AppDispatchContext } from '../../context/AppContext';
+import { AppContext } from '../../context/AppContext';
 
 export interface ItemVariation {
   type: string;
@@ -34,7 +34,7 @@ export interface Item {
 interface ItemCatalogProps {
 }
 
-const ItemCatalog: React.FC<ItemCatalogProps> = ({}) => {
+const ItemCatalog: React.FC<ItemCatalogProps> = () => {
 
     const [itemCatalog, setItemCatalog] = useState<Item[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);

@@ -29,7 +29,7 @@ const ItemTile : React.FC<ItemTileProps> = ({ item, isActionable }) => {
     } else {
       dispatch({ type: 'SET_NEXT_STATE', payload: true})
     }
-  }, [selectedItems]);
+  }, [selectedItems, dispatch]);
 
   const onHandleItemSelection = (item: Item) => {
     if (selectedItems.includes(item)) {
@@ -52,9 +52,6 @@ const ItemTile : React.FC<ItemTileProps> = ({ item, isActionable }) => {
 
   // Function to convert cents to dollars
   const centsToDollars = (cents: number) => (cents / 100).toFixed(2);
-
-  // Calculate discounted price (10% off)
-  const discountedPrice = ((priceInCents * 0.9)/100).toFixed(2);
 
 
   return (

@@ -39,7 +39,7 @@ const CustomerOverview: React.FC<CustomerOverviewProps> = () => {
         }
         getCustomer();
         getSubscriptions();
-    },[])
+    },[customerId])
 
     if (!customerId) {
         return <div>Missing customer ID</div>

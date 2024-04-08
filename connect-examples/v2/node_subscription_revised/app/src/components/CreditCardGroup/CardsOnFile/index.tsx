@@ -6,8 +6,7 @@ import ComponentLayout from '../../ComponentLayout';
 interface CardsOnFileProps {
 }
 
-const CardsOnFile: React.FC<CardsOnFileProps> = ({ 
-    }) => {
+const CardsOnFile: React.FC<CardsOnFileProps> = () => {
     const { selectedCustomer, selectedSubscriptionPlan, selectedItems } = useContext(AppContext);
     const dispatch = useContext(AppDispatchContext);
     const [selectedCard, setSelectedCard] = useState<string | undefined>(selectedCustomer?.cards?.[0]?.id);

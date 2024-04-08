@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomerTile from './CustomerTile';
 import { Card as FlowCard} from 'flowbite-react';
 import Skeleton from '../Skeleton';
@@ -22,10 +22,9 @@ interface Card {
   };
 }
 
-interface CustomerProps {
-}
+interface CustomerProps {}
 
-const Customers: React.FC<CustomerProps> = ({}) => {
+const Customers: React.FC<CustomerProps> = () => {
   const [customers, setCustomers] = useState<CustomerData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
