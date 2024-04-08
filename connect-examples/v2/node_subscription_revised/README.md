@@ -22,13 +22,13 @@ $ npm i
 $ cp .env.example .env
 ```
 
-In `.env` Change the value of `SQ_ACCESS_TOKEN` to your sandbox access token you retrieved earlier
+In `.env` Change the value of `SQ_ACCESS_TOKEN` to your sandbox access token you retrieved earlier from the sanbox test account you created
 ```
 $ npm run seed
 $ npm run dev
 ```
 
-You will now have an express server running and listening on localhost:4000
+You will now have an Express server running and listening on [localhost:4000](http://localhost:4000)
 
 ### Set up your Webapp
 Open another Terminal
@@ -45,7 +45,7 @@ $ npm i
 $ npm run start
 ```
 
-You will now have a webapp running on localhost:3000
+You will now have a webapp running on [localhost:3000](http://localhost:3000)
 
 Use the app to create subscriptions
 
@@ -60,4 +60,4 @@ Use the app to create subscriptions
 
 
 ### Cleanup 
-Delete the sandbox test account when you are done with this sample. If you would like to run it all again, create a new sandbox test account, update the access token in your `.env` and run the seed script again.
+Delete the sandbox test account when you are done with this sample. If you would like to run it all again, create a new sandbox test account, update the access token in your `.env` and run the seed script again. Make sure the sandbox account is using the same APP Id as well, otherwise you will need to update the `REACT_APP_SQUARE_APP_ID` value as well.
