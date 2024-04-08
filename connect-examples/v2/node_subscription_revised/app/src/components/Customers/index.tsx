@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import CustomerTile from './CustomerTile';
-import { Card as FlowCard} from 'flowbite-react';
-import Skeleton from '../Skeleton';
+import React, { useState, useEffect } from "react";
+import CustomerTile from "./CustomerTile";
+import { Card as FlowCard } from "flowbite-react";
+import Skeleton from "../Skeleton";
 
 export interface CustomerData {
   id: string;
@@ -31,12 +31,12 @@ const Customers: React.FC<CustomerProps> = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/customers');
+        const response = await fetch("/customers");
         const data = await response.json();
         setCustomers(data);
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching customer data:', error);
+        console.error("Error fetching customer data:", error);
       }
     };
 
@@ -45,13 +45,15 @@ const Customers: React.FC<CustomerProps> = () => {
 
   return (
     <>
-    {isLoading ? <FlowCard>
-        <Skeleton/>
-      </FlowCard> :
-
-    customers.map((customer, i) =>
-     <CustomerTile key={i} customer={customer} isActionable={true}/>
-    )}
+      {isLoading ? (
+        <FlowCard>
+          <Skeleton />
+        </FlowCard>
+      ) : (
+        customers.map((customer, i) => (
+          <CustomerTile key={i} customer={customer} isActionable={true} />
+        ))
+      )}
     </>
   );
 };
