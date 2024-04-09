@@ -24,7 +24,7 @@ const NewCreditCardInput: React.FC<NewCreditCardInputProps> = () => {
             applicationId={process.env.REACT_APP_SQUARE_APP_ID}
             cardTokenizeResponseReceived={async (token) => {
               try {
-                const response = await fetch("/cards", {
+                const cardResponse = await fetch("/cards", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -35,34 +35,41 @@ const NewCreditCardInput: React.FC<NewCreditCardInputProps> = () => {
                     postalCode: token.details?.billing?.postalCode,
                   }),
                 });
-                const card = await response.json();
-
-                try {
-                  await fetch("/subscriptions", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      customerId: selectedCustomer.id,
-                      subscriptionVariationId:
-                        selectedSubscriptionPlan.subscriptionPlanData
-                          .subscriptionPlanVariations[0].id,
-                      itemIds: selectedItems.map(
-                        (item) => item.itemData.variations[0].id,
-                      ),
-                      cardId: card.id,
-                    }),
-                  });
-                  dispatch({ type: "SUBMIT_ORDER", payload: null });
-                  await new Promise((resolve) => setTimeout(resolve, 4000));
-                  dispatch({ type: "DISMISS_TOAST", payload: null });
-                } catch (error) {
-                  console.error("Error fetching customer data:", error);
+              
+                if (!cardResponse.ok) {
+                  throw new Error("Failed to create card data");
                 }
+              
+                const card = await cardResponse.json();
+              
+                const subscriptionResponse = await fetch("/subscriptions", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    customerId: selectedCustomer.id,
+                    subscriptionVariationId: selectedSubscriptionPlan.subscriptionPlanData
+                      .subscriptionPlanVariations[0].id,
+                    itemIds: selectedItems.map((item) => item.itemData.variations[0].id),
+                    cardId: card.id,
+                  }),
+                });
+              
+                if (!subscriptionResponse.ok) {
+                  throw new Error("Failed to create subscription");
+                }
+              
+                dispatch({ type: "SUBMIT_ORDER", payload: null });
+              
+                // Wait for 4 seconds
+                await new Promise((resolve) => setTimeout(resolve, 4000));
+              
+                dispatch({ type: "DISMISS_TOAST", payload: null });
+              
               } catch (error) {
-                console.error("Error fetching customer data:", error);
-              }
+                console.error("Error:", error);
+              }              
             }}
           >
             <CreditCard>

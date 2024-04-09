@@ -10,6 +10,11 @@
     "seed": "NODE_ENV=sandbox node ./bin/script/seed-catalog.js generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "husky": {
+    "hooks": {
+    "pre-commit": "lint-staged"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

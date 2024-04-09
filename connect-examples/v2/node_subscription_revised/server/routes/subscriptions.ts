@@ -235,19 +235,17 @@ router.get("/:subscriptionId", async (req: Request, res: Response) => {
       } = await squareClient.catalogApi.retrieveCatalogObject(
         subscription.planVariationId,
       );
-      //@ts-ignore
-      if (subscription?.phases?.length > 0) {
-        //@ts-ignore
+      
+      if (subscription?.phases && subscription.phases.length > 0) {
         for (let i = 0; i < subscription.phases.length; i++) {
-          if (subscription?.phases?.[i].orderTemplateId === undefined) continue;
-          //@ts-ignore
+          const orderTemplateId = subscription.phases[i].orderTemplateId;
+          if (orderTemplateId === undefined || orderTemplateId === null) continue;
           const {
             result: { order },
           } = await squareClient.ordersApi.retrieveOrder(
-            subscription.phases[i].orderTemplateId,
+            orderTemplateId,
           );
-          //@ts-ignore
-          //@ts-ignore
+          // @ts-ignore
           subscription.phases[i].order = order;
         }
         res.json({ subscription, object });
