@@ -1,5 +1,5 @@
 /*
-Copyright 2019 Square Inc.
+Copyright 2024 Square Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ require("dotenv").config();
 
 // WARNING: Do not run this script in a production environment. This script is
 // intended to be used for testing purposes only.
-// Configure OAuth2 access token for authorization: oauth2
 const config = {
   environment: Environment.Sandbox, // For sandbox use only
   bearerAuthCredentials: {
@@ -48,11 +47,12 @@ async function addCustomers() {
       idempotencyKey: crypto.randomUUID(),
       givenName: "John",
       familyName: "Doe",
-      emailAddress: "johndoe@square-example.com", // it is a fake email
+      emailAddress: "johndoe@square-example.com",
     });
 
     await cardsApi.createCard({
       idempotencyKey: crypto.randomUUID(),
+      // Set the source ID as a test card, more info here: https://developer.squareup.com/docs/devtools/sandbox/payments#source-ids-for-testing-the-createpayment-endpoint
       sourceId: "cnon:card-nonce-ok",
       card: {
         customerId: customer.id,
@@ -64,11 +64,12 @@ async function addCustomers() {
       idempotencyKey: crypto.randomUUID(),
       givenName: "Amelia",
       familyName: "Earhart",
-      emailAddress: "ameliae@square-example.com", // it is a fake email
+      emailAddress: "ameliae@square-example.com",
     });
 
     console.log("Successfully created customers");
   } catch (error) {
+
     console.error("Create customers failed: ", error);
   }
 }
@@ -81,7 +82,7 @@ async function addCustomers() {
  * @param Object with Image information
  * @param String catalogObjectId
  */
-const addImages = async (image, catalogObjectId, success) => {
+const addImages = async (image, catalogObjectId) => {
   // Create JSON request with required image information requirements.
   const request = {
     idempotencyKey: crypto.randomUUID(),
@@ -101,10 +102,7 @@ const addImages = async (image, catalogObjectId, success) => {
   });
 
   try {
-    const {
-      result: { image },
-    } = await catalogApi.createCatalogImage(request, imageFile);
-    success();
+    await catalogApi.createCatalogImage(request, imageFile);
   } catch (error) {
     console.error("Image upload failed with error: ", error);
   }
@@ -177,20 +175,17 @@ const addItems = async () => {
 
       // The new catalog objects will be returned with a corresponding Square Object ID.
       // Using the new Square Object ID, we map each object with their image and upload their image.
-      idMappings.forEach(async (idMapping) => {
+      for (let i = 0; i < idMappings.length; i++) {
+        const idMapping = idMappings[i];
         const clientObjectId = idMapping.clientObjectId;
         const objectId = idMapping.objectId;
 
         if (sampleData[clientObjectId] && sampleData[clientObjectId].image) {
           const image = sampleData[clientObjectId].image;
-          await addImages(image, objectId, () => {
-            console.log(
-              "Successfully uploaded image for item:",
-              clientObjectId,
-            );
-          });
+          await addImages(image, objectId);
+          console.log("Successfully uploaded image for item:", clientObjectId);
         }
-      });
+      }
     } catch (error) {
       console.error("Updating catalog items failed: ", error);
     }
