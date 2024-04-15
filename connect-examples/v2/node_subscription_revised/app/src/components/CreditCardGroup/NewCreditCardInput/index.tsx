@@ -62,7 +62,7 @@ const NewCreditCardInput: React.FC<NewCreditCardInputProps> = () => {
               
                 dispatch({ type: "SUBMIT_ORDER", payload: null });
               
-                // Wait for 4 seconds
+                // Wait for 4 seconds to then dismiss the toast
                 await new Promise((resolve) => setTimeout(resolve, 4000));
               
                 dispatch({ type: "DISMISS_TOAST", payload: null });
@@ -73,7 +73,7 @@ const NewCreditCardInput: React.FC<NewCreditCardInputProps> = () => {
             }}
           >
             <CreditCard>
-              <button>Add Card on File</button>
+              Add Card on File
             </CreditCard>
           </PaymentForm>
         </div>

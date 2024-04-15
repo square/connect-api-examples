@@ -1,4 +1,4 @@
-# Node Subscriptions
+# Catalog Item Subscription Sample App
 
 ## Prerequisites
 
@@ -15,20 +15,46 @@
 
 ## Getting started
 
-### Set up your REST Server
+### Seeding your Sandbox Test Account
 ```
 $ cd server
 $ npm i 
 $ cp .env.example .env
 ```
-
 In `.env` Change the value of `SQ_ACCESS_TOKEN` to your sandbox access token you retrieved earlier from the sanbox test account you created
 ```
 $ npm run seed
+```
+
+### What does the seed script do?
+
+Located in `server/bin/seed-catalog.js` this script will do the following:
+
+1. Create 2 customers, one with a card on file and the other without using Square's [Create Customer Endpoint](https://developer.squareup.com/reference/square/customers-api/create-customer).
+1. Create various Catalog objects, which are defined in `server/bin/sample-seed-data.json` - We read this data in and make one request to Square's [Batch Upsert Catalog endpoint](https://developer.squareup.com/reference/square/catalog-api/batch-upsert-catalog-objects)
+    ```
+    1. Creates 4 Catalog Categories - Breakfast, Lunch, Dinner, and Vegetarian
+
+    2. Creates 21 Items for the catalog. These are the different meals for our meal plan. We assign each meal various categories during this step
+
+    3. Creates 1 Discount Object - which is used on our subscriptions
+
+    4. Creates Our 3 different Subscription Plans and 6 different Subscription Plan Variations. (2 variations per plan)
+    ```
+1. Lastly we will add image data to each of the 21 Items we created using Square's [Create Catalog Image Endpoint](https://developer.squareup.com/reference/square/catalog-api/create-catalog-image)
+
+You can go to your sandbox test account and view this seeded data in the dashboard if you like.
+
+### Set up your REST Server
+After successfully seeding your sandbox test account, you can now start your REST server for the webapp
+
+```
 $ npm run dev
 ```
 
 You will now have an Express server running and listening on [localhost:4000](http://localhost:4000)
+
+The different endpoints available are defined in `server/routes` where you can see the code powered by the Square SDK that makes API calls to Square. 
 
 ### Set up your Webapp
 Open another Terminal
