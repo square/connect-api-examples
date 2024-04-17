@@ -1,0 +1,1089 @@
+{
+  "#Breakfast Category": {
+    "data": {
+      "type": "CATEGORY",
+      "id": "#Breakfast Category",
+      "presentAtAllLocations": true,
+      "categoryData": {
+        "name": "Breakfast"
+      }
+    }
+  },
+  "#Lunch Category": {
+    "data": {
+      "type": "CATEGORY",
+      "id": "#Lunch Category",
+      "presentAtAllLocations": true,
+      "categoryData": {
+        "name": "Lunch"
+      }
+    }
+  },
+  "#Dinner Category": {
+    "data": {
+      "type": "CATEGORY",
+      "id": "#Dinner Category",
+      "presentAtAllLocations": true,
+      "categoryData": {
+        "name": "Dinner"
+      }
+    }
+  },
+  "#Vegetarian Category": {
+    "data": {
+      "type": "CATEGORY",
+      "id": "#Vegetarian Category",
+      "presentAtAllLocations": true,
+      "categoryData": {
+        "name": "Vegetarian"
+      }
+    }
+  },
+  "#Bacon Cheeseburger": {
+    "image": {
+      "url": "./bin/script/img/bacon-burger@2x.png",
+      "id": "#Bacon Cheeseburger",
+      "caption": "A picture of a bacon cheeseburger."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Bacon Cheeseburger",
+      "presentAtAllLocations": true,
+      "itemData": {
+        "name": "Bacon Cheeseburger",
+        "description": "One mouth-watering, flame-grilled, quarter-pound angus beef burger with your choice of cheese on a sesame seed bun. Comes with a side of fries.",
+        "categories": [
+          {
+            "id": "#Lunch Category"
+          },
+          {
+            "id": "#Dinner Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Bacon Cheeseburger",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Bacon Cheeseburger",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 995,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Fried Chicken Sandwich": {
+    "image": {
+      "url": "./bin/script/img/chicken-sandwich@2x.png",
+      "id": "#Fried Chicken Sandwich",
+      "caption": "A picture of a fried chicken sandwich."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Fried Chicken Sandwich",
+      "itemData": {
+        "name": "Fried Chicken Sandwich",
+        "description": "A buttermilk fried chicken thigh with crispy skin on a sesame seed bun. Topped with fresh red cabbage slaw and jalapeños and our house hot sauce.",
+        "abbreviation": "FCS",
+        "categories": [
+          {
+            "id": "#Lunch Category"
+          },
+          {
+            "id": "#Dinner Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Fried Chicken Sandwich",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Fried Chicken Sandwich",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 675,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Sunny-Side Egg on Toast": {
+    "image": {
+      "url": "./bin/script/img/egg-sunnyside-up-on-toast@2x.png",
+      "id": "#Sunny-Side Egg on Toast",
+      "caption": "A picture of Sunny-Side Egg on Toast."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Sunny-Side Egg on Toast",
+      "itemData": {
+        "name": "Sunny-Side Egg on Toast",
+        "description": "One farm-fresh sunny side up egg, tomato, and green peppers on a slice of our toast fresh from our bakehouse.",
+        "abbreviation": "ET",
+        "categories": [
+          {
+            "id": "#Breakfast Category"
+          },
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Sunny-Side Egg on Toast",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Sunny-Side Egg on Toast",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 495,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Grilled Steak": {
+    "image": {
+      "url": "./bin/script/img/grilled-steak@2x.png",
+      "id": "#Grilled Steak",
+      "caption": "A picture of grilled steak."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Grilled Steak",
+      "itemData": {
+        "name": "Grilled Steak",
+        "description": "Perfectly grilled flank steak that's been marinated in our award winning sauce, paired with fresh-from-the-farm veggies.",
+        "abbreviation": "BRF",
+        "categories": [
+          {
+            "id": "#Dinner Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Grilled Steak",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Grilled Steak",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 1195,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Italian Sandwich": {
+    "image": {
+      "url": "./bin/script/img/italian-sandwich@2x.png",
+      "id": "#Italian Sandwich",
+      "caption": "A picture of a sandwich."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Italian Sandwich",
+      "itemData": {
+        "name": "Italian Sandwich",
+        "description": "Salami, capicolla, ham, provolone, fresh lettuce, peppers, onion, and olive oil served on our homemade sourdough. What more could you want in a sandwich?",
+        "abbreviation": "IS",
+        "categories": [
+          {
+            "id": "#Lunch Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Italian Sandwich",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Italian Sandwich",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 895,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Meatballs": {
+    "image": {
+      "url": "./bin/script/img/meatballs@2x.png",
+      "id": "#Meatballs",
+      "caption": "A picture of meatballs."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Meatballs",
+      "itemData": {
+        "name": "Meatballs",
+        "description": "Lean grilled lamb meatballs served with fresh greens. Perfect for those on a ketogenic diet.",
+        "abbreviation": "MB",
+        "categories": [
+          {
+            "id": "#Dinner Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Meatballs",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Meatballs",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 695,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Mediterranean Yogurt Bowl": {
+    "image": {
+      "url": "./bin/script/img/mediterranean-yogurt-bowl@2x.png",
+      "id": "#Mediterranean Yogurt Bowl",
+      "caption": "A picture of a Mediterranean Yogurt Bowl."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Mediterranean Yogurt Bowl",
+      "itemData": {
+        "name": "Mediterranean Yogurt Bowl",
+        "description": "Greek yogurt topped with olives, chopped peppers, cucumber, crispy chickpeas, beans, and figs. Served with our fresh homemade pita.",
+        "abbreviation": "MYB",
+        "categories": [
+          {
+            "id": "#Lunch Category"
+          },
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Mediterranean Yogurt Bowl",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Mediterranean Yogurt Bowl",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 495,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Oatmeal with Fruit": {
+    "image": {
+      "url": "./bin/script/img/oatmeal-with-fruit@2x.png",
+      "id": "#Oatmeal with Fruit",
+      "caption": "A picture of Oatmeal with Fruit."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Oatmeal with Fruit",
+      "itemData": {
+        "name": "Oatmeal with Fruit",
+        "description": "A classic hot breakfast comprised of our famous steel-cut oats topped with fruit and almond slices straight from locally owned farms.",
+        "abbreviation": "SB",
+        "categories": [
+          {
+            "id": "#Breakfast Category"
+          },
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Oatmeal with Fruit",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Oatmeal with Fruit",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 495,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Pancakes with Fruit": {
+    "image": {
+      "url": "./bin/script/img/pancakes-with-fruit@2x.png",
+      "id": "#Pancakes with Fruit",
+      "caption": "A picture of Pancakes with Fruit."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Pancakes with Fruit",
+      "itemData": {
+        "name": "Pancakes with Fruit",
+        "description": "The fluffiest, most perfectly golden pancakes you've ever had topped with fresh fruit from local farms. Real Canadian maple syrup served on the side.",
+        "abbreviation": "PF",
+        "categories": [
+          {
+            "id": "#Breakfast Category"
+          },
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Pancakes with Fruit",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Pancakes with Fruit",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 995,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Salmon with Zucchini": {
+    "image": {
+      "url": "./bin/script/img/salmon-with-zucchini@2x.png",
+      "id": "#Salmon with Zucchini",
+      "caption": "A picture of chicken."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Salmon with Zucchini",
+      "itemData": {
+        "name": "Salmon with Zucchini",
+        "description": "Fresh caught Alaskan king salmon served on a bed of braised spinach and diced zucchini.",
+        "abbreviation": "SZ",
+        "categories": [
+          {
+            "id": "#Dinner Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Salmon with Zucchini",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Salmon with Zucchini",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 1495,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Steak Tacos": {
+    "image": {
+      "url": "./bin/script/img/steak-tacos@2x.png",
+      "id": "#Steak Tacos",
+      "caption": "A picture of Steak Tacos."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Steak Tacos",
+      "itemData": {
+        "name": "Steak Tacos",
+        "description": "Two tacos with flank steak marinated for a minimum of 24 hours in our award-winning marinade. Topped with a mix of fresh cilantro and cooling cucumber.",
+        "abbreviation": "ST",
+        "categories": [
+          {
+            "id": "#Lunch Category"
+          },
+          {
+            "id": "#Dinner Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Steak Tacos",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Steak Tacos",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 695,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Autumn Soup": {
+    "image": {
+      "url": "./bin/script/img/autumn-soup@2x.png",
+      "id": "#Autumn Soup",
+      "caption": "A picture of Autumn Soup."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Autumn Soup",
+      "itemData": {
+        "name": "Autumn Soup",
+        "description": "The smoothest butternut squash soup you've ever had served with locally made goat cheese and toasted nuts.",
+        "abbreviation": "AS",
+        "categories": [
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Autumn Soup",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Autumn Soup",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 695,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Vegetarian Wrap": {
+    "image": {
+      "url": "./bin/script/img/vegetarian-wrap@2x.png",
+      "id": "#Vegetarian Wrap",
+      "caption": "A picture of a vegetarian wrap."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Vegetarian Wrap",
+      "itemData": {
+        "name": "Vegetarian Wrap",
+        "description": "A flavorful wrap filled with a variety of fresh vegetables, hummus, and your choice of sauce.",
+        "categories": [
+          {
+            "id": "#Lunch Category"
+          },
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Vegetarian Wrap",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Vegetarian Wrap",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 795,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Caprese Salad": {
+    "image": {
+      "url": "./bin/script/img/caprese-salad@2x.png",
+      "id": "#Caprese Salad",
+      "caption": "A picture of a Caprese salad."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Caprese Salad",
+      "itemData": {
+        "name": "Caprese Salad",
+        "description": "Fresh mozzarella, tomatoes, and basil drizzled with balsamic glaze. A classic Italian salad.",
+        "categories": [
+          {
+            "id": "#Lunch Category"
+          },
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Caprese Salad",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Caprese Salad",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 895,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Pesto Pasta": {
+    "image": {
+      "url": "./bin/script/img/pesto-pasta@2x.png",
+      "id": "#Pesto Pasta",
+      "caption": "A picture of pesto pasta."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Pesto Pasta",
+      "itemData": {
+        "name": "Pesto Pasta",
+        "description": "Al dente pasta tossed in a rich and flavorful basil pesto sauce.",
+        "categories": [
+          {
+            "id": "#Dinner Category"
+          },
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Pesto Pasta",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Pesto Pasta",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 1095,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Strawberry Smoothie": {
+    "image": {
+      "url": "./bin/script/img/strawberry-smoothie@2x.png",
+      "id": "#Strawberry Smoothie",
+      "caption": "A picture of a Strawberry smoothie."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Strawberry Smoothie",
+      "itemData": {
+        "name": "Strawberry Smoothie",
+        "description": "A refreshing smoothie made with ripe strawberries, yogurt, and a hint of citrus.",
+        "categories": [
+          {
+            "id": "#Breakfast Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Strawberry Smoothie",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Strawberry Smoothie",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 550,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Vegetarian Pizza": {
+    "image": {
+      "url": "./bin/script/img/vegetarian-pizza@2x.png",
+      "id": "#Vegetarian Pizza",
+      "caption": "A picture of a vegetarian pizza."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Vegetarian Pizza",
+      "itemData": {
+        "name": "Vegetarian Pizza",
+        "description": "A delicious pizza topped with a variety of fresh vegetables and gooey cheese.",
+        "categories": [
+          {
+            "id": "#Dinner Category"
+          },
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Vegetarian Pizza",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Vegetarian Pizza",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 1295,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Chicken Caesar Wrap": {
+    "image": {
+      "url": "./bin/script/img/chicken-caesar-wrap@2x.png",
+      "id": "#Chicken Caesar Wrap",
+      "caption": "A picture of a chicken caesar wrap."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Chicken Caesar Wrap",
+      "itemData": {
+        "name": "Chicken Caesar Wrap",
+        "description": "Grilled chicken, crisp romaine lettuce, parmesan cheese, and Caesar dressing wrapped in a soft tortilla.",
+        "categories": [
+          {
+            "id": "#Lunch Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Chicken Caesar Wrap",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Chicken Caesar Wrap",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 995,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Veggie Delight Salad": {
+    "image": {
+      "url": "./bin/script/img/veggie-delight-salad@2x.png",
+      "id": "#Veggie Delight Salad",
+      "caption": "A picture of a veggie delight salad."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Veggie Delight Salad",
+      "itemData": {
+        "name": "Veggie Delight Salad",
+        "description": "A healthy salad with a mix of fresh vegetables, nuts, and a zesty vinaigrette.",
+        "categories": [
+          {
+            "id": "#Vegetarian Category"
+          },
+          {
+            "id": "#Lunch Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Veggie Delight Salad",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Veggie Delight Salad",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 895,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Avocado Toast": {
+    "image": {
+      "url": "./bin/script/img/avocado-toast@2x.png",
+      "id": "#Avocado Toast",
+      "caption": "A picture of avocado toast."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#Avocado Toast",
+      "itemData": {
+        "name": "Avocado Toast",
+        "description": "Sliced avocado on top of toasted sourdough bread, garnished with cherry tomatoes and a drizzle of olive oil.",
+        "categories": [
+          {
+            "id": "#Breakfast Category"
+          },
+          {
+            "id": "#Vegetarian Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular Avocado Toast",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#Avocado Toast",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 695,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#BBQ Chicken Pizza": {
+    "image": {
+      "url": "./bin/script/img/bbq-chicken-pizza@2x.png",
+      "id": "#BBQ Chicken Pizza",
+      "caption": "A picture of BBQ chicken pizza."
+    },
+    "data": {
+      "type": "ITEM",
+      "id": "#BBQ Chicken Pizza",
+      "itemData": {
+        "name": "BBQ Chicken Pizza",
+        "description": "Succulent BBQ chicken, red onions, and cilantro atop a crispy pizza crust.",
+        "categories": [
+          {
+            "id": "#Dinner Category"
+          }
+        ],
+        "variations": [
+          {
+            "type": "ITEM_VARIATION",
+            "id": "#Regular BBQ Chicken Pizza",
+            "isDeleted": false,
+            "presentAtAllLocations": true,
+            "itemVariationData": {
+              "itemId": "#BBQ Chicken Pizza",
+              "name": "Regular",
+              "pricingType": "FIXED_PRICING",
+              "priceMoney": {
+                "amount": 1195,
+                "currency": "CURRENCY"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#TenPercentDiscount": {
+    "data": {
+      "type": "DISCOUNT",
+      "id": "#TenPercentDiscount",
+      "discountData": {
+        "name": "10% Off",
+        "discountType": "FIXED_PERCENTAGE",
+        "percentage": "10"
+      }
+    }
+  },
+  "#Two-Item-Breakfast": {
+    "data": {
+      "type": "SUBSCRIPTION_PLAN",
+      "id": "#Two-Item-Breakfast",
+      "subscriptionPlanData": {
+        "name": "Two Breakfast Items - $1 First Week Trial",
+        "eligibleCategoryIds": ["#Breakfast Category"],
+        "subscriptionPlanVariations": [
+          {
+            "id": "#Two-Item-Breakfast-Weekly",
+            "type": "SUBSCRIPTION_PLAN_VARIATION",
+            "subscriptionPlanVariationData": {
+              "name": "Two Breakfast Items a Week - Billed Weekly",
+              "phases": [
+                {
+                  "ordinal": 0,
+                  "cadence": "WEEKLY",
+                  "periods": 1,
+                  "pricing": {
+                    "type": "STATIC",
+                    "priceMoney": {
+                      "amount": 100,
+                      "currency": "USD"
+                    }
+                  }
+                },
+                {
+                  "ordinal": 1,
+                  "cadence": "WEEKLY",
+                  "pricing": {
+                    "type": "RELATIVE",
+                    "discountIds": ["#TenPercentDiscount"]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "#Two-Item-Breakfast-Monthly",
+            "type": "SUBSCRIPTION_PLAN_VARIATION",
+            "subscriptionPlanVariationData": {
+              "name": "Two Breakfast Items a Month - Billed Monthly",
+              "phases": [
+                {
+                  "ordinal": 0,
+                  "cadence": "WEEKLY",
+                  "periods": 1,
+                  "pricing": {
+                    "type": "STATIC",
+                    "priceMoney": {
+                      "amount": 100,
+                      "currency": "USD"
+                    }
+                  }
+                },
+                {
+                  "ordinal": 1,
+                  "cadence": "MONTHLY",
+                  "pricing": {
+                    "type": "RELATIVE",
+                    "discountIds": ["#TenPercentDiscount"]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Two-Item-Lunch-Or-Dinner": {
+    "data": {
+      "type": "SUBSCRIPTION_PLAN",
+      "id": "#Two-Item-Lunch-Or-Dinner",
+      "subscriptionPlanData": {
+        "name": "Two Lunch or Dinner Items - $1 First Week Trial",
+        "eligibleCategoryIds": ["#Lunch Category", "#Dinner Category"],
+        "subscriptionPlanVariations": [
+          {
+            "id": "#Two-Item-Lunch-Or-Dinner-Weekly",
+            "type": "SUBSCRIPTION_PLAN_VARIATION",
+            "subscriptionPlanVariationData": {
+              "name": "Two Lunch or Dinner Items a Week - Billed Weekly",
+              "phases": [
+                {
+                  "cadence": "WEEKLY",
+                  "ordinal": 0,
+                  "periods": 1,
+                  "pricing": {
+                    "type": "STATIC",
+                    "priceMoney": {
+                      "amount": 100,
+                      "currency": "USD"
+                    }
+                  }
+                },
+                {
+                  "ordinal": 1,
+                  "cadence": "WEEKLY",
+                  "pricing": {
+                    "type": "RELATIVE",
+                    "discountIds": ["#TenPercentDiscount"]
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "#Two-Item-Lunch-Or-Dinner-Monthly",
+            "type": "SUBSCRIPTION_PLAN_VARIATION",
+            "subscriptionPlanVariationData": {
+              "name": "Two Lunch or Dinner Items a Month - Billed Monthly",
+              "phases": [
+                {
+                  "cadence": "WEEKLY",
+                  "ordinal": 0,
+                  "periods": 1,
+                  "pricing": {
+                    "type": "STATIC",
+                    "priceMoney": {
+                      "amount": 100,
+                      "currency": "USD"
+                    }
+                  }
+                },
+                {
+                  "ordinal": 1,
+                  "cadence": "MONTHLY",
+                  "pricing": {
+                    "type": "RELATIVE",
+                    "discountIds": ["#TenPercentDiscount"]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "#Vegetarian-Meal-Plan": {
+    "data": {
+      "type": "SUBSCRIPTION_PLAN",
+      "id": "#Vegetarian-Meal-Plan",
+      "subscriptionPlanData": {
+        "name": "Two Vegetarian Items - $1 First Week Trial",
+        "eligibleCategoryIds": ["#Vegetarian Category"],
+        "subscriptionPlanVariations": [
+          {
+            "id": "#Vegetarian-Meal-Plan-Weekly",
+            "type": "SUBSCRIPTION_PLAN_VARIATION",
+            "subscriptionPlanVariationData": {
+              "name": "Two Vegetarian Items a Week - Billed Weekly",
+              "phases": [
+                {
+                  "ordinal": 0,
+                  "cadence": "WEEKLY",
+                  "periods": 1,
+                  "pricing": {
+                    "type": "STATIC",
+                    "priceMoney": {
+                      "amount": 100,
+                      "currency": "USD"
+                    }
+                  }
+                },
+                {
+                  "ordinal": 1,
+                  "cadence": "WEEKLY",
+                  "pricing": {
+                    "type": "RELATIVE"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "id": "#Vegetarian-Meal-Plan-Monthly",
+            "type": "SUBSCRIPTION_PLAN_VARIATION",
+            "subscriptionPlanVariationData": {
+              "name": "Two Vegetarian Items a Month - Billed Monthly",
+              "phases": [
+                {
+                  "ordinal": 0,
+                  "cadence": "WEEKLY",
+                  "periods": 1,
+                  "pricing": {
+                    "type": "STATIC",
+                    "priceMoney": {
+                      "amount": 100,
+                      "currency": "USD"
+                    }
+                  }
+                },
+                {
+                  "ordinal": 1,
+                  "cadence": "MONTHLY",
+                  "pricing": {
+                    "type": "RELATIVE"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}
