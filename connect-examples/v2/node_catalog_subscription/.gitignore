@@ -10,7 +10,7 @@ app/node_modules
 /coverage
 
 # production
-/build
+app/build
 
 # misc
 .DS_Store
@@ -25,3 +25,5 @@ yarn-error.log*
 
 server/node_modules
 server/.env
+
+app/.env
