@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./routes/Home";
-import CustomerOverview from "./routes/CustomerOverview";
+import Home from "./pages/Home";
+import CustomerOverview from "./pages/CustomerOverview";
 import {
   AppContext,
   AppDispatchContext,
@@ -9,7 +9,7 @@ import {
 } from "./context/AppContext";
 import { useReducer } from "react";
 import NavBar from "./components/Navbar";
-import SubscriptionDetails from "./routes/SubscriptionDetails";
+import SubscriptionDetails from "./pages/SubscriptionDetails";
 
 const App = () => {
   const [state, dispatch] = useReducer(appReducer, initialState);
