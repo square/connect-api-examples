@@ -18,10 +18,9 @@ Complete documentation for Square APIs is available at
 [developer.squareup.com/docs].
 
 If you have questions about Square Connect API features or implementation,
-you can ask for help on [Stack Overflow] or in our [Slack community].
+you can ask for help on our [Developer Forums] or in our [Discord community].
 
 [//]: # "Link anchor definitions"
-[SDK blog post]: https://medium.com/square-corner-blog/announcing-our-new-versions-of-our-client-sdks-1336d26e8099
-[Stack Overflow]: https://stackoverflow.com/questions/tagged/square-connect
-[Slack community]: https://squ.re/2Hks3YE
+[Developer Forums]: https://developer.squareup.com/forums
+[Discord community]: https://discord.com/invite/squaredev
 [developer.squareup.com/docs]: https://developer.squareup.com/docs
