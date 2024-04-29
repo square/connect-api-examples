@@ -1,10 +1,14 @@
-﻿# Useful Links
+﻿# Deprecated Example
+**This Sample Application has been deprecated and is no longer maintained.** 
+The use of `CreateCheckout` is a deprecated pattern and we now suggest using the `CreatePaymentLink` [endpoint](https://developer.squareup.com/reference/square/checkout-api/create-payment-link). More information [here](https://developer.squareup.com/docs/checkout-api)
+
+### Useful Links
 
 * [C# (.NET) SDK Page](https://developer.squareup.com/docs/sdks/dotnet)
 * [Checkout API Overview](https://developer.squareup.com/docs/checkout-api/what-it-does)
 * [Checkout in the API Reference](https://developer.squareup.com/reference/square/checkout-api)
 
-# Website Payment Processing Using the Square Checkout API: Csharp
+### Website Payment Processing Using the Square Checkout API: Csharp
 
 This is a simple example application that utilizes Square's Checkout API 
 using ASP.NET Core Razor. This examples assumes you are familiar with C# development. 
@@ -15,7 +19,7 @@ There are two sections in this ReadMe.
 * [Application Flow](#application-flow) - Provides an overview of how the Square 
 Checkout API integrate in the ASP.NET app.
 
-## Setup
+### Setup
 
 To get it running:
 
@@ -32,7 +36,7 @@ dotnet run --launch-profile Sandbox
 
 This will start the server on `localhost:5000`, which you can navigate to in your favorite browser.
 
-## Application flow
+### Application flow
 
 This is an ASP.NET Core Razor application. The web application implements the 
 Checkout API to take payments.   
