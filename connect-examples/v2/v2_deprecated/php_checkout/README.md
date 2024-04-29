@@ -1,22 +1,27 @@
-# Useful Links
+# Deprecated Example
+**This Sample Application has been deprecated and is no longer maintained.** 
+The use of `CreateCheckout` is a deprecated pattern and we now suggest using the `CreatePaymentLink` [endpoint](https://developer.squareup.com/reference/square/checkout-api/create-payment-link). More information [here](https://developer.squareup.com/docs/checkout-api)
+
+
+### Useful Links
 
 - [PHP SDK Page](https://developer.squareup.com/docs/sdks/php)
 - [Checkout API Overview](https://developer.squareup.com/docs/checkout-api/what-it-does)
 - [Checkout in the API Reference](https://developer.squareup.com/reference/square/checkout-api)
 
-# Square Checkout Demo
+### Square Checkout Demo
 
 This is a simple example application that utilizes Square's Checkout API. This examples does assume you are familiar with PHP development.
 
 It takes a single payment, declared by the user, and creates an order to use in the Checkout API.
 
-## Setup
+### Setup
 
-### Requirements
+#### Requirements
 
 - 8.0 <= PHP
 
-### Install the PHP client library
+#### Install the PHP client library
 
 This sample already includes the `square/square` dependency in its `composer.json` file. To install the client library:
 
@@ -29,7 +34,7 @@ This sample already includes the `square/square` dependency in its `composer.jso
 php composer.phar install
 ```
 
-### Specify your application credentials
+#### Specify your application credentials
 
 In order for the example to work, you must create a new file `.env` by copying the contents of the `.env.example` file. Edit this file with your application credentials and environment configuration.
 
@@ -44,7 +49,7 @@ Open your [developer dashboard](https://developer.squareup.com/). Now supply eit
 | SQUARE_ACCESS_TOKEN   | `string` | Access Token found at the Developer App Dashboard, Credentials tab. Must match the corresponding `ENVIRONMENT`.                                                   |
 | SQUARE_LOCATION_ID    | `string` | Location found at the Developer App Dashboard, Location tab. Must match the corresponding `ENVIRONMENT`.                                                          |
 
-## Running the sample
+### Running the sample
 
 From the sample's root directory, run:
 
@@ -58,6 +63,6 @@ For more information about Checkout please visit:
 - https://developer.squareup.com/reference/square/checkout-api
 - https://github.com/square/square-php-sdk/blob/master/docs/Api/CheckoutApi.md
 
-## Feedback
+### Feedback
 
 Rate this sample app [here](https://delighted.com/t/Z1xmKSqy)!
