@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsPayment</title>
+    <%= csrf_meta_tags %>
+    <script type="text/javascript">
+      window.applicationId = '<%=Rails.application.secrets.square_application_id %>';
+      window.locationId = '<%=Rails.application.secrets.square_location_id %>';
+    </script>
+    <%= stylesheet_link_tag 'application', 'data-turbolinks-track' => true %>
+  </head>
+  <body>
+
+    <%= yield %>
+
+    <%= form_with url: "/subscription", method: :get do |form| %>
+    <br />
+      <%= form.check_box :multiphase %>
+      <%= form.label :membership_with_trial, "With free trial" %>
+      <%= form.check_box :singlephase %>
+      <%= form.label :membership_without_trial, "Without free trial" %>
+      <br />
+      <%= form.label :person, "First name" %>
+      <%= form.text_field :first_name %>
+      <%= form.label :person, "Last name" %>
+      <%= form.text_field :last_name %>
+      <br />
+      <%= form.label :email_address, "Email address" %>
+      <%= form.email_field :address %>
+      <%= form.label :phone_number, "Phone number" %>
+      <%= form.telephone_field :phone %>
+      <br />
+      <%= form.label :start_at, "Start date:" %>
+      <%= form.date_field :start_at %>
+      <%= form.label :end_at, "End date:" %>
+      <%= form.date_field :end_at %>
+      <br />
+      <%= form.label :birthday, "Date of birth" %>
+      <%= form.date_field :birthday_date %>
+      <br />
+      <%= form.submit %>
+    <% end %>
+
+
+
+
+
+  </body>
+</html>
